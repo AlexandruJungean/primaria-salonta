@@ -844,9 +844,315 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
 ---
 
-## 6. API Integrations
+## 6. API Integrations & Components
 
-### 6.1 Google Maps Configuration
+### 6.0 Hero Carousel Component
+
+```typescript
+// components/sections/hero-carousel.tsx
+'use client';
+
+import { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { cn } from '@/lib/utils/cn';
+
+interface HeroSlide {
+  id: string;
+  image: string;
+  alt: string;
+}
+
+const HERO_SLIDES: HeroSlide[] = [
+  {
+    id: 'primaria',
+    image: '/images/primaria-salonta-1.jpg',
+    alt: 'Primăria Municipiului Salonta',
+  },
+  {
+    id: 'muzeu',
+    image: '/images/muzeu-salonta.jpg',
+    alt: 'Complexul Muzeal Arany János',
+  },
+  {
+    id: 'parc',
+    image: '/images/parc-salonta-3.jpg',
+    alt: 'Parcul Central Salonta',
+  },
+  {
+    id: 'casa-cultura',
+    image: '/images/casa-de-cultura-salonta-1.jpg',
+    alt: 'Casa de Cultură Zilahy Lajos',
+  },
+  {
+    id: 'bazin',
+    image: '/images/bazin-de-inot-salonta-1.jpeg',
+    alt: 'Bazinul de Înot Salonta',
+  },
+];
+
+const AUTO_SLIDE_INTERVAL = 6000; // 6 seconds
+
+export function HeroCarousel() {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+
+  const nextSlide = useCallback(() => {
+    setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
+  }, []);
+
+  const prevSlide = useCallback(() => {
+    setCurrentSlide((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
+  }, []);
+
+  const goToSlide = (index: number) => {
+    setCurrentSlide(index);
+    setIsAutoPlaying(false);
+    // Resume auto-play after 10 seconds of inactivity
+    setTimeout(() => setIsAutoPlaying(true), 10000);
+  };
+
+  useEffect(() => {
+    if (!isAutoPlaying) return;
+    
+    const interval = setInterval(nextSlide, AUTO_SLIDE_INTERVAL);
+    return () => clearInterval(interval);
+  }, [isAutoPlaying, nextSlide]);
+
+  return (
+    <section className="relative h-[600px] md:h-[700px] w-full overflow-hidden">
+      {/* Slides */}
+      {HERO_SLIDES.map((slide, index) => (
+        <div
+          key={slide.id}
+          className={cn(
+            'absolute inset-0 transition-opacity duration-1000',
+            index === currentSlide ? 'opacity-100' : 'opacity-0'
+          )}
+        >
+          <Image
+            src={slide.image}
+            alt={slide.alt}
+            fill
+            className="object-cover"
+            priority={index === 0}
+          />
+          {/* Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/60" />
+        </div>
+      ))}
+
+      {/* Content Overlay */}
+      <div className="relative z-10 h-full flex flex-col items-center justify-center px-4">
+        {/* Logo & Title */}
+        <Image
+          src="/logo/logo-transparent.png"
+          alt="Primăria Salonta"
+          width={120}
+          height={120}
+          className="mb-6"
+        />
+        <h1 className="text-4xl md:text-6xl font-heading font-bold text-white text-center mb-4">
+          Primăria Municipiului Salonta
+        </h1>
+        <p className="text-xl md:text-2xl text-white/90 text-center mb-8">
+          Site-ul oficial al Primăriei Municipiului Salonta
+        </p>
+
+        {/* Search Bar */}
+        <div className="w-full max-w-xl mb-8">
+          <div className="relative">
+            <input
+              type="search"
+              placeholder="Căutare..."
+              className="w-full px-6 py-4 rounded-full bg-white/95 text-gray-900 placeholder-gray-500 shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+            />
+            <button className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-primary-900 text-white rounded-full hover:bg-primary-800 transition-colors">
+              <Search className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+
+        {/* Quick Access Buttons */}
+        <div className="flex flex-wrap justify-center gap-3">
+          {/* Quick links will be rendered here */}
+        </div>
+      </div>
+
+      {/* Navigation Arrows */}
+      <button
+        onClick={prevSlide}
+        className="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full text-white transition-colors"
+        aria-label="Previous slide"
+      >
+        <ChevronLeft className="w-6 h-6" />
+      </button>
+      <button
+        onClick={nextSlide}
+        className="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full text-white transition-colors"
+        aria-label="Next slide"
+      >
+        <ChevronRight className="w-6 h-6" />
+      </button>
+
+      {/* Dot Indicators */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+        {HERO_SLIDES.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => goToSlide(index)}
+            className={cn(
+              'w-3 h-3 rounded-full transition-all',
+              index === currentSlide
+                ? 'bg-white w-8'
+                : 'bg-white/50 hover:bg-white/70'
+            )}
+            aria-label={`Go to slide ${index + 1}`}
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
+```
+
+### 6.1 Mega Menu Navigation Component
+
+```typescript
+// components/layout/mega-menu.tsx
+'use client';
+
+import { useState } from 'react';
+import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { ChevronDown } from 'lucide-react';
+import { cn } from '@/lib/utils/cn';
+
+interface MenuItem {
+  id: string;
+  href: string;
+  icon?: React.ComponentType<{ className?: string }>;
+  children?: MenuItem[];
+}
+
+interface MegaMenuProps {
+  items: MenuItem[];
+}
+
+export function MegaMenu({ items }: MegaMenuProps) {
+  const [activeMenu, setActiveMenu] = useState<string | null>(null);
+  const t = useTranslations('navigation');
+
+  return (
+    <nav className="hidden lg:flex items-center gap-1">
+      {items.map((item) => (
+        <div
+          key={item.id}
+          className="relative"
+          onMouseEnter={() => setActiveMenu(item.id)}
+          onMouseLeave={() => setActiveMenu(null)}
+        >
+          <button
+            className={cn(
+              'flex items-center gap-1 px-4 py-2 text-sm font-medium rounded-lg transition-colors',
+              activeMenu === item.id
+                ? 'bg-primary-100 text-primary-900'
+                : 'text-gray-700 hover:bg-gray-100'
+            )}
+          >
+            {t(item.id)}
+            {item.children && (
+              <ChevronDown
+                className={cn(
+                  'w-4 h-4 transition-transform',
+                  activeMenu === item.id && 'rotate-180'
+                )}
+              />
+            )}
+          </button>
+
+          {/* Mega Menu Dropdown */}
+          {item.children && activeMenu === item.id && (
+            <div className="absolute top-full left-0 w-screen max-w-4xl bg-white rounded-xl shadow-xl border border-gray-200 p-6 animate-slide-down">
+              <div className="grid grid-cols-3 gap-6">
+                {item.children.map((child) => (
+                  <Link
+                    key={child.id}
+                    href={child.href}
+                    className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors group"
+                  >
+                    {child.icon && (
+                      <child.icon className="w-5 h-5 text-primary-600 mt-0.5 group-hover:text-primary-700" />
+                    )}
+                    <div>
+                      <div className="font-medium text-gray-900 group-hover:text-primary-700">
+                        {t(child.id)}
+                      </div>
+                      {/* Optional description can be added here */}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      ))}
+    </nav>
+  );
+}
+```
+
+**Navigation Structure for Mega Menu:**
+```typescript
+// lib/constants/navigation.ts
+import {
+  Building2,
+  Landmark,
+  Users,
+  FileText,
+  Briefcase,
+  BarChart3,
+  Monitor,
+  Newspaper,
+  Video,
+  Phone,
+} from 'lucide-react';
+
+export const MAIN_NAVIGATION = [
+  {
+    id: 'localitatea',
+    href: '/localitatea',
+    children: [
+      { id: 'localizare', href: '/localitatea/localizare', icon: MapPin },
+      { id: 'istoric', href: '/localitatea/istoric', icon: Clock },
+      { id: 'cultura', href: '/localitatea/cultura', icon: Palette },
+      { id: 'harta', href: '/localitatea/harta-digitala', icon: Map },
+      { id: 'galerie', href: '/localitatea/galerie', icon: Image },
+      { id: 'excursieVirtuala', href: '/localitatea/excursie-virtuala', icon: Eye },
+      { id: 'oraseInfratite', href: '/localitatea/orase-infratite', icon: Globe },
+      { id: 'cetateniOnoare', href: '/localitatea/cetateni-de-onoare', icon: Award },
+      { id: 'economie', href: '/localitatea/economie', icon: TrendingUp },
+    ],
+  },
+  {
+    id: 'institutii',
+    href: '/institutii',
+    children: [
+      { id: 'casaCultura', href: '/institutii/casa-cultura', icon: Building },
+      { id: 'biblioteca', href: '/institutii/biblioteca', icon: BookOpen },
+      { id: 'muzeu', href: '/institutii/muzeu', icon: Landmark },
+      { id: 'asistentaMedicala', href: '/institutii/asistenta-medicala', icon: Heart },
+      { id: 'cantinaSociala', href: '/institutii/cantina-sociala', icon: Utensils },
+      { id: 'centrulZi', href: '/institutii/centrul-de-zi', icon: Users },
+      { id: 'cuibulDropiei', href: '/institutii/cuibul-dropiei', icon: Bird },
+      { id: 'bazinInot', href: '/institutii/bazin-inot', icon: Waves },
+    ],
+  },
+  // ... continue for all menu sections
+];
+```
+
+### 6.2 Google Maps Configuration
 
 ```typescript
 // lib/google-maps.ts
@@ -977,7 +1283,290 @@ export function WebcamEmbed({ title, streamUrl, description }: WebcamEmbedProps)
 }
 ```
 
-### 6.3 Webcam Configuration
+### 6.3 Online Payment Links Configuration
+
+```typescript
+// lib/constants/payment-links.ts
+export const PAYMENT_LINKS = [
+  {
+    id: 'ghiseul',
+    url: 'https://www.ghiseul.ro/ghiseul/public/',
+    icon: 'CreditCard',
+    translations: {
+      ro: {
+        title: 'Ghișeul.ro',
+        description: 'Platforma națională pentru plăți online către instituțiile publice',
+      },
+      hu: {
+        title: 'Ghișeul.ro',
+        description: 'Nemzeti online fizetési platform közintézmények felé',
+      },
+      en: {
+        title: 'Ghișeul.ro',
+        description: 'National platform for online payments to public institutions',
+      },
+    },
+  },
+  {
+    id: 'impozite-taxe',
+    url: 'https://www.globalpay.ro/public/salonta/login/index/redirctrl/debite/rediract/debite/lang/ro',
+    icon: 'Receipt',
+    translations: {
+      ro: {
+        title: 'Impozite și taxe',
+        description: 'Plătește impozite pe clădiri, terenuri și alte taxe locale',
+      },
+      hu: {
+        title: 'Adók és illetékek',
+        description: 'Fizessen épület-, telek- és egyéb helyi adókat',
+      },
+      en: {
+        title: 'Taxes and fees',
+        description: 'Pay building taxes, land taxes, and other local fees',
+      },
+    },
+  },
+  {
+    id: 'amenzi',
+    url: 'https://www.globalpay.ro/public/salonta/login/index/redirctrl/amenzi/rediract/index/lang/ro',
+    icon: 'FileWarning',
+    translations: {
+      ro: {
+        title: 'Amenzi contravenționale',
+        description: 'Plătește amenzi de circulație și alte amenzi contravenționale',
+      },
+      hu: {
+        title: 'Szabálysértési bírságok',
+        description: 'Fizessen közlekedési és egyéb szabálysértési bírságokat',
+      },
+      en: {
+        title: 'Contravention fines',
+        description: 'Pay traffic fines and other contravention fines',
+      },
+    },
+  },
+];
+
+// components/features/payment-cards.tsx
+'use client';
+
+import { useTranslations, useLocale } from 'next-intl';
+import { ExternalLink, CreditCard, Receipt, FileWarning } from 'lucide-react';
+import { PAYMENT_LINKS } from '@/lib/constants/payment-links';
+
+const ICONS = {
+  CreditCard,
+  Receipt,
+  FileWarning,
+};
+
+export function PaymentCards() {
+  const locale = useLocale() as 'ro' | 'hu' | 'en';
+  const t = useTranslations('payments');
+
+  return (
+    <div className="grid md:grid-cols-3 gap-6">
+      {PAYMENT_LINKS.map((payment) => {
+        const Icon = ICONS[payment.icon as keyof typeof ICONS];
+        const translation = payment.translations[locale];
+
+        return (
+          <a
+            key={payment.id}
+            href={payment.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex flex-col items-center p-8 bg-white rounded-2xl shadow-card hover:shadow-card-hover border border-gray-100 transition-all hover:-translate-y-1"
+          >
+            <div className="w-16 h-16 rounded-full bg-primary-100 flex items-center justify-center mb-4 group-hover:bg-primary-200 transition-colors">
+              <Icon className="w-8 h-8 text-primary-700" />
+            </div>
+            <h3 className="text-xl font-heading font-semibold text-primary-900 mb-2 text-center">
+              {translation.title}
+            </h3>
+            <p className="text-gray-600 text-center text-sm mb-4">
+              {translation.description}
+            </p>
+            <span className="inline-flex items-center gap-1 text-primary-700 font-medium group-hover:underline">
+              {t('accessPlatform')}
+              <ExternalLink className="w-4 h-4" />
+            </span>
+          </a>
+        );
+      })}
+    </div>
+  );
+}
+```
+
+### 6.5 Leadership & Schedule Configuration
+
+```typescript
+// lib/constants/leadership.ts
+export const LEADERSHIP = [
+  {
+    id: 'primar',
+    position: 'primar',
+    photo: '/images/consilul local/primar-torok-laszlo.jpg',
+    email: 'primsal3@gmail.com',
+    phone: '+40 728 105 762',
+    translations: {
+      ro: {
+        name: 'Török László',
+        position: 'Primar',
+        audienceSchedule: 'Săptămâni impare, Miercuri: 9:00 - 11:00',
+      },
+      hu: {
+        name: 'Török László',
+        position: 'Polgármester',
+        audienceSchedule: 'Páratlan hetek, Szerda: 9:00 - 11:00',
+      },
+      en: {
+        name: 'Török László',
+        position: 'Mayor',
+        audienceSchedule: 'Odd weeks, Wednesday: 9:00 - 11:00',
+      },
+    },
+  },
+  {
+    id: 'viceprimar',
+    position: 'viceprimar',
+    photo: '/images/consilul local/viceprimar-horvath-janos.jpg',
+    email: 'primsal3@gmail.com',
+    phone: '+40 728 105 762',
+    translations: {
+      ro: {
+        name: 'Horváth János',
+        position: 'Viceprimar',
+        audienceSchedule: 'Săptămâni pare, Miercuri: 9:00 - 11:00',
+      },
+      hu: {
+        name: 'Horváth János',
+        position: 'Alpolgármester',
+        audienceSchedule: 'Páros hetek, Szerda: 9:00 - 11:00',
+      },
+      en: {
+        name: 'Horváth János',
+        position: 'Deputy Mayor',
+        audienceSchedule: 'Even weeks, Wednesday: 9:00 - 11:00',
+      },
+    },
+  },
+  {
+    id: 'secretar',
+    position: 'secretar',
+    photo: null, // TBD
+    email: 'primsal3@gmail.com',
+    phone: '+40 728 105 762',
+    translations: {
+      ro: {
+        name: 'TBD', // To be provided
+        position: 'Secretar General',
+        audienceSchedule: 'În fiecare săptămână, Joi: 9:00 - 11:00',
+      },
+      hu: {
+        name: 'TBD',
+        position: 'Főjegyző',
+        audienceSchedule: 'Minden héten, Csütörtök: 9:00 - 11:00',
+      },
+      en: {
+        name: 'TBD',
+        position: 'General Secretary',
+        audienceSchedule: 'Every week, Thursday: 9:00 - 11:00',
+      },
+    },
+  },
+];
+
+// lib/constants/public-hours.ts
+export const PUBLIC_HOURS = {
+  translations: {
+    ro: {
+      title: 'Program cu publicul',
+      audienceTitle: 'Audiențe',
+      registrationNote: 'Înscrierea la audiențe se face la camera 11 (parter) a Primăriei Municipiului Salonta, pe baza actului de identitate.',
+    },
+    hu: {
+      title: 'Ügyfélfogadás',
+      audienceTitle: 'Fogadóórák',
+      registrationNote: 'A fogadóórákra való feliratkozás a Nagyszalontai Polgármesteri Hivatal 11-es szobájában (földszint) történik, személyi igazolvány alapján.',
+    },
+    en: {
+      title: 'Public Hours',
+      audienceTitle: 'Audiences',
+      registrationNote: 'Registration for audiences is done at room 11 (ground floor) of Salonta City Hall, based on ID card.',
+    },
+  },
+  offices: [
+    {
+      id: 'general',
+      room: null,
+      hours: [
+        { days: 'Luni - Vineri', from: '8:00', to: '11:00' },
+        { days: 'Luni - Vineri', from: '13:00', to: '16:00' },
+      ],
+      translations: {
+        ro: { name: 'Toate birourile de la parter' },
+        hu: { name: 'Minden földszinti iroda' },
+        en: { name: 'All ground floor offices' },
+      },
+    },
+    {
+      id: 'casierie',
+      room: '10',
+      floor: 'parter',
+      hours: [{ days: 'Luni - Vineri', from: '8:00', to: '16:00' }],
+      translations: {
+        ro: { name: 'Casierie' },
+        hu: { name: 'Pénztár' },
+        en: { name: 'Cashier' },
+      },
+    },
+    {
+      id: 'relatii-public',
+      room: '11',
+      floor: 'parter',
+      hours: [{ days: 'Luni - Vineri', from: '8:00', to: '16:00' }],
+      translations: {
+        ro: { name: 'Biroul de relații cu publicul' },
+        hu: { name: 'Ügyfélszolgálat' },
+        en: { name: 'Public Relations Office' },
+      },
+    },
+  ],
+};
+
+// lib/constants/contact.ts
+export const CONTACT_INFO = {
+  address: {
+    street: 'Str. Republicii nr. 1',
+    city: 'Salonta',
+    county: 'Bihor',
+    country: 'Romania',
+    postalCode: '415500',
+  },
+  phone: {
+    main: '+40 728 105 762',
+    landline: ['0359-409730', '0359-409731', '0259-373243'],
+    fax: '0359-409733',
+  },
+  email: {
+    primary: 'primsal3@gmail.com',
+    secondary: 'primsal@rdslink.ro',
+  },
+  coordinates: {
+    lat: 46.8,
+    lng: 21.65,
+  },
+  socialMedia: {
+    facebook: 'https://www.facebook.com/PrimariaSalontaNagyszalontaPolgarmesteriHivatala',
+    instagram: 'https://www.instagram.com/primaria.municipiuluisalonta/',
+    tiktok: 'https://www.tiktok.com/@primariasalonta_',
+  },
+};
+```
+
+### 6.6 Webcam Configuration
 
 ```typescript
 // lib/constants/webcams.ts
