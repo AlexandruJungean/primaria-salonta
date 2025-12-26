@@ -67,6 +67,7 @@ export default function CulturaPage() {
                       alt={t(place.id)}
                       fill
                       className="object-cover"
+                      sizes="(max-width: 768px) 100vw, 33vw"
                     />
                   </CardImage>
                   <CardContent className="pt-4">

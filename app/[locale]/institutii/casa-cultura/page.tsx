@@ -35,6 +35,7 @@ export default function CasaCulturaPage() {
                   alt="Casa de Cultură Zilahy Lajos"
                   fill
                   className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
                 />
               </div>
               

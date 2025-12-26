@@ -52,6 +52,7 @@ export default function GaleriePage() {
                   alt={image.alt}
                   fill
                   className="object-cover transition-transform duration-300 group-hover:scale-110"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                 />
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-end">
                   <span className="text-white text-sm p-3 opacity-0 group-hover:opacity-100 transition-opacity">

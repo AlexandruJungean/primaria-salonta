@@ -35,6 +35,7 @@ export default function BazinInotPage() {
                   alt="Bazinul de Înot Salonta"
                   fill
                   className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
                 />
               </div>
               <div className="relative aspect-video rounded-xl overflow-hidden">
@@ -43,6 +44,7 @@ export default function BazinInotPage() {
                   alt="Bazinul de Înot Salonta"
                   fill
                   className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
                 />
               </div>
             </div>

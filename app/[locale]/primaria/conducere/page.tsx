@@ -52,6 +52,7 @@ export default function LeadershipPage() {
                         alt={translation.name}
                         fill
                         className="object-cover object-top"
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">

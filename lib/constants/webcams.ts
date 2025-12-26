@@ -2,6 +2,8 @@ export interface Webcam {
   id: string;
   slug: string;
   streamUrl: string;
+  embedUrl: string;
+  thumbnailUrl: string;
   translations: {
     ro: { title: string; description: string };
     hu: { title: string; description: string };
@@ -14,6 +16,8 @@ export const WEBCAMS: Webcam[] = [
     id: 'arany-janos',
     slug: 'casa-memoriala-arany-janos',
     streamUrl: 'https://www.ipcamlive.com/casaaranyjanos',
+    embedUrl: 'https://www.ipcamlive.com/player/player.php?alias=casaaranyjanos',
+    thumbnailUrl: '/images/casa-memoriala-salonta-1.jpg',
     translations: {
       ro: {
         title: 'Casa Memorială "Arany János"',
@@ -33,6 +37,8 @@ export const WEBCAMS: Webcam[] = [
     id: 'nuca-de-aur',
     slug: 'parcul-nuca-de-aur',
     streamUrl: 'https://www.ipcamlive.com/aranydio1',
+    embedUrl: 'https://www.ipcamlive.com/player/player.php?alias=aranydio1',
+    thumbnailUrl: '/images/parc-salonta-1.jpg',
     translations: {
       ro: {
         title: 'Parcul "Nuca de Aur"',
