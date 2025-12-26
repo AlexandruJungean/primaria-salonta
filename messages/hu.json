@@ -31,7 +31,9 @@
     "pentruCetateni": "Polgároknak",
     "pentruFirme": "Cégeknek",
     "primpieSalonta": "Polgármesteri Hivatal",
+    "primariaSalonta": "Polgármesteri Hivatal",
     "turistSalonta": "Turista Nagyszalontán",
+    "turistInSalonta": "Turista Nagyszalontán",
     "descoperiSalonta": "Fedezze fel Nagyszalontát",
     "localitatea": "A város",
     "localizare": "Elhelyezkedés",
@@ -108,7 +110,19 @@
     "formulare": "Nyomtatványok",
     "stiri": "Hírek",
     "camereWeb": "Webkamerák",
-    "contact": "Kapcsolat"
+    "contact": "Kapcsolat",
+    "faq": "Gyakran ismételt kérdések (Hamarosan)",
+    "raporteazaProblema": "Probléma bejelentése (Hamarosan)",
+    "evenimente": "Események",
+    "evenimenteDesc": "Nagyszalonta eseménynaptára",
+    "stareCivila": "Anyakönyvi hivatal (Hamarosan)",
+    "registruAgricol": "Mezőgazdasági nyilvántartás (Hamarosan)",
+    "transport": "Tömegközlekedés (Hamarosan)",
+    "educatie": "Oktatás (Hamarosan)",
+    "sanatate": "Egészségügy (Hamarosan)",
+    "sport": "Sport és szabadidő (Hamarosan)",
+    "voluntariat": "Önkéntesség (Hamarosan)",
+    "agentiEconomici": "Gazdasági szereplők (Hamarosan)"
   },
   "homepage": {
     "welcome": "Üdvözöljük",
@@ -118,7 +132,17 @@
     "quickLinks": "Gyors hozzáférés",
     "liveWebcams": "Élő webkamerák",
     "usefulLinks": "Hasznos linkek",
-    "exploreCity": "Fedezze fel a várost"
+    "exploreCity": "Fedezze fel a várost",
+    "photoGallery": "Fotógaléria",
+    "photoGallerySubtitle": "Fedezze fel Nagyszalonta szépségét képeken keresztül",
+    "cityMap": "Interaktív térkép",
+    "cityMapSubtitle": "Fedezze fel Nagyszalonta fontos helyszíneit",
+    "upcomingEventsSubtitle": "Vegyen részt a közösségi eseményeken",
+    "weatherNow": "Időjárás most",
+    "loadingWeather": "Időjárás betöltése...",
+    "feelsLike": "Hőérzet",
+    "humidity": "Páratartalom",
+    "wind": "Szél"
   },
   "footer": {
     "address": "Cím",
@@ -194,7 +218,11 @@
     "title": "Élő webkamerák",
     "subtitle": "Tekintsen meg élő képeket Nagyszalontáról",
     "vlcNote": "Az optimális megtekintéshez telepítse a",
-    "vlcLink": "VLC Player-t"
+    "vlcLink": "VLC Player-t",
+    "openInNewTab": "Új ablakban nyílik meg",
+    "watchLive": "Élő közvetítés",
+    "viewingInfo": "A webkamerák a szolgáltató oldalán nyílnak meg",
+    "viewingInfoDesc": "Biztonsági okokból az élő webkamerák közvetlenül az ipcamlive.com oldalon tekinthetők meg. Kattintson a kamera képére az élő közvetítés megtekintéséhez."
   },
   "leadership": {
     "title": "A Polgármesteri Hivatal vezetősége",
@@ -217,6 +245,35 @@
       "title": "Szerverhiba",
       "description": "Sajnáljuk, hiba történt. Kérjük, próbálja újra később."
     }
+  },
+  "cityStats": {
+    "title": "Nagyszalonta számokban",
+    "subtitle": "Fedezze fel városunk legfontosabb adatait",
+    "population": "Lakosság",
+    "area": "Terület",
+    "altitude": "Tengerszint feletti magasság",
+    "founded": "Első írásos említés",
+    "twinCities": "Testvérvárosok",
+    "honoraryCitizens": "Díszpolgárok"
+  },
+  "events": {
+    "title": "Események",
+    "subtitle": "Nagyszalonta eseménynaptára",
+    "filterByCategory": "Szűrés kategória szerint",
+    "allEvents": "Összes",
+    "noEvents": "Nincs ütemezett esemény.",
+    "pastEvent": "Elmúlt esemény",
+    "viewDetails": "Részletek",
+    "eventDetails": "Esemény részletei",
+    "date": "Dátum",
+    "time": "Időpont",
+    "location": "Helyszín",
+    "addToCalendar": "Hozzáadás a naptárhoz",
+    "shareEvent": "Megosztás",
+    "linkCopied": "Link a vágólapra másolva!",
+    "viewOnMap": "Megtekintés a térképen",
+    "relatedEvents": "Hasonló események",
+    "pastEventNotice": "Ez az esemény már lezajlott."
   }
 }
 

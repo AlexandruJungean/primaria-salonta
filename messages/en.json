@@ -31,7 +31,9 @@
     "pentruCetateni": "For Citizens",
     "pentruFirme": "For Businesses",
     "primpieSalonta": "Salonta City Hall",
+    "primariaSalonta": "Salonta City Hall",
     "turistSalonta": "Tourist in Salonta",
+    "turistInSalonta": "Tourist in Salonta",
     "descoperiSalonta": "Discover Salonta",
     "localitatea": "The City",
     "localizare": "Location",
@@ -108,7 +110,19 @@
     "formulare": "Standard Forms",
     "stiri": "News",
     "camereWeb": "Webcams",
-    "contact": "Contact"
+    "contact": "Contact",
+    "faq": "Frequently Asked Questions (Coming Soon)",
+    "raporteazaProblema": "Report a Problem (Coming Soon)",
+    "evenimente": "Events",
+    "evenimenteDesc": "Salonta event calendar",
+    "stareCivila": "Civil Registry (Coming Soon)",
+    "registruAgricol": "Agricultural Register (Coming Soon)",
+    "transport": "Public Transport (Coming Soon)",
+    "educatie": "Education (Coming Soon)",
+    "sanatate": "Health (Coming Soon)",
+    "sport": "Sports & Recreation (Coming Soon)",
+    "voluntariat": "Volunteering (Coming Soon)",
+    "agentiEconomici": "Business Directory (Coming Soon)"
   },
   "homepage": {
     "welcome": "Welcome",
@@ -118,7 +132,17 @@
     "quickLinks": "Quick Access",
     "liveWebcams": "Live Webcams",
     "usefulLinks": "Useful Links",
-    "exploreCity": "Explore the City"
+    "exploreCity": "Explore the City",
+    "photoGallery": "Photo Gallery",
+    "photoGallerySubtitle": "Discover the beauty of Salonta through images",
+    "cityMap": "Interactive Map",
+    "cityMapSubtitle": "Explore important locations in Salonta",
+    "upcomingEventsSubtitle": "Join community events",
+    "weatherNow": "Weather now",
+    "loadingWeather": "Loading weather...",
+    "feelsLike": "Feels like",
+    "humidity": "Humidity",
+    "wind": "Wind"
   },
   "footer": {
     "address": "Address",
@@ -194,7 +218,11 @@
     "title": "Live Webcams",
     "subtitle": "View live images from Salonta",
     "vlcNote": "For optimal viewing, install",
-    "vlcLink": "VLC Player"
+    "vlcLink": "VLC Player",
+    "openInNewTab": "Opens in new tab",
+    "watchLive": "Watch live",
+    "viewingInfo": "Webcams open on the provider's website",
+    "viewingInfoDesc": "For security reasons, live webcams are viewed directly on ipcamlive.com. Click on the camera image to watch the live stream."
   },
   "leadership": {
     "title": "City Hall Leadership",
@@ -217,6 +245,35 @@
       "title": "Server error",
       "description": "Sorry, an error occurred. Please try again later."
     }
+  },
+  "cityStats": {
+    "title": "Salonta in Numbers",
+    "subtitle": "Discover the essential facts about our city",
+    "population": "Population",
+    "area": "Area",
+    "altitude": "Altitude",
+    "founded": "First Documented",
+    "twinCities": "Twin Cities",
+    "honoraryCitizens": "Honorary Citizens"
+  },
+  "events": {
+    "title": "Events",
+    "subtitle": "Salonta event calendar",
+    "filterByCategory": "Filter by category",
+    "allEvents": "All",
+    "noEvents": "No scheduled events.",
+    "pastEvent": "Past event",
+    "viewDetails": "View details",
+    "eventDetails": "Event details",
+    "date": "Date",
+    "time": "Time",
+    "location": "Location",
+    "addToCalendar": "Add to calendar",
+    "shareEvent": "Share",
+    "linkCopied": "Link copied to clipboard!",
+    "viewOnMap": "View on map",
+    "relatedEvents": "Related events",
+    "pastEventNotice": "This event has already passed."
   }
 }
 

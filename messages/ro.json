@@ -31,7 +31,9 @@
     "pentruCetateni": "Pentru cetățeni",
     "pentruFirme": "Pentru firme",
     "primpieSalonta": "Primăria Salonta",
+    "primariaSalonta": "Primăria Salonta",
     "turistSalonta": "Turist în Salonta",
+    "turistInSalonta": "Turist în Salonta",
     "descoperiSalonta": "Descoperă Salonta",
     "localitatea": "Localitatea",
     "localizare": "Localizare",
@@ -108,7 +110,19 @@
     "formulare": "Formulare tipizate",
     "stiri": "Știri",
     "camereWeb": "Camere web",
-    "contact": "Contact"
+    "contact": "Contact",
+    "faq": "Întrebări frecvente (În curând)",
+    "raporteazaProblema": "Raportează o problemă (În curând)",
+    "evenimente": "Evenimente",
+    "evenimenteDesc": "Calendarul evenimentelor din Salonta",
+    "stareCivila": "Stare civilă (În curând)",
+    "registruAgricol": "Registrul agricol (În curând)",
+    "transport": "Transport public (În curând)",
+    "educatie": "Educație (În curând)",
+    "sanatate": "Sănătate (În curând)",
+    "sport": "Sport și agrement (În curând)",
+    "voluntariat": "Voluntariat (În curând)",
+    "agentiEconomici": "Agenți economici (În curând)"
   },
   "homepage": {
     "welcome": "Bine ați venit",
@@ -118,7 +132,17 @@
     "quickLinks": "Acces rapid",
     "liveWebcams": "Camere web live",
     "usefulLinks": "Link-uri utile",
-    "exploreCity": "Explorează orașul"
+    "exploreCity": "Explorează orașul",
+    "photoGallery": "Galerie foto",
+    "photoGallerySubtitle": "Descoperă frumusețea orașului Salonta prin imagini",
+    "cityMap": "Hartă interactivă",
+    "cityMapSubtitle": "Explorează locațiile importante din Salonta",
+    "upcomingEventsSubtitle": "Participă la evenimentele din comunitate",
+    "weatherNow": "Vremea acum",
+    "loadingWeather": "Se încarcă vremea...",
+    "feelsLike": "Se simte ca",
+    "humidity": "Umiditate",
+    "wind": "Vânt"
   },
   "footer": {
     "address": "Adresă",
@@ -194,7 +218,11 @@
     "title": "Camere web live",
     "subtitle": "Vizualizează imagini live din Salonta",
     "vlcNote": "Pentru vizualizare optimă, instalați",
-    "vlcLink": "VLC Player"
+    "vlcLink": "VLC Player",
+    "openInNewTab": "Se deschide într-o fereastră nouă",
+    "watchLive": "Vizualizează live",
+    "viewingInfo": "Camerele web se deschid pe site-ul furnizorului",
+    "viewingInfoDesc": "Din motive de securitate, camerele web live se vizualizează direct pe site-ul ipcamlive.com. Apăsați pe imaginea camerei pentru a vedea transmisiunea live."
   },
   "leadership": {
     "title": "Conducerea Primăriei",
@@ -217,6 +245,35 @@
       "title": "Eroare de server",
       "description": "Ne pare rău, a apărut o eroare. Vă rugăm încercați din nou mai târziu."
     }
+  },
+  "cityStats": {
+    "title": "Salonta în cifre",
+    "subtitle": "Descoperă datele esențiale despre orașul nostru",
+    "population": "Populație",
+    "area": "Suprafață",
+    "altitude": "Altitudine",
+    "founded": "Atestare documentară",
+    "twinCities": "Orașe înfrățite",
+    "honoraryCitizens": "Cetățeni de onoare"
+  },
+  "events": {
+    "title": "Evenimente",
+    "subtitle": "Calendarul evenimentelor din Salonta",
+    "filterByCategory": "Filtrează după categorie",
+    "allEvents": "Toate",
+    "noEvents": "Nu există evenimente programate.",
+    "pastEvent": "Eveniment trecut",
+    "viewDetails": "Vezi detalii",
+    "eventDetails": "Detalii eveniment",
+    "date": "Data",
+    "time": "Ora",
+    "location": "Locație",
+    "addToCalendar": "Adaugă în calendar",
+    "shareEvent": "Distribuie",
+    "linkCopied": "Link copiat în clipboard!",
+    "viewOnMap": "Vezi pe hartă",
+    "relatedEvents": "Evenimente similare",
+    "pastEventNotice": "Acest eveniment a trecut deja."
   }
 }
 

@@ -51,6 +51,14 @@ import {
   Phone,
   CreditCard,
   Send,
+  HelpCircle,
+  AlertTriangle,
+  Stethoscope,
+  GraduationCap,
+  Bus,
+  Dumbbell,
+  Wheat,
+  Store,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -75,6 +83,7 @@ export const MAIN_NAVIGATION: NavItem[] = [
       { id: 'platiOnline', href: '/servicii-online/plati', icon: CreditCard },
       { id: 'petitiiOnline', href: '/servicii-online/petitii', icon: Send },
       { id: 'formulare', href: '/servicii-online/formulare', icon: ClipboardList },
+      { id: 'raporteazaProblema', href: '/raporteaza-problema', icon: AlertTriangle },
       // Taxes & Fees
       { id: 'taxeImpozite', href: '/informatii-publice/taxe-impozite', icon: Receipt },
       // Schedule & Audiences
@@ -83,10 +92,20 @@ export const MAIN_NAVIGATION: NavItem[] = [
       // Announcements & Jobs
       { id: 'anunturi', href: '/transparenta/anunturi', icon: Megaphone },
       { id: 'concursuri', href: '/informatii-publice/concursuri', icon: BadgeCheck },
-      // Social Services
+      { id: 'evenimente', href: '/evenimente', icon: Calendar },
+      // Civil Registry & Agriculture
+      { id: 'stareCivila', href: '/stare-civila', icon: FileText },
+      { id: 'registruAgricol', href: '/registru-agricol', icon: Wheat },
+      // Social & Health Services
+      { id: 'sanatate', href: '/sanatate', icon: Stethoscope },
       { id: 'asistentaMedicala', href: '/institutii/asistenta-medicala', icon: Heart },
       { id: 'cantinaSociala', href: '/institutii/cantina-sociala', icon: Utensils },
       { id: 'centrulZi', href: '/institutii/centrul-de-zi', icon: Users },
+      // Education & Transport
+      { id: 'educatie', href: '/educatie', icon: GraduationCap },
+      { id: 'transport', href: '/transport', icon: Bus },
+      // FAQ
+      { id: 'faq', href: '/faq', icon: HelpCircle },
     ],
   },
   // 2. FOR BUSINESSES - Permits, procurement, urban planning
@@ -105,8 +124,9 @@ export const MAIN_NAVIGATION: NavItem[] = [
       { id: 'taxeImpozite', href: '/informatii-publice/taxe-impozite', icon: Receipt },
       // Jobs & Competitions
       { id: 'concursuri', href: '/informatii-publice/concursuri', icon: BadgeCheck },
-      // Economy
+      // Economy & Business Directory
       { id: 'economie', href: '/localitatea/economie', icon: TrendingUp },
+      { id: 'agentiEconomici', href: '/agenti-economici', icon: Store },
       // Environment
       { id: 'mediu', href: '/informatii-publice/mediu', icon: Leaf },
     ],
@@ -159,8 +179,13 @@ export const MAIN_NAVIGATION: NavItem[] = [
       { id: 'biblioteca', href: '/institutii/biblioteca', icon: BookOpen },
       { id: 'muzeu', href: '/institutii/muzeu', icon: Landmark },
       { id: 'cuibulDropiei', href: '/institutii/cuibul-dropiei', icon: Bird },
-      // Recreation
+      // Recreation & Sports
       { id: 'bazinInot', href: '/institutii/bazin-inot', icon: Waves },
+      { id: 'sport', href: '/sport', icon: Dumbbell },
+      // Events
+      { id: 'evenimente', href: '/evenimente', icon: Calendar },
+      // Volunteering
+      { id: 'voluntariat', href: '/voluntariat', icon: Heart },
       // Twin Cities & Honorary Citizens
       { id: 'oraseInfratite', href: '/localitatea/orase-infratite', icon: Globe },
       { id: 'cetateniOnoare', href: '/localitatea/cetateni-de-onoare', icon: Award },

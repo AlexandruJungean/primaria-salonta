@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { Video, ExternalLink, Play } from 'lucide-react';
 import Image from 'next/image';
@@ -11,48 +10,38 @@ import { WEBCAMS } from '@/lib/constants/webcams';
 
 function WebcamCard({ webcam, locale }: { webcam: typeof WEBCAMS[0]; locale: 'ro' | 'hu' | 'en' }) {
   const t = useTranslations('webcams');
-  const [showEmbed, setShowEmbed] = useState(false);
-  const [hasError, setHasError] = useState(false);
 
   return (
     <Card className="overflow-hidden">
-      <div className="aspect-video bg-gray-900 relative">
-        {showEmbed && !hasError ? (
-          <iframe
-            src={webcam.embedUrl}
-            title={webcam.translations[locale].title}
-            className="w-full h-full"
-            allow="autoplay; fullscreen"
-            loading="lazy"
-            onError={() => setHasError(true)}
-          />
-        ) : (
-          // Thumbnail with play button - click to load stream
-          <button
-            onClick={() => setShowEmbed(true)}
-            className="w-full h-full relative group"
-            aria-label={`${webcam.translations[locale].title} - Click to play`}
-          >
-            <Image
-              src={webcam.thumbnailUrl}
-              alt={webcam.translations[locale].title}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 50vw"
-            />
-            <div className="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors flex items-center justify-center">
-              <div className="w-16 h-16 rounded-full bg-white/90 group-hover:bg-white flex items-center justify-center transition-all group-hover:scale-110">
-                <Play className="w-8 h-8 text-primary-900 ml-1" />
-              </div>
-            </div>
-            <div className="absolute bottom-3 left-3 flex items-center gap-2 text-white text-sm font-medium">
-              <Video className="w-4 h-4" />
-              <span>LIVE</span>
-              <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-            </div>
-          </button>
-        )}
-      </div>
+      <a
+        href={webcam.streamUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="block aspect-video bg-gray-900 relative group"
+        aria-label={`${webcam.translations[locale].title} - Click to watch live`}
+      >
+        <Image
+          src={webcam.thumbnailUrl}
+          alt={webcam.translations[locale].title}
+          fill
+          className="object-cover transition-transform duration-300 group-hover:scale-105"
+          sizes="(max-width: 768px) 100vw, 50vw"
+        />
+        <div className="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors flex items-center justify-center">
+          <div className="w-16 h-16 rounded-full bg-white/90 group-hover:bg-white flex items-center justify-center transition-all group-hover:scale-110">
+            <Play className="w-8 h-8 text-primary-900 ml-1" />
+          </div>
+        </div>
+        <div className="absolute bottom-3 left-3 flex items-center gap-2 text-white text-sm font-medium">
+          <Video className="w-4 h-4" />
+          <span>LIVE</span>
+          <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+        </div>
+        <div className="absolute top-3 right-3 bg-black/60 text-white text-xs px-2 py-1 rounded flex items-center gap-1">
+          <ExternalLink className="w-3 h-3" />
+          {t('openInNewTab')}
+        </div>
+      </a>
       <CardContent className="pt-4">
         <h3 className="font-semibold text-lg text-gray-900 mb-1">
           {webcam.translations[locale].title}
@@ -66,7 +55,7 @@ function WebcamCard({ webcam, locale }: { webcam: typeof WEBCAMS[0]; locale: 'ro
           rel="noopener noreferrer"
           className="text-primary-700 font-medium text-sm hover:text-primary-900 inline-flex items-center gap-1"
         >
-          {t('vlcNote')} {t('vlcLink')}
+          {t('watchLive')}
           <ExternalLink className="w-4 h-4" />
         </a>
       </CardContent>
@@ -93,4 +82,3 @@ export function WebcamsSection() {
     </Section>
   );
 }
-
