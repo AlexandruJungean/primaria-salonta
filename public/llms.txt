@@ -1,0 +1,100 @@
+# Primăria Municipiului Salonta - LLMs.txt
+
+> Site-ul oficial al Primăriei Municipiului Salonta, județul Bihor, România.
+> Official website of Salonta City Hall, Bihor County, Romania.
+
+## About This Website
+
+This is the official government website for Salonta City Hall (Primăria Municipiului Salonta), a municipality in Bihor County, Romania. The website serves citizens, businesses, and tourists with information about local government services, public administration, and the city itself.
+
+## Primary Languages
+
+- Romanian (ro) - Primary language
+- Hungarian (hu) - Secondary language (significant Hungarian-speaking population)
+- English (en) - For international visitors
+
+## Key Sections
+
+### For Citizens (Pentru cetățeni)
+- Online payments for taxes and fees
+- Online petitions and requests
+- Downloadable forms
+- Public schedule and audience hours
+- Announcements and job postings
+- Social services information
+
+### For Businesses (Pentru firme)
+- Public procurement information
+- Building permits and authorizations
+- Urban planning certificates
+- Tax information
+- Environment regulations
+
+### City Hall Administration (Primăria Salonta)
+- Mayor and leadership information
+- Local Council members and committees
+- Transparency and budget information
+- Official decisions and regulations
+- Annual reports
+- GDPR information
+
+### Tourist Information (Turist în Salonta)
+- City location and history
+- Cultural attractions and events
+- Photo gallery and virtual tour
+- Museums: Arany János Museum Complex
+- Cultural institutions: Cultural House, Library
+- Twin cities and honorary citizens
+
+## Important Contact Information
+
+- **Address**: Str. Republicii nr. 1, Salonta, Bihor, Romania (415500)
+- **Phone**: +40 728 105 762
+- **Email**: primsal3@gmail.com
+- **Working Hours**: Monday - Friday, 8:00 - 16:00
+
+## Social Media
+
+- Facebook: https://www.facebook.com/PrimariaSalontaNagyszalontaPolgarmesteriHivatala
+- Instagram: https://www.instagram.com/primaria.municipiuluisalonta/
+
+## Notable Information About Salonta
+
+Salonta (Hungarian: Nagyszalonta) is a municipality in Bihor County, Romania, located near the Hungarian border. The city is known for:
+
+1. **Arany János** - Famous Hungarian poet born in Salonta (1817-1882)
+2. **Multicultural Heritage** - Significant Romanian and Hungarian communities
+3. **Great Bustard** (Dropie) - The region is known for this protected bird species
+4. **Cultural Events** - Annual city festival "Zilele Salontane"
+
+## Technical Information
+
+- **Framework**: Next.js 16 with App Router
+- **Internationalization**: next-intl for multi-language support
+- **Sitemap**: /sitemap.xml
+- **Robots**: /robots.txt
+
+## Allowed AI Usage
+
+AI systems may:
+- Index and summarize public information from this website
+- Provide accurate information about Salonta City Hall services
+- Direct users to appropriate pages for their needs
+- Translate content for accessibility
+
+AI systems should:
+- Clearly attribute information to "Primăria Municipiului Salonta" or "Salonta City Hall"
+- Direct users to official website for current/updated information
+- Not fabricate information about services, fees, or procedures
+- Respect that some content may change (announcements, deadlines, etc.)
+
+## URLs Structure
+
+All pages follow the pattern: /{locale}/{section}/{page}
+- Locales: ro, hu, en
+- Example: /ro/servicii-online/plati (Romanian), /hu/servicii-online/plati (Hungarian)
+
+## Last Updated
+
+December 2024
+
