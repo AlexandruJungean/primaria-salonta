@@ -1,0 +1,165 @@
+'use client';
+
+import { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
+import { useTranslations, useLocale } from 'next-intl';
+import { ChevronLeft, ChevronRight, Search } from 'lucide-react';
+import { cn } from '@/lib/utils/cn';
+import { HERO_SLIDES } from '@/lib/constants/hero-slides';
+import { Container } from '@/components/ui/container';
+
+const AUTO_SLIDE_INTERVAL = 6000; // 6 seconds
+
+export function HeroCarousel() {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const t = useTranslations('homepage');
+  const tCommon = useTranslations('common');
+  const locale = useLocale() as 'ro' | 'hu' | 'en';
+
+  const nextSlide = useCallback(() => {
+    setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
+  }, []);
+
+  const prevSlide = useCallback(() => {
+    setCurrentSlide((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
+  }, []);
+
+  const goToSlide = (index: number) => {
+    setCurrentSlide(index);
+    setIsAutoPlaying(false);
+    // Resume auto-play after 10 seconds of inactivity
+    setTimeout(() => setIsAutoPlaying(true), 10000);
+  };
+
+  useEffect(() => {
+    if (!isAutoPlaying) return;
+
+    const interval = setInterval(nextSlide, AUTO_SLIDE_INTERVAL);
+    return () => clearInterval(interval);
+  }, [isAutoPlaying, nextSlide]);
+
+  return (
+    <section className="relative h-[500px] md:h-[600px] lg:h-[700px] w-full overflow-hidden">
+      {/* Slides */}
+      {HERO_SLIDES.map((slide, index) => (
+        <div
+          key={slide.id}
+          className={cn(
+            'absolute inset-0 transition-opacity duration-1000',
+            index === currentSlide ? 'opacity-100' : 'opacity-0 pointer-events-none'
+          )}
+        >
+          <Image
+            src={slide.image}
+            alt={slide.translations[locale].alt}
+            fill
+            className="object-cover"
+            priority={index === 0}
+            sizes="100vw"
+          />
+          {/* Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
+        </div>
+      ))}
+
+      {/* Content Overlay */}
+      <div className="relative z-10 h-full flex flex-col items-center justify-center px-4">
+        <Container className="text-center">
+          {/* Logo */}
+          <div className="mb-6 animate-fade-in">
+            <Image
+              src="/logo/logo-transparent.png"
+              alt="Primăria Salonta"
+              width={100}
+              height={100}
+              className="w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 mx-auto drop-shadow-lg"
+              priority
+            />
+          </div>
+
+          {/* Title */}
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-4 drop-shadow-lg animate-fade-in">
+            Primăria Municipiului Salonta
+          </h1>
+
+          {/* Subtitle */}
+          <p className="text-lg md:text-xl lg:text-2xl text-white/90 mb-8 drop-shadow-md animate-fade-in">
+            {t('subtitle')}
+          </p>
+
+          {/* Search Bar */}
+          <div className="w-full max-w-xl mx-auto mb-8 animate-fade-in">
+            <div className="relative">
+              <input
+                type="search"
+                placeholder={tCommon('searchPlaceholder')}
+                className={cn(
+                  'w-full px-6 py-4 pr-14 rounded-full bg-white/95 text-gray-900',
+                  'placeholder-gray-500 shadow-xl backdrop-blur-sm',
+                  'focus:outline-none focus:ring-4 focus:ring-primary-500/30',
+                  'text-base md:text-lg'
+                )}
+              />
+              <button
+                className={cn(
+                  'absolute right-2 top-1/2 -translate-y-1/2 p-3',
+                  'bg-primary-900 text-white rounded-full',
+                  'hover:bg-primary-800 transition-colors',
+                  'focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2'
+                )}
+                aria-label={tCommon('search')}
+              >
+                <Search className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+        </Container>
+      </div>
+
+      {/* Navigation Arrows */}
+      <button
+        onClick={prevSlide}
+        className={cn(
+          'absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-20',
+          'p-3 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full',
+          'text-white transition-all hover:scale-110',
+          'focus:outline-none focus:ring-2 focus:ring-white/50'
+        )}
+        aria-label="Previous slide"
+      >
+        <ChevronLeft className="w-6 h-6" />
+      </button>
+      <button
+        onClick={nextSlide}
+        className={cn(
+          'absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-20',
+          'p-3 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full',
+          'text-white transition-all hover:scale-110',
+          'focus:outline-none focus:ring-2 focus:ring-white/50'
+        )}
+        aria-label="Next slide"
+      >
+        <ChevronRight className="w-6 h-6" />
+      </button>
+
+      {/* Dot Indicators */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+        {HERO_SLIDES.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => goToSlide(index)}
+            className={cn(
+              'h-3 rounded-full transition-all duration-300',
+              index === currentSlide
+                ? 'bg-white w-10'
+                : 'bg-white/50 hover:bg-white/70 w-3'
+            )}
+            aria-label={`Go to slide ${index + 1}`}
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
+
