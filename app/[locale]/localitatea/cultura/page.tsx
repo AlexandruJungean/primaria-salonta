@@ -17,13 +17,13 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
 const CULTURAL_PLACES = [
   {
-    id: 'casa-cultura',
+    id: 'casaCultura',
     image: '/images/casa-de-cultura-salonta-1.jpg',
     href: '/institutii/casa-cultura',
   },
   {
     id: 'biblioteca',
-    image: '/images/primaria-salonta-1.jpg',
+    image: '/images/colegiul-national-teodor-nes-salonta-1.jpg',
     href: '/institutii/biblioteca',
   },
   {
@@ -64,14 +64,14 @@ export default function CulturaPage() {
                   <CardImage>
                     <Image
                       src={place.image}
-                      alt={t(place.id.replace('-', ''))}
+                      alt={t(place.id)}
                       fill
                       className="object-cover"
                     />
                   </CardImage>
                   <CardContent className="pt-4">
                     <h3 className="font-semibold text-lg text-gray-900">
-                      {t(place.id === 'casa-cultura' ? 'casaCultura' : place.id)}
+                      {t(place.id)}
                     </h3>
                   </CardContent>
                 </Card>

@@ -18,14 +18,14 @@ const GALLERY_IMAGES = [
   { src: '/images/primaria-salonta-2.jpg', alt: 'Primăria Salonta' },
   { src: '/images/muzeu-salonta.jpg', alt: 'Complexul Muzeal Arany János' },
   { src: '/images/casa-de-cultura-salonta-1.jpg', alt: 'Casa de Cultură' },
+  { src: '/images/casa-memoriala-salonta-1.jpg', alt: 'Casa Memorială' },
   { src: '/images/parc-salonta-1.jpg', alt: 'Parc Salonta' },
   { src: '/images/parc-salonta-2.jpg', alt: 'Parc Salonta' },
-  { src: '/images/parc-salonta-3.jpg', alt: 'Parc Salonta' },
   { src: '/images/bazin-de-inot-salonta-1.jpeg', alt: 'Bazin de Înot' },
-  { src: '/images/bazin-de-inot-salonta-2.jpeg', alt: 'Bazin de Înot' },
-  { src: '/images/Salonta_Biserica_ortodoxa.jpg', alt: 'Biserica Ortodoxă' },
-  { src: '/images/Salonta_Biserica_reformata.jpg', alt: 'Biserica Reformată' },
-  { src: '/images/Salonta_Biserica_romano-catolica.jpg', alt: 'Biserica Romano-Catolică' },
+  { src: '/images/aquapark-salonta-1.jpg', alt: 'Aquapark Salonta' },
+  { src: '/images/biserica-salonta-3.jpg', alt: 'Biserica Salonta' },
+  { src: '/images/liceul-arany-janos-salonta-1.jpg', alt: 'Liceul Arany János' },
+  { src: '/images/cladire-dropii-salonta-2.jpg', alt: 'Cuibul Dropiei' },
 ];
 
 export default function GaleriePage() {
