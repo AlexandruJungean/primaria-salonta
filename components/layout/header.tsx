@@ -1,9 +1,7 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
 import { Link } from '@/components/ui/link';
 import Image from 'next/image';
-import { Search } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { MegaMenu } from './mega-menu';
 import { MobileNav } from './mobile-nav';
@@ -12,7 +10,6 @@ import { cn } from '@/lib/utils/cn';
 import { useState, useEffect } from 'react';
 
 export function Header() {
-  const t = useTranslations('common');
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -99,14 +96,6 @@ export function Header() {
 
           {/* Right Side Actions */}
           <div className="flex items-center gap-2">
-            {/* Search Button */}
-            <button
-              className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
-              aria-label={t('search')}
-            >
-              <Search className="w-5 h-5" />
-            </button>
-
             {/* Language Switcher - Mobile Only (desktop has it in top bar) */}
             <div className="lg:hidden">
               <LanguageSwitcher />
