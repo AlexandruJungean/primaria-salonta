@@ -4,7 +4,7 @@ import { useLocale } from 'next-intl';
 import { usePathname, useRouter } from '@/i18n/navigation';
 import { cn } from '@/lib/utils/cn';
 import { ChevronDown } from 'lucide-react';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 
 // SVG Flag components for proper rendering on Windows
 function RomaniaFlag({ className }: { className?: string }) {
@@ -58,6 +58,8 @@ export function LanguageSwitcher({ variant = 'default' }: LanguageSwitcherProps)
   const router = useRouter();
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, right: 0 });
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const currentLanguage = LANGUAGES.find((lang) => lang.code === locale) || LANGUAGES[0];
@@ -67,10 +69,32 @@ export function LanguageSwitcher({ variant = 'default' }: LanguageSwitcherProps)
     setIsOpen(false);
   };
 
+  const updateDropdownPosition = useCallback(() => {
+    if (buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      setDropdownPosition({
+        top: rect.bottom + 8,
+        right: window.innerWidth - rect.right,
+      });
+    }
+  }, []);
+
+  // Update position when opening
+  useEffect(() => {
+    if (isOpen) {
+      updateDropdownPosition();
+    }
+  }, [isOpen, updateDropdownPosition]);
+
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current && 
+        buttonRef.current &&
+        !dropdownRef.current.contains(event.target as Node) &&
+        !buttonRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
@@ -83,8 +107,9 @@ export function LanguageSwitcher({ variant = 'default' }: LanguageSwitcherProps)
 
   if (variant === 'topbar') {
     return (
-      <div ref={dropdownRef} className="relative">
+      <>
         <button
+          ref={buttonRef}
           onClick={() => setIsOpen(!isOpen)}
           className={cn(
             'flex items-center gap-2 text-sm font-medium transition-colors',
@@ -99,7 +124,11 @@ export function LanguageSwitcher({ variant = 'default' }: LanguageSwitcherProps)
         </button>
 
         {isOpen && (
-          <div className="absolute right-0 top-full mt-2 w-44 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-[9999] animate-in fade-in slide-in-from-top-2 duration-200">
+          <div 
+            ref={dropdownRef}
+            className="fixed w-44 bg-white rounded-lg shadow-xl border border-gray-200 py-1 z-[9999] animate-in fade-in slide-in-from-top-2 duration-200"
+            style={{ top: dropdownPosition.top, right: dropdownPosition.right }}
+          >
             {LANGUAGES.map((language) => {
               const LangFlag = language.Flag;
               return (
@@ -120,13 +149,14 @@ export function LanguageSwitcher({ variant = 'default' }: LanguageSwitcherProps)
             })}
           </div>
         )}
-      </div>
+      </>
     );
   }
 
   return (
-    <div ref={dropdownRef} className="relative">
+    <>
       <button
+        ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
           'flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors',
@@ -140,7 +170,11 @@ export function LanguageSwitcher({ variant = 'default' }: LanguageSwitcherProps)
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 top-full mt-2 w-44 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-[9999] animate-in fade-in slide-in-from-top-2 duration-200">
+        <div 
+          ref={dropdownRef}
+          className="fixed w-44 bg-white rounded-lg shadow-xl border border-gray-200 py-1 z-[9999] animate-in fade-in slide-in-from-top-2 duration-200"
+          style={{ top: dropdownPosition.top, right: dropdownPosition.right }}
+        >
           {LANGUAGES.map((language) => {
             const LangFlag = language.Flag;
             return (
@@ -161,7 +195,7 @@ export function LanguageSwitcher({ variant = 'default' }: LanguageSwitcherProps)
           })}
         </div>
       )}
-    </div>
+    </>
   );
 }
 

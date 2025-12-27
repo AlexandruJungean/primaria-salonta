@@ -24,22 +24,22 @@ export function Header() {
   return (
     <header
       className={cn(
-        'sticky top-0 z-40 w-full transition-all duration-300 overflow-x-hidden',
+        'sticky top-0 z-40 w-full transition-all duration-300',
         isScrolled
           ? 'bg-white/95 backdrop-blur-md shadow-sm'
           : 'bg-white'
       )}
     >
       {/* Top Bar */}
-      <div className="hidden lg:block bg-primary-900 text-white py-2">
-        <Container>
+      <div className="hidden lg:block bg-primary-900 text-white py-2 overflow-visible">
+        <Container className="overflow-visible">
           <div className="flex items-center justify-between text-sm">
             <div className="flex items-center gap-6">
               <span>📍 Str. Republicii nr. 1, Salonta, Bihor</span>
               <span>📞 +40 728 105 762</span>
               <span>✉️ primsal3@gmail.com</span>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 overflow-visible">
               <a
                 href="https://www.facebook.com/PrimariaSalontaNagyszalontaPolgarmesteriHivatala"
                 target="_blank"
@@ -58,7 +58,7 @@ export function Header() {
               >
                 Instagram
               </a>
-              <div className="border-l border-white/30 pl-4">
+              <div className="border-l border-white/30 pl-4 overflow-visible">
                 <LanguageSwitcher variant="topbar" />
               </div>
             </div>
