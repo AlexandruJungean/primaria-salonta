@@ -99,7 +99,7 @@ export function LanguageSwitcher({ variant = 'default' }: LanguageSwitcherProps)
         </button>
 
         {isOpen && (
-          <div className="absolute right-0 top-full mt-2 w-44 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="absolute right-0 top-full mt-2 w-44 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-[9999] animate-in fade-in slide-in-from-top-2 duration-200">
             {LANGUAGES.map((language) => {
               const LangFlag = language.Flag;
               return (
@@ -140,7 +140,7 @@ export function LanguageSwitcher({ variant = 'default' }: LanguageSwitcherProps)
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 top-full mt-2 w-44 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="absolute right-0 top-full mt-2 w-44 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-[9999] animate-in fade-in slide-in-from-top-2 duration-200">
           {LANGUAGES.map((language) => {
             const LangFlag = language.Flag;
             return (
