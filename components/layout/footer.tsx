@@ -194,19 +194,22 @@ export function Footer() {
       {/* Bottom Bar */}
       <div className="border-t border-white/10">
         <Container>
-          <div className="py-6 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-primary-200">
-            <p>{t('copyright', { year: currentYear })}</p>
-            <div className="flex items-center gap-6">
-              <Link href="/politica-confidentialitate" className="hover:text-white transition-colors">
+          <div className="py-6 flex flex-col items-center gap-4 text-sm text-primary-200">
+            <p className="text-center">{t('copyright', { year: currentYear })}</p>
+            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+              <Link href="/politica-confidentialitate" className="hover:text-white transition-colors whitespace-nowrap">
                 {t('privacyPolicy')}
               </Link>
-              <Link href="/politica-cookies" className="hover:text-white transition-colors">
+              <span className="hidden sm:inline text-white/30">|</span>
+              <Link href="/politica-cookies" className="hover:text-white transition-colors whitespace-nowrap">
                 {t('cookiePolicy')}
               </Link>
-              <Link href="/accesibilitate" className="hover:text-white transition-colors">
+              <span className="hidden sm:inline text-white/30">|</span>
+              <Link href="/accesibilitate" className="hover:text-white transition-colors whitespace-nowrap">
                 {t('accessibility')}
               </Link>
-              <Link href="/sitemap" className="hover:text-white transition-colors">
+              <span className="hidden sm:inline text-white/30">|</span>
+              <Link href="/sitemap" className="hover:text-white transition-colors whitespace-nowrap">
                 {t('sitemap')}
               </Link>
             </div>

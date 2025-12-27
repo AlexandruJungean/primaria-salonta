@@ -83,15 +83,19 @@ export function MobileNav() {
       </button>
 
       {/* Mobile Menu Overlay */}
-      {isOpen && (
-        <div className="fixed inset-0 z-50 bg-black/50" onClick={() => setIsOpen(false)} />
-      )}
+      <div 
+        className={cn(
+          'fixed inset-0 z-50 bg-black/50 transition-opacity duration-300',
+          isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        )} 
+        onClick={() => setIsOpen(false)} 
+      />
 
       {/* Mobile Menu Panel */}
       <div
         className={cn(
           'fixed top-0 right-0 z-50 h-full w-full max-w-sm bg-white shadow-xl transition-transform duration-300 ease-in-out',
-          isOpen ? 'translate-x-0' : 'translate-x-full'
+          isOpen ? 'translate-x-0' : 'translate-x-full pointer-events-none'
         )}
       >
         {/* Header */}

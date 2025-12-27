@@ -104,18 +104,19 @@ export function AccessibilityToolbar() {
       </button>
 
       {/* Overlay */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 z-50 bg-black/50"
-          onClick={() => setIsOpen(false)}
-        />
-      )}
+      <div
+        className={cn(
+          'fixed inset-0 z-50 bg-black/50 transition-opacity duration-300',
+          isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        )}
+        onClick={() => setIsOpen(false)}
+      />
 
       {/* Toolbar Panel */}
       <div
         className={cn(
           'fixed left-0 top-0 z-50 h-full w-80 bg-white shadow-2xl overflow-y-auto transition-transform duration-300',
-          isOpen ? 'translate-x-0' : '-translate-x-full'
+          isOpen ? 'translate-x-0' : '-translate-x-full pointer-events-none'
         )}
       >
         <div className="p-4 border-b border-gray-200 flex items-center justify-between bg-primary-900 text-white">
