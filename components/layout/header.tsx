@@ -27,7 +27,7 @@ export function Header() {
   return (
     <header
       className={cn(
-        'sticky top-0 z-40 w-full transition-all duration-300',
+        'sticky top-0 z-40 w-full transition-all duration-300 overflow-x-hidden',
         isScrolled
           ? 'bg-white/95 backdrop-blur-md shadow-sm'
           : 'bg-white'
@@ -92,8 +92,10 @@ export function Header() {
             </div>
           </Link>
 
-          {/* Desktop Navigation */}
-          <MegaMenu />
+          {/* Desktop Navigation - hidden on mobile */}
+          <div className="hidden lg:block">
+            <MegaMenu />
+          </div>
 
           {/* Right Side Actions */}
           <div className="flex items-center gap-2">

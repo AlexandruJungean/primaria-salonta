@@ -41,7 +41,7 @@ export function MegaMenu() {
   };
 
   return (
-    <nav className="hidden lg:flex items-center">
+    <nav className="flex items-center">
       {/* Main Navigation - 4 user-centric categories */}
       {MAIN_NAVIGATION.map((item) => {
         const hasChildren = item.children && item.children.length > 0;

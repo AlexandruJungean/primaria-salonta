@@ -187,7 +187,7 @@ export default async function LocaleLayout({
       <head>
         <OrganizationJsonLd />
       </head>
-      <body className={`${openSans.variable} ${sourceSerif.variable} antialiased min-h-screen flex flex-col overflow-x-hidden`}>
+      <body className={`${openSans.variable} ${sourceSerif.variable} antialiased min-h-screen flex flex-col`}>
         <NextIntlClientProvider messages={messages}>
           {/* Skip to Content Link */}
           <a href="#main-content" className="skip-to-content">

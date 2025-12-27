@@ -56,7 +56,7 @@ export const HERO_SLIDES: HeroSlide[] = [
   },
   {
     id: 'biserica',
-    image: '/images/Salonta_Biserica_ortodoxa.jpg',
+    image: '/images/biserica-salonta-3.jpg',
     translations: {
       ro: { alt: 'Biserica Ortodoxă Salonta' },
       hu: { alt: 'Nagyszalontai Ortodox Templom' },
