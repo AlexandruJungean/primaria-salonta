@@ -43,6 +43,7 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "@supabase/supabase-js": "^2.x",
+    "@google-cloud/translate": "^8.x",
     "next-intl": "^3.x",
     "@react-google-maps/api": "^2.x",
     "lucide-react": "^0.x",
@@ -247,6 +248,9 @@ SUPABASE_SERVICE_ROLE_KEY=eyJxxx...
 
 # Google Maps
 NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=AIzaxxx...
+
+# Google Cloud Translation API
+GOOGLE_TRANSLATE_API_KEY=AIzaxxx...
 
 # App Configuration
 NEXT_PUBLIC_SITE_URL=https://salonta.ro
@@ -462,6 +466,232 @@ CREATE TABLE page_translations (
   meta_title TEXT,
   meta_description TEXT,
   UNIQUE(page_id, locale)
+);
+
+-- ============================================
+-- ADDITIONAL TABLES FOR ADMIN DASHBOARD
+-- ============================================
+
+-- News/Articles with auto-translation
+CREATE TABLE news (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  slug TEXT UNIQUE NOT NULL,
+  category TEXT NOT NULL CHECK (category IN ('anunturi', 'consiliu', 'proiecte', 'stiri')),
+  image_url TEXT,
+  published BOOLEAN DEFAULT false,
+  published_at TIMESTAMPTZ,
+  expires_at TIMESTAMPTZ,
+  -- Romanian (primary)
+  title_ro TEXT NOT NULL,
+  excerpt_ro TEXT,
+  content_ro TEXT,
+  -- Hungarian (auto-translated)
+  title_hu TEXT,
+  excerpt_hu TEXT,
+  content_hu TEXT,
+  -- English (auto-translated)
+  title_en TEXT,
+  excerpt_en TEXT,
+  content_en TEXT,
+  translation_status TEXT DEFAULT 'pending',
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Council Decisions (HCL) - Romanian only
+CREATE TABLE council_decisions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  decision_number TEXT NOT NULL,
+  decision_date DATE NOT NULL,
+  year INTEGER NOT NULL,
+  title TEXT NOT NULL,
+  summary TEXT,
+  decision_pdf_url TEXT,
+  minutes_pdf_url TEXT,
+  published BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  UNIQUE(decision_number, year)
+);
+
+-- Mayor's Dispositions - Romanian only
+CREATE TABLE dispositions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  disposition_number TEXT NOT NULL,
+  disposition_date DATE NOT NULL,
+  year INTEGER NOT NULL,
+  title TEXT NOT NULL,
+  pdf_url TEXT,
+  published BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  UNIQUE(disposition_number, year)
+);
+
+-- Regulations - Romanian only
+CREATE TABLE regulations (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title TEXT NOT NULL,
+  category TEXT NOT NULL,
+  description TEXT,
+  pdf_url TEXT NOT NULL,
+  effective_date DATE,
+  published BOOLEAN DEFAULT true,
+  sort_order INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Council Meeting Minutes - Romanian only
+CREATE TABLE council_minutes (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  session_date DATE NOT NULL,
+  session_type TEXT NOT NULL CHECK (session_type IN ('ordinara', 'extraordinara')),
+  title TEXT NOT NULL,
+  pdf_url TEXT,
+  published BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Budget Documents - Romanian only
+CREATE TABLE budget_documents (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  year INTEGER NOT NULL,
+  document_type TEXT NOT NULL CHECK (document_type IN ('buget', 'executie', 'rectificare', 'cont_executie')),
+  quarter INTEGER, -- For quarterly reports
+  title TEXT NOT NULL,
+  pdf_url TEXT NOT NULL,
+  published BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Job Vacancies/Competitions - Auto-translated
+CREATE TABLE job_vacancies (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  department TEXT NOT NULL,
+  deadline DATE NOT NULL,
+  status TEXT DEFAULT 'activ' CHECK (status IN ('activ', 'inchis', 'anulat')),
+  -- Romanian (primary)
+  title_ro TEXT NOT NULL,
+  requirements_ro TEXT,
+  description_ro TEXT,
+  -- Hungarian (auto-translated)
+  title_hu TEXT,
+  requirements_hu TEXT,
+  description_hu TEXT,
+  -- English (auto-translated)
+  title_en TEXT,
+  requirements_en TEXT,
+  description_en TEXT,
+  announcement_pdf_url TEXT,
+  results_pdf_url TEXT,
+  published BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Wealth Declarations - Romanian only
+CREATE TABLE wealth_declarations (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  person_name TEXT NOT NULL,
+  position TEXT NOT NULL,
+  year INTEGER NOT NULL,
+  declaration_type TEXT NOT NULL CHECK (declaration_type IN ('avere', 'interese')),
+  pdf_url TEXT NOT NULL,
+  published BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Building Permits - Romanian only
+CREATE TABLE building_permits (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  permit_number TEXT NOT NULL,
+  issue_date DATE NOT NULL,
+  year INTEGER NOT NULL,
+  address TEXT NOT NULL,
+  owner TEXT,
+  project_description TEXT,
+  pdf_url TEXT,
+  published BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Urbanism Certificates - Romanian only
+CREATE TABLE urbanism_certificates (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  certificate_number TEXT NOT NULL,
+  issue_date DATE NOT NULL,
+  year INTEGER NOT NULL,
+  address TEXT NOT NULL,
+  purpose TEXT,
+  pdf_url TEXT,
+  published BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Urban Plans (PUZ/PUD/PUG) - Romanian only
+CREATE TABLE urban_plans (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  plan_type TEXT NOT NULL CHECK (plan_type IN ('PUG', 'PUZ', 'PUD')),
+  title TEXT NOT NULL,
+  location TEXT,
+  status TEXT DEFAULT 'in_lucru' CHECK (status IN ('in_lucru', 'aprobat', 'respins')),
+  approval_decision TEXT, -- HCL reference
+  pdf_url TEXT,
+  published BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Public Acquisitions - Romanian only
+CREATE TABLE public_acquisitions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  acquisition_type TEXT NOT NULL CHECK (acquisition_type IN ('achizitie_directa', 'licitatie', 'cerere_oferte')),
+  title TEXT NOT NULL,
+  description TEXT,
+  estimated_value DECIMAL(15,2),
+  deadline DATE,
+  status TEXT DEFAULT 'activ' CHECK (status IN ('activ', 'inchis', 'anulat', 'atribuit')),
+  documentation_pdf_url TEXT,
+  result_pdf_url TEXT,
+  published BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Downloadable Forms - Romanian only
+CREATE TABLE downloadable_forms (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  category TEXT NOT NULL,
+  title TEXT NOT NULL,
+  description TEXT,
+  pdf_url TEXT NOT NULL,
+  sort_order INTEGER DEFAULT 0,
+  published BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Transparency Reports - Romanian only
+CREATE TABLE transparency_reports (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  report_type TEXT NOT NULL CHECK (report_type IN ('raport_anual', 'dezbatere_publica', 'buletin_informativ')),
+  year INTEGER NOT NULL,
+  title TEXT NOT NULL,
+  description TEXT,
+  pdf_url TEXT,
+  published BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- COVID Updates (archived) - Auto-translated
+CREATE TABLE covid_updates (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  update_date DATE NOT NULL,
+  -- Romanian (primary)
+  title_ro TEXT NOT NULL,
+  content_ro TEXT NOT NULL,
+  -- Hungarian (auto-translated)
+  title_hu TEXT,
+  content_hu TEXT,
+  -- English (auto-translated)
+  title_en TEXT,
+  content_en TEXT,
+  published BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT now()
 );
 ```
 
@@ -851,7 +1081,215 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
 ## 6. API Integrations & Components
 
-### 6.0 Hero Carousel Component
+### 6.0 Google Cloud Translation API Integration
+
+The website uses Google Cloud Translation API to automatically translate dynamic content (news, events, announcements) from Romanian to Hungarian and English. This allows admins to write content in a single language while serving a multilingual website.
+
+#### 6.0.1 Translation Service
+
+```typescript
+// lib/services/translation.ts
+import { Translate } from '@google-cloud/translate/build/src/v2';
+
+const translate = new Translate({
+  key: process.env.GOOGLE_TRANSLATE_API_KEY,
+});
+
+export type SupportedLocale = 'ro' | 'hu' | 'en';
+
+interface TranslationResult {
+  ro: string;
+  hu: string;
+  en: string;
+}
+
+/**
+ * Translates text from Romanian to all supported languages
+ * @param text - Original Romanian text
+ * @returns Object with translations for all locales
+ */
+export async function translateText(text: string): Promise<TranslationResult> {
+  if (!text || text.trim() === '') {
+    return { ro: text, hu: text, en: text };
+  }
+
+  try {
+    const [huTranslation] = await translate.translate(text, { from: 'ro', to: 'hu' });
+    const [enTranslation] = await translate.translate(text, { from: 'ro', to: 'en' });
+
+    return {
+      ro: text,
+      hu: huTranslation,
+      en: enTranslation,
+    };
+  } catch (error) {
+    console.error('Translation error:', error);
+    // Fallback to original text if translation fails
+    return { ro: text, hu: text, en: text };
+  }
+}
+
+/**
+ * Batch translate multiple fields
+ * @param fields - Object with field names and Romanian values
+ * @returns Object with translated fields for all locales
+ */
+export async function translateFields(
+  fields: Record<string, string>
+): Promise<Record<string, TranslationResult>> {
+  const results: Record<string, TranslationResult> = {};
+  
+  await Promise.all(
+    Object.entries(fields).map(async ([key, value]) => {
+      results[key] = await translateText(value);
+    })
+  );
+
+  return results;
+}
+```
+
+#### 6.0.2 Translation Hook for Admin Dashboard
+
+```typescript
+// hooks/use-translation.ts
+'use client';
+
+import { useState } from 'react';
+
+interface UseTranslationOptions {
+  onSuccess?: (translations: Record<string, any>) => void;
+  onError?: (error: Error) => void;
+}
+
+export function useTranslation(options?: UseTranslationOptions) {
+  const [isTranslating, setIsTranslating] = useState(false);
+
+  const translateContent = async (content: Record<string, string>) => {
+    setIsTranslating(true);
+    try {
+      const response = await fetch('/api/translate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content }),
+      });
+
+      if (!response.ok) throw new Error('Translation failed');
+
+      const translations = await response.json();
+      options?.onSuccess?.(translations);
+      return translations;
+    } catch (error) {
+      options?.onError?.(error as Error);
+      throw error;
+    } finally {
+      setIsTranslating(false);
+    }
+  };
+
+  return { translateContent, isTranslating };
+}
+```
+
+#### 6.0.3 Translation API Route
+
+```typescript
+// app/api/translate/route.ts
+import { NextRequest, NextResponse } from 'next/server';
+import { translateFields } from '@/lib/services/translation';
+
+export async function POST(request: NextRequest) {
+  try {
+    const { content } = await request.json();
+
+    if (!content || typeof content !== 'object') {
+      return NextResponse.json(
+        { error: 'Invalid content format' },
+        { status: 400 }
+      );
+    }
+
+    const translations = await translateFields(content);
+    return NextResponse.json(translations);
+  } catch (error) {
+    console.error('Translation API error:', error);
+    return NextResponse.json(
+      { error: 'Translation failed' },
+      { status: 500 }
+    );
+  }
+}
+```
+
+#### 6.0.4 Database Schema for Translated Content
+
+```sql
+-- Example: Articles with auto-translation support
+CREATE TABLE articles (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  slug TEXT UNIQUE NOT NULL,
+  category TEXT NOT NULL,
+  image_url TEXT,
+  published BOOLEAN DEFAULT false,
+  published_at TIMESTAMPTZ,
+  -- Original Romanian content (primary)
+  title_ro TEXT NOT NULL,
+  excerpt_ro TEXT,
+  content_ro TEXT,
+  -- Auto-translated Hungarian
+  title_hu TEXT,
+  excerpt_hu TEXT,
+  content_hu TEXT,
+  -- Auto-translated English
+  title_en TEXT,
+  excerpt_en TEXT,
+  content_en TEXT,
+  -- Translation metadata
+  translation_status TEXT DEFAULT 'pending' CHECK (translation_status IN ('pending', 'completed', 'failed', 'manual')),
+  translated_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Trigger to auto-translate on insert/update
+CREATE OR REPLACE FUNCTION trigger_translate_article()
+RETURNS TRIGGER AS $$
+BEGIN
+  -- Mark for translation if Romanian content changed
+  IF NEW.title_ro IS DISTINCT FROM OLD.title_ro 
+     OR NEW.excerpt_ro IS DISTINCT FROM OLD.excerpt_ro 
+     OR NEW.content_ro IS DISTINCT FROM OLD.content_ro THEN
+    NEW.translation_status := 'pending';
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER article_translation_trigger
+BEFORE UPDATE ON articles
+FOR EACH ROW
+EXECUTE FUNCTION trigger_translate_article();
+```
+
+#### 6.0.5 Content Categories and Translation Rules
+
+| Category | Auto-Translate | Notes |
+|----------|----------------|-------|
+| News/Articles | ✅ Yes | Title, excerpt, content |
+| Events | ✅ Yes | Title, description, location names |
+| Announcements | ✅ Yes | Title, content |
+| Job Vacancies | ✅ Yes | Title, requirements, description |
+| Gallery | ✅ Yes | Titles, captions, alt text |
+| COVID Updates | ✅ Yes | Title, content |
+| HCL (Council Decisions) | ❌ No | Legal documents - Romanian only |
+| Dispositions | ❌ No | Legal documents - Romanian only |
+| Budget Documents | ❌ No | Financial documents - Romanian only |
+| Regulations | ❌ No | Legal documents - Romanian only |
+| Building Permits | ❌ No | Legal documents - Romanian only |
+| Urban Plans | ❌ No | Technical documents - Romanian only |
+| Wealth Declarations | ❌ No | Legal documents - Romanian only |
+
+### 6.1 Hero Carousel Component
 
 ```typescript
 // components/sections/hero-carousel.tsx
@@ -2248,6 +2686,7 @@ module.exports = {
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | ✅ | Supabase anonymous key |
 | `SUPABASE_SERVICE_ROLE_KEY` | ✅ | Supabase service role key (server-side only) |
 | `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` | ✅ | Google Maps API key |
+| `GOOGLE_TRANSLATE_API_KEY` | ✅ | Google Cloud Translation API key (server-side only) |
 | `NEXT_PUBLIC_SITE_URL` | ✅ | Production website URL |
 | `SMTP_HOST` | ⚡ | Email server host |
 | `SMTP_PORT` | ⚡ | Email server port |
@@ -2270,12 +2709,35 @@ npm run start        # Start production server
 npm run lint         # Run ESLint
 npm run type-check   # Run TypeScript check
 
+# Dependencies
+npm install @google-cloud/translate  # Google Cloud Translation API
+
 # Supabase
 npx supabase login   # Login to Supabase
 npx supabase init    # Initialize Supabase
 npx supabase db push # Push schema changes
 npx supabase gen types typescript --linked > types/database.ts
 ```
+
+### C. Google Cloud Translation API Setup
+
+1. **Enable the API:**
+   - Go to Google Cloud Console
+   - Enable "Cloud Translation API"
+   - Create API credentials (API Key)
+
+2. **Set Environment Variable:**
+   ```bash
+   GOOGLE_TRANSLATE_API_KEY=your_api_key_here
+   ```
+
+3. **Usage Limits (Free Tier):**
+   - 500,000 characters/month free
+   - Estimated usage: ~50,000 chars/month for typical content updates
+
+4. **Cost Estimation (Beyond Free Tier):**
+   - $20 per million characters
+   - Typical article (1000 chars) = $0.02 to translate to 2 languages
 
 ---
 
