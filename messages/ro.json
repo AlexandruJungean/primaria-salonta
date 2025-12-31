@@ -123,7 +123,8 @@
     "sport": "Sport și agrement (În curând)",
     "voluntariat": "Voluntariat (În curând)",
     "agentiEconomici": "Agenți economici (În curând)",
-    "problemeSociale": "Probleme sociale – formulare"
+    "problemeSociale": "Probleme sociale – formulare",
+    "coronavirus": "Informații coronavirus"
   },
   "homepage": {
     "welcome": "Bine ați venit",
@@ -597,8 +598,19 @@
     "newsAndEvents": "Știri și evenimente",
     "socialProblemsTitle": "Probleme sociale – formulare",
     "covidInfoTitle": "Informații utile privind coronavirus",
+    "covidLinkTitle": "Informații utile privind coronavirus (COVID-19)",
     "registersTitle": "Registre",
     "archiveMandateTitle": "Arhivă validare mandate (2020-2024)"
+  },
+  "coronavirusPage": {
+    "title": "Informații utile privind coronavirus (COVID-19)",
+    "description": "Hotărâri și recomandări privind coronavirus COVID-19 în Municipiul Salonta",
+    "archiveTitle": "Arhivă informații COVID-19",
+    "archiveText": "Această pagină conține informații arhivate din perioada stării de urgență cauzată de pandemia COVID-19 (2020). Informațiile sunt păstrate în scop documentar.",
+    "documentsTitle": "Documente și formulare",
+    "updatesTitle": "Actualizări și anunțuri",
+    "moreInfo": "Pentru informații actualizate privind serviciile Primăriei Salonta, vă rugăm să consultați pagina de Contact sau să ne sunați la numerele de telefon afișate.",
+    "contactLink": "Contactați-ne"
   },
   "problemeSocialePage": {
     "infoTitle": "Formulare pentru probleme sociale",

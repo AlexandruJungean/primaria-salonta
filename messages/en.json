@@ -123,7 +123,8 @@
     "sport": "Sports & Recreation (Coming Soon)",
     "voluntariat": "Volunteering (Coming Soon)",
     "agentiEconomici": "Business Directory (Coming Soon)",
-    "problemeSociale": "Social Problems – forms"
+    "problemeSociale": "Social Problems – forms",
+    "coronavirus": "Coronavirus Information"
   },
   "homepage": {
     "welcome": "Welcome",
@@ -597,8 +598,19 @@
     "newsAndEvents": "News and events",
     "socialProblemsTitle": "Social Problems – forms",
     "covidInfoTitle": "Useful Coronavirus Information",
+    "covidLinkTitle": "Useful Coronavirus Information (COVID-19)",
     "registersTitle": "Registers",
     "archiveMandateTitle": "Mandate Validation Archive (2020-2024)"
+  },
+  "coronavirusPage": {
+    "title": "Useful Coronavirus Information (COVID-19)",
+    "description": "Decisions and recommendations regarding coronavirus COVID-19 in Salonta Municipality",
+    "archiveTitle": "COVID-19 Information Archive",
+    "archiveText": "This page contains archived information from the state of emergency caused by the COVID-19 pandemic (2020). The information is kept for documentary purposes.",
+    "documentsTitle": "Documents and Forms",
+    "updatesTitle": "Updates and Announcements",
+    "moreInfo": "For updated information regarding Salonta City Hall services, please visit the Contact page or call the displayed phone numbers.",
+    "contactLink": "Contact us"
   },
   "problemeSocialePage": {
     "infoTitle": "Social Problem Forms",

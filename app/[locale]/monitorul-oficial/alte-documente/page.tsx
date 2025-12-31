@@ -102,10 +102,8 @@ const CAREER_LINKS = [
 // Social problems - internal page (single page with both RO/HU forms)
 const SOCIAL_LINK = { titleKey: 'problemeSociale', href: '/servicii-online/probleme-sociale' };
 
-// Coronavirus info - document from database (will be an announcement)
-const COVID_DOCS = [
-  { doc: 'Informații utile privind coronavirus (COVID-19)', url: '#' },
-];
+// Coronavirus info - internal page link
+const COVID_LINK = { titleKey: 'coronavirus', href: '/informatii-publice/coronavirus' };
 
 // Registers - documents from database
 const REGISTERS = [
@@ -370,9 +368,7 @@ export default function AlteDocumentePage() {
               <CardContent className="p-5">
                 <SectionHeader icon={AlertCircle} title={ta('covidInfoTitle')} bgColor="bg-orange-500" />
                 <div className="space-y-2">
-                  {COVID_DOCS.map((doc, i) => (
-                    <DocumentItem key={i} title={doc.doc} url={doc.url} />
-                  ))}
+                  <InternalLinkItem title={ta('covidLinkTitle')} href={COVID_LINK.href} />
                 </div>
               </CardContent>
             </Card>
