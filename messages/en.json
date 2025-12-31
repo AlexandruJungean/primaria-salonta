@@ -390,6 +390,93 @@
     "event2": "Arany János Festival - event dedicated to the poet Arany János",
     "event3": "Traditional celebrations - events celebrating Romanian and Hungarian traditions",
     "event4": "Art exhibitions - displays of local and national artists' works"
+  },
+  "economiePage": {
+    "intro": "Salonta's economy is based on a balanced mix of agriculture, industry, commerce and services, leveraging its strategic geographic position at the border with Hungary.",
+    "sectors": {
+      "agriculture": {
+        "title": "Agriculture",
+        "description": "The agricultural sector is an important component of the local economy, with cereal and vegetable production and animal husbandry."
+      },
+      "industry": {
+        "title": "Industry",
+        "description": "Manufacturing industry, especially in food and construction, contributes to economic development."
+      },
+      "commerce": {
+        "title": "Commerce and Services",
+        "description": "The commercial and services sector has developed significantly, offering diverse opportunities for business and employment."
+      },
+      "tourism": {
+        "title": "Tourism",
+        "description": "Cultural tourism, based on Arany János heritage and local traditions, attracts visitors from Romania and Hungary."
+      }
+    },
+    "geographicAdvantageTitle": "Strategic Geographic Advantage",
+    "borderCrossingText": "Due to the city's favorable geographic location, in 1996 the Border Crossing Point to Hungary 'Salonta – Méhkerék' was opened, 14 km from the city, accessible via a modernized asphalt road.",
+    "industrialZoneUtilities": "The industrial zone is equipped with the following utilities: natural gas, national road access, sewerage, drinking and industrial water, electricity, telephone network.",
+    "industrialActivityTitle": "Industrial Activity",
+    "industrialActivityText": "Industrial activity is predominantly concentrated in the northwestern part of the city, as shown in the General Urban Plan, specifically in Territorial Reference Unit No. 1, located within the municipality's built-up area. Near this zone is the Salonta CFR Halt, enabling passenger and freight transport by rail.",
+    "mainFunctionsText": "The main functions of Salonta city are characterized by the following activities: industrial, agricultural, service, socio-cultural and commercial, passenger and freight transport, administrative-coordination.",
+    "industrialDevelopmentTitle": "Industrial Development",
+    "industrialDevelopmentText": "The development of industrial production in this city was contributed to by the development of crafts, the presence of workforce, and the favorable geographic position. The municipality of Salonta has a highly qualified workforce in all fields.",
+    "mainIndustriesText": "Among the main industrial branches we mention: food industry, machine building, textiles, clothing, leather, fur, footwear, and wood processing.",
+    "developmentPotentialTitle": "Development Potential",
+    "potential": {
+      "borderCrossing": "Border crossing point - main driver of socio-economic development in all sectors",
+      "freeZone": "Possibility of establishing a free zone",
+      "crossBorderCooperation": "Cooperation zone for development between border regions",
+      "developmentCorridor": "Area located on the main county development corridor",
+      "majorRoutes": "Major county, national and international road and rail routes",
+      "transitTourism": "Transit tourism"
+    },
+    "investmentTitle": "Opportunities for Investors",
+    "investmentText1": "For potential investors, approximately 20 hectares would be available within the city limits. To provide developed land to potential investors, Salonta Local Council is studying the possibility of developing an industrial area, in accordance with current legislation, on 10 hectares of private city property, free of encumbrances, intended for industrial activity.",
+    "investmentText2": "In addition to the advantages of locations intended for potential investors, the Local Council, in accordance with current legislation, may grant various tax incentives based on certain criteria.",
+    "investmentText3": "An important element for investors is the proximity to the border.",
+    "restaurantsTitle": "Restaurants",
+    "hotelsTitle": "Accommodation",
+    "hotelSlaviaDesc": "4-star hotel with restaurant, located in the historic center, featuring Romanian and Slovak specialties.",
+    "motelMilleniumDesc": "Affordable accommodation with modern facilities and free parking.",
+    "ancoraDesc": "Guesthouse with restaurant, offering accommodation and traditional Romanian dishes.",
+    "tourismAgenciesTitle": "Tourism Agencies",
+    "turistsalDesc": "Travel agency with over 12 years of experience, offering tour packages to Hungary, Croatia and international circuits.",
+    "investorCTA": "Interested in Investing in Salonta?",
+    "investorCTAText": "The Local Council, together with Salonta City Hall, is at the disposal of those interested in investing in Salonta.",
+    "contactUs": "Contact Us"
+  },
+  "generalePage": {
+    "dispozitiiTitle": "Dispositions",
+    "contPlatiTitle": "Account for Document Copying Fees",
+    "contPlatiDesc": "Account for payment via postal order, bank transfer, bank cards and other payment systems, according to current legal provisions, for document copying services requested under Law no. 544/2001:",
+    "contPlatiDetails": "Opened at Salonta Treasury, beneficiary: Municipality of Salonta, code 4593423",
+    "formulareTitle": "Forms",
+    "rapoarteTitle": "Annual Reports",
+    "rapoarteAnuale": "Annual Reports",
+    "ghidulCetateanului": "Citizen's Guide - Transparency in Public Administration",
+    "ceLegea52Title": "What is Transparency Law no. 52/2003?",
+    "ceLegea52Desc": "The transparency law ensures the openness of public administration activity towards citizens through two important mechanisms:",
+    "ceLegea52Item1": "Your participation in the process of drafting normative regulations",
+    "ceLegea52Item2": "Your participation in the decision-making process",
+    "cuiSeAdreseazaTitle": "Who does this law address?",
+    "cuiSeAdreseazaDesc": "The transparency law involves collaboration between two partners: public administration and the recipients of regulations developed by it (citizens, non-governmental organizations, business associations).",
+    "cePresupuneTitle": "What does the law entail?",
+    "cePresupuneDesc1": "We are obliged to make public draft normative regulations before they are adopted.",
+    "cePresupuneDesc2": "After this moment, if you are interested, you have the opportunity to formulate suggestions and recommendations regarding the regulations presented in draft form.",
+    "avantajeTitle": "What are the advantages of applying this law for you?",
+    "avantajeItem1": "You are informed about proposed normative draft regulations to be adopted",
+    "avantajeItem2": "It encourages you to express your views on these projects and thus get involved in solving community problems",
+    "proceduraTitle": "What is the procedure?",
+    "proceduraDesc1": "We publish an announcement informing you that a certain draft decision with public character has been initiated and requesting you to express your opinions, proposals, suggestions in writing, the deadline for submission, as well as the place where related materials can be studied.",
+    "proceduraDesc2": "Legally constituted associations may request the organization of public debates on the draft decision, and we will communicate the date, time and place where the debate will take place (within maximum 10 days of the request).",
+    "proceduraDesc3": "Proposals and suggestions will be analyzed by the initiator and local council, they have a recommendation character, the decision to include them in the final decision belongs to the public authority.",
+    "contestareTitle": "Methods of Appeal",
+    "contestareDesc": "The methods of contesting the decision of the authority or public institution in the situation where the person considers himself/herself harmed regarding the right of access to requested public interest information are provided in art. 21 and 22 of Law no. 544/2001:",
+    "contestareItem1": "Administrative complaint – to be submitted to the head of the authority or public institution",
+    "contestareItem2": "Complaint to the administrative litigation section of the court in whose territorial jurisdiction the person resides or in whose territorial jurisdiction the headquarters of the authority or public institution is located",
+    "contestareNote": "The methods of contesting the authority's decision in the situation where the person considers himself/herself harmed by an administrative act are provided by Law 554/2004 on administrative litigation.",
+    "linkuriUtileTitle": "Useful Links",
+    "reclamatiiANPC": "ANPC Complaints",
+    "infoNote": "Documents on this page will be loaded from the database. Links marked with '#' are placeholders and will be updated later with actual documents."
   }
 }
 

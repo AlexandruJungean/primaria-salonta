@@ -390,6 +390,93 @@
     "event2": "Arany János Fesztivál - az Arany János költőnek szentelt rendezvény",
     "event3": "Hagyományos ünnepek - a román és magyar hagyományokat ünneplő események",
     "event4": "Művészeti kiállítások - helyi és országos művészek munkáinak bemutatása"
+  },
+  "economiePage": {
+    "intro": "Nagyszalonta gazdasága a mezőgazdaság, ipar, kereskedelem és szolgáltatások kiegyensúlyozott keverékén alapul, kihasználva a magyar határ közelében lévő stratégiai földrajzi helyzetet.",
+    "sectors": {
+      "agriculture": {
+        "title": "Mezőgazdaság",
+        "description": "A mezőgazdasági ágazat fontos része a helyi gazdaságnak, gabona- és zöldségtermesztéssel, valamint állattenyésztéssel."
+      },
+      "industry": {
+        "title": "Ipar",
+        "description": "A feldolgozóipar, különösen az élelmiszer- és építőipar, hozzájárul a gazdasági fejlődéshez."
+      },
+      "commerce": {
+        "title": "Kereskedelem és szolgáltatások",
+        "description": "A kereskedelmi és szolgáltató szektor jelentősen fejlődött, változatos üzleti és foglalkoztatási lehetőségeket kínálva."
+      },
+      "tourism": {
+        "title": "Turizmus",
+        "description": "Az Arany János örökségén és a helyi hagyományokon alapuló kulturális turizmus Romániából és Magyarországról vonz látogatókat."
+      }
+    },
+    "geographicAdvantageTitle": "Stratégiai földrajzi előny",
+    "borderCrossingText": "A város kedvező földrajzi elhelyezkedése következtében 1996-ban megnyílt a Magyarország felé vezető 'Nagyszalonta – Méhkerék' határátkelőhely, 14 km-re a várostól, korszerűsített, aszfaltburkolatú úton megközelíthető.",
+    "industrialZoneUtilities": "Az ipari övezet a következő közművekkel rendelkezik: földgáz, országúti csatlakozás, csatornázás, ivó- és ipari víz, elektromosság, telefonhálózat.",
+    "industrialActivityTitle": "Ipari tevékenység",
+    "industrialActivityText": "Az ipari tevékenység túlnyomórészt a város északnyugati részén összpontosul, ahogy a P.U.G.-ból is kiderül, nevezetesen az 1. számú Területi Referencia Egységben, amely a város belterületén található. E zóna közelében található a Nagyszalontai CFR megállóhely, amely lehetővé teszi a személyek és áruk vasúti szállítását.",
+    "mainFunctionsText": "Nagyszalonta város fő funkciói a következő tevékenységekkel jellemezhetők: ipari, mezőgazdasági, szolgáltató, társadalmi-kulturális és kereskedelmi, személy- és áruszállítás, közigazgatási-koordinációs.",
+    "industrialDevelopmentTitle": "Ipari fejlődés",
+    "industrialDevelopmentText": "A város ipari termelésének fejlődéséhez hozzájárult a kézművesség fejlődése, a munkaerő jelenléte és a kedvező földrajzi helyzet. Nagyszalonta város minden területen magas képzettségű munkaerővel rendelkezik.",
+    "mainIndustriesText": "A fő iparágak közül megemlítjük: élelmiszeripar, gépgyártás, textil, ruházat, bőripar, szőrmeipar, cipőgyártás, fafeldolgozás.",
+    "developmentPotentialTitle": "Fejlődési potenciál",
+    "potential": {
+      "borderCrossing": "Határátkelőhely - a társadalmi-gazdasági fejlődés fő motorja minden szektorban",
+      "freeZone": "Szabadövezet kialakításának lehetősége",
+      "crossBorderCooperation": "Együttműködési zóna határ menti régiók fejlesztésére és rendezésére",
+      "developmentCorridor": "A megyei fő fejlesztési folyosón elhelyezkedő terület",
+      "majorRoutes": "Fő megyei, országos és nemzetközi közúti és vasúti közlekedési tengelyek",
+      "transitTourism": "Tranzitturizmus"
+    },
+    "investmentTitle": "Lehetőségek befektetők számára",
+    "investmentText1": "A potenciális befektetők számára a város belterületén körülbelül 20 hektár terület állna rendelkezésre. A potenciális befektetőknek szánt rendezett telkek biztosítása érdekében Nagyszalonta Helyi Tanácsa tanulmányozza egy ipari terület kialakításának lehetőségét, a hatályos jogszabályoknak megfelelően, 10 hektáros, a város magántulajdonában lévő, tehermentes, ipari tevékenységre szánt területen.",
+    "investmentText2": "A potenciális befektetőknek szánt helyszínek előnyei mellett a Helyi Tanács a hatályos jogszabályoknak megfelelően különböző adókedvezményeket nyújthat bizonyos kritériumok alapján.",
+    "investmentText3": "A befektetők szempontjából fontos elem a határ közelsége.",
+    "restaurantsTitle": "Éttermek",
+    "hotelsTitle": "Szállás",
+    "hotelSlaviaDesc": "4 csillagos szálloda étteremmel, a város történelmi központjában, román és szlovák specialitásokkal.",
+    "motelMilleniumDesc": "Megfizethető szálláshely modern felszereltséggel és ingyenes parkolással.",
+    "ancoraDesc": "Étteremmel rendelkező panzió, szállást és hagyományos román ételeket kínál.",
+    "tourismAgenciesTitle": "Utazási irodák",
+    "turistsalDesc": "Több mint 12 éves tapasztalattal rendelkező utazási iroda, magyarországi, horvátországi és nemzetközi körút csomagokat kínál.",
+    "investorCTA": "Érdekli a befektetés Nagyszalontán?",
+    "investorCTAText": "A Helyi Tanács Nagyszalonta Polgármesteri Hivatalával együtt a Nagyszalontába befektetni kívánók rendelkezésére áll.",
+    "contactUs": "Kapcsolatfelvétel"
+  },
+  "generalePage": {
+    "dispozitiiTitle": "Rendelkezések",
+    "contPlatiTitle": "Számla dokumentum másolási díjakhoz",
+    "contPlatiDesc": "Számla a postai utalványon, banki átutaláson, bankkártyákon és egyéb fizetési rendszereken keresztül történő befizetésekhez a 544/2001. sz. törvény alapján kért dokumentumok másolási szolgáltatásainak díjaihoz:",
+    "contPlatiDetails": "A Szalontai Kincstárnál nyitva, kedvezményezett: Szalonta Önkormányzata, kód: 4593423",
+    "formulareTitle": "Űrlapok",
+    "rapoarteTitle": "Éves jelentések",
+    "rapoarteAnuale": "Éves jelentések",
+    "ghidulCetateanului": "Állampolgári útmutató - Átláthatóság a közigazgatásban",
+    "ceLegea52Title": "Mi az 52/2003. sz. átláthatósági törvény?",
+    "ceLegea52Desc": "Az átláthatósági törvény két fontos mechanizmuson keresztül biztosítja a közigazgatás tevékenységének nyitottságát a polgárok felé:",
+    "ceLegea52Item1": "Az Ön részvétele a normatív jellegű szabályozások kidolgozási folyamatában",
+    "ceLegea52Item2": "Az Ön részvétele a döntéshozatali folyamatban",
+    "cuiSeAdreseazaTitle": "Kinek szól ez a törvény?",
+    "cuiSeAdreseazaDesc": "Az átláthatósági törvény két partner együttműködését feltételezi: a közigazgatás és az általa kidolgozott szabályozások címzettjei (állampolgárok, civil szervezetek, üzleti társulások).",
+    "cePresupuneTitle": "Mit feltételez a törvény?",
+    "cePresupuneDesc1": "Nekünk kötelességünk nyilvánosságra hozni a normatív jellegű szabályozási tervezeteket azok elfogadása előtt.",
+    "cePresupuneDesc2": "Ezt követően Önnek, ha érdekelt, lehetősége van javaslatokat és ajánlásokat megfogalmazni a tervezet formájában bemutatott szabályozásokkal kapcsolatban.",
+    "avantajeTitle": "Milyen előnyökkel jár Önnek e törvény alkalmazása?",
+    "avantajeItem1": "Tudomására hozzák az elfogadásra javasolt normatív jellegű szabályozási tervezeteket",
+    "avantajeItem2": "Arra ösztönzi, hogy kifejezze álláspontját ezekkel a tervezetekkel kapcsolatban, és így részt vegyen a közösség problémáinak megoldásában",
+    "proceduraTitle": "Mi az eljárás?",
+    "proceduraDesc1": "Hirdetményt teszünk közzé, amelyben tájékoztatjuk arról, hogy egy bizonyos közérdekű határozattervezetet kezdeményeztek, és felkérjük, hogy írásban fejezze ki véleményét, javaslatait, a beküldési határidőt, valamint azt a helyet, ahol a kapcsolódó anyagok tanulmányozhatók.",
+    "proceduraDesc2": "A törvényesen megalakult egyesületek kérhetik nyilvános viták szervezését a határozattervezetről, és mi közöljük a vita időpontját, óráját és helyszínét (a kéréstől számított legfeljebb 10 napon belül).",
+    "proceduraDesc3": "A javaslatokat és ajánlásokat a kezdeményező és a helyi tanács elemzi, ezek ajánlás jellegűek, a végső határozatba való beépítésükről a közhatóság dönt.",
+    "contestareTitle": "Jogorvoslati módok",
+    "contestareDesc": "A hatóság vagy közintézmény döntésének megtámadási módjai, amennyiben a személy úgy ítéli meg, hogy sérült a kért közérdekű információkhoz való hozzáférési joga, a 544/2001. sz. törvény 21. és 22. cikkében szerepelnek:",
+    "contestareItem1": "Közigazgatási panasz – a hatóság vagy közintézmény vezetőjéhez nyújtandó be",
+    "contestareItem2": "Panasz a lakóhely vagy a hatóság székhelye szerinti törvényszék közigazgatási peres osztályához",
+    "contestareNote": "A hatóság döntésének megtámadási módjai, amennyiben a személy közigazgatási aktus által sérültnek érzi magát, a közigazgatási perrendtartásról szóló 554/2004. sz. törvényben szerepelnek.",
+    "linkuriUtileTitle": "Hasznos linkek",
+    "reclamatiiANPC": "ANPC panaszok",
+    "infoNote": "Az ezen az oldalon található dokumentumok az adatbázisból töltődnek be. A '#' jelöléssel ellátott linkek helykitöltők, és később frissülnek a valódi dokumentumokkal."
   }
 }
 

@@ -390,6 +390,93 @@
     "event2": "Festivalul Arany János - eveniment dedicat poetului Arany János",
     "event3": "Sărbători tradiționale - evenimente care celebrează tradițiile române și maghiare",
     "event4": "Expoziții de artă - expuneri ale artiștilor locali și naționali"
+  },
+  "economiePage": {
+    "intro": "Economia municipiului Salonta se bazează pe un mix echilibrat de agricultură, industrie, comerț și servicii, valorificând poziția geografică strategică la granița cu Ungaria.",
+    "sectors": {
+      "agriculture": {
+        "title": "Agricultură",
+        "description": "Sectorul agricol reprezintă o componentă importantă a economiei locale, cu producție de cereale, legume și creșterea animalelor."
+      },
+      "industry": {
+        "title": "Industrie",
+        "description": "Industria prelucrătoare, în special în domeniul alimentar și al construcțiilor, contribuie la dezvoltarea economică."
+      },
+      "commerce": {
+        "title": "Comerț și Servicii",
+        "description": "Sectorul comercial și de servicii s-a dezvoltat semnificativ, oferind diverse oportunități pentru afaceri și angajare."
+      },
+      "tourism": {
+        "title": "Turism",
+        "description": "Turismul cultural, bazat pe moștenirea lui Arany János și tradițiile locale, atrage vizitatori din România și Ungaria."
+      }
+    },
+    "geographicAdvantageTitle": "Avantaj geografic strategic",
+    "borderCrossingText": "Ca urmare a amplasamentului geografic favorabil al orașului, în anul 1996 a fost deschis Punctul de Trecere a Frontierei spre Ungaria 'Salonta – Méhkerék', la 14 km de oraș, accesul fiind asigurat pe un drum modernizat, cu îmbrăcăminte asfaltică.",
+    "industrialZoneUtilities": "Zona industrială are asigurate următoarele utilități: gaz metan, acces la drum național, canalizare, apă potabilă și industrială, electricitate, telefonie.",
+    "industrialActivityTitle": "Activitate industrială",
+    "industrialActivityText": "Activitatea industrială este preponderent concentrată în partea de nord-vest a orașului, după cum rezultă și din P.U.G., respectiv în Unitatea Teritorială de Referință nr. 1, situată în intravilanul municipiului. În apropierea acestei zone se află amenajată Halta C.F.R. Salonta, fiind posibil transportul de persoane și mărfuri pe cale ferată.",
+    "mainFunctionsText": "Principalele funcții ale orașului Salonta sunt caracterizate prin următoarele activități: industriale, agricole, deservire, social-culturale și comerciale, transport de călători și mărfuri, administrativ-coordonare.",
+    "industrialDevelopmentTitle": "Dezvoltare industrială",
+    "industrialDevelopmentText": "La dezvoltarea producției industriale din acest oraș au contribuit dezvoltarea meșteșugurilor, prezența forței de muncă, poziția geografică favorabilă. Municipiul Salonta dispune de forță de muncă în toate domeniile cu un nivel ridicat de calificare.",
+    "mainIndustriesText": "Dintre principalele ramuri ale industriei amintim: industria alimentară, construcțiile de mașini, textile, confecții, pielărie, blănărie, încălțăminte, prelucrarea lemnului.",
+    "developmentPotentialTitle": "Potențial de dezvoltare",
+    "potential": {
+      "borderCrossing": "Punct de trecere a frontierei - principal motor de dezvoltare socio-economică în toate sectoarele",
+      "freeZone": "Posibilitate de amenajare zonă liberă",
+      "crossBorderCooperation": "Zonă de cooperare pentru amenajări și dezvoltări între regiuni de graniță",
+      "developmentCorridor": "Zonă aflată pe coridorul principal de dezvoltare județeană",
+      "majorRoutes": "Axe majore de circulație rutieră și feroviară județeană, națională și internațională",
+      "transitTourism": "Turism de tranzit"
+    },
+    "investmentTitle": "Oportunități pentru investitori",
+    "investmentText1": "Pentru posibilii investitori ar mai fi disponibilă în intravilanul orașului o suprafață de aproximativ 20 ha. Pentru punerea la dispoziție către posibilii investitori de terenuri amenajate, Consiliul Local Salonta studiază posibilitatea amenajării unui teren industrial, conform legislației în vigoare, pe suprafața de 10 ha, proprietatea privată a orașului, liber de sarcini, destinat activității industriale.",
+    "investmentText2": "Pe lângă avantajele amplasamentelor destinate posibililor investitori, Consiliul Local, conform legislației în vigoare, poate acorda diferite facilități fiscale, în funcție de anumite criterii.",
+    "investmentText3": "Un element important din punct de vedere al investitorilor este apropierea de graniță.",
+    "restaurantsTitle": "Restaurante",
+    "hotelsTitle": "Cazare",
+    "hotelSlaviaDesc": "Hotel de 4 stele cu restaurant, situat în centrul istoric al municipiului, cu specialități românești și slovace.",
+    "motelMilleniumDesc": "Unitate de cazare accesibilă, cu facilități moderne și parcare gratuită.",
+    "ancoraDesc": "Pensiune cu restaurant, oferind cazare și preparate tradiționale românești.",
+    "tourismAgenciesTitle": "Agenții de turism",
+    "turistsalDesc": "Agenție de turism cu peste 12 ani de experiență, oferind pachete turistice pentru Ungaria, Croația și circuite internaționale.",
+    "investorCTA": "Interesat să investești în Salonta?",
+    "investorCTAText": "Consiliul Local, împreună cu Primăria Municipiului Salonta stă la dispoziția celor interesați de a investi în Salonta.",
+    "contactUs": "Contactează-ne"
+  },
+  "generalePage": {
+    "dispozitiiTitle": "Dispoziții",
+    "contPlatiTitle": "Cont pentru plăți copiere documente",
+    "contPlatiDesc": "Cont pentru plata prin mandat poștal, prin decontare bancară, prin intermediul cardurilor bancare și prin intermediul altor sisteme de plată, potrivit prevederilor legale în vigoare, a sumelor reprezentând plata serviciilor de copiere a documentelor solicitate în baza Legii nr. 544/2001:",
+    "contPlatiDetails": "Deschis la Trezoreria Salonta, beneficiar Municipiul Salonta, cod 4593423",
+    "formulareTitle": "Formulare",
+    "rapoarteTitle": "Rapoarte anuale",
+    "rapoarteAnuale": "Rapoarte anuale",
+    "ghidulCetateanului": "Ghidul Cetățeanului - Transparența în Administrația Publică",
+    "ceLegea52Title": "Ce este Legea transparenței nr. 52/2003?",
+    "ceLegea52Desc": "Legea transparenței asigură deschiderea activității administrației publice către cetățeni prin intermediul a două mecanisme importante:",
+    "ceLegea52Item1": "Participarea dumneavoastră la procesul de elaborare a reglementărilor cu caracter normativ",
+    "ceLegea52Item2": "Participarea dumneavoastră la procesul de luare a deciziilor",
+    "cuiSeAdreseazaTitle": "Cui i se adresează această lege?",
+    "cuiSeAdreseazaDesc": "Legea transparenței implică o colaborare între doi parteneri: administrația publică și destinatarii reglementărilor elaborate de aceasta (cetățeni, organizații neguvernamentale, asociații de afaceri).",
+    "cePresupuneTitle": "Ce presupune legea?",
+    "cePresupuneDesc1": "Noi avem obligația de a face publice proiectele de reglementări cu caracter normativ înainte ca acestea să fie adoptate.",
+    "cePresupuneDesc2": "După acest moment, dumneavoastră, dacă sunteți interesat, aveți posibilitatea de a formula sugestii și recomandări cu privire la reglementările care au fost prezentate în stadiu de proiect.",
+    "avantajeTitle": "Care sunt avantajele aplicării acestei legi pentru dumneavoastră?",
+    "avantajeItem1": "Vi se aduce la cunoștință proiectele de reglementări cu caracter normativ propuse a fi adoptate",
+    "avantajeItem2": "Vă îndeamnă să vă exprimați punctele de vedere cu privire la aceste proiecte și astfel să vă implicați în rezolvarea problemelor comunității",
+    "proceduraTitle": "Care este procedura?",
+    "proceduraDesc1": "Noi publicăm un anunț prin care vă aducem la cunoștință faptul că un anumit proiect de hotărâre cu caracter public a fost inițiat și prin care vă solicităm să vă exprimați în scris opiniile, propunerile, sugestiile, data până la care le puteți înainta, precum și locul unde pot fi studiate materialele aferente.",
+    "proceduraDesc2": "Asociațiile legal constituite pot solicita organizarea de dezbateri publice pe marginea proiectului de hotărâre, urmând ca noi să comunicăm data, ora și locul unde se va desfășura dezbaterea (în maxim 10 zile de la solicitare).",
+    "proceduraDesc3": "Propunerile și sugestiile vor fi analizate de către inițiator și consiliul local, ele au caracter de recomandare, urmând ca decizia introducerii acestora în hotărârea finală să aparțină autorității publice.",
+    "contestareTitle": "Modalități de contestare",
+    "contestareDesc": "Modalitățile de contestare a deciziei autorității sau a instituției publice în situația în care persoana se consideră vătămată în privința dreptului de acces la informațiile de interes public solicitate sunt prevăzute în art. 21 și 22 din Legea nr. 544/2001:",
+    "contestareItem1": "Reclamația administrativă – se depune la conducătorul autorității sau al instituției publice",
+    "contestareItem2": "Plângerea la secția de contencios administrativ a tribunalului în a cărei rază teritorială domiciliază sau în a cărei rază teritorială se află sediul autorității ori al instituției publice",
+    "contestareNote": "Modalitățile de contestare a deciziei autorității în situația în care persoana se consideră vătămată printr-un act administrativ sunt prevăzute de Legea 554/2004 privind contenciosul administrativ.",
+    "linkuriUtileTitle": "Link-uri utile",
+    "reclamatiiANPC": "Reclamații ANPC",
+    "infoNote": "Documentele din această pagină vor fi încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri și vor fi actualizate ulterior cu documentele reale."
   }
 }
 
