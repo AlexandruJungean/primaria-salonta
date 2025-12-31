@@ -303,6 +303,43 @@
     "touristAttractions": "Călătorul aflat în Salonta se poate opri în casele ce au aparținut poeților Arany János, Sinka István și Zilahy Lajos, poate depune o floare la statuile acestora sau a revoluționarului pașoptist Kossuth Lajos sau poate admira Turnul Ciunt ori Palatul 'Arany' care adăpostește Biblioteca orășenească 'Teodor Neș' și o galerie de artă. Demne de interes sunt și bisericile orașului și clădirea Primăriei.",
     "opportunities": "Lăsând în urmă obiectivele turistice ale orașului, Salonta poate fi punct de plecare pentru cei pasionați de vânătoare și pescuit. În același timp, Salonta oferă multiple oportunități investitorilor și oamenilor de afaceri interesați, fiind un oraș al tuturor posibilităților."
   },
+  "oraseInfratitePage": {
+    "intro": "Municipiul Salonta menține relații de înfrățire și cooperare cu orașe din Ungaria și Slovacia, promovând schimburi culturale și economice.",
+    "aboutTitle": "Despre înfrățiri",
+    "aboutText": "Înfrățirile dintre orașe reprezintă o formă de cooperare care promovează schimburi culturale, economice și sociale între comunități. Aceste parteneriate facilitează proiecte comune, schimburi de experiență și consolidează legăturile între popoare.",
+    "cities": {
+      "sarkad": {
+        "name": "Sarkad",
+        "country": "Ungaria",
+        "description": "Oraș în județul Békés, la aproximativ 30 km de Salonta, cu care întreține relații strânse de colaborare."
+      },
+      "csepel": {
+        "name": "Csepel",
+        "country": "Ungaria",
+        "description": "District din sudul Budapestei, cunoscut pentru istoria sa industrială și culturală."
+      },
+      "turkeve": {
+        "name": "Túrkeve",
+        "country": "Ungaria",
+        "description": "Oraș în județul Jász-Nagykun-Szolnok, cu o bogată tradiție agricolă."
+      },
+      "rimaszombat": {
+        "name": "Rimaszombat",
+        "country": "Slovacia",
+        "description": "Oraș în sudul Slovaciei (Rimavská Sobota), centru economic și cultural important."
+      },
+      "nagykoros": {
+        "name": "Nagykőrös",
+        "country": "Ungaria",
+        "description": "Oraș în județul Pest, cunoscut ca locul unde a predat poetul Arany János."
+      },
+      "hajduboszormeny": {
+        "name": "Hajdúböszörmény",
+        "country": "Ungaria",
+        "description": "Oraș în județul Hajdú-Bihar, cu o istorie bogată legată de hajduci."
+      }
+    }
+  },
   "hartaDigitalaPage": {
     "title": "Harta Digitală Interactivă",
     "subtitle": "Explorați municipiul Salonta cu ajutorul hărții digitale interactive Map2Web",

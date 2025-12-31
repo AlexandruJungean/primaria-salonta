@@ -303,6 +303,43 @@
     "touristAttractions": "A Szalontára látogató megállhat az Arany János, Sinka István és Zilahy Lajos költőkhöz tartozó házaknál, virágot helyezhet szobraiknál vagy a 1848-as forradalmár Kossuth Lajosnál, és megcsodálhatja a Csonka tornyot vagy az 'Arany' palotát, amely a 'Teodor Neș' Városi Könyvtárnak és egy művészeti galériának ad otthont. A város templomai és a Városháza épülete is érdemes a megtekintésre.",
     "opportunities": "A város turisztikai látnivalóit elhagyva Szalonta kiindulópont lehet a vadászat és horgászat szerelmesei számára. Ugyanakkor Szalonta számos lehetőséget kínál az érdeklődő befektetőknek és üzletembereknek, minden lehetőség városa."
   },
+  "oraseInfratitePage": {
+    "intro": "Nagyszalonta testvérvárosi kapcsolatokat tart fenn magyarországi és szlovákiai városokkal, kulturális és gazdasági cseréket támogatva.",
+    "aboutTitle": "A testvérvárosokról",
+    "aboutText": "A testvérvárosi kapcsolatok olyan együttműködési formát jelentenek, amely kulturális, gazdasági és társadalmi cseréket ösztönöz a közösségek között. Ezek a partnerségek közös projekteket, tapasztalatcserét és a népek közötti kapcsolatok erősítését segítik elő.",
+    "cities": {
+      "sarkad": {
+        "name": "Sarkad",
+        "country": "Magyarország",
+        "description": "Város Békés megyében, körülbelül 30 km-re Nagyszalontától, amellyel szoros együttműködési kapcsolatot tart fenn."
+      },
+      "csepel": {
+        "name": "Csepel",
+        "country": "Magyarország",
+        "description": "Budapest déli kerülete, ipari és kulturális történelméről ismert."
+      },
+      "turkeve": {
+        "name": "Túrkeve",
+        "country": "Magyarország",
+        "description": "Város Jász-Nagykun-Szolnok megyében, gazdag mezőgazdasági hagyományokkal."
+      },
+      "rimaszombat": {
+        "name": "Rimaszombat",
+        "country": "Szlovákia",
+        "description": "Város Dél-Szlovákiában (Rimavská Sobota), fontos gazdasági és kulturális központ."
+      },
+      "nagykoros": {
+        "name": "Nagykőrös",
+        "country": "Magyarország",
+        "description": "Város Pest megyében, ahol Arany János költő tanított."
+      },
+      "hajduboszormeny": {
+        "name": "Hajdúböszörmény",
+        "country": "Magyarország",
+        "description": "Város Hajdú-Bihar megyében, gazdag hajdú történelemmel."
+      }
+    }
+  },
   "hartaDigitalaPage": {
     "title": "Interaktív Digitális Térkép",
     "subtitle": "Fedezze fel Nagyszalontát a Map2Web interaktív digitális térkép segítségével",
