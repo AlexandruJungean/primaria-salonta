@@ -140,6 +140,7 @@
     "upcomingEventsSubtitle": "Join community events",
     "weatherNow": "Weather now",
     "loadingWeather": "Loading weather...",
+    "weatherUnavailable": "Weather is currently unavailable",
     "feelsLike": "Feels like",
     "humidity": "Humidity",
     "wind": "Wind"
