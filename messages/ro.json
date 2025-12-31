@@ -188,13 +188,39 @@
   },
   "petitions": {
     "title": "Petiții online",
-    "subtitle": "Depune o petiție sau cerere online",
-    "formTitle": "Formular petiție",
-    "registrationNumber": "Număr înregistrare",
-    "address": "Adresa de domiciliu",
-    "content": "Conținutul petiției",
-    "submit": "Depune petiția",
-    "disclaimer": "Conform Legii nr. 233/2002 și OG nr. 27/2002"
+    "definition": "Prin PETIȚIE se înțelege cererea, reclamația, sesizarea sau propunerea formulată în scris ori prin poștă electronică, pe care un cetățean sau o organizație legal constituită o poate adresa autorităților și instituțiilor publice centrale și locale, serviciilor publice descentralizate ale ministerelor și ale celorlalte organe centrale, companiilor și societăților naționale, societăților comerciale de interes județean sau local, precum și regiilor autonome, denumite în continuare autorități și instituții publice.",
+    "legalReference": "(art. 2 din Ordonanța Guvernului nr. 27/2002 privind reglementarea activității de soluționare a petițiilor cu modificările ulterioare)",
+    "formTitle": "Pentru depunerea unei petiții completați formularul următor:",
+    "personType": "Tip persoană",
+    "personFizica": "Persoană fizică",
+    "personJuridica": "Persoană juridică",
+    "nume": "Nume",
+    "numePlaceholder": "Introduceți numele",
+    "prenume": "Prenume",
+    "prenumePlaceholder": "Introduceți prenumele",
+    "denumire": "Denumire",
+    "denumirePlaceholder": "Denumirea firmei/organizației",
+    "reprezentantLegal": "Reprezentant legal",
+    "reprezentantPlaceholder": "Numele reprezentantului",
+    "cui": "CUI",
+    "cuiPlaceholder": "Cod unic de înregistrare",
+    "email": "E-mail",
+    "telefon": "Telefon",
+    "adresaTitle": "Adresă",
+    "tara": "Țara",
+    "judet": "Județ",
+    "judetPlaceholder": "Ex: Bihor",
+    "localitate": "Localitate",
+    "localitatePlaceholder": "Ex: Salonta",
+    "adresa": "Adresă",
+    "adresaPlaceholder": "Strada, număr, bloc, apartament",
+    "mesaj": "Mesaj",
+    "mesajPlaceholder": "Descrieți în detaliu petiția dumneavoastră...",
+    "atasareFisier": "Atașare fișier",
+    "fileHint": "Puteți atașa documente suport (PDF, DOC, JPG - max. 10MB)",
+    "submit": "Trimite petiția",
+    "submitSuccess": "Petiția a fost trimisă cu succes! Veți primi un număr de înregistrare pe email.",
+    "disclaimer": "Conform OG nr. 27/2002 privind reglementarea activității de soluționare a petițiilor, autoritățile și instituțiile publice au obligația să răspundă la petiții în termen de 30 de zile de la data înregistrării."
   },
   "news": {
     "title": "Știri și anunțuri",
@@ -477,6 +503,34 @@
     "linkuriUtileTitle": "Link-uri utile",
     "reclamatiiANPC": "Reclamații ANPC",
     "infoNote": "Documentele din această pagină vor fi încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri și vor fi actualizate ulterior cu documentele reale."
+  },
+  "anunturiPage": {
+    "legend": "Legendă tipuri anunțuri",
+    "announcements": "anunțuri",
+    "archiveNote": "Arhivă anunțuri",
+    "archiveNoteDesc": "Anunțurile mai vechi sunt disponibile în arhiva primăriei. Documentele vor fi încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri."
+  },
+  "dezbateriPage": {
+    "introTitle": "Participare la dezbateri publice",
+    "introText": "Conform Legii nr. 52/2003 privind transparența decizională în administrația publică, cetățenii pot participa la dezbaterile publice organizate de Primăria Municipiului Salonta. Aici găsiți procesele verbale și documentele aferente dezbaterilor publice.",
+    "debates": "dezbateri",
+    "archive": "Arhivă",
+    "archiveTitle": "Arhivă dezbateri publice",
+    "infoNote": "Documentele din această pagină vor fi încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri și vor fi actualizate ulterior cu documentele reale."
+  },
+  "buletinPage": {
+    "sectionA": "Actele normative care reglementează organizarea și funcționarea instituției publice:",
+    "sectionB": "Structura organizatorică a Primăriei Municipiului Salonta, atribuțiile departamentelor din cadrul Administrației Publice Locale",
+    "sectionC": "Numele și prenumele persoanelor din conducerea instituției publice și ale funcționarului responsabil cu difuzarea informațiilor publice",
+    "sectionD": "Coordonatele de contact ale instituției publice",
+    "sectionE": "Audiențe",
+    "sectionF": "Sursele financiare, bugetul și bilanțul contabil",
+    "sectionG": "Programele și strategiile proprii",
+    "sectionH": "Lista cuprinzând documentele de interes public:",
+    "sectionI": "Lista cuprinzând categoriile de documente produse și/sau gestionate, potrivit legii:",
+    "sectionJ": "Modalitățile de contestare a deciziei autorității sau a instituției publice în situația în care persoana se consideră vătămată în privința dreptului de acces la informațiile de interes public solicitate",
+    "viewPage": "Vezi pagina",
+    "bulletin": "Buletin informativ"
   }
 }
 

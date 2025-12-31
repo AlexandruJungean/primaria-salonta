@@ -188,13 +188,39 @@
   },
   "petitions": {
     "title": "Online Petitions",
-    "subtitle": "Submit a petition or request online",
-    "formTitle": "Petition form",
-    "registrationNumber": "Registration number",
-    "address": "Home address",
-    "content": "Petition content",
+    "definition": "PETITION means the request, complaint, notification or proposal formulated in writing or by electronic mail, which a citizen or a legally constituted organization can address to central and local public authorities and institutions, decentralized public services of ministries and other central bodies, national companies and societies, commercial companies of county or local interest, as well as autonomous administrations, hereinafter referred to as public authorities and institutions.",
+    "legalReference": "(art. 2 of Government Ordinance no. 27/2002 on the regulation of petition resolution activities with subsequent amendments)",
+    "formTitle": "To submit a petition, please fill out the following form:",
+    "personType": "Person type",
+    "personFizica": "Individual",
+    "personJuridica": "Legal entity",
+    "nume": "Last name",
+    "numePlaceholder": "Enter your last name",
+    "prenume": "First name",
+    "prenumePlaceholder": "Enter your first name",
+    "denumire": "Company name",
+    "denumirePlaceholder": "Company/organization name",
+    "reprezentantLegal": "Legal representative",
+    "reprezentantPlaceholder": "Representative's name",
+    "cui": "Tax ID",
+    "cuiPlaceholder": "Unique registration code",
+    "email": "E-mail",
+    "telefon": "Phone",
+    "adresaTitle": "Address",
+    "tara": "Country",
+    "judet": "County",
+    "judetPlaceholder": "E.g.: Bihor",
+    "localitate": "City",
+    "localitatePlaceholder": "E.g.: Salonta",
+    "adresa": "Address",
+    "adresaPlaceholder": "Street, number, building, apartment",
+    "mesaj": "Message",
+    "mesajPlaceholder": "Describe your petition in detail...",
+    "atasareFisier": "Attach file",
+    "fileHint": "You can attach supporting documents (PDF, DOC, JPG - max. 10MB)",
     "submit": "Submit petition",
-    "disclaimer": "According to Law no. 233/2002 and GO no. 27/2002"
+    "submitSuccess": "Petition submitted successfully! You will receive a registration number by email.",
+    "disclaimer": "According to GO no. 27/2002 on the regulation of petition resolution activities, public authorities and institutions are required to respond to petitions within 30 days from the registration date."
   },
   "news": {
     "title": "News and Announcements",
@@ -477,6 +503,34 @@
     "linkuriUtileTitle": "Useful Links",
     "reclamatiiANPC": "ANPC Complaints",
     "infoNote": "Documents on this page will be loaded from the database. Links marked with '#' are placeholders and will be updated later with actual documents."
+  },
+  "anunturiPage": {
+    "legend": "Announcement types legend",
+    "announcements": "announcements",
+    "archiveNote": "Announcements archive",
+    "archiveNoteDesc": "Older announcements are available in the city hall archive. Documents will be loaded from the database. Links marked with '#' are placeholders."
+  },
+  "dezbateriPage": {
+    "introTitle": "Participation in public debates",
+    "introText": "According to Law no. 52/2003 on decision-making transparency in public administration, citizens can participate in public debates organized by Salonta City Hall. Here you can find the minutes and documents related to public debates.",
+    "debates": "debates",
+    "archive": "Archive",
+    "archiveTitle": "Public debates archive",
+    "infoNote": "Documents on this page will be loaded from the database. Links marked with '#' are placeholders and will be updated later with actual documents."
+  },
+  "buletinPage": {
+    "sectionA": "Normative acts regulating the organization and functioning of the public institution:",
+    "sectionB": "Organizational structure of Salonta City Hall, responsibilities of Local Public Administration departments",
+    "sectionC": "Names of persons in the public institution's leadership and of the official responsible for disseminating public information",
+    "sectionD": "Contact details of the public institution",
+    "sectionE": "Audiences",
+    "sectionF": "Financial sources, budget and accounting balance",
+    "sectionG": "Own programs and strategies",
+    "sectionH": "List of public interest documents:",
+    "sectionI": "List of categories of documents produced and/or managed according to law:",
+    "sectionJ": "Methods of contesting the decision of the authority or public institution when a person considers their right to access requested public interest information has been violated",
+    "viewPage": "View page",
+    "bulletin": "Information bulletin"
   }
 }
 

@@ -53,7 +53,8 @@
     "framer-motion": "^11.x",
     "embla-carousel-react": "^8.x",
     "react-pdf": "^7.x",
-    "next-seo": "^6.x"
+    "next-seo": "^6.x",
+    "react-google-recaptcha-v3": "^1.x"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -250,6 +251,10 @@ NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=AIzaxxx...
 # App Configuration
 NEXT_PUBLIC_SITE_URL=https://salonta.ro
 NEXT_PUBLIC_DEFAULT_LOCALE=ro
+
+# Google reCAPTCHA v3
+NEXT_PUBLIC_RECAPTCHA_SITE_KEY=6Lexxx...
+RECAPTCHA_SECRET_KEY=6Lexxx...
 
 # Email (for contact forms)
 SMTP_HOST=smtp.gmail.com
@@ -2001,6 +2006,67 @@ export const contactFormSchema = z.object({
 export type ContactFormData = z.infer<typeof contactFormSchema>;
 ```
 
+### 9.3 Google reCAPTCHA v3 Integration
+
+All public forms are protected with Google reCAPTCHA v3 for invisible bot protection.
+
+```typescript
+// lib/recaptcha.ts
+export async function verifyRecaptcha(token: string): Promise<boolean> {
+  const response = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      secret: process.env.RECAPTCHA_SECRET_KEY!,
+      response: token,
+    }),
+  });
+
+  const data = await response.json();
+  return data.success && data.score >= 0.5;
+}
+
+// components/features/recaptcha-provider.tsx
+'use client';
+
+import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
+
+export function RecaptchaProvider({ children }: { children: React.ReactNode }) {
+  return (
+    <GoogleReCaptchaProvider
+      reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
+      scriptProps={{
+        async: true,
+        defer: true,
+        appendTo: 'head',
+      }}
+    >
+      {children}
+    </GoogleReCaptchaProvider>
+  );
+}
+
+// Usage in form components:
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
+
+function ContactForm() {
+  const { executeRecaptcha } = useGoogleReCaptcha();
+
+  const handleSubmit = async (data: FormData) => {
+    if (!executeRecaptcha) return;
+    
+    const token = await executeRecaptcha('contact_form');
+    // Send token to backend for verification
+    await submitForm({ ...data, recaptchaToken: token });
+  };
+}
+```
+
+**Required Package:**
+```bash
+npm install react-google-recaptcha-v3
+```
+
 ---
 
 ## 10. Deployment Strategy
@@ -2188,6 +2254,8 @@ module.exports = {
 | `SMTP_USER` | ⚡ | Email username |
 | `SMTP_PASSWORD` | ⚡ | Email password |
 | `REVALIDATION_SECRET` | ⚡ | Secret for on-demand revalidation |
+| `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` | ✅ | Google reCAPTCHA v3 site key |
+| `RECAPTCHA_SECRET_KEY` | ✅ | Google reCAPTCHA v3 secret key |
 | `NEXT_PUBLIC_GA_ID` | ❓ | Google Analytics ID |
 
 ✅ = Required | ⚡ = Required for specific features | ❓ = Optional

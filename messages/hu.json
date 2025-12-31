@@ -188,13 +188,39 @@
   },
   "petitions": {
     "title": "Online beadványok",
-    "subtitle": "Nyújtson be beadványt vagy kérelmet online",
-    "formTitle": "Beadvány űrlap",
-    "registrationNumber": "Iktatószám",
-    "address": "Lakcím",
-    "content": "A beadvány tartalma",
-    "submit": "Beadvány benyújtása",
-    "disclaimer": "A 233/2002. sz. törvény és a 27/2002. sz. kormányrendelet szerint"
+    "definition": "BEADVÁNY alatt értendő az írásban vagy elektronikus postán megfogalmazott kérelem, panasz, közlés vagy javaslat, amelyet egy állampolgár vagy jogszerűen megalakult szervezet címezhet a központi és helyi hatóságoknak és közintézményeknek, a minisztériumok és más központi szervek decentralizált közszolgálatainak, a nemzeti vállalatoknak és társaságoknak, a megyei vagy helyi érdekeltségű kereskedelmi társaságoknak, valamint az autonóm vállalatoknak.",
+    "legalReference": "(a 27/2002. sz. Kormányrendelet 2. cikke a beadványok elintézési tevékenységének szabályozásáról, későbbi módosításokkal)",
+    "formTitle": "Beadvány benyújtásához töltse ki az alábbi űrlapot:",
+    "personType": "Személy típusa",
+    "personFizica": "Természetes személy",
+    "personJuridica": "Jogi személy",
+    "nume": "Családnév",
+    "numePlaceholder": "Adja meg a családnevet",
+    "prenume": "Utónév",
+    "prenumePlaceholder": "Adja meg az utónevet",
+    "denumire": "Megnevezés",
+    "denumirePlaceholder": "Cég/szervezet megnevezése",
+    "reprezentantLegal": "Törvényes képviselő",
+    "reprezentantPlaceholder": "A képviselő neve",
+    "cui": "Adószám",
+    "cuiPlaceholder": "Egyedi nyilvántartási szám",
+    "email": "E-mail",
+    "telefon": "Telefon",
+    "adresaTitle": "Cím",
+    "tara": "Ország",
+    "judet": "Megye",
+    "judetPlaceholder": "Pl: Bihar",
+    "localitate": "Település",
+    "localitatePlaceholder": "Pl: Nagyszalonta",
+    "adresa": "Cím",
+    "adresaPlaceholder": "Utca, szám, tömbház, lakás",
+    "mesaj": "Üzenet",
+    "mesajPlaceholder": "Írja le részletesen a beadványát...",
+    "atasareFisier": "Fájl csatolása",
+    "fileHint": "Csatolhat támogató dokumentumokat (PDF, DOC, JPG - max. 10MB)",
+    "submit": "Beadvány küldése",
+    "submitSuccess": "A beadvány sikeresen elküldve! Iktatószámot kap e-mailben.",
+    "disclaimer": "A 27/2002. sz. kormányrendelet értelmében a beadványok elintézési tevékenységének szabályozásáról, a hatóságok és közintézmények kötelesek a beadványokra 30 napon belül válaszolni az iktatás dátumától számítva."
   },
   "news": {
     "title": "Hírek és hirdetmények",
@@ -477,6 +503,34 @@
     "linkuriUtileTitle": "Hasznos linkek",
     "reclamatiiANPC": "ANPC panaszok",
     "infoNote": "Az ezen az oldalon található dokumentumok az adatbázisból töltődnek be. A '#' jelöléssel ellátott linkek helykitöltők, és később frissülnek a valódi dokumentumokkal."
+  },
+  "anunturiPage": {
+    "legend": "Hirdetménytípusok jelmagyarázata",
+    "announcements": "hirdetmény",
+    "archiveNote": "Hirdetmények archívuma",
+    "archiveNoteDesc": "A régebbi hirdetmények a polgármesteri hivatal archívumában érhetők el. A dokumentumok az adatbázisból töltődnek be. A '#' jelölésű linkek helykitöltők."
+  },
+  "dezbateriPage": {
+    "introTitle": "Részvétel a nyilvános vitákon",
+    "introText": "A közigazgatás döntéshozatali átláthatóságáról szóló 52/2003. sz. törvény értelmében az állampolgárok részt vehetnek a Nagyszalonta Polgármesteri Hivatala által szervezett nyilvános vitákon. Itt találhatók a nyilvános viták jegyzőkönyvei és kapcsolódó dokumentumai.",
+    "debates": "vita",
+    "archive": "Archívum",
+    "archiveTitle": "Nyilvános viták archívuma",
+    "infoNote": "Az ezen az oldalon található dokumentumok az adatbázisból töltődnek be. A '#' jelölésű linkek helykitöltők, és később frissülnek a valódi dokumentumokkal."
+  },
+  "buletinPage": {
+    "sectionA": "A közintézmény szervezését és működését szabályozó normatív aktusok:",
+    "sectionB": "Nagyszalonta Polgármesteri Hivatalának szervezeti felépítése, a Helyi Közigazgatás osztályainak hatáskörei",
+    "sectionC": "A közintézmény vezetőinek és a közérdekű információk terjesztéséért felelős tisztviselő neve",
+    "sectionD": "A közintézmény elérhetőségei",
+    "sectionE": "Fogadóórák",
+    "sectionF": "Pénzügyi források, költségvetés és számviteli mérleg",
+    "sectionG": "Saját programok és stratégiák",
+    "sectionH": "A közérdekű dokumentumok listája:",
+    "sectionI": "A törvény szerint készített és/vagy kezelt dokumentumkategóriák listája:",
+    "sectionJ": "A hatóság vagy közintézmény döntésének megtámadási módjai, amennyiben a személy úgy ítéli meg, hogy sérült a kért közérdekű információkhoz való hozzáférési joga",
+    "viewPage": "Oldal megtekintése",
+    "bulletin": "Tájékoztató"
   }
 }
 

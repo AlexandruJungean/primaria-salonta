@@ -94,7 +94,10 @@ The website **MUST** include:
 - ✅ Data processing information
 - ✅ DPO contact information
 
-### 3.5 Mandatory Compliance - Accessibility (HG 1259/2002)
+### 3.5 Form Security - Google reCAPTCHA v3
+All public forms (petitions, contact, etc.) will be protected with Google reCAPTCHA v3 to prevent spam and bot submissions while maintaining a seamless user experience (invisible verification).
+
+### 3.6 Mandatory Compliance - Accessibility (HG 1259/2002)
 - ✅ WCAG 2.1 Level AA compliance
 - ✅ Screen reader compatibility
 - ✅ Keyboard navigation
