@@ -518,6 +518,46 @@
     "archiveTitle": "Nyilvános viták archívuma",
     "infoNote": "Az ezen az oldalon található dokumentumok az adatbázisból töltődnek be. A '#' jelölésű linkek helykitöltők, és később frissülnek a valódi dokumentumokkal."
   },
+  "statutPage": {
+    "statut2021": "Nagyszalonta Város Statútuma – 2021",
+    "statut2017": "Nagyszalonta Város Statútuma – Újraközölt, 2017",
+    "download": "Letöltés"
+  },
+  "financiarePage": {
+    "budgetTitle": "Nagyszalonta Város általános költségvetése",
+    "budgetLegalRef": "OUG 57/2019 Közigazgatási törvénykönyv, 3. SZAKASZ – A helyi tanács hatáskörei",
+    "budgetLegalText": "129. cikk: (4) bek. A (2) bek. b) pontjában előírt hatáskörök gyakorlása során a helyi tanács: a) a polgármester javaslatára jóváhagyja a közigazgatási-területi egység költségvetését.",
+    "executionTitle": "Végrehajtási számla",
+    "budgetGeneralTitle": "Általános költségvetés",
+    "rectificationsTitle": "Költségvetési módosítások",
+    "otherDocsTitle": "Egyéb dokumentumok",
+    "rectification": "Módosítás"
+  },
+  "hotarariMolPage": {
+    "mainTitle": "Nagyszalonta Város Helyi Tanácsának határozatai",
+    "hotarari-clms": "Nagyszalonta Város Helyi Tanácsának határozatai",
+    "hotarari-republicate": "HTHM – Újraközölt határozatok",
+    "registersTitle": "Elfogadott határozatok nyilvántartása",
+    "registersSubtitle": "A Helyi Tanács által elfogadott határozatok éves nyilvántartása",
+    "projectsTitle": "Határozattervezetek nyilvántartása",
+    "projectsSubtitle": "A döntéshozó szerv határozattervezeteinek nyilvántartása",
+    "registerYear": "Határozatok nyilvántartása – {year}",
+    "projectYear": "Tervezetek nyilvántartása – {year}"
+  },
+  "dispozitiiMolPage": {
+    "mainTitle": "Nagyszalonta Város Polgármesterének rendeletei",
+    "registersTitle": "Rendeletek nyilvántartása",
+    "registersSubtitle": "A végrehajtó hatóság rendeleteinek éves nyilvántartása",
+    "registerYear": "Rendeletek nyilvántartása – {year}"
+  },
+  "regulamentePage": {
+    "mainTitle": "Közigazgatási eljárások szabályzatai",
+    "mainSubtitle": "Szervezeti és működési szabályzatok",
+    "otherTitle": "Egyéb szabályzatok",
+    "otherSubtitle": "Különböző területekre vonatkozó szabályzatok",
+    "archiveTitle": "Archív szabályzatok",
+    "archiveSubtitle": "Hatályon kívül helyezett vagy lecserélt szabályzatok"
+  },
   "buletinPage": {
     "sectionA": "A közintézmény szervezését és működését szabályozó normatív aktusok:",
     "sectionB": "Nagyszalonta Polgármesteri Hivatalának szervezeti felépítése, a Helyi Közigazgatás osztályainak hatáskörei",
@@ -531,6 +571,32 @@
     "sectionJ": "A hatóság vagy közintézmény döntésének megtámadási módjai, amennyiben a személy úgy ítéli meg, hogy sérült a kért közérdekű információkhoz való hozzáférési joga",
     "viewPage": "Oldal megtekintése",
     "bulletin": "Tájékoztató"
+  },
+  "alteDocumentePage": {
+    "quickLinksTitle": "Gyors hozzáférés a kapcsolódó oldalakhoz",
+    "quickLinksSubtitle": "Linkek a weboldal más részeihez",
+    "links": {
+      "ordineZi": "Helyi Tanács ülések napirendje",
+      "proceseVerbale": "Helyi Tanács ülések jegyzőkönyvei",
+      "publicatiiCasatorii": "Házassági hirdetmények",
+      "dezbateriPublice": "Nyilvános viták",
+      "declaratiiAlesiFunctionari": "Választott tisztségviselők és köztisztviselők",
+      "declaratiiConsilieri": "Helyi tanácsosok"
+    },
+    "transparencyAnnouncementsTitle": "Átláthatóság – Hirdetmények",
+    "transparencyReportsTitle": "Jelentések – döntéshozatali átláthatóság",
+    "transparencyReportYear": "{year}. évi átláthatósági éves jelentés",
+    "councilMinutesTitle": "Helyi Tanács ülések jegyzőkönyvei",
+    "minuteSession": "Ülés jegyzőkönyve",
+    "extraordinary": "rendkívüli",
+    "archives": "Archívum",
+    "archiveYear": "{year} archívum",
+    "mandateValidationsTitle": "Vagyonnyilatkozatok / Mandátum hitelesítések",
+    "careerTitle": "Karrier – hirdetmények / űrlapok",
+    "newsAndEvents": "Hírek és események",
+    "socialProblemsTitle": "Szociális problémák – űrlapok",
+    "covidInfoTitle": "Hasznos koronavírus információk",
+    "registersTitle": "Nyilvántartások"
   }
 }
 

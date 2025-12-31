@@ -518,6 +518,46 @@
     "archiveTitle": "Arhivă dezbateri publice",
     "infoNote": "Documentele din această pagină vor fi încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri și vor fi actualizate ulterior cu documentele reale."
   },
+  "statutPage": {
+    "statut2021": "Statutul Municipiului Salonta – 2021",
+    "statut2017": "Statutul Municipiului Salonta – Republicat, 2017",
+    "download": "Descarcă"
+  },
+  "financiarePage": {
+    "budgetTitle": "Bugetul general al Municipiului Salonta",
+    "budgetLegalRef": "OUG 57/2019 privind Codul Administrativ, SECȚIUNEA 3 – Atribuțiile consiliului local",
+    "budgetLegalText": "Art. 129: alin. (4) În exercitarea atribuțiilor prevăzute la alin. (2) lit. b), consiliul local: a) aprobă, la propunerea primarului, bugetul unității administrativ-teritoriale, virările de credite, modul de utilizare a rezervei bugetare și contul de încheiere a exercițiului bugetar.",
+    "executionTitle": "Contul de execuție",
+    "budgetGeneralTitle": "Buget general",
+    "rectificationsTitle": "Rectificări bugetare",
+    "otherDocsTitle": "Alte documente",
+    "rectification": "Rectificarea"
+  },
+  "hotarariMolPage": {
+    "mainTitle": "Hotărârile Consiliului Local al Municipiului Salonta",
+    "hotarari-clms": "Hotărârile Consiliului Local al Municipiului Salonta",
+    "hotarari-republicate": "Hotărârile CLMS – Republicate",
+    "registersTitle": "Registre hotărâri adoptate",
+    "registersSubtitle": "Evidența hotărârilor adoptate de Consiliul Local pe ani",
+    "projectsTitle": "Registre proiecte de hotărâri",
+    "projectsSubtitle": "Evidența proiectelor de hotărâri ale autorității deliberative",
+    "registerYear": "Registru hotărâri – {year}",
+    "projectYear": "Registru proiecte – {year}"
+  },
+  "dispozitiiMolPage": {
+    "mainTitle": "Dispoziții ale Primarului Municipiului Salonta",
+    "registersTitle": "Registre dispoziții",
+    "registersSubtitle": "Evidența dispozițiilor autorității executive pe ani",
+    "registerYear": "Registru dispoziții – {year}"
+  },
+  "regulamentePage": {
+    "mainTitle": "Regulamente privind procedurile administrative",
+    "mainSubtitle": "Regulamente de organizare și funcționare",
+    "otherTitle": "Alte regulamente",
+    "otherSubtitle": "Regulamente specifice pentru diverse domenii",
+    "archiveTitle": "Regulamente arhivă",
+    "archiveSubtitle": "Regulamente abrogate sau înlocuite"
+  },
   "buletinPage": {
     "sectionA": "Actele normative care reglementează organizarea și funcționarea instituției publice:",
     "sectionB": "Structura organizatorică a Primăriei Municipiului Salonta, atribuțiile departamentelor din cadrul Administrației Publice Locale",
@@ -531,6 +571,32 @@
     "sectionJ": "Modalitățile de contestare a deciziei autorității sau a instituției publice în situația în care persoana se consideră vătămată în privința dreptului de acces la informațiile de interes public solicitate",
     "viewPage": "Vezi pagina",
     "bulletin": "Buletin informativ"
+  },
+  "alteDocumentePage": {
+    "quickLinksTitle": "Acces rapid la pagini conexe",
+    "quickLinksSubtitle": "Linkuri către alte secțiuni ale site-ului",
+    "links": {
+      "ordineZi": "Ordinea de zi a ședințelor de Consiliu Local",
+      "proceseVerbale": "Procese verbale ale ședințelor de consiliu local",
+      "publicatiiCasatorii": "Publicații căsătorii",
+      "dezbateriPublice": "Dezbateri publice",
+      "declaratiiAlesiFunctionari": "Aleși locali și funcționari publici",
+      "declaratiiConsilieri": "Consilieri locali"
+    },
+    "transparencyAnnouncementsTitle": "Transparență – Anunțuri",
+    "transparencyReportsTitle": "Rapoarte – transparența decizională",
+    "transparencyReportYear": "Raport anual privind transparența decizională pentru anul {year}",
+    "councilMinutesTitle": "Minutele ședințelor de Consiliu Local",
+    "minuteSession": "Minuta ședinței",
+    "extraordinary": "extraordinară",
+    "archives": "Arhivă",
+    "archiveYear": "Arhivă {year}",
+    "mandateValidationsTitle": "Declarații avere și interese / Validare mandate",
+    "careerTitle": "Carieră – anunțuri / formulare",
+    "newsAndEvents": "Știri și evenimente",
+    "socialProblemsTitle": "Probleme sociale – formulare",
+    "covidInfoTitle": "Informații utile privind coronavirus",
+    "registersTitle": "Registre"
   }
 }
 

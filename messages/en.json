@@ -518,6 +518,46 @@
     "archiveTitle": "Public debates archive",
     "infoNote": "Documents on this page will be loaded from the database. Links marked with '#' are placeholders and will be updated later with actual documents."
   },
+  "statutPage": {
+    "statut2021": "Statute of Salonta Municipality – 2021",
+    "statut2017": "Statute of Salonta Municipality – Republished, 2017",
+    "download": "Download"
+  },
+  "financiarePage": {
+    "budgetTitle": "General Budget of Salonta Municipality",
+    "budgetLegalRef": "OUG 57/2019 Administrative Code, SECTION 3 – Local Council Responsibilities",
+    "budgetLegalText": "Art. 129: par. (4) In exercising the responsibilities provided in par. (2) letter b), the local council: a) approves, at the mayor's proposal, the budget of the administrative-territorial unit.",
+    "executionTitle": "Execution Account",
+    "budgetGeneralTitle": "General Budget",
+    "rectificationsTitle": "Budget Rectifications",
+    "otherDocsTitle": "Other Documents",
+    "rectification": "Rectification"
+  },
+  "hotarariMolPage": {
+    "mainTitle": "Decisions of Salonta Municipal Local Council",
+    "hotarari-clms": "Decisions of Salonta Municipal Local Council",
+    "hotarari-republicate": "SMLC Decisions – Republished",
+    "registersTitle": "Adopted Decisions Registers",
+    "registersSubtitle": "Annual records of decisions adopted by the Local Council",
+    "projectsTitle": "Draft Decisions Registers",
+    "projectsSubtitle": "Records of draft decisions of the deliberative authority",
+    "registerYear": "Decisions register – {year}",
+    "projectYear": "Draft register – {year}"
+  },
+  "dispozitiiMolPage": {
+    "mainTitle": "Dispositions of the Mayor of Salonta Municipality",
+    "registersTitle": "Dispositions Registers",
+    "registersSubtitle": "Annual records of executive authority dispositions",
+    "registerYear": "Dispositions register – {year}"
+  },
+  "regulamentePage": {
+    "mainTitle": "Administrative Procedure Regulations",
+    "mainSubtitle": "Organization and functioning regulations",
+    "otherTitle": "Other Regulations",
+    "otherSubtitle": "Specific regulations for various domains",
+    "archiveTitle": "Archived Regulations",
+    "archiveSubtitle": "Repealed or replaced regulations"
+  },
   "buletinPage": {
     "sectionA": "Normative acts regulating the organization and functioning of the public institution:",
     "sectionB": "Organizational structure of Salonta City Hall, responsibilities of Local Public Administration departments",
@@ -531,6 +571,32 @@
     "sectionJ": "Methods of contesting the decision of the authority or public institution when a person considers their right to access requested public interest information has been violated",
     "viewPage": "View page",
     "bulletin": "Information bulletin"
+  },
+  "alteDocumentePage": {
+    "quickLinksTitle": "Quick Access to Related Pages",
+    "quickLinksSubtitle": "Links to other sections of the website",
+    "links": {
+      "ordineZi": "Local Council Session Agendas",
+      "proceseVerbale": "Local Council Session Minutes",
+      "publicatiiCasatorii": "Marriage Publications",
+      "dezbateriPublice": "Public Debates",
+      "declaratiiAlesiFunctionari": "Elected Officials and Civil Servants",
+      "declaratiiConsilieri": "Local Councilors"
+    },
+    "transparencyAnnouncementsTitle": "Transparency – Announcements",
+    "transparencyReportsTitle": "Reports – Decision-Making Transparency",
+    "transparencyReportYear": "Annual transparency report for {year}",
+    "councilMinutesTitle": "Local Council Session Minutes",
+    "minuteSession": "Session minutes",
+    "extraordinary": "extraordinary",
+    "archives": "Archive",
+    "archiveYear": "Archive {year}",
+    "mandateValidationsTitle": "Wealth Declarations / Mandate Validations",
+    "careerTitle": "Career – announcements / forms",
+    "newsAndEvents": "News and events",
+    "socialProblemsTitle": "Social Problems – forms",
+    "covidInfoTitle": "Useful Coronavirus Information",
+    "registersTitle": "Registers"
   }
 }
 
