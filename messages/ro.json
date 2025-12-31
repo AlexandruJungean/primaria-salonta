@@ -303,6 +303,27 @@
     "touristAttractions": "Călătorul aflat în Salonta se poate opri în casele ce au aparținut poeților Arany János, Sinka István și Zilahy Lajos, poate depune o floare la statuile acestora sau a revoluționarului pașoptist Kossuth Lajos sau poate admira Turnul Ciunt ori Palatul 'Arany' care adăpostește Biblioteca orășenească 'Teodor Neș' și o galerie de artă. Demne de interes sunt și bisericile orașului și clădirea Primăriei.",
     "opportunities": "Lăsând în urmă obiectivele turistice ale orașului, Salonta poate fi punct de plecare pentru cei pasionați de vânătoare și pescuit. În același timp, Salonta oferă multiple oportunități investitorilor și oamenilor de afaceri interesați, fiind un oraș al tuturor posibilităților."
   },
+  "hartaDigitalaPage": {
+    "title": "Harta Digitală Interactivă",
+    "subtitle": "Explorați municipiul Salonta cu ajutorul hărții digitale interactive Map2Web",
+    "openMap": "Deschide Harta Interactivă",
+    "featuresTitle": "Funcționalități disponibile",
+    "features": {
+      "searchTitle": "Căutare adrese",
+      "searchDesc": "Găsiți orice adresă din Salonta",
+      "routeTitle": "Calcul rute",
+      "routeDesc": "Planificați traseul cu mașina, pe jos sau cu bicicleta",
+      "measureTitle": "Măsurători",
+      "measureDesc": "Măsurați distanțe și suprafețe",
+      "printTitle": "Export PDF",
+      "printDesc": "Exportați hărți pentru printare",
+      "langTitle": "Multilingv",
+      "langDesc": "Disponibil în RO, HU, EN",
+      "layersTitle": "Straturi tematice",
+      "layersDesc": "Vizualizați puncte de interes și facilități"
+    },
+    "infoText": "Harta digitală este dezvoltată de Schubert & Franzke și oferă informații detaliate despre străzile, instituțiile și punctele de interes din Salonta."
+  },
   "culturaPage": {
     "intro": "Orașul Salonta a dat culturii universale numeroase personalități:",
     "personalitiesTitle": "Personalități culturale",

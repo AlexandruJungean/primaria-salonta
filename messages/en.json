@@ -303,6 +303,27 @@
     "touristAttractions": "Visitors to Salonta can stop at the houses that belonged to poets Arany János, Sinka István, and Zilahy Lajos, lay a flower at their statues or that of the 1848 revolutionary Kossuth Lajos, or admire the Csonka Tower or the \"Arany\" Palace which houses the \"Teodor Neș\" Municipal Library and an art gallery. The city's churches and the Town Hall building are also worth visiting.",
     "opportunities": "Leaving behind the city's tourist attractions, Salonta can be a starting point for hunting and fishing enthusiasts. At the same time, Salonta offers multiple opportunities for interested investors and businesspeople, being a city of all possibilities."
   },
+  "hartaDigitalaPage": {
+    "title": "Interactive Digital Map",
+    "subtitle": "Explore Salonta municipality with the Map2Web interactive digital map",
+    "openMap": "Open Interactive Map",
+    "featuresTitle": "Available features",
+    "features": {
+      "searchTitle": "Address Search",
+      "searchDesc": "Find any address in Salonta",
+      "routeTitle": "Route Planning",
+      "routeDesc": "Plan your route by car, on foot, or by bicycle",
+      "measureTitle": "Measurements",
+      "measureDesc": "Measure distances and areas",
+      "printTitle": "PDF Export",
+      "printDesc": "Export maps for printing",
+      "langTitle": "Multilingual",
+      "langDesc": "Available in RO, HU, EN",
+      "layersTitle": "Thematic Layers",
+      "layersDesc": "View points of interest and facilities"
+    },
+    "infoText": "The digital map is developed by Schubert & Franzke and provides detailed information about the streets, institutions, and points of interest in Salonta."
+  },
   "culturaPage": {
     "intro": "The city of Salonta has given universal culture numerous personalities:",
     "personalitiesTitle": "Cultural Personalities",

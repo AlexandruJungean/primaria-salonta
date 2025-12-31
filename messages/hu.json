@@ -303,6 +303,27 @@
     "touristAttractions": "A Szalontára látogató megállhat az Arany János, Sinka István és Zilahy Lajos költőkhöz tartozó házaknál, virágot helyezhet szobraiknál vagy a 1848-as forradalmár Kossuth Lajosnál, és megcsodálhatja a Csonka tornyot vagy az 'Arany' palotát, amely a 'Teodor Neș' Városi Könyvtárnak és egy művészeti galériának ad otthont. A város templomai és a Városháza épülete is érdemes a megtekintésre.",
     "opportunities": "A város turisztikai látnivalóit elhagyva Szalonta kiindulópont lehet a vadászat és horgászat szerelmesei számára. Ugyanakkor Szalonta számos lehetőséget kínál az érdeklődő befektetőknek és üzletembereknek, minden lehetőség városa."
   },
+  "hartaDigitalaPage": {
+    "title": "Interaktív Digitális Térkép",
+    "subtitle": "Fedezze fel Nagyszalontát a Map2Web interaktív digitális térkép segítségével",
+    "openMap": "Interaktív Térkép Megnyitása",
+    "featuresTitle": "Elérhető funkciók",
+    "features": {
+      "searchTitle": "Címkeresés",
+      "searchDesc": "Keressen bármilyen címet Nagyszalontán",
+      "routeTitle": "Útvonaltervezés",
+      "routeDesc": "Tervezze meg útját autóval, gyalog vagy kerékpárral",
+      "measureTitle": "Mérések",
+      "measureDesc": "Mérjen távolságokat és területeket",
+      "printTitle": "PDF Exportálás",
+      "printDesc": "Exportáljon térképeket nyomtatáshoz",
+      "langTitle": "Többnyelvű",
+      "langDesc": "Elérhető RO, HU, EN nyelveken",
+      "layersTitle": "Tematikus rétegek",
+      "layersDesc": "Tekintse meg az érdekességeket és létesítményeket"
+    },
+    "infoText": "A digitális térképet a Schubert & Franzke fejlesztette, és részletes információkat nyújt Nagyszalonta utcáiról, intézményeiről és látnivalóiról."
+  },
   "culturaPage": {
     "intro": "Szalonta város számos személyiséget adott az egyetemes kultúrának:",
     "personalitiesTitle": "Kulturális személyiségek",

@@ -1,6 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { useTranslations } from 'next-intl';
-import { Map } from 'lucide-react';
+import { ExternalLink, Map, Search, Route, Ruler, Printer, Globe } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
@@ -12,8 +12,20 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return { title: t('hartaDigitala') };
 }
 
+const FEATURE_ICONS = [Search, Route, Ruler, Printer, Globe, Map];
+
 export default function HartaDigitalaPage() {
   const t = useTranslations('navigation');
+  const tPage = useTranslations('hartaDigitalaPage');
+
+  const features = [
+    { icon: Search, titleKey: 'searchTitle', descKey: 'searchDesc' },
+    { icon: Route, titleKey: 'routeTitle', descKey: 'routeDesc' },
+    { icon: Ruler, titleKey: 'measureTitle', descKey: 'measureDesc' },
+    { icon: Printer, titleKey: 'printTitle', descKey: 'printDesc' },
+    { icon: Globe, titleKey: 'langTitle', descKey: 'langDesc' },
+    { icon: Map, titleKey: 'layersTitle', descKey: 'layersDesc' },
+  ];
 
   return (
     <>
@@ -23,35 +35,81 @@ export default function HartaDigitalaPage() {
       ]} />
       <PageHeader titleKey="hartaDigitala" icon="map" />
 
-      <Section background="white" className="py-0">
-        <div className="h-[calc(100vh-300px)] min-h-[500px]">
-          <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d43682.91!2d21.6!3d46.8!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4747f4e8b2f14f87%3A0x400d4d3e1f4c4e0!2sSalonta!5e0!3m2!1sen!2sro!4v1"
-            width="100%"
-            height="100%"
-            style={{ border: 0 }}
-            allowFullScreen
-            loading="lazy"
-            title="Hartă digitală Salonta"
-          />
-        </div>
-      </Section>
-
-      <Section background="gray">
+      <Section background="white">
         <Container>
-          <div className="max-w-2xl mx-auto text-center">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
-              Explorează Salonta
-            </h2>
-            <p className="text-gray-600">
-              Folosiți harta interactivă pentru a explora municipiul Salonta. 
-              Puteți vizualiza străzile, instituțiile publice, zonele de interes 
-              și punctele turistice ale orașului.
-            </p>
+          <div className="max-w-5xl mx-auto">
+            {/* Hero Card */}
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl mb-12">
+              {/* Map Preview Image */}
+              <div className="relative h-[400px] bg-gradient-to-br from-primary-600 to-primary-800">
+                <div className="absolute inset-0 bg-[url('/images/primaria-salonta-1.jpg')] bg-cover bg-center opacity-20" />
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-8">
+                  <Map className="w-20 h-20 mb-6 opacity-90" />
+                  <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">
+                    {tPage('title')}
+                  </h2>
+                  <p className="text-xl text-white/80 mb-8 text-center max-w-2xl">
+                    {tPage('subtitle')}
+                  </p>
+                  <a 
+                    href="https://salonta-city.map2web.eu/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-3 px-8 py-4 bg-white text-primary-700 rounded-xl hover:bg-gray-100 transition-colors text-lg font-semibold shadow-lg"
+                  >
+                    <ExternalLink className="w-6 h-6" />
+                    {tPage('openMap')}
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* Features Grid */}
+            <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+              {tPage('featuresTitle')}
+            </h3>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+              {features.map((feature, index) => {
+                const Icon = feature.icon;
+                return (
+                  <div 
+                    key={index}
+                    className="flex items-start gap-4 p-5 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
+                  >
+                    <div className="flex-shrink-0 w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center">
+                      <Icon className="w-6 h-6 text-primary-600" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-1">
+                        {tPage(`features.${feature.titleKey}`)}
+                      </h4>
+                      <p className="text-sm text-gray-600">
+                        {tPage(`features.${feature.descKey}`)}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Info Box */}
+            <div className="bg-primary-50 rounded-xl p-6 text-center">
+              <p className="text-gray-700 mb-4">
+                {tPage('infoText')}
+              </p>
+              <a 
+                href="https://salonta-city.map2web.eu/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-primary-700 hover:text-primary-800 font-medium"
+              >
+                salonta-city.map2web.eu
+                <ExternalLink className="w-4 h-4" />
+              </a>
+            </div>
           </div>
         </Container>
       </Section>
     </>
   );
 }
-
