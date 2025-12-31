@@ -67,13 +67,13 @@ export function HeroCarousel() {
       <div className="relative z-10 h-full flex flex-col items-center justify-center px-4">
         <Container className="text-center">
           {/* Logo */}
-          <div className="mb-6 animate-fade-in">
+          <div className="animate-fade-in">
             <Image
               src="/logo/logo-transparent.png"
               alt="Primăria Salonta"
-              width={100}
-              height={100}
-              className="w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 mx-auto drop-shadow-lg"
+              width={200}
+              height={200}
+              className="w-34 h-34 md:w-40 md:h-40 lg:w-48 lg:h-48 mx-auto drop-shadow-lg"
               priority
             />
           </div>
