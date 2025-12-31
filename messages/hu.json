@@ -122,7 +122,8 @@
     "sanatate": "Egészségügy (Hamarosan)",
     "sport": "Sport és szabadidő (Hamarosan)",
     "voluntariat": "Önkéntesség (Hamarosan)",
-    "agentiEconomici": "Gazdasági szereplők (Hamarosan)"
+    "agentiEconomici": "Gazdasági szereplők (Hamarosan)",
+    "problemeSociale": "Szociális problémák – nyomtatványok"
   },
   "homepage": {
     "welcome": "Üdvözöljük",
@@ -596,7 +597,42 @@
     "newsAndEvents": "Hírek és események",
     "socialProblemsTitle": "Szociális problémák – űrlapok",
     "covidInfoTitle": "Hasznos koronavírus információk",
-    "registersTitle": "Nyilvántartások"
+    "registersTitle": "Nyilvántartások",
+    "archiveMandateTitle": "Mandátum hitelesítés archívum (2020-2024)"
+  },
+  "problemeSocialePage": {
+    "infoTitle": "Szociális problémák nyomtatványai",
+    "infoText": "Itt találhatók a Nagyszalonta Polgármesteri Hivatala által nyújtott különböző szociális támogatások igényléséhez szükséges nyomtatványok.",
+    "formsTitle": "Elérhető nyomtatványok",
+    "forms": {
+      "cererePrestatiiExceptionale": "Rendkívüli segély kérvény",
+      "cerereAjutorUrgenta": "Sürgősségi segély kérvény",
+      "declaratieVenit": "Jövedelem-bevallás modell"
+    },
+    "contactTitle": "További információk",
+    "contactText": "További információkért vagy a nyomtatványok kitöltéséhez nyújtott segítségért kérjük, forduljon a Szociális Szolgálathoz.",
+    "contactLink": "Kapcsolatfelvétel"
+  },
+  "formularePage": {
+    "intro": "Töltse le a Nagyszalonta Polgármesteri Hivatalának benyújtott különböző kérelmekhez szükséges szabványos nyomtatványokat.",
+    "metodologie": "Keretmódszertan az űrlap kitöltési idejének kiszámításához",
+    "forms": "nyomtatvány",
+    "categories": {
+      "achizitiiPublice": "Közbeszerzések",
+      "asistentaSociala": "Szociális segítség",
+      "autorizariConstructii": "Építési engedélyek",
+      "birouAgricol": "Mezőgazdasági iroda",
+      "centrulZi": "\"A közösség nagyszülei\" Napközi Központ Nagyszalonta",
+      "dezvoltareUrbana": "Városfejlesztés",
+      "diverse": "Egyéb",
+      "evidentaPopulatiei": "Lakosságnyilvántartás",
+      "impoziteTaxe": "Adók és illetékek",
+      "protectieCivila": "Polgári védelem",
+      "resurseUmane": "Humán erőforrás",
+      "stareCivila": "Anyakönyvi hivatal",
+      "urbanismAmenajare": "Városrendezés és területfejlesztés",
+      "transparenta": "Átláthatóság"
+    }
   }
 }
 

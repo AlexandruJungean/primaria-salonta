@@ -92,22 +92,19 @@ const MANDATE_VALIDATIONS = [
   { doc: 'Încheiere Civilă nr. 703 din 14.10.2024 privind validare mandat primar Török László', url: '#' },
 ];
 
-// Career documents - external links
+// Career links - internal pages
 const CAREER_LINKS = [
-  { doc: 'Anunțurile posturilor scoase la concurs', url: 'https://salonta.net/ro/cariera/anunturile-posturilor-scoase-la-concurs/' },
-  { doc: 'Diverse anunțuri', url: 'https://salonta.net/ro/info-diverse-3/' },
-  { doc: 'Formulare', url: 'https://salonta.net/ro/informatii-utile/formulare/' },
+  { titleKey: 'concursuri', href: '/informatii-publice/concursuri' },
+  { titleKey: 'anunturi', href: '/transparenta/anunturi' },
+  { titleKey: 'formulare', href: '/servicii-online/formulare' },
 ];
 
-// Social problems forms - external links
-const SOCIAL_LINKS = [
-  { doc: 'Probleme sociale – formulare', lang: 'RO', url: 'https://salonta.net/ro/probleme-sociale-formulare/' },
-  { doc: 'Probleme sociale – formulare', lang: 'HU', url: 'https://salonta.net/hu/szocialis-problemak-nyomtatvanyok/' },
-];
+// Social problems - internal page (single page with both RO/HU forms)
+const SOCIAL_LINK = { titleKey: 'problemeSociale', href: '/servicii-online/probleme-sociale' };
 
-// Coronavirus info - external link (only RO exists)
-const COVID_LINKS = [
-  { doc: 'Informații utile privind coronavirus', lang: 'RO', url: 'https://salonta.net/ro/hotarari-si-recomandari-privind-coronavirus-covid-19/' },
+// Coronavirus info - document from database (will be an announcement)
+const COVID_DOCS = [
+  { doc: 'Informații utile privind coronavirus (COVID-19)', url: '#' },
 ];
 
 // Registers - documents from database
@@ -134,12 +131,10 @@ function DocumentItem({ title, url }: { title: string; url: string }) {
   );
 }
 
-function ExternalLinkItem({ title, url }: { title: string; url: string }) {
+function InternalLinkItem({ title, href }: { title: string; href: string }) {
   return (
     <Link
-      href={url}
-      target="_blank"
-      rel="noopener noreferrer"
+      href={href}
       className="flex items-center justify-between gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
     >
       <div className="flex items-center gap-2 min-w-0">
@@ -147,8 +142,7 @@ function ExternalLinkItem({ title, url }: { title: string; url: string }) {
         <span className="text-sm text-gray-700">{title}</span>
       </div>
       <span className="flex items-center gap-1 px-2 py-1 bg-primary-100 text-primary-700 rounded text-xs font-medium shrink-0">
-        <ExternalLink className="w-3 h-3" />
-        Link
+        →
       </span>
     </Link>
   );
@@ -319,11 +313,22 @@ export default function AlteDocumentePage() {
                   {MANDATE_VALIDATIONS.map((doc, i) => (
                     <DocumentItem key={i} title={doc.doc} url={doc.url} />
                   ))}
-                  {/* Archive link - external */}
-                  <ExternalLinkItem 
-                    title="Arhivă validare mandate (2020-2024)" 
-                    url="https://salonta.net/ro/arhiva-validare-mandate-2020-2024/" 
-                  />
+                </div>
+                {/* Archive section - documents from database */}
+                <div className="mt-4 pt-4 border-t">
+                  <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                    <Archive className="w-5 h-5 text-purple-600" />
+                    {ta('archiveMandateTitle')}
+                  </h3>
+                  <div className="space-y-2">
+                    <DocumentItem title="Sentința civilă nr. 86/2023 privind validarea mandatului consilierului local supleant" url="#" />
+                    <DocumentItem title="HCLMS nr. 3 din 31.01.2023 – constatare încetare mandat Gali Éva" url="#" />
+                    <DocumentItem title="Sentința civilă nr. 45/2022 privind validarea mandatului consilierului local supleant" url="#" />
+                    <DocumentItem title="Încheierea civilă nr. 341/2020 privind validarea mandatului primarului" url="#" />
+                    <DocumentItem title="Încheierea civilă nr. 349/2020 privind validarea mandatelor consilierilor locali" url="#" />
+                    <DocumentItem title="Ordinul Prefectului nr. 588/20.10.2020 privind constatarea ca legal constituit a Consiliului Local al mun. Salonta" url="#" />
+                    <DocumentItem title="Încheierea civilă nr.397/2020 privind validarea mandatului consilierului local supleant" url="#" />
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -335,8 +340,8 @@ export default function AlteDocumentePage() {
                 <CardContent className="p-5">
                   <SectionHeader icon={Briefcase} title={ta('careerTitle')} bgColor="bg-teal-600" />
                   <div className="space-y-2">
-                    {CAREER_LINKS.map((doc, i) => (
-                      <ExternalLinkItem key={i} title={doc.doc} url={doc.url} />
+                    {CAREER_LINKS.map((link, i) => (
+                      <InternalLinkItem key={i} title={t(link.titleKey)} href={link.href} />
                     ))}
                   </div>
                   <Link 
@@ -354,9 +359,7 @@ export default function AlteDocumentePage() {
                 <CardContent className="p-5">
                   <SectionHeader icon={Heart} title={ta('socialProblemsTitle')} bgColor="bg-rose-600" />
                   <div className="space-y-2">
-                    {SOCIAL_LINKS.map((doc, i) => (
-                      <ExternalLinkItem key={i} title={`${doc.doc} (${doc.lang})`} url={doc.url} />
-                    ))}
+                    <InternalLinkItem title={t(SOCIAL_LINK.titleKey)} href={SOCIAL_LINK.href} />
                   </div>
                 </CardContent>
               </Card>
@@ -367,8 +370,8 @@ export default function AlteDocumentePage() {
               <CardContent className="p-5">
                 <SectionHeader icon={AlertCircle} title={ta('covidInfoTitle')} bgColor="bg-orange-500" />
                 <div className="space-y-2">
-                  {COVID_LINKS.map((doc, i) => (
-                    <ExternalLinkItem key={i} title={`${doc.doc} (${doc.lang})`} url={doc.url} />
+                  {COVID_DOCS.map((doc, i) => (
+                    <DocumentItem key={i} title={doc.doc} url={doc.url} />
                   ))}
                 </div>
               </CardContent>

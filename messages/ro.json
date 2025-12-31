@@ -122,7 +122,8 @@
     "sanatate": "Sănătate (În curând)",
     "sport": "Sport și agrement (În curând)",
     "voluntariat": "Voluntariat (În curând)",
-    "agentiEconomici": "Agenți economici (În curând)"
+    "agentiEconomici": "Agenți economici (În curând)",
+    "problemeSociale": "Probleme sociale – formulare"
   },
   "homepage": {
     "welcome": "Bine ați venit",
@@ -596,7 +597,42 @@
     "newsAndEvents": "Știri și evenimente",
     "socialProblemsTitle": "Probleme sociale – formulare",
     "covidInfoTitle": "Informații utile privind coronavirus",
-    "registersTitle": "Registre"
+    "registersTitle": "Registre",
+    "archiveMandateTitle": "Arhivă validare mandate (2020-2024)"
+  },
+  "problemeSocialePage": {
+    "infoTitle": "Formulare pentru probleme sociale",
+    "infoText": "Aici găsiți formularele necesare pentru solicitarea diferitelor ajutoare sociale oferite de Primăria Municipiului Salonta.",
+    "formsTitle": "Formulare disponibile",
+    "forms": {
+      "cererePrestatiiExceptionale": "Cerere prestații excepționale",
+      "cerereAjutorUrgenta": "Cerere ajutor de urgență",
+      "declaratieVenit": "Model Declarație de venit"
+    },
+    "contactTitle": "Informații suplimentare",
+    "contactText": "Pentru mai multe informații sau asistență în completarea formularelor, vă rugăm să contactați Serviciul de Asistență Socială.",
+    "contactLink": "Contactați-ne"
+  },
+  "formularePage": {
+    "intro": "Descărcați formularele tipizate necesare pentru diverse solicitări către Primăria Municipiului Salonta.",
+    "metodologie": "Metodologia-cadru cu privire la calcularea duratei de completare a unui formular",
+    "forms": "formulare",
+    "categories": {
+      "achizitiiPublice": "Achiziții publice",
+      "asistentaSociala": "Asistență socială",
+      "autorizariConstructii": "Autorizări construcții",
+      "birouAgricol": "Birou agricol",
+      "centrulZi": "Centrul de zi \"Bunicii comunității\" Salonta",
+      "dezvoltareUrbana": "Dezvoltare urbană",
+      "diverse": "Diverse",
+      "evidentaPopulatiei": "Evidența populației",
+      "impoziteTaxe": "Impozite și taxe",
+      "protectieCivila": "Protecție civilă",
+      "resurseUmane": "Resurse umane",
+      "stareCivila": "Stare civilă",
+      "urbanismAmenajare": "Urbanism și amenajarea teritoriului",
+      "transparenta": "Transparență"
+    }
   }
 }
 

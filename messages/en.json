@@ -122,7 +122,8 @@
     "sanatate": "Health (Coming Soon)",
     "sport": "Sports & Recreation (Coming Soon)",
     "voluntariat": "Volunteering (Coming Soon)",
-    "agentiEconomici": "Business Directory (Coming Soon)"
+    "agentiEconomici": "Business Directory (Coming Soon)",
+    "problemeSociale": "Social Problems – forms"
   },
   "homepage": {
     "welcome": "Welcome",
@@ -596,7 +597,42 @@
     "newsAndEvents": "News and events",
     "socialProblemsTitle": "Social Problems – forms",
     "covidInfoTitle": "Useful Coronavirus Information",
-    "registersTitle": "Registers"
+    "registersTitle": "Registers",
+    "archiveMandateTitle": "Mandate Validation Archive (2020-2024)"
+  },
+  "problemeSocialePage": {
+    "infoTitle": "Social Problem Forms",
+    "infoText": "Here you can find the forms required to request various social benefits offered by Salonta City Hall.",
+    "formsTitle": "Available Forms",
+    "forms": {
+      "cererePrestatiiExceptionale": "Exceptional benefits request",
+      "cerereAjutorUrgenta": "Emergency aid request",
+      "declaratieVenit": "Income declaration form"
+    },
+    "contactTitle": "Additional Information",
+    "contactText": "For more information or assistance in completing the forms, please contact the Social Assistance Service.",
+    "contactLink": "Contact us"
+  },
+  "formularePage": {
+    "intro": "Download the standardized forms needed for various requests to Salonta City Hall.",
+    "metodologie": "Framework methodology for calculating form completion time",
+    "forms": "forms",
+    "categories": {
+      "achizitiiPublice": "Public Procurement",
+      "asistentaSociala": "Social Assistance",
+      "autorizariConstructii": "Building Permits",
+      "birouAgricol": "Agricultural Office",
+      "centrulZi": "\"Community Grandparents\" Day Center Salonta",
+      "dezvoltareUrbana": "Urban Development",
+      "diverse": "Miscellaneous",
+      "evidentaPopulatiei": "Population Records",
+      "impoziteTaxe": "Taxes and Fees",
+      "protectieCivila": "Civil Protection",
+      "resurseUmane": "Human Resources",
+      "stareCivila": "Civil Registry",
+      "urbanismAmenajare": "Urban Planning and Land Development",
+      "transparenta": "Transparency"
+    }
   }
 }
 
