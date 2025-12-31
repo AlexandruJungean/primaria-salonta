@@ -34,7 +34,7 @@ export default function CetateniOnoarePage() {
 
       <Section background="white">
         <Container>
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-5xl mx-auto">
             <p className="text-xl text-gray-600 mb-8 text-center">
               Titlul de Cetățean de Onoare este cea mai înaltă distincție acordată 
               de Consiliul Local al Municipiului Salonta persoanelor care au adus 

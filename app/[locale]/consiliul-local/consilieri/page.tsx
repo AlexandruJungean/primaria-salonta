@@ -46,7 +46,7 @@ export default function ConsilieriPage() {
 
       <Section background="white">
         <Container>
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-5xl mx-auto">
             <p className="text-lg text-gray-600 mb-8 text-center">
               Consiliul Local al Municipiului Salonta este format din 
               {COUNCILORS.length} consilieri locali aleși pentru mandatul 2020-2024.

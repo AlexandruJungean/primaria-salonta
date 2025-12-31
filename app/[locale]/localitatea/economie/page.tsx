@@ -49,7 +49,7 @@ export default function EconomiePage() {
 
       <Section background="white">
         <Container>
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-5xl mx-auto">
             <p className="text-xl text-gray-600 mb-8 text-center">
               Economia municipiului Salonta se bazează pe un mix echilibrat de 
               agricultură, industrie, comerț și servicii, valorificând poziția 

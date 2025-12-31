@@ -35,7 +35,7 @@ export default function HotarariPage() {
 
       <Section background="white">
         <Container>
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-5xl mx-auto">
             {/* Search and Filter */}
             <div className="flex gap-4 mb-8">
               <div className="flex-1">

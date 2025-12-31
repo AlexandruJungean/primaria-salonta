@@ -26,7 +26,7 @@ export default function GdprPage() {
 
       <Section background="white">
         <Container>
-          <div className="max-w-4xl mx-auto prose prose-lg">
+          <div className="max-w-5xl mx-auto prose prose-lg">
             <h2>Protecția datelor cu caracter personal</h2>
             <p>
               Primăria Municipiului Salonta prelucrează date cu caracter personal 

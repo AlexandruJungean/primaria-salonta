@@ -49,7 +49,7 @@ export default function ComisiiPage() {
 
       <Section background="white">
         <Container>
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-5xl mx-auto">
             <p className="text-lg text-gray-600 mb-8 text-center">
               Comisiile de specialitate ale Consiliului Local analizează și 
               avizează proiectele de hotărâri înainte de a fi supuse votului.

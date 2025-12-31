@@ -27,7 +27,7 @@ export default function TaxeImpozitePage() {
 
       <Section background="white">
         <Container>
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-5xl mx-auto">
             {/* Quick access to online payment */}
             <Card className="bg-primary-50 border-primary-200 mb-8">
               <CardContent className="flex items-center justify-between pt-6">

@@ -26,7 +26,7 @@ export default function LocalizarePage() {
 
       <Section background="white">
         <Container>
-          <div className="max-w-4xl mx-auto prose prose-lg">
+          <div className="prose prose-lg prose-gray max-w-5xl mx-auto">
             <p className="lead text-xl text-gray-600 mb-8">
               Municipiul Salonta este situat în vestul României, în județul Bihor, la aproximativ 35 km sud-vest de Oradea.
             </p>

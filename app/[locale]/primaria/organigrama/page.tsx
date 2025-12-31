@@ -26,7 +26,7 @@ export default function OrganigramaPage() {
 
       <Section background="white">
         <Container>
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-5xl mx-auto">
             <p className="text-lg text-gray-600 mb-8 text-center">
               Structura organizatorică a Primăriei Municipiului Salonta
             </p>

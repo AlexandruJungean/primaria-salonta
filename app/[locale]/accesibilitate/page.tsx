@@ -21,7 +21,7 @@ export default function AccesibilitatePage() {
 
       <Section background="white">
         <Container>
-          <div className="max-w-4xl mx-auto prose prose-lg">
+          <div className="prose prose-lg prose-gray max-w-5xl mx-auto">
             <p className="lead">
               Primăria Municipiului Salonta se angajează să asigure accesibilitatea digitală 
               pentru persoanele cu dizabilități.

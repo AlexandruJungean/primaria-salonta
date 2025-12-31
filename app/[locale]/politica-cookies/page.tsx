@@ -21,7 +21,7 @@ export default function PoliticaCookiesPage() {
 
       <Section background="white">
         <Container>
-          <div className="max-w-4xl mx-auto prose prose-lg">
+          <div className="prose prose-lg prose-gray max-w-5xl mx-auto">
             <p className="lead">
               Ultima actualizare: Decembrie 2024
             </p>

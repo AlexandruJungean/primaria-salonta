@@ -77,7 +77,7 @@ export default function PaymentsPage() {
         <Container>
           <SectionHeader title={t('title')} subtitle={t('subtitle')} />
 
-          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {PAYMENT_LINKS.map((payment) => (
               <PaymentCard key={payment.id} payment={payment} locale={locale} />
             ))}

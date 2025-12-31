@@ -50,7 +50,7 @@ export default function ServiciiOnlinePage() {
             pentru a economisi timp și a rezolva cererile mai rapid.
           </p>
 
-          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {SERVICES.map((service) => {
               const Icon = service.icon;
               return (

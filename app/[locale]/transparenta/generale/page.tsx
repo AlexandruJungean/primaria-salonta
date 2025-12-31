@@ -26,7 +26,7 @@ export default function GeneralePage() {
 
       <Section background="white">
         <Container>
-          <div className="max-w-4xl mx-auto prose prose-lg">
+          <div className="prose prose-lg prose-gray max-w-5xl mx-auto">
             <h2>Transparență decizională</h2>
             <p>
               În conformitate cu Legea nr. 52/2003 privind transparența decizională 

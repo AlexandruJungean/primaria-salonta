@@ -39,7 +39,7 @@ export default function ConsiliulLocalPage() {
             a administrației publice locale, format din consilieri locali aleși.
           </p>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {COUNCIL_SECTIONS.map((section) => {
               const Icon = section.icon;
               return (

@@ -26,7 +26,7 @@ export default function AsistentaMedicalaPage() {
 
       <Section background="white">
         <Container>
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-5xl mx-auto">
             <div className="grid md:grid-cols-3 gap-4 mb-8">
               <Card>
                 <CardContent className="flex items-center gap-4 pt-6">

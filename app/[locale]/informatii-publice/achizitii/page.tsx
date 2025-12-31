@@ -33,7 +33,7 @@ export default function AchizitiiPage() {
 
       <Section background="white">
         <Container>
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-5xl mx-auto">
             <div className="flex items-center justify-center gap-4 mb-8 p-4 bg-primary-50 rounded-xl">
               <span>Consultați anunțurile publice pe:</span>
               <a

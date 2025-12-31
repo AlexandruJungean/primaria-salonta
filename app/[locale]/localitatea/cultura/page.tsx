@@ -46,7 +46,7 @@ export default function CulturaPage() {
 
       <Section background="white">
         <Container>
-          <div className="max-w-4xl mx-auto prose prose-lg mb-12">
+          <div className="prose prose-lg prose-gray max-w-5xl mx-auto mb-12">
             <p className="lead text-xl text-gray-600">
               Salonta este un oraș cu o bogată moștenire culturală, fiind cunoscut în special 
               pentru legătura sa cu poetul Arany János și pentru tradițiile sale multiculturale.
@@ -80,7 +80,7 @@ export default function CulturaPage() {
             ))}
           </div>
 
-          <div className="max-w-4xl mx-auto prose prose-lg">
+          <div className="prose prose-lg prose-gray max-w-5xl mx-auto">
             <h2>Evenimente culturale</h2>
             <p>
               Municipiul Salonta găzduiește anual numeroase evenimente culturale care 
