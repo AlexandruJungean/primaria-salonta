@@ -1,13 +1,10 @@
 import { getTranslations } from 'next-intl/server';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
-import { Palette, Building, BookOpen, Landmark, Music } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
-import { Card, CardContent, CardImage } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
-import { Link } from '@/components/ui/link';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -15,26 +12,21 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return { title: t('cultura') };
 }
 
-const CULTURAL_PLACES = [
-  {
-    id: 'casaCultura',
-    image: '/images/casa-de-cultura-salonta-1.jpg',
-    href: '/institutii/casa-cultura',
-  },
-  {
-    id: 'biblioteca',
-    image: '/images/colegiul-national-teodor-nes-salonta-1.jpg',
-    href: '/institutii/biblioteca',
-  },
-  {
-    id: 'muzeu',
-    image: '/images/muzeu-salonta.jpg',
-    href: '/institutii/muzeu',
-  },
+const PERSONALITIES = [
+  { id: 'aranyJanos', image: '/images/personalitati/aranyjanos.png', name: 'Arany János' },
+  { id: 'aranyLaszlo', image: '/images/personalitati/aranylaszlo.png', name: 'Arany László' },
+  { id: 'kulinGyorgy', image: '/images/personalitati/kulingyorgy.png', name: 'Kulin György' },
+  { id: 'sinkaIstvan', image: '/images/personalitati/sinkaistvan.png', name: 'Sinka István' },
+  { id: 'zilahyLajos', image: '/images/personalitati/zilahylajos.png', name: 'Zilahy Lajos' },
+  { id: 'foldiJanos', image: '/images/personalitati/foldijanos.png', name: 'Földi János' },
+  { id: 'szekelyLaszlo', image: '/images/personalitati/szekelylaszlo.png', name: 'Székely László' },
+  { id: 'erdelyiJozsef', image: '/images/personalitati/erdelyijozsef.png', name: 'Erdélyi József' },
+  { id: 'kissIstvan', image: '/images/personalitati/kissistvan.png', name: 'Kiss István' },
 ];
 
 export default function CulturaPage() {
   const t = useTranslations('navigation');
+  const tPage = useTranslations('culturaPage');
 
   return (
     <>
@@ -47,63 +39,89 @@ export default function CulturaPage() {
       <Section background="white">
         <Container>
           <div className="prose prose-lg prose-gray max-w-5xl mx-auto mb-12">
-            <p className="lead text-xl text-gray-600">
-              Salonta este un oraș cu o bogată moștenire culturală, fiind cunoscut în special 
-              pentru legătura sa cu poetul Arany János și pentru tradițiile sale multiculturale.
+            <p className="lead text-xl text-gray-600 mb-6">
+              {tPage('intro')}
             </p>
+
+            <ul className="space-y-1">
+              <li>– {tPage('personalities.aranyJanos')}</li>
+              <li>– {tPage('personalities.foldiJanos')}</li>
+              <li>– {tPage('personalities.lovassyLaszlo')}</li>
+              <li>– {tPage('personalities.sinkaIstvan')}</li>
+              <li>– {tPage('personalities.zilahyLajos')}</li>
+              <li>– {tPage('personalities.kissFerenc')}</li>
+              <li>– {tPage('personalities.erdelyiJozsef')}</li>
+              <li>– {tPage('personalities.teodorNes')}</li>
+            </ul>
+
+            <p className="mt-6">{tPage('museumIntro')}</p>
           </div>
 
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-            Instituții culturale
+          {/* Personalities Grid */}
+          <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
+            {tPage('personalitiesTitle')}
           </h2>
 
-          <div className="grid md:grid-cols-3 gap-6 mb-12">
-            {CULTURAL_PLACES.map((place) => (
-              <Link key={place.id} href={place.href}>
-                <Card hover className="overflow-hidden h-full">
-                  <CardImage>
-                    <Image
-                      src={place.image}
-                      alt={t(place.id)}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 100vw, 33vw"
-                    />
-                  </CardImage>
-                  <CardContent className="pt-4">
-                    <h3 className="font-semibold text-lg text-gray-900">
-                      {t(place.id)}
-                    </h3>
-                  </CardContent>
-                </Card>
-              </Link>
+          <div className="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-9 gap-4 mb-16 max-w-5xl mx-auto">
+            {PERSONALITIES.map((person) => (
+              <div key={person.id} className="text-center group">
+                <div className="relative aspect-square rounded-lg overflow-hidden shadow-md mb-2 bg-gray-100 group-hover:shadow-lg transition-shadow">
+                  <Image
+                    src={person.image}
+                    alt={person.name}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 33vw, (max-width: 1024px) 20vw, 11vw"
+                  />
+                </div>
+                <p className="text-xs font-medium text-gray-700">{person.name}</p>
+              </div>
             ))}
           </div>
 
-          <div className="prose prose-lg prose-gray max-w-5xl mx-auto">
-            <h2>Evenimente culturale</h2>
-            <p>
-              Municipiul Salonta găzduiește anual numeroase evenimente culturale care 
-              celebrează diversitatea și moștenirea culturală a orașului:
-            </p>
-            <ul>
-              <li><strong>Zilele Orașului Salonta</strong> - festival anual cu concerte, spectacole și activități culturale</li>
-              <li><strong>Festivalul Arany János</strong> - eveniment dedicat poetului Arany János</li>
-              <li><strong>Sărbători tradiționale</strong> - evenimente care celebrează tradițiile române și maghiare</li>
-              <li><strong>Expoziții de artă</strong> - expuneri ale artiștilor locali și naționali</li>
-            </ul>
+          {/* Arany János Biography */}
+          <div className="bg-primary-50 rounded-2xl p-8 max-w-5xl mx-auto mb-12">
+            <div className="flex flex-col md:flex-row gap-8">
+              <div className="md:w-1/3">
+                <div className="relative aspect-[3/4] rounded-xl overflow-hidden shadow-lg">
+                  <Image
+                    src="/images/personalitati/aranyjanos.png"
+                    alt="Arany János"
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 300px"
+                  />
+                </div>
+              </div>
+              <div className="md:w-2/3">
+                <h2 className="text-3xl font-bold text-primary-900 mb-1">
+                  {tPage('aranyJanosTitle')}
+                </h2>
+                <p className="text-lg text-primary-700 italic mb-6">
+                  {tPage('aranyJanosSubtitle')}
+                </p>
+                <div className="prose prose-gray">
+                  <p>{tPage('aranyJanosBio1')}</p>
+                  <p>{tPage('aranyJanosBio2')}</p>
+                  <p>{tPage('aranyJanosBio3')}</p>
+                  <p>{tPage('aranyJanosBio4')}</p>
+                  <p>{tPage('aranyJanosBio5')}</p>
+                  <p>{tPage('aranyJanosBio6')}</p>
+                  <p>{tPage('aranyJanosBio7')}</p>
+                </div>
+              </div>
+            </div>
+          </div>
 
-            <h2>Patrimoniu cultural</h2>
-            <p>
-              Orașul deține numeroase monumente și clădiri de patrimoniu, printre care:
-            </p>
+          {/* Cultural Events */}
+          <div className="prose prose-lg prose-gray max-w-5xl mx-auto">
+            <h2>{tPage('culturalEventsTitle')}</h2>
+            <p>{tPage('culturalEventsIntro')}</p>
             <ul>
-              <li>Complexul Muzeal &quot;Arany János&quot;</li>
-              <li>Casa Memorială &quot;Arany János&quot;</li>
-              <li>Biserica Reformată</li>
-              <li>Biserica Romano-Catolică</li>
-              <li>Biserica Ortodoxă</li>
-              <li>Primăria Veche (clădire monument)</li>
+              <li><strong>{tPage('event1').split(' - ')[0]}</strong> - {tPage('event1').split(' - ')[1]}</li>
+              <li><strong>{tPage('event2').split(' - ')[0]}</strong> - {tPage('event2').split(' - ')[1]}</li>
+              <li><strong>{tPage('event3').split(' - ')[0]}</strong> - {tPage('event3').split(' - ')[1]}</li>
+              <li><strong>{tPage('event4').split(' - ')[0]}</strong> - {tPage('event4').split(' - ')[1]}</li>
             </ul>
           </div>
         </Container>
@@ -111,4 +129,3 @@ export default function CulturaPage() {
     </>
   );
 }
-
