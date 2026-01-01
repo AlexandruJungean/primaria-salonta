@@ -3,9 +3,9 @@
 import { useState, useRef, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/components/ui/link';
-import { ChevronDown, Newspaper, Video, Phone } from 'lucide-react';
+import { ChevronDown, ChevronRight, Newspaper, Video, Phone } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
-import { MAIN_NAVIGATION, SECONDARY_NAVIGATION } from '@/lib/constants/navigation';
+import { MAIN_NAVIGATION, SECONDARY_NAVIGATION, type NavSection } from '@/lib/constants/navigation';
 
 export function MegaMenu() {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
@@ -40,63 +40,157 @@ export function MegaMenu() {
     contact: Phone,
   };
 
+  // Calculate total items count for layout decisions
+  const getTotalItems = (section: NavSection) => {
+    const groupItems = section.groups?.reduce((acc, group) => acc + group.items.length, 0) || 0;
+    const standaloneItems = section.standaloneItems?.length || 0;
+    return groupItems + standaloneItems;
+  };
+
   return (
     <nav className="flex items-center">
       {/* Main Navigation - 4 user-centric categories */}
-      {MAIN_NAVIGATION.map((item) => {
-        const hasChildren = item.children && item.children.length > 0;
+      {MAIN_NAVIGATION.map((section) => {
+        const hasContent =
+          (section.groups && section.groups.length > 0) ||
+          (section.standaloneItems && section.standaloneItems.length > 0);
+        const totalItems = getTotalItems(section);
+        const isLargeMenu = totalItems > 12;
 
         return (
           <div
-            key={item.id}
+            key={section.id}
             className="relative"
-            onMouseEnter={() => hasChildren && handleMouseEnter(item.id)}
+            onMouseEnter={() => hasContent && handleMouseEnter(section.id)}
             onMouseLeave={handleMouseLeave}
           >
             <button
               className={cn(
                 'flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-md transition-colors whitespace-nowrap',
-                activeMenu === item.id
+                activeMenu === section.id
                   ? 'bg-primary-50 text-primary-900'
                   : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
               )}
             >
-              {t(item.id)}
+              {t(section.id)}
               <ChevronDown
                 className={cn(
                   'w-4 h-4 transition-transform duration-200',
-                  activeMenu === item.id && 'rotate-180'
+                  activeMenu === section.id && 'rotate-180'
                 )}
               />
             </button>
 
-            {/* Mega Menu Dropdown - Wide layout like Oradea */}
-            {hasChildren && activeMenu === item.id && (
+            {/* Mega Menu Dropdown */}
+            {hasContent && activeMenu === section.id && (
               <div
                 className="absolute left-1/2 -translate-x-1/2 top-full pt-2 z-50"
-                onMouseEnter={() => handleMouseEnter(item.id)}
+                onMouseEnter={() => handleMouseEnter(section.id)}
                 onMouseLeave={handleMouseLeave}
               >
-                <div className="bg-white rounded-xl shadow-2xl border border-gray-200 p-6 min-w-[500px] max-w-[600px] animate-in fade-in slide-in-from-top-2 duration-200">
-                  <div className="grid grid-cols-2 gap-x-8 gap-y-1">
-                    {item.children!.map((child) => {
-                      const ChildIcon = child.icon;
-                      return (
-                        <Link
-                          key={child.id + child.href}
-                          href={child.href}
-                          className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-gray-50 transition-colors group"
-                        >
-                          {ChildIcon && (
-                            <ChildIcon className="w-5 h-5 text-primary-600 group-hover:text-primary-700 shrink-0" />
-                          )}
-                          <span className="text-sm text-gray-700 group-hover:text-gray-900 font-medium">
-                            {t(child.id)}
-                          </span>
-                        </Link>
-                      );
-                    })}
-                  </div>
+                <div
+                  className={cn(
+                    'bg-white rounded-xl shadow-2xl border border-gray-200 p-5 animate-in fade-in slide-in-from-top-2 duration-200',
+                    isLargeMenu ? 'min-w-[720px] max-w-[900px]' : 'min-w-[520px] max-w-[640px]'
+                  )}
+                >
+                  {/* Groups */}
+                  {section.groups && section.groups.length > 0 && (
+                    <div
+                      className={cn(
+                        'grid gap-6',
+                        isLargeMenu ? 'grid-cols-3' : 'grid-cols-2'
+                      )}
+                    >
+                      {section.groups.map((group) => {
+                        const GroupIcon = group.groupIcon;
+                        return (
+                          <div key={group.groupId} className="space-y-2">
+                            {/* Group Header */}
+                            {group.groupHref ? (
+                              <Link
+                                href={group.groupHref}
+                                className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-primary-50 transition-colors group"
+                              >
+                                {GroupIcon && (
+                                  <GroupIcon className="w-4 h-4 text-primary-600" />
+                                )}
+                                <span className="text-sm font-semibold text-gray-900 group-hover:text-primary-700">
+                                  {t(group.groupId)}
+                                </span>
+                                <ChevronRight className="w-3.5 h-3.5 text-gray-400 group-hover:text-primary-600 ml-auto" />
+                              </Link>
+                            ) : (
+                              <div className="flex items-center gap-2 px-2 py-1.5">
+                                {GroupIcon && (
+                                  <GroupIcon className="w-4 h-4 text-primary-600" />
+                                )}
+                                <span className="text-sm font-semibold text-gray-900">
+                                  {t(group.groupId)}
+                                </span>
+                              </div>
+                            )}
+
+                            {/* Group Items */}
+                            <div className="space-y-0.5 pl-1 border-l-2 border-gray-100 ml-2">
+                              {group.items.map((item) => {
+                                const ItemIcon = item.icon;
+                                return (
+                                  <Link
+                                    key={item.id + item.href}
+                                    href={item.href}
+                                    className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-gray-50 transition-colors group"
+                                  >
+                                    {ItemIcon && (
+                                      <ItemIcon className="w-4 h-4 text-gray-400 group-hover:text-primary-600 shrink-0" />
+                                    )}
+                                    <span className="text-sm text-gray-600 group-hover:text-gray-900">
+                                      {t(item.id)}
+                                    </span>
+                                  </Link>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {/* Standalone Items */}
+                  {section.standaloneItems && section.standaloneItems.length > 0 && (
+                    <>
+                      {/* Divider if there are groups above */}
+                      {section.groups && section.groups.length > 0 && (
+                        <div className="border-t border-gray-100 my-4" />
+                      )}
+
+                      <div
+                        className={cn(
+                          'grid gap-x-6 gap-y-1',
+                          section.standaloneItems.length > 4 ? 'grid-cols-2' : 'grid-cols-1'
+                        )}
+                      >
+                        {section.standaloneItems.map((item) => {
+                          const ItemIcon = item.icon;
+                          return (
+                            <Link
+                              key={item.id + item.href}
+                              href={item.href}
+                              className="flex items-center gap-2.5 px-2 py-2 rounded-lg hover:bg-gray-50 transition-colors group"
+                            >
+                              {ItemIcon && (
+                                <ItemIcon className="w-4 h-4 text-primary-600 group-hover:text-primary-700 shrink-0" />
+                              )}
+                              <span className="text-sm text-gray-700 group-hover:text-gray-900 font-medium">
+                                {t(item.id)}
+                              </span>
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             )}
@@ -124,4 +218,3 @@ export function MegaMenu() {
     </nav>
   );
 }
-
