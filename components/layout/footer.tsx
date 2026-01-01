@@ -224,6 +224,17 @@ export function Footer() {
                 {t('sitemap')}
               </Link>
             </div>
+            <p className="text-xs text-primary-300/70">
+              {t('developedBy')}{' '}
+              <a 
+                href="https://alexjungean.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="hover:text-white transition-colors"
+              >
+                Alexandru Jungean
+              </a>
+            </p>
           </div>
         </Container>
       </div>
