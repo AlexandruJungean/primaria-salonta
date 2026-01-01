@@ -285,6 +285,14 @@
     "procedureWorksheet": "Pentru organizarea și finalitatea audiențelor se folosește ca element de lucru – foaia de audiențe.",
     "procedureResolution": "Problemele ridicate vor putea fi soluționate conform procedurilor legale și în limitele de competență, așa cum sunt stabilite de Legea 215/2001 republicată, după analizarea problemei cu șefii compartimentelor de resort."
   },
+  "declaratiiPage": {
+    "electedOfficials": "Aleși locali",
+    "electedOfficialsSubtitle": "Primar, Viceprimar, Consilieri locali",
+    "publicServants": "Funcționari publici",
+    "publicServantsSubtitle": "Angajații Primăriei Municipiului Salonta",
+    "infoTitle": "Informații",
+    "infoText": "Declarațiile de avere și de interese sunt publicate conform prevederilor Legii nr. 176/2010 privind integritatea în exercitarea funcțiilor și demnităților publice. Documentele sunt disponibile și pe site-ul Agenției Naționale de Integritate."
+  },
   "publicHours": {
     "title": "Program cu publicul",
     "audienceTitle": "Audiențe",

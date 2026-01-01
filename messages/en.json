@@ -285,6 +285,14 @@
     "procedureWorksheet": "For the organization and finality of audiences, the audience sheet is used as a working element.",
     "procedureResolution": "The raised issues can be resolved according to legal procedures and within the limits of competence, as established by Law 215/2001 republished, after analyzing the problem with the heads of the relevant departments."
   },
+  "declaratiiPage": {
+    "electedOfficials": "Elected Officials",
+    "electedOfficialsSubtitle": "Mayor, Deputy Mayor, Local Councilors",
+    "publicServants": "Public Servants",
+    "publicServantsSubtitle": "Employees of Salonta City Hall",
+    "infoTitle": "Information",
+    "infoText": "Wealth and interest declarations are published in accordance with the provisions of Law no. 176/2010 regarding integrity in the exercise of public functions and dignities. Documents are also available on the National Integrity Agency website."
+  },
   "publicHours": {
     "title": "Public Hours",
     "audienceTitle": "Audiences",

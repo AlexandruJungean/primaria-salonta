@@ -285,6 +285,14 @@
     "procedureWorksheet": "Az audienciák szervezéséhez és véglegességéhez munkaelemként az audiencia-lapot használják.",
     "procedureResolution": "A felvetett problémák a jogi eljárásoknak megfelelően és a hatáskörök keretein belül oldhatók meg, az újraközölt 215/2001. törvénynek megfelelően, a probléma elemzése után az illetékes osztályvezetőkkel."
   },
+  "declaratiiPage": {
+    "electedOfficials": "Választott tisztségviselők",
+    "electedOfficialsSubtitle": "Polgármester, Alpolgármester, Helyi tanácsosok",
+    "publicServants": "Köztisztviselők",
+    "publicServantsSubtitle": "Nagyszalonta Polgármesteri Hivatalának alkalmazottai",
+    "infoTitle": "Információk",
+    "infoText": "A vagyon- és érdekeltségi nyilatkozatok a 176/2010. számú törvény rendelkezéseinek megfelelően kerülnek közzétételre, amely a közfunkciók és közmegbízatások gyakorlásának integritásáról szól. A dokumentumok a Nemzeti Integritási Ügynökség weboldalán is elérhetők."
+  },
   "publicHours": {
     "title": "Ügyfélfogadás",
     "audienceTitle": "Fogadóórák",
