@@ -797,6 +797,20 @@
     "materialsSection": "Informative and educational materials",
     "emergencyTitle": "In case of emergency, call 112!",
     "emergencyText": "The single emergency number 112 is free and operates 24/7."
+  },
+  "proiecteLocalePage": {
+    "description": "Projects funded from the local budget in the fields of culture, environment and sports. Access the necessary documents for submitting projects and evaluation results.",
+    "results": "Results",
+    "culture": "CULTURE",
+    "environment": "ENVIRONMENT",
+    "sport": "SPORT",
+    "socialPrograms": "SOCIAL PROGRAMS",
+    "specialAnnouncements": "Special announcements",
+    "projectsLogo": "Projects logo of Salonta Municipality",
+    "infoNotice": "Local projects are funded from the budget of Salonta Municipality and aim to support cultural, environmental protection and sports activities in the local community.",
+    "legendCulture": "Culture",
+    "legendEnvironment": "Environment",
+    "legendSport": "Sport"
   }
 }
 

@@ -797,6 +797,20 @@
     "materialsSection": "Materiale informative și educative",
     "emergencyTitle": "În caz de urgență, sunați 112!",
     "emergencyText": "Numărul unic de urgență 112 este gratuit și funcționează 24/7."
+  },
+  "proiecteLocalePage": {
+    "description": "Proiecte finanțate din bugetul local în domeniile cultură, mediu și sport. Accesați documentele necesare pentru depunerea proiectelor și rezultatele evaluărilor.",
+    "results": "Rezultate",
+    "culture": "CULTURĂ",
+    "environment": "MEDIU",
+    "sport": "SPORT",
+    "socialPrograms": "PROGRAME SOCIALE",
+    "specialAnnouncements": "Anunțuri speciale",
+    "projectsLogo": "LOGO-ul pentru proiecte al Primăriei Mun. Salonta",
+    "infoNotice": "Proiectele locale sunt finanțate din bugetul Municipiului Salonta și au ca scop sprijinirea activităților culturale, de protecție a mediului și sportive în comunitatea locală.",
+    "legendCulture": "Cultură",
+    "legendEnvironment": "Mediu",
+    "legendSport": "Sport"
   }
 }
 

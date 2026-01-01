@@ -797,6 +797,20 @@
     "materialsSection": "Tájékoztató és oktatási anyagok",
     "emergencyTitle": "Vészhelyzetben hívja a 112-t!",
     "emergencyText": "A 112-es egységes segélyhívószám ingyenes és 0-24 üzemel."
+  },
+  "proiecteLocalePage": {
+    "description": "Helyi költségvetésből finanszírozott projektek kultúra, környezetvédelem és sport területén. Hozzáférés a pályázatokhoz szükséges dokumentumokhoz és az értékelési eredményekhez.",
+    "results": "Eredmények",
+    "culture": "KULTÚRA",
+    "environment": "KÖRNYEZETVÉDELEM",
+    "sport": "SPORT",
+    "socialPrograms": "SZOCIÁLIS PROGRAMOK",
+    "specialAnnouncements": "Különleges közlemények",
+    "projectsLogo": "Nagyszalonta Önkormányzatának projekt logója",
+    "infoNotice": "A helyi projekteket Nagyszalonta Önkormányzatának költségvetéséből finanszírozzák, és céljuk a kulturális, környezetvédelmi és sporttevékenységek támogatása a helyi közösségben.",
+    "legendCulture": "Kultúra",
+    "legendEnvironment": "Környezetvédelem",
+    "legendSport": "Sport"
   }
 }
 
