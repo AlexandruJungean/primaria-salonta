@@ -32,7 +32,7 @@ export const LEADERSHIP: LeadershipMember[] = [
     position: 'primar',
     photo: '/images/consilul local/primar-torok-laszlo.jpg',
     email: 'primsal3@gmail.com',
-    phone: '+40 728 105 762',
+    phone: '',
     education: {
       ro: [
         'Facultatea Electromecanică din Oradea, promoția 1992',
@@ -104,7 +104,7 @@ export const LEADERSHIP: LeadershipMember[] = [
     position: 'viceprimar',
     photo: '/images/consilul local/viceprimar-horvath-janos.jpg',
     email: 'primsal3@gmail.com',
-    phone: '+40 728 105 762',
+    phone: '',
     education: {
       ro: [],
       hu: [],
@@ -152,7 +152,7 @@ export const LEADERSHIP: LeadershipMember[] = [
     position: 'secretar',
     photo: null,
     email: 'primsal3@gmail.com',
-    phone: '+40 728 105 762',
+    phone: '',
     education: {
       ro: [
         'Universitatea din Oradea, Facultatea de Științe Juridice și Administrative - Licențiat în Științe Juridice, specializare Drept, promoția 1996',

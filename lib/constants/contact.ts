@@ -5,16 +5,18 @@ export const CONTACT_INFO = {
     county: 'Bihor',
     country: 'Romania',
     postalCode: '415500',
-    full: 'Str. Republicii nr. 1, Salonta, Jud. Bihor, Romania',
+    full: 'Str. Republicii nr.1, Salonta, Jud.Bihor',
   },
   phone: {
-    main: '+40 728 105 762',
+    main: '0359-409730',
     landline: ['0359-409730', '0359-409731', '0259-373243'],
     fax: '0359-409733',
+    display: '0359-409730, 0359-409731, 0259-373243',
   },
   email: {
-    primary: 'primsal3@gmail.com',
-    secondary: 'primsal@rdslink.ro',
+    primary: 'primsal@rdslink.ro',
+    secondary: 'primsal3@gmail.com',
+    display: 'primsal@rdslink.ro, primsal3@gmail.com',
   },
   coordinates: {
     lat: 46.8,

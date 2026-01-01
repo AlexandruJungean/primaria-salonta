@@ -109,18 +109,29 @@ export function Footer() {
                   <MapPin className="w-5 h-5 shrink-0 mt-0.5" />
                   <span>{CONTACT_INFO.address.full}</span>
                 </li>
-                <li className="flex items-center gap-3">
-                  <Phone className="w-5 h-5 shrink-0" />
-                  <span>{CONTACT_INFO.phone.main}</span>
+                <li className="flex items-start gap-3">
+                  <Phone className="w-5 h-5 shrink-0 mt-0.5" />
+                  <div>
+                    <div>{CONTACT_INFO.phone.display}</div>
+                    <div className="text-sm mt-1">FAX: {CONTACT_INFO.phone.fax}</div>
+                  </div>
                 </li>
-                <li className="flex items-center gap-3">
-                  <Mail className="w-5 h-5 shrink-0" />
-                  <a
-                    href={`mailto:${CONTACT_INFO.email.primary}`}
-                    className="hover:text-white transition-colors"
-                  >
-                    {CONTACT_INFO.email.primary}
-                  </a>
+                <li className="flex items-start gap-3">
+                  <Mail className="w-5 h-5 shrink-0 mt-0.5" />
+                  <div>
+                    <a
+                      href={`mailto:${CONTACT_INFO.email.primary}`}
+                      className="hover:text-white transition-colors block"
+                    >
+                      {CONTACT_INFO.email.primary}
+                    </a>
+                    <a
+                      href={`mailto:${CONTACT_INFO.email.secondary}`}
+                      className="hover:text-white transition-colors block"
+                    >
+                      {CONTACT_INFO.email.secondary}
+                    </a>
+                  </div>
                 </li>
                 <li className="flex items-start gap-3">
                   <Clock className="w-5 h-5 shrink-0 mt-0.5" />

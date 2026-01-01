@@ -91,10 +91,12 @@ export default function LeadershipPage() {
 
                       {/* Contact Info */}
                       <div className="flex flex-wrap gap-4 mb-6 pb-6 border-b border-gray-100">
-                        <div className="flex items-center gap-2 text-gray-600">
-                          <Phone className="w-4 h-4 text-primary-600" />
-                          <span className="text-sm">{leader.phone}</span>
-                        </div>
+                        {leader.phone && (
+                          <div className="flex items-center gap-2 text-gray-600">
+                            <Phone className="w-4 h-4 text-primary-600" />
+                            <span className="text-sm">{leader.phone}</span>
+                          </div>
+                        )}
                         <div className="flex items-center gap-2 text-gray-600">
                           <Mail className="w-4 h-4 text-primary-600" />
                           <a

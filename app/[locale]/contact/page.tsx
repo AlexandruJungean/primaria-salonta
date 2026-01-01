@@ -65,12 +65,9 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <h4 className="font-medium text-gray-900">Telefon</h4>
-                      <p className="text-gray-600">{CONTACT_INFO.phone.main}</p>
-                      <p className="text-sm text-gray-500 mt-1">
-                        Fix: {CONTACT_INFO.phone.landline.join(', ')}
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        Fax: {CONTACT_INFO.phone.fax}
+                      <p className="text-gray-600">{CONTACT_INFO.phone.display}</p>
+                      <p className="text-sm text-gray-500 mt-2">
+                        FAX: {CONTACT_INFO.phone.fax}
                       </p>
                     </div>
                   </CardContent>
@@ -84,12 +81,20 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <h4 className="font-medium text-gray-900">Email</h4>
-                      <a
-                        href={`mailto:${CONTACT_INFO.email.primary}`}
-                        className="text-primary-700 hover:text-primary-900"
-                      >
-                        {CONTACT_INFO.email.primary}
-                      </a>
+                      <div className="space-y-1">
+                        <a
+                          href={`mailto:${CONTACT_INFO.email.primary}`}
+                          className="block text-primary-700 hover:text-primary-900"
+                        >
+                          {CONTACT_INFO.email.primary}
+                        </a>
+                        <a
+                          href={`mailto:${CONTACT_INFO.email.secondary}`}
+                          className="block text-primary-700 hover:text-primary-900"
+                        >
+                          {CONTACT_INFO.email.secondary}
+                        </a>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>

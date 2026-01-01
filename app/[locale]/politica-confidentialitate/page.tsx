@@ -85,9 +85,10 @@ export default function PoliticaConfidentialitatePage() {
               Pentru orice întrebări sau solicitări privind datele personale, ne puteți contacta la:
             </p>
             <ul>
-              <li>Email: primsal3@gmail.com</li>
-              <li>Adresa: Str. Republicii nr. 1, Salonta, Bihor</li>
-              <li>Telefon: +40 728 105 762</li>
+              <li>Email: primsal@rdslink.ro, primsal3@gmail.com</li>
+              <li>Adresa: Str. Republicii nr.1, Salonta, Jud.Bihor</li>
+              <li>Telefon: 0359-409730, 0359-409731, 0259-373243</li>
+              <li>FAX: 0359-409733</li>
             </ul>
 
             <h2>8. Autoritatea de Supraveghere</h2>

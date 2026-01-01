@@ -35,8 +35,8 @@ export function Header() {
         <Container className="overflow-visible">
           <div className="flex items-center justify-between text-sm">
             <div className="flex items-center gap-6">
-              <span>📍 Str. Republicii nr. 1, Salonta, Bihor</span>
-              <span>📞 +40 728 105 762</span>
+              <span>📍 Str. Republicii nr.1, Salonta, Jud.Bihor</span>
+              <span>📞 0359-409730, 0359-409731</span>
               <span>✉️ primsal3@gmail.com</span>
             </div>
             <div className="flex items-center gap-4 overflow-visible">
