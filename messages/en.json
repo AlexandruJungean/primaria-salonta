@@ -714,6 +714,15 @@
     "download": "Download",
     "decisionsTitle": "Adopted decisions",
     "backToList": "Back to decisions list"
+  },
+  "hotarariRepublicatePage": {
+    "description": "Local Council decisions of Salonta Municipality that have been republished with subsequent amendments or additions."
+  },
+  "declaratiiConsiliuPage": {
+    "description": "Wealth and interest declarations of local councilors, in accordance with Law no. 176/2010 on integrity in the exercise of public functions and dignities.",
+    "wealthDeclaration": "Wealth declaration",
+    "interestDeclaration": "Interest declaration",
+    "infoText": "Declarations are published in accordance with legal provisions and are also available on the National Integrity Agency (ANI) website. To access a document, click the corresponding button next to the councilor's name."
   }
 }
 

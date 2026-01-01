@@ -714,6 +714,15 @@
     "download": "Letöltés",
     "decisionsTitle": "Elfogadott határozatok",
     "backToList": "Vissza a határozatok listájához"
+  },
+  "hotarariRepublicatePage": {
+    "description": "Nagyszalonta Város Helyi Tanácsának határozatai, amelyeket utólagos módosításokkal vagy kiegészítésekkel újra közzétettek."
+  },
+  "declaratiiConsiliuPage": {
+    "description": "A helyi tanácsosok vagyon- és érdekeltségi nyilatkozatai a 176/2010. sz. törvény értelmében a köztisztségek és méltóságok gyakorlásának integritásáról.",
+    "wealthDeclaration": "Vagyonnyilatkozat",
+    "interestDeclaration": "Érdekeltségi nyilatkozat",
+    "infoText": "A nyilatkozatok a törvényi előírásoknak megfelelően kerülnek közzétételre, és elérhetők a Nemzeti Integritási Ügynökség (ANI) weboldalán is. A dokumentum eléréséhez kattintson a tanácsos neve melletti megfelelő gombra."
   }
 }
 

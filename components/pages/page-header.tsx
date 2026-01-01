@@ -58,6 +58,7 @@ import {
   Send,
   Mail,
   HelpCircle,
+  FileStack,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -117,6 +118,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
   send: Send,
   mail: Mail,
   helpCircle: HelpCircle,
+  fileStack: FileStack,
 };
 
 export interface PageHeaderProps {

@@ -714,6 +714,15 @@
     "download": "Descarcă",
     "decisionsTitle": "Hotărâri adoptate",
     "backToList": "Înapoi la lista hotărârilor"
+  },
+  "hotarariRepublicatePage": {
+    "description": "Hotărârile Consiliului Local al Municipiului Salonta care au fost republicate cu modificări sau completări ulterioare."
+  },
+  "declaratiiConsiliuPage": {
+    "description": "Declarațiile de avere și de interese ale consilierilor locali, conform Legii nr. 176/2010 privind integritatea în exercitarea funcțiilor și demnităților publice.",
+    "wealthDeclaration": "Declarație de avere",
+    "interestDeclaration": "Declarație de interese",
+    "infoText": "Declarațiile sunt publicate conform prevederilor legale și sunt disponibile și pe site-ul Agenției Naționale de Integritate (ANI). Pentru accesarea unui document, apăsați butonul corespunzător din dreptul numelui consilierului."
   }
 }
 
