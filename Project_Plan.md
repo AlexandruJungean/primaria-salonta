@@ -637,6 +637,9 @@ A dedicated admin dashboard will be developed after the main website is approved
 | 🔍 **Search & Filter** | Find content by type, date, status | Medium |
 | 📈 **Analytics** | View page views, downloads, popular content | Low |
 | 📧 **Notifications** | Email alerts for new petitions, contact messages | Low |
+| 👥 **Councilors** | Add/edit local council members, parties, photos (Admin only) | High |
+| 🏛️ **Commissions** | Create/edit specialty committees, assign members (Admin only) | High |
+| 📋 **Declarations** | Upload wealth & interest declarations per person/year (Admin only) | High |
 
 ### Admin Workflow Example: Publishing News
 

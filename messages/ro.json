@@ -293,6 +293,27 @@
     "infoTitle": "Informații",
     "infoText": "Declarațiile de avere și de interese sunt publicate conform prevederilor Legii nr. 176/2010 privind integritatea în exercitarea funcțiilor și demnităților publice. Documentele sunt disponibile și pe site-ul Agenției Naționale de Integritate."
   },
+  "rapoarteAnualePage": {
+    "subtitle": "Raport anual privind starea socio-economică și de mediu a Municipiului Salonta",
+    "description": "Rapoarte prezentate Consiliului Local conform legislației în vigoare",
+    "reportTitle": "Raport anual"
+  },
+  "consilieriPage": {
+    "introduction": "Consiliul Local al municipiului Salonta este autoritatea deliberativă, care gestionează problemele de interes local, desfășurând activitatea în baza OUG 57/2019 privind Codul Administrativ, cu modificările și completările ulterioare. Este format din 17 consilieri care își desfășoară activitatea în Comisii de specialitate.",
+    "councilorsTitle": "Componența Consiliului Local",
+    "responsibilitiesTitle": "Atribuțiile principale ale consilierilor"
+  },
+  "comisiiPage": {
+    "description": "Comisiile de specialitate ale Consiliului Local analizează și avizează proiectele de hotărâri înainte de a fi supuse votului în plenul Consiliului Local."
+  },
+  "sessionsPage": {
+    "description": "Ședințele Consiliului Local al Municipiului Salonta sunt publice și pot fi urmărite live prin Zoom.",
+    "convocation": "Dispoziție convocare",
+    "liveAt": "Transmisie live de la ora:",
+    "liveStream": "Transmisie live",
+    "startTime": "Ora de început",
+    "viewDetails": "Vezi detalii"
+  },
   "publicHours": {
     "title": "Program cu publicul",
     "audienceTitle": "Audiențe",

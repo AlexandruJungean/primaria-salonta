@@ -293,6 +293,27 @@
     "infoTitle": "Információk",
     "infoText": "A vagyon- és érdekeltségi nyilatkozatok a 176/2010. számú törvény rendelkezéseinek megfelelően kerülnek közzétételre, amely a közfunkciók és közmegbízatások gyakorlásának integritásáról szól. A dokumentumok a Nemzeti Integritási Ügynökség weboldalán is elérhetők."
   },
+  "rapoarteAnualePage": {
+    "subtitle": "Éves jelentés Nagyszalonta Község társadalmi-gazdasági és környezeti állapotáról",
+    "description": "A Helyi Tanács elé terjesztett jelentések a hatályos jogszabályoknak megfelelően",
+    "reportTitle": "Éves jelentés"
+  },
+  "consilieriPage": {
+    "introduction": "Nagyszalonta Községi Helyi Tanácsa a helyi érdekű ügyeket kezelő tanácskozó testület, amely a 57/2019 sürgősségi kormányrendelet (Közigazgatási Kódex) alapján működik, a későbbi módosításokkal és kiegészítésekkel. 17 tanácsosból áll, akik szakbizottságokban végzik tevékenységüket.",
+    "councilorsTitle": "A Helyi Tanács összetétele",
+    "responsibilitiesTitle": "A tanácsosok főbb feladatai"
+  },
+  "comisiiPage": {
+    "description": "A Helyi Tanács szakbizottságai elemzik és véleményezik a határozattervezeteket, mielőtt azokat a Helyi Tanács plenáris ülésén szavazásra bocsátanák."
+  },
+  "sessionsPage": {
+    "description": "Nagyszalonta Helyi Tanácsának ülései nyilvánosak, és élőben követhetők Zoom-on keresztül.",
+    "convocation": "Összehívó rendelkezés",
+    "liveAt": "Élő közvetítés:",
+    "liveStream": "Élő közvetítés",
+    "startTime": "Kezdési idő",
+    "viewDetails": "Részletek"
+  },
   "publicHours": {
     "title": "Ügyfélfogadás",
     "audienceTitle": "Fogadóórák",

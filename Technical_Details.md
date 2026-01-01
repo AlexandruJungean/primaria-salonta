@@ -550,6 +550,75 @@ CREATE TABLE council_minutes (
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
+-- Council Sessions/Meetings (Ședințe) - Romanian only
+CREATE TABLE council_sessions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  session_date DATE NOT NULL,
+  session_time TIME NOT NULL,
+  session_type TEXT DEFAULT 'ordinara' CHECK (session_type IN ('ordinara', 'extraordinara')),
+  convocation_pdf_url TEXT, -- Dispoziție convocare
+  zoom_url TEXT, -- Live stream URL
+  meeting_id TEXT, -- Zoom Meeting ID
+  passcode TEXT, -- Zoom Passcode
+  agenda_pdf_url TEXT, -- Ordine de zi PDF
+  minutes_pdf_url TEXT, -- Proces verbal
+  is_live BOOLEAN DEFAULT false, -- Currently streaming
+  published BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Local Council Members (Councilors) - Romanian only (names don't translate)
+CREATE TABLE councilors (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  party TEXT NOT NULL, -- UDMR, PSD, PNL, USR, etc.
+  email TEXT,
+  phone TEXT,
+  photo_url TEXT,
+  mandate_start DATE,
+  mandate_end DATE,
+  is_active BOOLEAN DEFAULT true,
+  display_order INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Specialty Committees/Commissions - Auto-translated
+CREATE TABLE council_commissions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  -- Romanian (primary)
+  name_ro TEXT NOT NULL,
+  -- Hungarian (auto-translated or manual)
+  name_hu TEXT,
+  -- English (auto-translated or manual)
+  name_en TEXT,
+  color TEXT DEFAULT 'bg-primary-600', -- Tailwind color class
+  display_order INTEGER DEFAULT 0,
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Commission Members (junction table)
+CREATE TABLE commission_members (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  commission_id UUID REFERENCES council_commissions(id) ON DELETE CASCADE,
+  councilor_id UUID REFERENCES councilors(id) ON DELETE CASCADE,
+  role TEXT DEFAULT 'membru' CHECK (role IN ('presedinte', 'vicepresedinte', 'secretar', 'membru')),
+  created_at TIMESTAMPTZ DEFAULT now(),
+  UNIQUE(commission_id, councilor_id)
+);
+
+-- Councilor Declarations (wealth & interests) - Romanian only
+CREATE TABLE councilor_declarations (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  councilor_id UUID REFERENCES councilors(id) ON DELETE CASCADE,
+  declaration_type TEXT NOT NULL CHECK (declaration_type IN ('avere', 'interese')),
+  year INTEGER NOT NULL,
+  category TEXT NOT NULL CHECK (category IN ('alesi_locali', 'functionari_publici')),
+  context TEXT, -- 'pt. începerea mandatului', 'pt. încetare', etc.
+  pdf_url TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
 -- Budget Documents - Romanian only
 CREATE TABLE budget_documents (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),

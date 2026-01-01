@@ -293,6 +293,27 @@
     "infoTitle": "Information",
     "infoText": "Wealth and interest declarations are published in accordance with the provisions of Law no. 176/2010 regarding integrity in the exercise of public functions and dignities. Documents are also available on the National Integrity Agency website."
   },
+  "rapoarteAnualePage": {
+    "subtitle": "Annual report on the socio-economic and environmental status of Salonta Municipality",
+    "description": "Reports presented to the Local Council according to current legislation",
+    "reportTitle": "Annual report"
+  },
+  "consilieriPage": {
+    "introduction": "The Local Council of Salonta Municipality is the deliberative authority that manages issues of local interest, operating under GEO 57/2019 on the Administrative Code, with subsequent amendments and additions. It consists of 17 councilors who carry out their activity in specialized Committees.",
+    "councilorsTitle": "Local Council Composition",
+    "responsibilitiesTitle": "Main responsibilities of the councilors"
+  },
+  "comisiiPage": {
+    "description": "The specialized committees of the Local Council analyze and approve draft decisions before they are submitted to a vote in the Local Council plenary."
+  },
+  "sessionsPage": {
+    "description": "Salonta Local Council meetings are public and can be watched live via Zoom.",
+    "convocation": "Convocation",
+    "liveAt": "Live stream at:",
+    "liveStream": "Live Stream",
+    "startTime": "Start time",
+    "viewDetails": "View details"
+  },
   "publicHours": {
     "title": "Public Hours",
     "audienceTitle": "Audiences",

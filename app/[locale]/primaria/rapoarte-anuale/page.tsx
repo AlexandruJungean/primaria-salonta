@@ -13,16 +13,19 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return { title: t('rapoarteAnuale') };
 }
 
+// Mock data - will be replaced with database content
 const REPORTS = [
-  { year: 2024, title: 'Raport anual de activitate 2024' },
-  { year: 2023, title: 'Raport anual de activitate 2023' },
-  { year: 2022, title: 'Raport anual de activitate 2022' },
-  { year: 2021, title: 'Raport anual de activitate 2021' },
-  { year: 2020, title: 'Raport anual de activitate 2020' },
+  { year: 2022, url: '#' },
+  { year: 2021, url: '#' },
+  { year: 2019, url: '#' },
+  { year: 2018, url: '#' },
+  { year: 2017, url: '#' },
+  { year: 2016, url: '#' },
 ];
 
 export default function RapoarteAnualePage() {
   const t = useTranslations('navigation');
+  const tr = useTranslations('rapoarteAnualePage');
 
   return (
     <>
@@ -35,36 +38,52 @@ export default function RapoarteAnualePage() {
       <Section background="white">
         <Container>
           <div className="max-w-3xl mx-auto">
-            <p className="text-lg text-gray-600 mb-8 text-center">
-              Rapoartele anuale de activitate ale Primarului Municipiului Salonta, 
-              prezentate Consiliului Local conform legislației în vigoare.
-            </p>
+            
+            {/* Description */}
+            <Card className="mb-6">
+              <CardContent className="p-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-xl bg-primary-100 flex items-center justify-center shrink-0">
+                    <BarChart3 className="w-6 h-6 text-primary-700" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-bold text-gray-900">{tr('subtitle')}</h2>
+                    <p className="text-sm text-gray-500">{tr('description')}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
+            {/* Reports List */}
             <div className="space-y-3">
               {REPORTS.map((report) => (
-                <Card key={report.year}>
-                  <CardContent className="flex items-center justify-between pt-6">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-lg bg-primary-100 flex items-center justify-center">
-                        <FileText className="w-6 h-6 text-primary-700" />
+                <Card key={report.year} className="hover:shadow-md transition-shadow">
+                  <CardContent className="p-0">
+                    <div className="flex items-center justify-between p-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center">
+                          <FileText className="w-5 h-5 text-gray-500" />
+                        </div>
+                        <span className="font-medium text-gray-900">
+                          {tr('reportTitle')} – {report.year}
+                        </span>
                       </div>
-                      <div>
-                        <h3 className="font-semibold text-gray-900">{report.title}</h3>
-                        <p className="text-sm text-gray-500">Anul {report.year}</p>
-                      </div>
+                      <a
+                        href={report.url}
+                        className="flex items-center gap-2 px-4 py-2 bg-primary-900 text-white rounded-lg hover:bg-primary-800 transition-colors text-sm font-medium"
+                      >
+                        <Download className="w-4 h-4" />
+                        PDF
+                      </a>
                     </div>
-                    <button className="flex items-center gap-2 px-4 py-2 bg-primary-900 text-white rounded-lg hover:bg-primary-800 transition-colors">
-                      <Download className="w-4 h-4" />
-                      Descarcă
-                    </button>
                   </CardContent>
                 </Card>
               ))}
             </div>
+
           </div>
         </Container>
       </Section>
     </>
   );
 }
-
