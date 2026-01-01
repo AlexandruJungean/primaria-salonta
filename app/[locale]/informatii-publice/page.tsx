@@ -1,6 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { useTranslations } from 'next-intl';
-import { FileSearch, ShoppingCart, Wallet, Receipt, BadgeCheck, Hammer, Home, Map, Leaf, ShieldCheck } from 'lucide-react';
+import { FileSearch, ShoppingCart, Wallet, Receipt, BadgeCheck, Hammer, Home, Map, Leaf, ShieldCheck, Siren } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { Card, CardContent } from '@/components/ui/card';
@@ -24,6 +24,7 @@ const SECTIONS = [
   { id: 'planuriUrbanistice', href: '/informatii-publice/planuri-urbanistice', icon: Map },
   { id: 'mediu', href: '/informatii-publice/mediu', icon: Leaf },
   { id: 'gdpr', href: '/informatii-publice/gdpr', icon: ShieldCheck },
+  { id: 'coronavirus', href: '/informatii-publice/coronavirus', icon: Siren },
 ];
 
 export default function InformatiiPublicePage() {

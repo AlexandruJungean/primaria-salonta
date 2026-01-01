@@ -1,6 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { useTranslations } from 'next-intl';
-import { Target, Map, Euro, Globe, Building, Siren } from 'lucide-react';
+import { Target, Map, Euro, Globe, Building, Siren, ShieldCheck } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { Card, CardContent } from '@/components/ui/card';
@@ -21,6 +21,7 @@ const SECTIONS = [
   { id: 'proiecteEuropene', href: '/programe/proiecte-europene', icon: Globe },
   { id: 'proiecteLocale', href: '/programe/proiecte-locale', icon: Building },
   { id: 'svsu', href: '/programe/svsu', icon: Siren },
+  { id: 'sna', href: '/programe/sna', icon: ShieldCheck },
 ];
 
 export default function ProgramePage() {

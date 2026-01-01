@@ -121,13 +121,14 @@
     "educatie": "Education (Coming Soon)",
     "sanatate": "Health (Coming Soon)",
     "sport": "Sports & Recreation (Coming Soon)",
-    "voluntariat": "Volunteering (Coming Soon)",
     "agentiEconomici": "Business Directory (Coming Soon)",
     "problemeSociale": "Social Problems – forms",
     "coronavirus": "Coronavirus Information",
     "rapoarteStudii": "Reports and Studies",
     "rapoarteAudit": "Audit Reports",
-    "studii": "Studies"
+    "studii": "Studies",
+    "sna": "NAS Sectoral Plan",
+    "voluntariat": "Volunteering"
   },
   "homepage": {
     "welcome": "Welcome",
@@ -746,6 +747,56 @@
   "studiiPage": {
     "description": "Feasibility studies and other studies conducted for Salonta Municipality projects.",
     "noStudies": "No studies published at this time."
+  },
+  "strategiePage": {
+    "description": "Strategic documents guiding the medium and long-term development of Salonta Municipality."
+  },
+  "pmudPage": {
+    "description": "The Sustainable Urban Mobility Plan (SUMP) establishes the vision and objectives for transport and mobility in Salonta Municipality.",
+    "infoText": "SUMP is the strategic document that ensures an integrated approach to urban mobility, with objectives to improve accessibility, safety and quality of life in the municipality."
+  },
+  "pnrrPage": {
+    "description": "Projects funded through the National Recovery and Resilience Plan (NRRP) implemented in Salonta Municipality.",
+    "c5Title": "C5 - Renovation Wave: Energy Efficiency",
+    "c10Title": "C10 - Local Green Transport and ICT Development",
+    "c15Title": "C15 - Education",
+    "infoText": "NRRP projects are funded by the European Union through NextGenerationEU. For additional information on implementation status, contact Salonta City Hall."
+  },
+  "proiecteEuropenePage": {
+    "description": "European-funded projects implemented or in progress in Salonta Municipality.",
+    "activeProjects": "Active Projects",
+    "completedProjects": "Completed Projects",
+    "fundingNotice": "The presented projects are co-financed from European funds through various operational programs. For more information about each project, consult the related documents or contact Salonta City Hall."
+  },
+  "snaPage": {
+    "title": "SNA Sectoral Plan",
+    "description": "Sectoral action plan for implementing the National Anti-Corruption Strategy at Salonta City Hall.",
+    "infoText": "The National Anti-Corruption Strategy is the public policy document that establishes objectives, principles and directions of action for preventing and combating corruption in public administration.",
+    "period2021_2025": "NAS 2021-2025",
+    "period2021_2025_subtitle": "Strategy in force",
+    "period2016_2020": "NAS 2016-2020",
+    "period2016_2020_subtitle": "Previous strategy (archive)"
+  },
+  "voluntariatPage": {
+    "title": "Volunteering Activity",
+    "description": "Information and forms for volunteering activities at Salonta City Hall.",
+    "introTitle": "Become a volunteer!",
+    "introText": "Volunteering is an excellent way to contribute to the community's wellbeing and gain valuable experience. Salonta City Hall offers volunteering opportunities in various fields.",
+    "documentsTitle": "Documents and forms",
+    "contactInfo": "For more information about volunteering programs or to register, contact Salonta City Hall at the phone numbers displayed on the website."
+  },
+  "svsuPage": {
+    "title": "Voluntary Emergency Service",
+    "description": "Information about SVSU Salonta, intervention plans and educational materials for emergency prevention.",
+    "missionTitle": "SVSU Mission",
+    "missionText": "The Voluntary Emergency Service (SVSU) has the role of ensuring the prevention and management of emergency situations at the municipal level, protecting the lives and property of citizens.",
+    "infoSection": "SVSU Information",
+    "plansSection": "Plans and scheduling",
+    "preventionSection": "Prevention",
+    "recruitmentSection": "Recruitment",
+    "materialsSection": "Informative and educational materials",
+    "emergencyTitle": "In case of emergency, call 112!",
+    "emergencyText": "The single emergency number 112 is free and operates 24/7."
   }
 }
 

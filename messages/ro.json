@@ -121,13 +121,14 @@
     "educatie": "Educație (În curând)",
     "sanatate": "Sănătate (În curând)",
     "sport": "Sport și agrement (În curând)",
-    "voluntariat": "Voluntariat (În curând)",
     "agentiEconomici": "Agenți economici (În curând)",
     "problemeSociale": "Probleme sociale – formulare",
     "coronavirus": "Informații coronavirus",
     "rapoarteStudii": "Rapoarte și studii",
     "rapoarteAudit": "Rapoarte de audit",
-    "studii": "Studii"
+    "studii": "Studii",
+    "sna": "Planul sectorial SNA",
+    "voluntariat": "Voluntariat"
   },
   "homepage": {
     "welcome": "Bine ați venit",
@@ -746,6 +747,56 @@
   "studiiPage": {
     "description": "Studii de fezabilitate și alte studii realizate pentru proiectele Municipiului Salonta.",
     "noStudies": "Nu există studii publicate momentan."
+  },
+  "strategiePage": {
+    "description": "Documentele strategice care ghidează dezvoltarea Municipiului Salonta pe termen mediu și lung."
+  },
+  "pmudPage": {
+    "description": "Planul de Mobilitate Urbană Durabilă (PMUD) stabilește viziunea și obiectivele pentru transportul și mobilitatea în Municipiul Salonta.",
+    "infoText": "PMUD reprezintă documentul strategic care asigură o abordare integrată a mobilității urbane, având ca obiective îmbunătățirea accesibilității, siguranței și calității vieții în municipiu."
+  },
+  "pnrrPage": {
+    "description": "Proiecte finanțate prin Planul Național de Redresare și Reziliență (PNRR) implementate în Municipiul Salonta.",
+    "c5Title": "C5 - Valul Renovării: Eficiență energetică",
+    "c10Title": "C10 - Transport local verde și dezvoltare TIC",
+    "c15Title": "C15 - Educație",
+    "infoText": "Proiectele PNRR sunt finanțate de Uniunea Europeană prin NextGenerationEU. Pentru informații suplimentare despre stadiul implementării, contactați Primăria Municipiului Salonta."
+  },
+  "proiecteEuropenePage": {
+    "description": "Proiecte cu finanțare europeană implementate sau în curs de implementare în Municipiul Salonta.",
+    "activeProjects": "Proiecte în derulare",
+    "completedProjects": "Proiecte finalizate",
+    "fundingNotice": "Proiectele prezentate sunt cofinanțate din fonduri europene prin diferite programe operaționale. Pentru informații suplimentare despre fiecare proiect, consultați documentele aferente sau contactați Primăria Municipiului Salonta."
+  },
+  "snaPage": {
+    "title": "Planul sectorial SNA",
+    "description": "Planul sectorial de acțiune pentru implementarea Strategiei Naționale Anticorupție la nivelul Primăriei Municipiului Salonta.",
+    "infoText": "Strategia Națională Anticorupție reprezintă documentul de politică publică ce stabilește obiectivele, principiile și direcțiile de acțiune pentru prevenirea și combaterea corupției în administrația publică.",
+    "period2021_2025": "SNA 2021-2025",
+    "period2021_2025_subtitle": "Strategie în vigoare",
+    "period2016_2020": "SNA 2016-2020",
+    "period2016_2020_subtitle": "Strategie anterioară (arhivă)"
+  },
+  "voluntariatPage": {
+    "title": "Activitate de voluntariat",
+    "description": "Informații și formulare pentru activitatea de voluntariat în cadrul Primăriei Municipiului Salonta.",
+    "introTitle": "Devino voluntar!",
+    "introText": "Voluntariatul reprezintă o modalitate excelentă de a contribui la binele comunității și de a dobândi experiență valoroasă. Primăria Municipiului Salonta oferă oportunități de voluntariat în diverse domenii.",
+    "documentsTitle": "Documente și formulare",
+    "contactInfo": "Pentru mai multe informații despre programele de voluntariat sau pentru a vă înscrie, contactați Primăria Municipiului Salonta la numerele de telefon afișate pe site."
+  },
+  "svsuPage": {
+    "title": "Serviciul Voluntar pentru Situații de Urgență",
+    "description": "Informații despre SVSU Salonta, planuri de intervenție și materiale educative pentru prevenirea situațiilor de urgență.",
+    "missionTitle": "Misiunea SVSU",
+    "missionText": "Serviciul Voluntar pentru Situații de Urgență (SVSU) are rolul de a asigura prevenirea și gestionarea situațiilor de urgență la nivelul municipiului, protejând viața și bunurile cetățenilor.",
+    "infoSection": "Informații SVSU",
+    "plansSection": "Planuri și planificări",
+    "preventionSection": "Prevenire",
+    "recruitmentSection": "Recrutare",
+    "materialsSection": "Materiale informative și educative",
+    "emergencyTitle": "În caz de urgență, sunați 112!",
+    "emergencyText": "Numărul unic de urgență 112 este gratuit și funcționează 24/7."
   }
 }
 

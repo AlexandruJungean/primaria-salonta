@@ -170,6 +170,7 @@ export const MAIN_NAVIGATION: NavSection[] = [
       { id: 'sanatate', href: '/sanatate', icon: Stethoscope },
       { id: 'educatie', href: '/educatie', icon: GraduationCap },
       { id: 'transport', href: '/transport', icon: Bus },
+      { id: 'voluntariat', href: '/voluntariat', icon: Heart },
       { id: 'faq', href: '/faq', icon: HelpCircle },
     ],
   },
@@ -271,6 +272,7 @@ export const MAIN_NAVIGATION: NavSection[] = [
           { id: 'proiecteEuropene', href: '/programe/proiecte-europene', icon: Globe },
           { id: 'proiecteLocale', href: '/programe/proiecte-locale', icon: MapPin },
           { id: 'svsu', href: '/programe/svsu', icon: Siren },
+          { id: 'sna', href: '/programe/sna', icon: ShieldCheck },
         ],
       },
       // Transparency group

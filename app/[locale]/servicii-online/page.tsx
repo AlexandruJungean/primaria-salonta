@@ -1,6 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { useTranslations } from 'next-intl';
-import { CreditCard, Send, ClipboardList, ExternalLink } from 'lucide-react';
+import { CreditCard, Send, ClipboardList, Heart } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { Card, CardContent } from '@/components/ui/card';
@@ -32,6 +32,12 @@ const SERVICES = [
     href: '/servicii-online/formulare', 
     icon: ClipboardList,
     description: 'Descarcă formulare tipizate'
+  },
+  { 
+    id: 'problemeSociale', 
+    href: '/servicii-online/probleme-sociale', 
+    icon: Heart,
+    description: 'Formulare pentru probleme sociale'
   },
 ];
 

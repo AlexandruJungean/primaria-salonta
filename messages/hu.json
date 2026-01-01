@@ -121,13 +121,14 @@
     "educatie": "Oktatás (Hamarosan)",
     "sanatate": "Egészségügy (Hamarosan)",
     "sport": "Sport és szabadidő (Hamarosan)",
-    "voluntariat": "Önkéntesség (Hamarosan)",
     "agentiEconomici": "Gazdasági szereplők (Hamarosan)",
     "problemeSociale": "Szociális problémák – nyomtatványok",
     "coronavirus": "Koronavírus információk",
     "rapoarteStudii": "Jelentések és tanulmányok",
     "rapoarteAudit": "Könyvvizsgálati jelentések",
-    "studii": "Tanulmányok"
+    "studii": "Tanulmányok",
+    "sna": "NKS szektorális terv",
+    "voluntariat": "Önkéntesség"
   },
   "homepage": {
     "welcome": "Üdvözöljük",
@@ -746,6 +747,56 @@
   "studiiPage": {
     "description": "Nagyszalonta Város projektjeihez készített megvalósíthatósági és egyéb tanulmányok.",
     "noStudies": "Jelenleg nincsenek közzétett tanulmányok."
+  },
+  "strategiePage": {
+    "description": "Nagyszalonta Város közép- és hosszú távú fejlesztését irányító stratégiai dokumentumok."
+  },
+  "pmudPage": {
+    "description": "A Fenntartható Városi Mobilitási Terv (PMUD) meghatározza Nagyszalonta közlekedési és mobilitási vízióját és céljait.",
+    "infoText": "A PMUD az a stratégiai dokumentum, amely biztosítja a városi mobilitás integrált megközelítését, a hozzáférhetőség, biztonság és életminőség javítását célozva a városban."
+  },
+  "pnrrPage": {
+    "description": "A Nemzeti Helyreállítási és Ellenállóképességi Terv (PNRR) keretében finanszírozott projektek Nagyszalontán.",
+    "c5Title": "C5 - Felújítási Hullám: Energiahatékonyság",
+    "c10Title": "C10 - Helyi Zöld Közlekedés és IKT Fejlesztés",
+    "c15Title": "C15 - Oktatás",
+    "infoText": "A PNRR projekteket az Európai Unió finanszírozza a NextGenerationEU keretében. A megvalósítás állapotával kapcsolatos további információkért forduljon Nagyszalonta Polgármesteri Hivatalához."
+  },
+  "proiecteEuropenePage": {
+    "description": "Európai finanszírozású projektek, amelyek Nagyszalontán valósultak meg vagy folyamatban vannak.",
+    "activeProjects": "Folyamatban lévő projektek",
+    "completedProjects": "Befejezett projektek",
+    "fundingNotice": "A bemutatott projektek különböző operatív programokon keresztül európai alapokból társfinanszírozottak. Az egyes projektekről további információkért tekintse meg a kapcsolódó dokumentumokat, vagy forduljon Nagyszalonta Polgármesteri Hivatalához."
+  },
+  "snaPage": {
+    "title": "SNA szektorális terv",
+    "description": "Szektorális cselekvési terv a Nemzeti Korrupcióellenes Stratégia végrehajtására Nagyszalonta Polgármesteri Hivatalánál.",
+    "infoText": "A Nemzeti Korrupcióellenes Stratégia az a közpolitikai dokumentum, amely meghatározza a korrupció megelőzésének és leküzdésének céljait, elveit és cselekvési irányait a közigazgatásban.",
+    "period2021_2025": "NKS 2021-2025",
+    "period2021_2025_subtitle": "Hatályos stratégia",
+    "period2016_2020": "NKS 2016-2020",
+    "period2016_2020_subtitle": "Korábbi stratégia (archívum)"
+  },
+  "voluntariatPage": {
+    "title": "Önkéntes tevékenység",
+    "description": "Információk és nyomtatványok az önkéntes tevékenységhez Nagyszalonta Polgármesteri Hivatalánál.",
+    "introTitle": "Legyen önkéntes!",
+    "introText": "Az önkéntesség kiváló módja annak, hogy hozzájáruljon a közösség jólétéhez és értékes tapasztalatokat szerezzen. Nagyszalonta Polgármesteri Hivatala különböző területeken kínál önkéntes lehetőségeket.",
+    "documentsTitle": "Dokumentumok és nyomtatványok",
+    "contactInfo": "Az önkéntes programokról további információkért vagy a regisztrációhoz forduljon Nagyszalonta Polgármesteri Hivatalához a weboldalon feltüntetett telefonszámokon."
+  },
+  "svsuPage": {
+    "title": "Önkéntes Vészhelyzeti Szolgálat",
+    "description": "Információk a Nagyszalontai SVSU-ról, beavatkozási tervek és oktatási anyagok a vészhelyzetek megelőzésére.",
+    "missionTitle": "Az SVSU küldetése",
+    "missionText": "Az Önkéntes Vészhelyzeti Szolgálat (SVSU) feladata a vészhelyzetek megelőzésének és kezelésének biztosítása önkormányzati szinten, védve a polgárok életét és vagyonát.",
+    "infoSection": "SVSU információk",
+    "plansSection": "Tervek és ütemezés",
+    "preventionSection": "Megelőzés",
+    "recruitmentSection": "Toborzás",
+    "materialsSection": "Tájékoztató és oktatási anyagok",
+    "emergencyTitle": "Vészhelyzetben hívja a 112-t!",
+    "emergencyText": "A 112-es egységes segélyhívószám ingyenes és 0-24 üzemel."
   }
 }
 
