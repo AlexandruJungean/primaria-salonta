@@ -193,9 +193,14 @@ PRIMĂRIA SALONTA
 │   ├── Strategia de dezvoltare a municipiului Salonta
 │   ├── PMUD (Sustainable Urban Mobility Plan)
 │   ├── PNRR (National Recovery and Resilience Plan)
-│   ├── Proiecte Programul Regional Nord-Vest 2021-2027
+│   ├── Proiecte Programul Regional Nord-Vest 2021-2027 [DB]
+│   │   └── [projectId] (Individual Project Detail Page) [DB]
+│   │       ├── Project Info & Financial Values [DB]
+│   │       ├── Documents (Press Releases, Reports) [DB]
+│   │       └── Status Updates with Images [DB]
 │   ├── Proiecte europene (European Projects)
-│   ├── Proiecte locale (Local Projects)
+│   ├── Proiecte locale (Local Projects) [DB]
+│   │   └── Year-based documents (Culture/Environment/Sport) [DB]
 │   ├── Planul sectorial SNA (Anti-corruption Strategy)
 │   ├── Activitate de voluntariat
 │   └── Serviciul Voluntar pentru situații de urgență (SVSU)
@@ -223,8 +228,10 @@ PRIMĂRIA SALONTA
 │
 ├── 📰 ȘTIRI ȘI EVENIMENTE (News and Events)
 │   ├── Știri (News)
+│   │   └── [slug] (Individual News Article Page)
 │   ├── Anunțuri (Announcements)
 │   └── Evenimente (Events)
+│       └── [slug] (Individual Event Page)
 │
 ├── 📹 CAMERE WEB (Webcams)
 │   ├── Casa Memorială "Arany János"
@@ -628,7 +635,7 @@ A dedicated admin dashboard will be developed after the main website is approved
 | Feature | Description | Priority |
 |---------|-------------|----------|
 | 🔐 **Authentication** | Secure login with role-based access (Admin, Editor, Viewer) | High |
-| 📝 **Content Editor** | WYSIWYG editor for news, events, and announcements | High |
+| 📰 **News Builder** | Drag-and-drop page builder for news articles (see below) | High |
 | 🌐 **Auto-Translation** | One-click translation via Google Cloud Translation API | High |
 | 📄 **Document Manager** | Upload and organize PDFs (HCL, dispositions, forms) | High |
 | 🖼️ **Media Library** | Image upload and gallery management | Medium |
@@ -640,22 +647,114 @@ A dedicated admin dashboard will be developed after the main website is approved
 | 👥 **Councilors** | Add/edit local council members, parties, photos (Admin only) | High |
 | 🏛️ **Commissions** | Create/edit specialty committees, assign members (Admin only) | High |
 | 📋 **Declarations** | Upload wealth & interest declarations per person/year (Admin only) | High |
+| 🏗️ **Regional Program** | Manage EU projects, status updates, documents (Admin only) | High |
+| 📁 **Local Projects** | Manage local projects by year/category (Admin only) | High |
+
+### 📰 News Builder (Page Builder for Articles)
+
+The News Builder provides a drag-and-drop interface for creating rich news articles with multiple content sections:
+
+**Article Metadata:**
+| Field | Description |
+|-------|-------------|
+| Title | Article title (auto-translated to HU/EN) |
+| Slug | URL-friendly identifier (auto-generated) |
+| Category | anunturi, consiliu, proiecte, stiri, comunicate |
+| Featured Image | Main image for listings and social sharing |
+| Excerpt | Short summary for listings (auto-translated) |
+| Author Name | Name of the person who wrote the article |
+| Author Role | Position/title of the author (e.g., "Purtător de cuvânt") |
+| Author Photo | Optional profile photo |
+| Published At | Publication date/time |
+| Expires At | Optional expiration date |
+| Featured | Mark as featured for homepage display |
+
+**Available Content Blocks (Sections):**
+| Block Type | Description |
+|------------|-------------|
+| 📝 **Text** | Rich text paragraph with formatting (bold, italic, links) |
+| 📌 **Heading** | H2, H3, H4 section headings |
+| 🖼️ **Image** | Single image with caption and alt text |
+| 🖼️ **Gallery** | Multiple images in grid layout with captions |
+| 💬 **Quote** | Blockquote with optional attribution |
+| 📋 **List** | Bullet or numbered list |
+| 🎬 **Video** | Embedded video (YouTube, Facebook, etc.) |
+| 📄 **Document** | PDF/document download link with title |
+| ➖ **Divider** | Visual separator between sections |
+| ℹ️ **Callout** | Highlighted information box (info, warning, success) |
+| 📊 **Table** | Data table with rows and columns |
+
+**Block Features:**
+- Drag-and-drop reordering
+- Duplicate/delete blocks
+- Preview mode
+- Each block auto-translates to HU/EN on save
+
+**News Article URL Structure:**
+```
+/ro/stiri/[slug]  → Romanian version
+/hu/stiri/[slug]  → Hungarian version
+/en/stiri/[slug]  → English version
+```
+
+### 🏗️ Regional Program Nord-Vest Manager
+
+Dedicated interface for managing EU-funded projects under the Regional Program Nord-Vest 2021-2027:
+
+**Project Management:**
+| Field | Description |
+|-------|-------------|
+| Title | Full official project title (auto-translated) |
+| Short Title | Display name for listings |
+| SMIS Code | Official project code (e.g., 301398) |
+| Slug | URL-friendly identifier |
+| Status | in_implementare, finalizat, anulat |
+| Icon | Lucide icon name for visual display |
+| Color | Theme color (blue, violet, amber, etc.) |
+
+**Financial Information:**
+| Field | Description |
+|-------|-------------|
+| Total Value | Total project value in RON |
+| Eligible Value | Total eligible value |
+| FEDR Value | EU fund contribution |
+| National Budget | National co-financing |
+
+**Documents Tab:**
+- Upload press releases, contracts, reports
+- Set document type and date
+- Reorder documents
+
+**Status Updates Tab:**
+- Create progress reports by period (4 months, 6 months, etc.)
+- Add rich text descriptions of activities
+- Upload progress photos with captions
+- Organize updates by category
 
 ### Admin Workflow Example: Publishing News
 
 ```
 1. Admin logs into dashboard
-2. Creates new article in Romanian
-3. Clicks "Auto-Translate" button
-4. Reviews/edits Hungarian and English translations
-5. Uploads featured image
-6. Sets publication date (immediate or scheduled)
-7. Clicks "Publish"
-8. System automatically:
-   - Saves translations to database
-   - Generates article page
-   - Updates news listing
-   - Clears relevant caches
+2. Clicks "New Article" → News Builder opens
+3. Fills in metadata (title, author, category)
+4. Adds content blocks:
+   - Heading: "Anunț important"
+   - Text: Rich text paragraph
+   - Image: Uploads photo with caption
+   - Gallery: Adds multiple event photos
+   - Document: Links to PDF announcement
+5. Reorders blocks via drag-and-drop
+6. Clicks "Preview" to see final layout
+7. Clicks "Auto-Translate" → HU/EN versions generated
+8. Reviews/edits translations if needed
+9. Sets publication date (immediate or scheduled)
+10. Clicks "Publish"
+11. System automatically:
+    - Saves all sections to database
+    - Generates article page at /stiri/[slug]
+    - Updates news listing
+    - Clears relevant caches
+    - Sends notification (if configured)
 ```
 
 ### Role-Based Access
@@ -740,28 +839,70 @@ A dedicated admin dashboard will be developed after the main website is approved
 
 ### 12.0.1 Pages Using Mock Data (To Be Migrated to Database)
 
-| Page | Mock Data Location | Content Type |
-|------|-------------------|--------------|
-| Homepage - News Section | `components/sections/news-section.tsx` | MOCK_NEWS |
-| Homepage - Events Section | `lib/constants/events.ts` | EVENTS |
-| Știri (News) | `app/[locale]/stiri/page.tsx` | MOCK_NEWS |
-| Evenimente (Events) | `lib/constants/events.ts` | EVENTS |
-| Consilieri Locali | `app/[locale]/consiliul-local/consilieri/page.tsx` | COUNCILORS |
-| Hotărâri CL | `app/[locale]/consiliul-local/hotarari/page.tsx` | DECISIONS |
-| Concursuri/Jobs | `app/[locale]/informatii-publice/concursuri/page.tsx` | JOBS |
-| Buget | `app/[locale]/informatii-publice/buget/page.tsx` | BUDGET_DOCS |
-| Declarații Avere | `app/[locale]/primaria/declaratii-avere/page.tsx` | DECLARATIONS |
-| Monitorul Oficial - Hotărâri | `app/[locale]/monitorul-oficial/hotarari/page.tsx` | DECISIONS |
-| Monitorul Oficial - Dispoziții | `app/[locale]/monitorul-oficial/dispozitii/page.tsx` | DISPOSITIONS |
-| Monitorul Oficial - Regulamente | `app/[locale]/monitorul-oficial/regulamente/page.tsx` | REGULATIONS |
-| Monitorul Oficial - Doc. Financiare | `app/[locale]/monitorul-oficial/documente-financiare/page.tsx` | FINANCIAL_DOCS |
-| Monitorul Oficial - Alte Documente | `app/[locale]/monitorul-oficial/alte-documente/page.tsx` | Various |
-| Formulare | `app/[locale]/servicii-online/formulare/page.tsx` | FORMS |
-| Probleme Sociale | `app/[locale]/servicii-online/probleme-sociale/page.tsx` | FORMS |
-| Coronavirus | `app/[locale]/informatii-publice/coronavirus/page.tsx` | COVID_UPDATES |
-| Transparență | `app/[locale]/transparenta/*/page.tsx` | TRANSPARENCY_DOCS |
-| Achiziții | `app/[locale]/informatii-publice/achizitii/page.tsx` | ACQUISITIONS |
-| Galerie | `app/[locale]/localitatea/galerie/page.tsx` | GALLERY |
+**Note:** All pages that display documents, images, or dynamic content will fetch data from the Supabase database. The table below shows all pages with mock data that need migration.
+
+#### 📰 News & Events (Database-driven)
+| Page | Mock Data Location | Database Table(s) |
+|------|-------------------|-------------------|
+| Homepage - News Section | `components/sections/news-section.tsx` | `news` |
+| Homepage - Events Section | `lib/constants/events.ts` | `events` |
+| Știri (News List) | `app/[locale]/stiri/page.tsx` | `news` |
+| Știri [slug] (Article Detail) | `app/[locale]/stiri/[slug]/page.tsx` | `news` + `news_sections` + `news_section_images` |
+| Evenimente (Events) | `lib/constants/events.ts` | `events` |
+
+#### 📜 Council & Officials (Database-driven)
+| Page | Mock Data Location | Database Table(s) |
+|------|-------------------|-------------------|
+| Consilieri Locali | `app/[locale]/consiliul-local/consilieri/page.tsx` | `councilors` + `council_commissions` |
+| Comisii de specialitate | `app/[locale]/consiliul-local/comisii/page.tsx` | `council_commissions` + `commission_members` |
+| Hotărâri CL | `app/[locale]/consiliul-local/hotarari/page.tsx` | `council_decisions` |
+| Procese Verbale | `app/[locale]/consiliul-local/procese-verbale/page.tsx` | `council_minutes` |
+| Ședințe CL | `app/[locale]/consiliul-local/sedinte/page.tsx` | `council_sessions` |
+| Declarații Avere (Primăria) | `app/[locale]/primaria/declaratii-avere/page.tsx` | `wealth_declarations` |
+| Declarații Avere (Consiliu) | `app/[locale]/consiliul-local/declaratii-avere/page.tsx` | `councilor_declarations` |
+
+#### 📚 Monitorul Oficial Local (All Documents from Database)
+| Page | Mock Data Location | Database Table(s) |
+|------|-------------------|-------------------|
+| Hotărâri | `app/[locale]/monitorul-oficial/hotarari/page.tsx` | `council_decisions` |
+| Dispoziții | `app/[locale]/monitorul-oficial/dispozitii/page.tsx` | `dispositions` |
+| Regulamente | `app/[locale]/monitorul-oficial/regulamente/page.tsx` | `regulations` |
+| Documente Financiare | `app/[locale]/monitorul-oficial/documente-financiare/page.tsx` | `budget_documents` |
+| Alte Documente | `app/[locale]/monitorul-oficial/alte-documente/page.tsx` | `documents` |
+
+#### 💰 Financial & Public Information (Database-driven)
+| Page | Mock Data Location | Database Table(s) |
+|------|-------------------|-------------------|
+| Buget | `app/[locale]/informatii-publice/buget/page.tsx` | `budget_documents` |
+| Achiziții Publice | `app/[locale]/informatii-publice/achizitii/page.tsx` | `public_acquisitions` |
+| Licitații | `app/[locale]/informatii-publice/licitatii/page.tsx` | `public_acquisitions` |
+| Concursuri/Jobs | `app/[locale]/informatii-publice/concursuri/page.tsx` | `job_vacancies` |
+| Autorizații de construire | `app/[locale]/informatii-publice/autorizatii/page.tsx` | `building_permits` |
+| Certificate de urbanism | `app/[locale]/informatii-publice/certificate-urbanism/page.tsx` | `urbanism_certificates` |
+| Planuri urbanistice | `app/[locale]/informatii-publice/planuri-urbanistice/page.tsx` | `urban_plans` |
+
+#### 📊 Transparency (Database-driven)
+| Page | Mock Data Location | Database Table(s) |
+|------|-------------------|-------------------|
+| Anunțuri | `app/[locale]/transparenta/anunturi/page.tsx` | `news` (category: anunturi) |
+| Dezbateri Publice | `app/[locale]/transparenta/dezbateri/page.tsx` | `transparency_reports` |
+| Buletin Informativ | `app/[locale]/transparenta/buletin/page.tsx` | `transparency_reports` |
+| Coronavirus (Archived) | `app/[locale]/informatii-publice/coronavirus/page.tsx` | `covid_updates` |
+
+#### 📋 Programs & Projects (Database-driven)
+| Page | Mock Data Location | Database Table(s) |
+|------|-------------------|-------------------|
+| Regional Program Nord-Vest | `app/[locale]/programe/program-regional-nord-vest/page.tsx` | `regional_program_projects` |
+| Regional Program [projectId] | `app/[locale]/programe/program-regional-nord-vest/[projectId]/page.tsx` | `regional_program_projects` + `regional_program_documents` + `regional_program_status_updates` + `regional_program_status_images` |
+| Proiecte Locale | `app/[locale]/programe/proiecte-locale/page.tsx` | `local_projects_years` + `local_project_results` + `local_project_documents` |
+| Proiecte Europene | `app/[locale]/programe/proiecte-europene/page.tsx` | `documents` (category: european_projects) |
+
+#### 🖼️ Media & Forms (Database-driven)
+| Page | Mock Data Location | Database Table(s) |
+|------|-------------------|-------------------|
+| Galerie | `app/[locale]/localitatea/galerie/page.tsx` | `gallery_albums` + `gallery_images` |
+| Formulare | `app/[locale]/servicii-online/formulare/page.tsx` | `downloadable_forms` |
+| Probleme Sociale | `app/[locale]/servicii-online/probleme-sociale/page.tsx` | `downloadable_forms` |
 
 ### 12.1 Required from Primăria Salonta (After Approval)
 1. ✅ Logo files - *Provided*

@@ -15,6 +15,7 @@
     "loading": "Se încarcă...",
     "error": "Eroare",
     "noResults": "Nu s-au găsit rezultate",
+    "notFound": "Pagină negăsită",
     "close": "Închide",
     "open": "Deschide",
     "menu": "Meniu",
@@ -331,7 +332,8 @@
     "404": {
       "title": "Pagina nu a fost găsită",
       "description": "Ne pare rău, pagina pe care o căutați nu există sau a fost mutată.",
-      "backHome": "Înapoi la pagina principală"
+      "backHome": "Înapoi la pagina principală",
+      "back": "Înapoi"
     },
     "500": {
       "title": "Eroare de server",

@@ -472,30 +472,255 @@ CREATE TABLE page_translations (
 -- ADDITIONAL TABLES FOR ADMIN DASHBOARD
 -- ============================================
 
--- News/Articles with auto-translation
+-- ============================================
+-- NEWS/ARTICLES WITH PAGE BUILDER STRUCTURE
+-- ============================================
+
+-- News articles - main table
 CREATE TABLE news (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   slug TEXT UNIQUE NOT NULL,
-  category TEXT NOT NULL CHECK (category IN ('anunturi', 'consiliu', 'proiecte', 'stiri')),
-  image_url TEXT,
+  category TEXT NOT NULL CHECK (category IN ('anunturi', 'consiliu', 'proiecte', 'stiri', 'comunicate')),
+  featured_image_url TEXT,
+  featured BOOLEAN DEFAULT false,
   published BOOLEAN DEFAULT false,
   published_at TIMESTAMPTZ,
   expires_at TIMESTAMPTZ,
+  -- Author information
+  author_name TEXT,
+  author_role TEXT,
+  author_photo_url TEXT,
   -- Romanian (primary)
   title_ro TEXT NOT NULL,
   excerpt_ro TEXT,
-  content_ro TEXT,
+  meta_title_ro TEXT,
+  meta_description_ro TEXT,
   -- Hungarian (auto-translated)
   title_hu TEXT,
   excerpt_hu TEXT,
-  content_hu TEXT,
+  meta_title_hu TEXT,
+  meta_description_hu TEXT,
   -- English (auto-translated)
   title_en TEXT,
   excerpt_en TEXT,
-  content_en TEXT,
-  translation_status TEXT DEFAULT 'pending',
+  meta_title_en TEXT,
+  meta_description_en TEXT,
+  -- Translation status
+  translation_status TEXT DEFAULT 'pending' CHECK (translation_status IN ('pending', 'completed', 'failed', 'manual')),
+  translated_at TIMESTAMPTZ,
+  -- Timestamps
   created_at TIMESTAMPTZ DEFAULT now(),
   updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- News content sections/blocks (page builder)
+-- Allows building articles with multiple content blocks in custom order
+CREATE TABLE news_sections (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  news_id UUID REFERENCES news(id) ON DELETE CASCADE,
+  section_type TEXT NOT NULL CHECK (section_type IN (
+    'text',           -- Rich text paragraph
+    'heading',        -- H2, H3, H4 heading
+    'image',          -- Single image with caption
+    'gallery',        -- Multiple images in grid
+    'quote',          -- Blockquote
+    'list',           -- Bullet or numbered list
+    'video',          -- Embedded video (YouTube, etc.)
+    'document',       -- PDF/document download link
+    'divider',        -- Visual separator
+    'callout',        -- Highlighted info box
+    'table'           -- Data table
+  )),
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  -- Romanian content (primary)
+  content_ro TEXT,
+  -- Hungarian (auto-translated)
+  content_hu TEXT,
+  -- English (auto-translated)
+  content_en TEXT,
+  -- Additional metadata (JSON for flexibility)
+  metadata JSONB DEFAULT '{}',
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- News section images (for gallery sections or inline images)
+CREATE TABLE news_section_images (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  section_id UUID REFERENCES news_sections(id) ON DELETE CASCADE,
+  image_url TEXT NOT NULL,
+  sort_order INTEGER DEFAULT 0,
+  -- Romanian (primary)
+  alt_text_ro TEXT,
+  caption_ro TEXT,
+  -- Hungarian (auto-translated)
+  alt_text_hu TEXT,
+  caption_hu TEXT,
+  -- English (auto-translated)
+  alt_text_en TEXT,
+  caption_en TEXT,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- News tags for categorization and filtering
+CREATE TABLE news_tags (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  slug TEXT UNIQUE NOT NULL,
+  name_ro TEXT NOT NULL,
+  name_hu TEXT,
+  name_en TEXT,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Junction table for news-tags relationship
+CREATE TABLE news_tags_junction (
+  news_id UUID REFERENCES news(id) ON DELETE CASCADE,
+  tag_id UUID REFERENCES news_tags(id) ON DELETE CASCADE,
+  PRIMARY KEY (news_id, tag_id)
+);
+
+-- Index for faster news queries
+CREATE INDEX idx_news_published ON news(published, published_at DESC);
+CREATE INDEX idx_news_category ON news(category);
+CREATE INDEX idx_news_featured ON news(featured) WHERE featured = true;
+CREATE INDEX idx_news_sections_order ON news_sections(news_id, sort_order);
+
+-- ============================================
+-- REGIONAL PROGRAM NORD-VEST 2021-2027
+-- ============================================
+
+-- Main projects table
+CREATE TABLE regional_program_projects (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  slug TEXT UNIQUE NOT NULL,
+  smis_code TEXT UNIQUE NOT NULL,
+  icon_name TEXT DEFAULT 'building2',
+  color TEXT DEFAULT 'blue',
+  status TEXT DEFAULT 'in_implementare' CHECK (status IN ('in_implementare', 'finalizat', 'anulat')),
+  -- Financial values (in RON)
+  total_value DECIMAL(15,2),
+  eligible_value DECIMAL(15,2),
+  fedr_value DECIMAL(15,2),
+  national_budget_value DECIMAL(15,2),
+  -- Romanian (primary - project titles are official)
+  title_ro TEXT NOT NULL,
+  short_title_ro TEXT NOT NULL,
+  description_ro TEXT,
+  -- Hungarian (auto-translated)
+  title_hu TEXT,
+  short_title_hu TEXT,
+  description_hu TEXT,
+  -- English (auto-translated)
+  title_en TEXT,
+  short_title_en TEXT,
+  description_en TEXT,
+  -- Translation status
+  translation_status TEXT DEFAULT 'pending',
+  -- Timestamps
+  published BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Project documents (press releases, reports, etc.)
+CREATE TABLE regional_program_documents (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  project_id UUID REFERENCES regional_program_projects(id) ON DELETE CASCADE,
+  document_type TEXT DEFAULT 'comunicat' CHECK (document_type IN ('comunicat', 'raport', 'contract', 'anexa', 'altele')),
+  file_url TEXT NOT NULL,
+  document_date DATE,
+  sort_order INTEGER DEFAULT 0,
+  -- Romanian (primary)
+  title_ro TEXT NOT NULL,
+  -- Hungarian (auto-translated)
+  title_hu TEXT,
+  -- English (auto-translated)
+  title_en TEXT,
+  published BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Project status updates (timeline/progress reports)
+CREATE TABLE regional_program_status_updates (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  project_id UUID REFERENCES regional_program_projects(id) ON DELETE CASCADE,
+  status_category TEXT NOT NULL CHECK (status_category IN ('4_luni', '6_luni', 'trimestrial', 'anual', 'altele')),
+  period_label TEXT NOT NULL, -- e.g., "August 2024", "Octombrie 2024"
+  update_date DATE NOT NULL,
+  sort_order INTEGER DEFAULT 0,
+  -- Romanian (primary)
+  title_ro TEXT NOT NULL,
+  content_ro TEXT,
+  -- Hungarian (auto-translated)
+  title_hu TEXT,
+  content_hu TEXT,
+  -- English (auto-translated)
+  title_en TEXT,
+  content_en TEXT,
+  translation_status TEXT DEFAULT 'pending',
+  published BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Status update images (photos of work progress)
+CREATE TABLE regional_program_status_images (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  status_update_id UUID REFERENCES regional_program_status_updates(id) ON DELETE CASCADE,
+  image_url TEXT NOT NULL,
+  sort_order INTEGER DEFAULT 0,
+  -- Romanian (primary)
+  caption_ro TEXT,
+  alt_text_ro TEXT,
+  -- Hungarian (auto-translated)
+  caption_hu TEXT,
+  alt_text_hu TEXT,
+  -- English (auto-translated)
+  caption_en TEXT,
+  alt_text_en TEXT,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Indexes for regional program queries
+CREATE INDEX idx_regional_projects_status ON regional_program_projects(status);
+CREATE INDEX idx_regional_documents_project ON regional_program_documents(project_id, sort_order);
+CREATE INDEX idx_regional_updates_project ON regional_program_status_updates(project_id, sort_order);
+
+-- ============================================
+-- LOCAL PROJECTS (Proiecte Locale)
+-- ============================================
+
+-- Local projects by year
+CREATE TABLE local_projects_years (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  year INTEGER UNIQUE NOT NULL,
+  results_date DATE,
+  guide_title TEXT,
+  guide_date DATE,
+  logo_url TEXT,
+  published BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Local project results (per year)
+CREATE TABLE local_project_results (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  year_id UUID REFERENCES local_projects_years(id) ON DELETE CASCADE,
+  category TEXT NOT NULL CHECK (category IN ('cultura', 'mediu', 'sport')),
+  title_ro TEXT NOT NULL,
+  file_url TEXT NOT NULL,
+  sort_order INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Local project documents (forms, guides, annexes per year and category)
+CREATE TABLE local_project_documents (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  year_id UUID REFERENCES local_projects_years(id) ON DELETE CASCADE,
+  category TEXT NOT NULL CHECK (category IN ('cultura', 'mediu', 'sport', 'social', 'special')),
+  title_ro TEXT NOT NULL,
+  file_url TEXT NOT NULL,
+  notice TEXT, -- e.g., "Atenție! Ghidul este actualizat!"
+  sort_order INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT now()
 );
 
 -- Council Decisions (HCL) - Romanian only

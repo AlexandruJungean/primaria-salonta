@@ -15,6 +15,7 @@
     "loading": "Betöltés...",
     "error": "Hiba",
     "noResults": "Nincs találat",
+    "notFound": "Az oldal nem található",
     "close": "Bezárás",
     "open": "Megnyitás",
     "menu": "Menü",
@@ -331,7 +332,8 @@
     "404": {
       "title": "Az oldal nem található",
       "description": "Sajnáljuk, a keresett oldal nem létezik vagy áthelyezték.",
-      "backHome": "Vissza a főoldalra"
+      "backHome": "Vissza a főoldalra",
+      "back": "Vissza"
     },
     "500": {
       "title": "Szerverhiba",

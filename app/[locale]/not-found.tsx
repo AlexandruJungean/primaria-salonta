@@ -36,7 +36,7 @@ export default function NotFound() {
             </Button>
             <Button variant="outline" onClick={() => window.history.back()}>
               <ArrowLeft className="w-4 h-4" />
-              Înapoi
+              {t('back')}
             </Button>
           </div>
         </div>
