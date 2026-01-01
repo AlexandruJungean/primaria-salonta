@@ -862,6 +862,31 @@
     "urbanDevelopmentService": "Serviciul de Dezvoltare Urbană",
     "agriculturalOffice": "Biroul Agricol",
     "issuedDocuments": "Acte emise"
+  },
+  "autorizatiiConstruirePage": {
+    "infoTitle": "Autorizații de construire",
+    "infoText": "Lista autorizațiilor de construire eliberate de Primăria Municipiului Salonta. Documentele sunt publicate în conformitate cu prevederile legale în vigoare.",
+    "currentTitle": "Autorizații de construire",
+    "archiveTitle": "Arhivă autorizații de construire",
+    "documents": "documente",
+    "noteTitle": "Notă informativă",
+    "noteText": "Documentele de pe această pagină sunt încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri și vor fi actualizate ulterior cu documentele reale."
+  },
+  "bugetPage": {
+    "infoTitle": "Buget din toate sursele de venituri",
+    "infoText": "Bugetul local al Municipiului Salonta, situațiile financiare trimestriale și conturile de execuție bugetară. Documentele sunt publicate în conformitate cu prevederile legale în vigoare.",
+    "sections": "secțiuni",
+    "noteTitle": "Notă informativă",
+    "noteText": "Documentele de pe această pagină sunt încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri și vor fi actualizate ulterior cu documentele reale."
+  },
+  "certificateUrbanismPage": {
+    "infoTitle": "Certificate de urbanism",
+    "infoText": "Lista certificatelor de urbanism eliberate de Primăria Municipiului Salonta. Certificatul de urbanism este actul de informare prin care autoritatea publică face cunoscute solicitantului informații despre regimul juridic, economic și tehnic al terenurilor și construcțiilor existente.",
+    "currentTitle": "Certificate de urbanism",
+    "archiveTitle": "Arhivă certificate de urbanism",
+    "documents": "documente",
+    "noteTitle": "Notă informativă",
+    "noteText": "Documentele de pe această pagină sunt încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri și vor fi actualizate ulterior cu documentele reale."
   }
 }
 

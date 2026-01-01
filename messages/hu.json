@@ -862,6 +862,31 @@
     "urbanDevelopmentService": "Városfejlesztési Szolgálat",
     "agriculturalOffice": "Mezőgazdasági Iroda",
     "issuedDocuments": "Kiállított okmányok"
+  },
+  "autorizatiiConstruirePage": {
+    "infoTitle": "Építési engedélyek",
+    "infoText": "A Nagyszalonta Polgármesteri Hivatala által kiadott építési engedélyek listája. A dokumentumok a hatályos jogszabályoknak megfelelően kerülnek közzétételre.",
+    "currentTitle": "Építési engedélyek",
+    "archiveTitle": "Építési engedélyek archívuma",
+    "documents": "dokumentum",
+    "noteTitle": "Tájékoztatás",
+    "noteText": "Az ezen az oldalon található dokumentumok az adatbázisból töltődnek be. A '#' jelöléssel ellátott linkek helykitöltők, amelyek később frissülnek a valódi dokumentumokkal."
+  },
+  "bugetPage": {
+    "infoTitle": "Költségvetés minden bevételi forrásból",
+    "infoText": "Nagyszalonta Város helyi költségvetése, negyedéves pénzügyi kimutatások és költségvetési végrehajtási számlák. A dokumentumok a hatályos jogszabályoknak megfelelően kerülnek közzétételre.",
+    "sections": "szekció",
+    "noteTitle": "Tájékoztatás",
+    "noteText": "Az ezen az oldalon található dokumentumok az adatbázisból töltődnek be. A '#' jelöléssel ellátott linkek helykitöltők, amelyek később frissülnek a valódi dokumentumokkal."
+  },
+  "certificateUrbanismPage": {
+    "infoTitle": "Urbanisztikai bizonyítványok",
+    "infoText": "A Nagyszalonta Polgármesteri Hivatala által kiadott urbanisztikai bizonyítványok listája. Az urbanisztikai bizonyítvány olyan tájékoztató okmány, amelyen keresztül a hatóság a kérelmezővel közli a telkek és meglévő építmények jogi, gazdasági és műszaki rendszerére vonatkozó információkat.",
+    "currentTitle": "Urbanisztikai bizonyítványok",
+    "archiveTitle": "Urbanisztikai bizonyítványok archívuma",
+    "documents": "dokumentum",
+    "noteTitle": "Tájékoztatás",
+    "noteText": "Az ezen az oldalon található dokumentumok az adatbázisból töltődnek be. A '#' jelöléssel ellátott linkek helykitöltők, amelyek később frissülnek a valódi dokumentumokkal."
   }
 }
 

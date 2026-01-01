@@ -862,6 +862,31 @@
     "urbanDevelopmentService": "Urban Development Service",
     "agriculturalOffice": "Agricultural Office",
     "issuedDocuments": "Issued Documents"
+  },
+  "autorizatiiConstruirePage": {
+    "infoTitle": "Building Permits",
+    "infoText": "List of building permits issued by Salonta City Hall. Documents are published in accordance with current legal provisions.",
+    "currentTitle": "Building Permits",
+    "archiveTitle": "Building Permits Archive",
+    "documents": "documents",
+    "noteTitle": "Information Note",
+    "noteText": "Documents on this page are loaded from the database. Links marked with '#' are placeholders and will be updated later with actual documents."
+  },
+  "bugetPage": {
+    "infoTitle": "Budget from all revenue sources",
+    "infoText": "The local budget of Salonta Municipality, quarterly financial statements and budget execution accounts. Documents are published in accordance with current legal provisions.",
+    "sections": "sections",
+    "noteTitle": "Information Note",
+    "noteText": "Documents on this page are loaded from the database. Links marked with '#' are placeholders and will be updated later with actual documents."
+  },
+  "certificateUrbanismPage": {
+    "infoTitle": "Urbanism Certificates",
+    "infoText": "List of urbanism certificates issued by Salonta City Hall. The urbanism certificate is an informative document through which the public authority provides the applicant with information about the legal, economic and technical regime of land and existing constructions.",
+    "currentTitle": "Urbanism Certificates",
+    "archiveTitle": "Urbanism Certificates Archive",
+    "documents": "documents",
+    "noteTitle": "Information Note",
+    "noteText": "Documents on this page are loaded from the database. Links marked with '#' are placeholders and will be updated later with actual documents."
   }
 }
 
