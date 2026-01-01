@@ -588,7 +588,8 @@
     "legend": "Legendă tipuri anunțuri",
     "announcements": "anunțuri",
     "archiveNote": "Arhivă anunțuri",
-    "archiveNoteDesc": "Anunțurile mai vechi sunt disponibile în arhiva primăriei. Documentele vor fi încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri."
+    "archiveNoteDesc": "Anunțurile mai vechi sunt disponibile în arhiva primăriei. Documentele vor fi încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri.",
+    "viewDetails": "Detalii"
   },
   "dezbateriPage": {
     "introTitle": "Participare la dezbateri publice",
@@ -846,6 +847,21 @@
     "legendCulture": "Cultură",
     "legendEnvironment": "Mediu",
     "legendSport": "Sport"
+  },
+  "achizitiiPage": {
+    "seapNote": "Consultați anunțurile publice pe:",
+    "requiredForms": "Formulare necesare",
+    "currentDocuments": "Documente curente",
+    "archive2018": "Arhivă 2018",
+    "archive2017": "Arhivă 2017",
+    "archive2016": "Arhivă 2016"
+  },
+  "acteNecesarePage": {
+    "description": "Consultați lista actelor necesare pentru diferite proceduri la Primăria Municipiului Salonta.",
+    "urbanismOffice": "Biroul Urbanism",
+    "urbanDevelopmentService": "Serviciul de Dezvoltare Urbană",
+    "agriculturalOffice": "Biroul Agricol",
+    "issuedDocuments": "Acte emise"
   }
 }
 

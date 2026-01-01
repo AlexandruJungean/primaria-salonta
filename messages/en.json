@@ -588,7 +588,8 @@
     "legend": "Announcement types legend",
     "announcements": "announcements",
     "archiveNote": "Announcements archive",
-    "archiveNoteDesc": "Older announcements are available in the city hall archive. Documents will be loaded from the database. Links marked with '#' are placeholders."
+    "archiveNoteDesc": "Older announcements are available in the city hall archive. Documents will be loaded from the database. Links marked with '#' are placeholders.",
+    "viewDetails": "Details"
   },
   "dezbateriPage": {
     "introTitle": "Participation in public debates",
@@ -846,6 +847,21 @@
     "legendCulture": "Culture",
     "legendEnvironment": "Environment",
     "legendSport": "Sport"
+  },
+  "achizitiiPage": {
+    "seapNote": "View public procurement announcements on:",
+    "requiredForms": "Required Forms",
+    "currentDocuments": "Current Documents",
+    "archive2018": "Archive 2018",
+    "archive2017": "Archive 2017",
+    "archive2016": "Archive 2016"
+  },
+  "acteNecesarePage": {
+    "description": "Consult the list of required documents for various procedures at Salonta City Hall.",
+    "urbanismOffice": "Urbanism Office",
+    "urbanDevelopmentService": "Urban Development Service",
+    "agriculturalOffice": "Agricultural Office",
+    "issuedDocuments": "Issued Documents"
   }
 }
 

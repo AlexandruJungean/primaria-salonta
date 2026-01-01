@@ -588,7 +588,8 @@
     "legend": "Hirdetménytípusok jelmagyarázata",
     "announcements": "hirdetmény",
     "archiveNote": "Hirdetmények archívuma",
-    "archiveNoteDesc": "A régebbi hirdetmények a polgármesteri hivatal archívumában érhetők el. A dokumentumok az adatbázisból töltődnek be. A '#' jelölésű linkek helykitöltők."
+    "archiveNoteDesc": "A régebbi hirdetmények a polgármesteri hivatal archívumában érhetők el. A dokumentumok az adatbázisból töltődnek be. A '#' jelölésű linkek helykitöltők.",
+    "viewDetails": "Részletek"
   },
   "dezbateriPage": {
     "introTitle": "Részvétel a nyilvános vitákon",
@@ -846,6 +847,21 @@
     "legendCulture": "Kultúra",
     "legendEnvironment": "Környezetvédelem",
     "legendSport": "Sport"
+  },
+  "achizitiiPage": {
+    "seapNote": "A közbeszerzési hirdetmények megtekintése:",
+    "requiredForms": "Szükséges űrlapok",
+    "currentDocuments": "Aktuális dokumentumok",
+    "archive2018": "Archívum 2018",
+    "archive2017": "Archívum 2017",
+    "archive2016": "Archívum 2016"
+  },
+  "acteNecesarePage": {
+    "description": "Tekintse meg a Nagyszalonta Polgármesteri Hivatalhoz benyújtandó különböző eljárásokhoz szükséges okmányok listáját.",
+    "urbanismOffice": "Városrendezési Iroda",
+    "urbanDevelopmentService": "Városfejlesztési Szolgálat",
+    "agriculturalOffice": "Mezőgazdasági Iroda",
+    "issuedDocuments": "Kiállított okmányok"
   }
 }
 
