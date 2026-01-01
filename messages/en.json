@@ -736,6 +736,9 @@
     "committeeReports": "Committee reports",
     "councilorReports": "Councilor reports"
   },
+  "rapoarteStudiiPage": {
+    "description": "Audit reports by the Court of Accounts and feasibility studies for Salonta Municipality projects."
+  },
   "rapoarteAuditPage": {
     "description": "Audit reports conducted by the Romanian Court of Accounts for Salonta City Hall.",
     "infoText": "Audit reports are published in accordance with current legislation and are available for download in PDF format."

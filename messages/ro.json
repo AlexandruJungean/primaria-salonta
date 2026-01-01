@@ -736,6 +736,9 @@
     "committeeReports": "Rapoarte comisii",
     "councilorReports": "Rapoarte consilieri"
   },
+  "rapoarteStudiiPage": {
+    "description": "Rapoartele de audit realizate de Curtea de Conturi și studiile de fezabilitate pentru proiectele Municipiului Salonta."
+  },
   "rapoarteAuditPage": {
     "description": "Rapoartele de audit realizate de Curtea de Conturi a României pentru Primăria Municipiului Salonta.",
     "infoText": "Rapoartele de audit sunt publicate conform legislației în vigoare și sunt disponibile pentru descărcare în format PDF."

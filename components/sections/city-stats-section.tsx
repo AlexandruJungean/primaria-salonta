@@ -43,13 +43,13 @@ const CITY_STATS = [
   },
   {
     id: 'twinCities',
-    value: '4',
+    value: '6',
     icon: Globe,
     color: 'from-cyan-500 to-cyan-600',
   },
   {
     id: 'honoraryCitizens',
-    value: '12',
+    value: '10',
     icon: Award,
     color: 'from-rose-500 to-rose-600',
   },
