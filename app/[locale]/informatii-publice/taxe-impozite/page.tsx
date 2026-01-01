@@ -1,9 +1,8 @@
 import { getTranslations } from 'next-intl/server';
-import { useTranslations } from 'next-intl';
-import { Receipt, Download, CreditCard, Calculator } from 'lucide-react';
+import { Receipt, Download, CreditCard, FileText, Calendar } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
 import { Link } from '@/components/ui/link';
@@ -14,8 +13,31 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return { title: t('taxeImpozite') };
 }
 
-export default function TaxeImpozitePage() {
-  const t = useTranslations('navigation');
+// Types
+interface TaxDocument {
+  id: number;
+  title: string;
+  year: number;
+  pdfUrl: string;
+  extra?: string;
+}
+
+// Mock data - will be replaced with database fetch
+const TAX_DOCUMENTS: TaxDocument[] = [
+  { id: 1, title: 'Impozite si taxele locale pentru anul 2021', year: 2021, pdfUrl: '#' },
+  { id: 2, title: 'Impozite si taxele locale pentru anul 2020', year: 2020, pdfUrl: '#' },
+  { id: 3, title: 'Codurile IBAN pentru impozite si taxe locale', year: 2020, pdfUrl: '#' },
+  { id: 4, title: 'Impozitele și taxele locale pt. anul 2019', year: 2019, pdfUrl: '#' },
+  { id: 5, title: 'Facilitati fiscale', year: 2019, pdfUrl: '#', extra: 'Facilități fiscale' },
+  { id: 6, title: 'Impozitele și taxele locale pt. anul 2018', year: 2018, pdfUrl: '#' },
+  { id: 7, title: 'Impozitele și taxele locale pt. anul 2017', year: 2017, pdfUrl: '#' },
+  { id: 8, title: 'Impozitele și taxele locale pt. anul 2016', year: 2016, pdfUrl: '#' },
+];
+
+export default async function TaxeImpozitePage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'navigation' });
+  const tPage = await getTranslations({ locale, namespace: 'taxeImpozitePage' });
 
   return (
     <>
@@ -28,70 +50,90 @@ export default function TaxeImpozitePage() {
       <Section background="white">
         <Container>
           <div className="max-w-5xl mx-auto">
+            {/* Info Banner */}
+            <Card className="mb-8 bg-amber-50 border-amber-200">
+              <CardContent className="pt-6">
+                <div className="flex items-start gap-4">
+                  <Receipt className="w-8 h-8 text-amber-600 shrink-0" />
+                  <div>
+                    <h3 className="font-semibold text-amber-900 mb-2">{tPage('infoTitle')}</h3>
+                    <p className="text-amber-800 text-sm">
+                      {tPage('infoText')}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Quick access to online payment */}
             <Card className="bg-primary-50 border-primary-200 mb-8">
               <CardContent className="flex items-center justify-between pt-6">
                 <div className="flex items-center gap-4">
                   <CreditCard className="w-10 h-10 text-primary-700" />
                   <div>
-                    <h3 className="font-semibold text-primary-900">Plătește online</h3>
-                    <p className="text-sm text-primary-700">Taxe și impozite locale</p>
+                    <h3 className="font-semibold text-primary-900">{tPage('payOnline')}</h3>
+                    <p className="text-sm text-primary-700">{tPage('payOnlineDesc')}</p>
                   </div>
                 </div>
                 <Link 
                   href="/servicii-online/plati"
                   className="px-4 py-2 bg-primary-900 text-white rounded-lg hover:bg-primary-800"
                 >
-                  Plăți online
+                  {tPage('payOnlineButton')}
                 </Link>
               </CardContent>
             </Card>
 
-            <div className="prose prose-lg mb-8">
-              <h2>Impozite și taxe locale 2025</h2>
-              <p>
-                Nivelurile impozitelor și taxelor locale pentru anul 2025 au fost 
-                stabilite prin HCL nr. XX/2024, în conformitate cu Codul Fiscal.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-6 mb-8">
-              <Card>
-                <CardContent className="pt-6">
-                  <h3 className="font-semibold text-lg mb-3 flex items-center gap-2">
-                    <Calculator className="w-5 h-5 text-primary-600" />
-                    Impozit clădiri
-                  </h3>
-                  <ul className="space-y-2 text-sm text-gray-600">
-                    <li>Persoane fizice: 0.1% din valoarea impozabilă</li>
-                    <li>Persoane juridice: 0.5% - 1.3%</li>
-                  </ul>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="pt-6">
-                  <h3 className="font-semibold text-lg mb-3 flex items-center gap-2">
-                    <Calculator className="w-5 h-5 text-primary-600" />
-                    Impozit teren
-                  </h3>
-                  <ul className="space-y-2 text-sm text-gray-600">
-                    <li>Intravilan: în funcție de zonă și categorie</li>
-                    <li>Extravilan: conform categoriei de folosință</li>
-                  </ul>
-                </CardContent>
-              </Card>
-            </div>
-
-            <Card>
-              <CardContent className="flex items-center justify-between pt-6">
-                <div>
-                  <h4 className="font-semibold text-gray-900">Regulament taxe și impozite 2025</h4>
-                  <p className="text-sm text-gray-500">HCL nr. XX/2024</p>
+            {/* Documents Section */}
+            <div className="mb-8">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center">
+                  <FileText className="w-5 h-5 text-amber-700" />
                 </div>
-                <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
-                  <Download className="w-4 h-4" />
-                  Descarcă
-                </button>
+                <h2 className="text-xl font-bold text-gray-900">{tPage('documentsTitle')}</h2>
+              </div>
+
+              <div className="space-y-3">
+                {TAX_DOCUMENTS.map((doc) => (
+                  <Card key={doc.id} hover>
+                    <CardContent className="flex items-center justify-between pt-6">
+                      <div className="flex items-start gap-4">
+                        <div className="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center shrink-0">
+                          <FileText className="w-5 h-5 text-amber-600" />
+                        </div>
+                        <div>
+                          <h3 className="font-medium text-gray-900">{doc.title}</h3>
+                          <span className="text-sm text-gray-500 flex items-center gap-1 mt-1">
+                            <Calendar className="w-4 h-4" />
+                            {doc.year}
+                          </span>
+                        </div>
+                      </div>
+                      <a
+                        href={doc.pdfUrl}
+                        className="flex items-center gap-1 px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-amber-300 transition-colors shrink-0 ml-4"
+                      >
+                        <Download className="w-4 h-4 text-amber-600" />
+                        PDF
+                      </a>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+
+            {/* Info Note */}
+            <Card className="bg-gray-50 border-gray-200">
+              <CardContent className="pt-6">
+                <div className="flex items-start gap-4">
+                  <FileText className="w-8 h-8 text-gray-400 shrink-0" />
+                  <div>
+                    <h3 className="font-semibold text-gray-700 mb-2">{tPage('noteTitle')}</h3>
+                    <p className="text-gray-600 text-sm">
+                      {tPage('noteText')}
+                    </p>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </div>
@@ -100,4 +142,3 @@ export default function TaxeImpozitePage() {
     </>
   );
 }
-

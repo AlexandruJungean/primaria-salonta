@@ -29,7 +29,7 @@ const FORM_CATEGORIES = [
   {
     id: 'asistenta',
     titleKey: 'asistentaSociala',
-    icon: '❤️',
+    icon: '🤝',
     color: 'rose',
     forms: [
       { title: 'Cerere pentru acordarea indemnizației de creștere a copilului', url: '#' },

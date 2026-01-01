@@ -897,6 +897,24 @@
     "documents": "dokumentum",
     "noteTitle": "Tájékoztatás",
     "noteText": "Az ezen az oldalon található dokumentumok az adatbázisból töltődnek be. A '#' jelöléssel ellátott linkek helykitöltők, amelyek később frissülnek a valódi dokumentumokkal."
+  },
+  "gdprPage": {
+    "infoTitle": "Személyes adatok védelme",
+    "infoText": "Nagyszalonta Polgármesteri Hivatala az (EU) 2016/679 rendeletnek (GDPR) és a hatályos nemzeti jogszabályoknak megfelelően kezeli a személyes adatokat.",
+    "documentsTitle": "GDPR dokumentumok",
+    "formsTitle": "Online kérelmek/űrlapok",
+    "noteTitle": "Tájékoztatás",
+    "noteText": "Az ezen az oldalon található dokumentumok az adatbázisból töltődnek be. A '#' jelöléssel ellátott linkek helykitöltők, amelyek később frissülnek a valódi dokumentumokkal."
+  },
+  "taxeImpozitePage": {
+    "infoTitle": "Helyi adók és illetékek",
+    "infoText": "A helyi adók és illetékek mértékét évente a Helyi Tanács határozatával állapítják meg, az Adótörvénykönyv rendelkezéseinek megfelelően.",
+    "payOnline": "Fizessen online",
+    "payOnlineDesc": "Helyi adók és illetékek",
+    "payOnlineButton": "Online fizetés",
+    "documentsTitle": "Adó- és illetékdokumentumok",
+    "noteTitle": "Tájékoztatás",
+    "noteText": "Az ezen az oldalon található dokumentumok az adatbázisból töltődnek be. A '#' jelöléssel ellátott linkek helykitöltők, amelyek később frissülnek a valódi dokumentumokkal."
   }
 }
 

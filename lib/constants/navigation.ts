@@ -122,7 +122,6 @@ export const MAIN_NAVIGATION: NavSection[] = [
         items: [
           { id: 'taxeImpozite', href: '/informatii-publice/taxe-impozite', icon: Receipt },
           { id: 'concursuri', href: '/informatii-publice/concursuri', icon: BadgeCheck },
-          { id: 'formulareOnline', href: '/servicii-online/formulare', icon: ClipboardList },
           { id: 'acteNecesare', href: '/informatii-publice/acte-necesare', icon: FileText },
           { id: 'adapostCaini', href: '/informatii-publice/adapost-caini', icon: Dog },
         ],
@@ -228,7 +227,6 @@ export const MAIN_NAVIGATION: NavSection[] = [
           { id: 'regulamente', href: '/informatii-publice/regulamente', icon: ScrollText },
           { id: 'reteleTelecom', href: '/informatii-publice/retele-telecom', icon: Radio },
           { id: 'publicatiiVanzare', href: '/informatii-publice/publicatii-vanzare', icon: Tag },
-          { id: 'formulareOnline', href: '/servicii-online/formulare', icon: ClipboardList },
         ],
       },
       // Locality - Economy

@@ -897,6 +897,24 @@
     "documents": "documents",
     "noteTitle": "Information Note",
     "noteText": "Documents on this page are loaded from the database. Links marked with '#' are placeholders and will be updated later with actual documents."
+  },
+  "gdprPage": {
+    "infoTitle": "Personal Data Protection",
+    "infoText": "Salonta City Hall processes personal data in accordance with Regulation (EU) 2016/679 (GDPR) and current national legislation.",
+    "documentsTitle": "GDPR Documents",
+    "formsTitle": "Online Requests/Forms",
+    "noteTitle": "Information Note",
+    "noteText": "Documents on this page are loaded from the database. Links marked with '#' are placeholders and will be updated later with actual documents."
+  },
+  "taxeImpozitePage": {
+    "infoTitle": "Local Taxes and Fees",
+    "infoText": "Local taxes and fees levels are established annually by Local Council decision, in accordance with the Fiscal Code provisions.",
+    "payOnline": "Pay Online",
+    "payOnlineDesc": "Local taxes and fees",
+    "payOnlineButton": "Online Payments",
+    "documentsTitle": "Tax and Fee Documents",
+    "noteTitle": "Information Note",
+    "noteText": "Documents on this page are loaded from the database. Links marked with '#' are placeholders and will be updated later with actual documents."
   }
 }
 

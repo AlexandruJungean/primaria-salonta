@@ -897,6 +897,24 @@
     "documents": "documente",
     "noteTitle": "Notă informativă",
     "noteText": "Documentele de pe această pagină sunt încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri și vor fi actualizate ulterior cu documentele reale."
+  },
+  "gdprPage": {
+    "infoTitle": "Protecția datelor cu caracter personal",
+    "infoText": "Primăria Municipiului Salonta prelucrează date cu caracter personal în conformitate cu Regulamentul (UE) 2016/679 (GDPR) și legislația națională în vigoare.",
+    "documentsTitle": "Documente GDPR",
+    "formsTitle": "Cereri/formulare online",
+    "noteTitle": "Notă informativă",
+    "noteText": "Documentele de pe această pagină sunt încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri și vor fi actualizate ulterior cu documentele reale."
+  },
+  "taxeImpozitePage": {
+    "infoTitle": "Impozite și taxe locale",
+    "infoText": "Nivelurile impozitelor și taxelor locale sunt stabilite anual prin hotărâre a Consiliului Local, în conformitate cu prevederile Codului Fiscal.",
+    "payOnline": "Plătește online",
+    "payOnlineDesc": "Taxe și impozite locale",
+    "payOnlineButton": "Plăți online",
+    "documentsTitle": "Documente impozite și taxe",
+    "noteTitle": "Notă informativă",
+    "noteText": "Documentele de pe această pagină sunt încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri și vor fi actualizate ulterior cu documentele reale."
   }
 }
 
