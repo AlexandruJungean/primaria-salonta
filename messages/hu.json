@@ -94,6 +94,7 @@
     "pnrr": "PNRR",
     "proiecteEuropene": "Európai projektek",
     "proiecteLocale": "Helyi projektek",
+    "programRegionalNordVest": "Regionális Program Északnyugat 2021-2027 Projektek",
     "svsu": "SVSU",
     "documente": "Hivatalos Dokumentumok",
     "monitorulOficial": "Helyi Hivatalos Közlöny",
@@ -797,6 +798,25 @@
     "materialsSection": "Tájékoztató és oktatási anyagok",
     "emergencyTitle": "Vészhelyzetben hívja a 112-t!",
     "emergencyText": "A 112-es egységes segélyhívószám ingyenes és 0-24 üzemel."
+  },
+  "programRegionalNordVestPage": {
+    "description": "Az Északnyugati Regionális Program 2021-2027 keretében az Európai Unió Európai Regionális Fejlesztési Alapjából finanszírozott projektek.",
+    "projectsInImplementation": "Megvalósítás alatt álló projektek",
+    "moreInfo": "Az Európai Unió által társfinanszírozott egyéb programokról részletes információkért látogasson el a következő oldalra",
+    "investInFuture": "Befektetünk a régió jövőjébe!",
+    "projectValue": "Projekt értéke",
+    "eligibleValue": "Elszámolható érték",
+    "fedrValue": "ERFA érték",
+    "nationalValue": "Nemzeti költségvetés értéke",
+    "smisCode": "SMIS kód",
+    "documents": "Dokumentumok",
+    "projectStatus": "Projekt állapota",
+    "backToProjects": "Vissza a projektekhez",
+    "pressRelease": "Sajtóközlemény",
+    "statusDescription": "Projekt állapot leírások",
+    "statusAt4Months": "Állapot 4 hónapnál",
+    "statusAt6Months": "Állapot 6 hónapnál",
+    "fundedBy": "Az ADR Északnyugat ezt a projektet az Északnyugati Regionális Program 2021-2027 keretében az Európai Unió Európai Regionális Fejlesztési Alapjából finanszírozza."
   },
   "proiecteLocalePage": {
     "description": "Helyi költségvetésből finanszírozott projektek kultúra, környezetvédelem és sport területén. Hozzáférés a pályázatokhoz szükséges dokumentumokhoz és az értékelési eredményekhez.",

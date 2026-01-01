@@ -94,6 +94,7 @@
     "pnrr": "PNRR",
     "proiecteEuropene": "Proiecte europene",
     "proiecteLocale": "Proiecte locale",
+    "programRegionalNordVest": "Proiecte Programul Regional Nord-Vest 2021-2027",
     "svsu": "SVSU",
     "documente": "Documente Oficiale",
     "monitorulOficial": "Monitorul Oficial Local",
@@ -797,6 +798,25 @@
     "materialsSection": "Materiale informative și educative",
     "emergencyTitle": "În caz de urgență, sunați 112!",
     "emergencyText": "Numărul unic de urgență 112 este gratuit și funcționează 24/7."
+  },
+  "programRegionalNordVestPage": {
+    "description": "Proiecte finanțate prin Programul Regional Nord-Vest 2021-2027 din Fondul European de Dezvoltare Regională al Uniunii Europene.",
+    "projectsInImplementation": "Proiecte în implementare",
+    "moreInfo": "Pentru informații detaliate despre celelalte programe cofinanțate de Uniunea Europeană, vă invităm să vizitați",
+    "investInFuture": "Investim în viitorul regiunii!",
+    "projectValue": "Valoare proiect",
+    "eligibleValue": "Valoare eligibilă",
+    "fedrValue": "Valoare FEDR",
+    "nationalValue": "Valoare buget național",
+    "smisCode": "Cod SMIS",
+    "documents": "Documente",
+    "projectStatus": "Stadiu proiect",
+    "backToProjects": "Înapoi la proiecte",
+    "pressRelease": "Comunicat de presă",
+    "statusDescription": "Descrieri stadiu proiect",
+    "statusAt4Months": "Stadiu la 4 luni",
+    "statusAt6Months": "Stadiu la 6 luni",
+    "fundedBy": "ADR Nord-Vest finanțează acest proiect prin Programul Regional Nord-Vest 2021-2027 din Fondul European de Dezvoltare Regională al Uniunii Europene."
   },
   "proiecteLocalePage": {
     "description": "Proiecte finanțate din bugetul local în domeniile cultură, mediu și sport. Accesați documentele necesare pentru depunerea proiectelor și rezultatele evaluărilor.",

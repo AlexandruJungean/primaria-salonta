@@ -231,6 +231,22 @@ export const MAIN_NAVIGATION: NavSection[] = [
           { id: 'regulamentPrimarie', href: '/primaria/regulament', icon: ScrollText },
         ],
       },
+      // Programs & Strategies group
+      {
+        groupId: 'programe',
+        groupHref: '/programe',
+        groupIcon: Target,
+        items: [
+          { id: 'strategieDezvoltare', href: '/programe/strategie-dezvoltare', icon: TrendingUp },
+          { id: 'pmud', href: '/programe/pmud', icon: Bus },
+          { id: 'pnrr', href: '/programe/pnrr', icon: Euro },
+          { id: 'proiecteEuropene', href: '/programe/proiecte-europene', icon: Globe },
+          { id: 'proiecteLocale', href: '/programe/proiecte-locale', icon: MapPin },
+          { id: 'programRegionalNordVest', href: '/programe/program-regional-nord-vest', icon: Building2 },
+          { id: 'svsu', href: '/programe/svsu', icon: Siren },
+          { id: 'sna', href: '/programe/sna', icon: ShieldCheck },
+        ],
+      },
       // Local Council group
       {
         groupId: 'consiliulLocal',
@@ -258,21 +274,6 @@ export const MAIN_NAVIGATION: NavSection[] = [
           { id: 'dispozitii', href: '/monitorul-oficial/dispozitii', icon: FileCheck },
           { id: 'documenteFinanciare', href: '/monitorul-oficial/documente-financiare', icon: CircleDollarSign },
           { id: 'alteDocumente', href: '/monitorul-oficial/alte-documente', icon: FolderOpen },
-        ],
-      },
-      // Programs & Strategies group
-      {
-        groupId: 'programe',
-        groupHref: '/programe',
-        groupIcon: Target,
-        items: [
-          { id: 'strategieDezvoltare', href: '/programe/strategie-dezvoltare', icon: TrendingUp },
-          { id: 'pmud', href: '/programe/pmud', icon: Bus },
-          { id: 'pnrr', href: '/programe/pnrr', icon: Euro },
-          { id: 'proiecteEuropene', href: '/programe/proiecte-europene', icon: Globe },
-          { id: 'proiecteLocale', href: '/programe/proiecte-locale', icon: MapPin },
-          { id: 'svsu', href: '/programe/svsu', icon: Siren },
-          { id: 'sna', href: '/programe/sna', icon: ShieldCheck },
         ],
       },
       // Transparency group

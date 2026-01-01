@@ -94,6 +94,7 @@
     "pnrr": "NRRP",
     "proiecteEuropene": "European Projects",
     "proiecteLocale": "Local Projects",
+    "programRegionalNordVest": "Regional Program North-West 2021-2027 Projects",
     "svsu": "VESS",
     "documente": "Official Documents",
     "monitorulOficial": "Local Official Monitor",
@@ -797,6 +798,25 @@
     "materialsSection": "Informative and educational materials",
     "emergencyTitle": "In case of emergency, call 112!",
     "emergencyText": "The single emergency number 112 is free and operates 24/7."
+  },
+  "programRegionalNordVestPage": {
+    "description": "Projects funded through the North-West Regional Program 2021-2027 from the European Regional Development Fund of the European Union.",
+    "projectsInImplementation": "Projects in implementation",
+    "moreInfo": "For detailed information about other programs co-funded by the European Union, please visit",
+    "investInFuture": "We invest in the future of the region!",
+    "projectValue": "Project value",
+    "eligibleValue": "Eligible value",
+    "fedrValue": "ERDF value",
+    "nationalValue": "National budget value",
+    "smisCode": "SMIS Code",
+    "documents": "Documents",
+    "projectStatus": "Project status",
+    "backToProjects": "Back to projects",
+    "pressRelease": "Press release",
+    "statusDescription": "Project status descriptions",
+    "statusAt4Months": "Status at 4 months",
+    "statusAt6Months": "Status at 6 months",
+    "fundedBy": "ADR North-West funds this project through the North-West Regional Program 2021-2027 from the European Regional Development Fund of the European Union."
   },
   "proiecteLocalePage": {
     "description": "Projects funded from the local budget in the fields of culture, environment and sports. Access the necessary documents for submitting projects and evaluation results.",

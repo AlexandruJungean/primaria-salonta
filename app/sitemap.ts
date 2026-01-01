@@ -85,6 +85,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/programe/pnrr', priority: 0.6, changeFrequency: 'monthly' as const },
     { path: '/programe/proiecte-europene', priority: 0.6, changeFrequency: 'monthly' as const },
     { path: '/programe/proiecte-locale', priority: 0.6, changeFrequency: 'monthly' as const },
+    { path: '/programe/program-regional-nord-vest', priority: 0.6, changeFrequency: 'monthly' as const },
     { path: '/programe/svsu', priority: 0.5, changeFrequency: 'monthly' as const },
     
     // Monitorul Oficial
