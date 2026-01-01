@@ -133,7 +133,7 @@ export default function VoluntariatPage() {
         { label: t('voluntariat') }
       ]} />
       <PageHeader 
-        titleKey="voluntariat" 
+        titleKey="title" 
         icon="heart" 
         descriptionKey="description"
         namespace="voluntariatPage"
