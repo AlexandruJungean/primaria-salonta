@@ -1,12 +1,11 @@
 import { getTranslations } from 'next-intl/server';
 import { useTranslations, useLocale } from 'next-intl';
-import { Clock, Calendar, MapPin, Info } from 'lucide-react';
+import { Clock, MapPin, Info } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section, SectionHeader } from '@/components/ui/section';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PUBLIC_HOURS } from '@/lib/constants/public-hours';
-import { LEADERSHIP } from '@/lib/constants/leadership';
 
 export async function generateMetadata({
   params,
@@ -40,7 +39,7 @@ export default function PublicHoursPage() {
         <Container>
           <SectionHeader title={translations.title} />
 
-          <div className="grid lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          <div className="max-w-3xl mx-auto">
             {/* Office Hours */}
             <Card>
               <CardHeader>
@@ -80,47 +79,15 @@ export default function PublicHoursPage() {
               </CardContent>
             </Card>
 
-            {/* Audience Schedule */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Calendar className="w-5 h-5 text-primary-600" />
-                  {translations.audienceTitle}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {LEADERSHIP.map((leader) => (
-                    <div
-                      key={leader.id}
-                      className="flex items-start gap-3 p-3 rounded-lg bg-gray-50"
-                    >
-                      <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center shrink-0">
-                        <span className="text-primary-700 font-bold">
-                          {leader.translations[locale].name.charAt(0)}
-                        </span>
-                      </div>
-                      <div>
-                        <h4 className="font-medium text-gray-900">
-                          {leader.translations[locale].position}
-                        </h4>
-                        <p className="text-sm text-gray-600">
-                          {leader.translations[locale].name}
-                        </p>
-                        <p className="text-sm text-primary-700 font-medium mt-1">
-                          {leader.translations[locale].audienceSchedule}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Registration Note */}
-                <div className="mt-6 p-4 rounded-lg bg-amber-50 border border-amber-200">
-                  <div className="flex gap-3">
-                    <Info className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-                    <p className="text-sm text-amber-800">
-                      {translations.registrationNote}
+            {/* Temporary Location Notice */}
+            <Card className="mt-6 bg-blue-50 border-blue-200">
+              <CardContent className="p-5">
+                <div className="flex gap-4">
+                  <Info className="w-6 h-6 text-blue-600 shrink-0 mt-0.5" />
+                  <div>
+                    <h3 className="font-semibold text-blue-900 mb-1">{t('temporaryNotice')}</h3>
+                    <p className="text-sm text-blue-800">
+                      {t('temporaryNoticeText')}
                     </p>
                   </div>
                 </div>
@@ -132,4 +99,3 @@ export default function PublicHoursPage() {
     </>
   );
 }
-

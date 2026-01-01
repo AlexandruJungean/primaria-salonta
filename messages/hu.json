@@ -267,11 +267,31 @@
     "subtitle": "Nagyszalonta Polgármesteri Hivatalának szervezeti felépítése",
     "infoNote": "A dokumentumok rendszeresen frissülnek. További információkért forduljon a Humánerőforrás Szolgálathoz."
   },
+  "legislatiePage": {
+    "administrativeCode": "57/2019 sürgősségi kormányrendelet a Közigazgatási Kódexről",
+    "administrativeCodeDescription": "A közigazgatási kódex szabályozza a közigazgatási hatóságok és intézmények szervezésének és működésének általános kereteit.",
+    "viewDocument": "Dokumentum megtekintése",
+    "otherLegislation": "Egyéb vonatkozó jogszabályok"
+  },
+  "regulamentPage": {
+    "title": "Szervezési és működési szabályzat",
+    "subtitle": "Nagyszalonta Polgármesteri Hivatalának hivatalos dokumentumai",
+    "infoNote": "A dokumentumok a Helyi Tanács határozatai szerint frissülnek."
+  },
+  "audientePage": {
+    "registrationTitle": "Bejelentkezés audienciára",
+    "location": "11. szoba, Földszint - Nagyszalonta Polgármesteri Hivatala",
+    "procedureTitle": "Eljárás",
+    "procedureWorksheet": "Az audienciák szervezéséhez és véglegességéhez munkaelemként az audiencia-lapot használják.",
+    "procedureResolution": "A felvetett problémák a jogi eljárásoknak megfelelően és a hatáskörök keretein belül oldhatók meg, az újraközölt 215/2001. törvénynek megfelelően, a probléma elemzése után az illetékes osztályvezetőkkel."
+  },
   "publicHours": {
     "title": "Ügyfélfogadás",
     "audienceTitle": "Fogadóórák",
     "room": "Szoba",
-    "floor": "Földszint"
+    "floor": "Földszint",
+    "temporaryNotice": "Frissítés",
+    "temporaryNoticeText": "A Helyi Közösségi Személynyilvántartó Szolgálat, az Anyakönyvi Hivatal és Nagyszalonta Szociális Segélyezési Igazgatósága a Zilahy Lajos Művelődési Házban működik. (A Polgármesteri Hivatal energetikai felújítási munkálatainak befejezéséig)"
   },
   "errors": {
     "404": {

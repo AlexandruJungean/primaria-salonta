@@ -267,11 +267,31 @@
     "subtitle": "Structura organizatorică a Primăriei Municipiului Salonta",
     "infoNote": "Documentele sunt actualizate periodic. Pentru informații suplimentare, contactați Serviciul Resurse Umane."
   },
+  "legislatiePage": {
+    "administrativeCode": "OUG 57/2019 privind Codul Administrativ",
+    "administrativeCodeDescription": "Codul administrativ reglementează cadrul general pentru organizarea și funcționarea autorităților și instituțiilor administrației publice.",
+    "viewDocument": "Vezi documentul",
+    "otherLegislation": "Alte acte normative relevante"
+  },
+  "regulamentPage": {
+    "title": "Regulament de organizare și funcționare",
+    "subtitle": "Documente oficiale ale Primăriei Municipiului Salonta",
+    "infoNote": "Documentele sunt actualizate conform hotărârilor Consiliului Local."
+  },
+  "audientePage": {
+    "registrationTitle": "Înscriere la audiențe",
+    "location": "Camera 11, Parter - Primăria Municipiului Salonta",
+    "procedureTitle": "Procedură",
+    "procedureWorksheet": "Pentru organizarea și finalitatea audiențelor se folosește ca element de lucru – foaia de audiențe.",
+    "procedureResolution": "Problemele ridicate vor putea fi soluționate conform procedurilor legale și în limitele de competență, așa cum sunt stabilite de Legea 215/2001 republicată, după analizarea problemei cu șefii compartimentelor de resort."
+  },
   "publicHours": {
     "title": "Program cu publicul",
     "audienceTitle": "Audiențe",
     "room": "Camera",
-    "floor": "Parter"
+    "floor": "Parter",
+    "temporaryNotice": "Actualizare",
+    "temporaryNoticeText": "Serviciul public comunitar de evidență a persoanelor, Starea Civilă și Direcția de Asistență Socială Salonta funcționează la Casa de Cultură Zilahy Lajos. (Până la terminarea lucrărilor de renovare energetică a Primăriei)"
   },
   "errors": {
     "404": {

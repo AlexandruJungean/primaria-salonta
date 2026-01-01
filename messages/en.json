@@ -267,11 +267,31 @@
     "subtitle": "Organizational structure of Salonta City Hall",
     "infoNote": "Documents are updated periodically. For additional information, contact the Human Resources Service."
   },
+  "legislatiePage": {
+    "administrativeCode": "GEO 57/2019 on the Administrative Code",
+    "administrativeCodeDescription": "The administrative code regulates the general framework for the organization and functioning of public administration authorities and institutions.",
+    "viewDocument": "View document",
+    "otherLegislation": "Other relevant legislation"
+  },
+  "regulamentPage": {
+    "title": "Rules of Organization and Operation",
+    "subtitle": "Official documents of Salonta City Hall",
+    "infoNote": "Documents are updated according to Local Council decisions."
+  },
+  "audientePage": {
+    "registrationTitle": "Audience Registration",
+    "location": "Room 11, Ground Floor - Salonta City Hall",
+    "procedureTitle": "Procedure",
+    "procedureWorksheet": "For the organization and finality of audiences, the audience sheet is used as a working element.",
+    "procedureResolution": "The raised issues can be resolved according to legal procedures and within the limits of competence, as established by Law 215/2001 republished, after analyzing the problem with the heads of the relevant departments."
+  },
   "publicHours": {
     "title": "Public Hours",
     "audienceTitle": "Audiences",
     "room": "Room",
-    "floor": "Ground Floor"
+    "floor": "Ground Floor",
+    "temporaryNotice": "Update",
+    "temporaryNoticeText": "The local community public service for persons, Civil Registry and the Social Assistance Department of Salonta operate at the Zilahy Lajos Cultural House. (Until the completion of energy renovation works at City Hall)"
   },
   "errors": {
     "404": {

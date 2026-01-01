@@ -17,6 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
 export default function AudientePage() {
   const t = useTranslations('navigation');
+  const ta = useTranslations('audientePage');
   const locale = useLocale() as 'ro' | 'hu' | 'en';
   const translations = PUBLIC_HOURS.translations[locale];
 
@@ -65,7 +66,7 @@ export default function AudientePage() {
                 <div className="flex gap-4">
                   <Info className="w-6 h-6 text-amber-600 shrink-0" />
                   <div>
-                    <h4 className="font-semibold text-amber-900 mb-2">Înscriere la audiențe</h4>
+                    <h4 className="font-semibold text-amber-900 mb-2">{ta('registrationTitle')}</h4>
                     <p className="text-amber-800 text-sm">
                       {translations.registrationNote}
                     </p>
@@ -77,7 +78,24 @@ export default function AudientePage() {
             <Card className="mt-4">
               <CardContent className="flex items-center gap-4 pt-6">
                 <MapPin className="w-5 h-5 text-primary-600" />
-                <span>Camera 11, Parter - Primăria Municipiului Salonta</span>
+                <span>{ta('location')}</span>
+              </CardContent>
+            </Card>
+
+            {/* Additional information */}
+            <Card className="mt-4 bg-gray-50">
+              <CardContent className="pt-6">
+                <h4 className="font-semibold text-gray-900 mb-3">{ta('procedureTitle')}</h4>
+                <ul className="space-y-2 text-sm text-gray-600">
+                  <li className="flex items-start gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary-400 mt-2 shrink-0" />
+                    {ta('procedureWorksheet')}
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary-400 mt-2 shrink-0" />
+                    {ta('procedureResolution')}
+                  </li>
+                </ul>
               </CardContent>
             </Card>
           </div>
