@@ -934,6 +934,63 @@
     "spatiiVerziDesc": "Registrul local al spațiilor verzi",
     "noteTitle": "Notă informativă",
     "noteText": "Documentele de pe această pagină sunt încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri și vor fi actualizate ulterior cu documentele reale."
+  },
+  "oferteTerenPage": {
+    "infoTitle": "Legea nr. 17/2014",
+    "infoText": "Vânzarea terenurilor agricole situate în extravilan se face cu respectarea dreptului de preempțiune al coproprietarilor, arendașilor, vecinilor și statului român, conform Legii nr. 17/2014.",
+    "registryTitle": "Registrul ofertelor de vânzare",
+    "period": "Perioada",
+    "noteTitle": "Notă informativă",
+    "noteText": "Documentele de pe această pagină sunt încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri și vor fi actualizate ulterior cu documentele reale."
+  },
+  "planuriUrbanisticePage": {
+    "infoTitle": "Planuri urbanistice",
+    "infoText": "Planul Urbanistic General (PUG) stabilește reglementările privind modul de utilizare a terenurilor, organizarea rețelei de circulație și dezvoltarea echipării edilitare a localității.",
+    "pugDesc": "Planul Urbanistic General",
+    "noteTitle": "Notă informativă",
+    "noteText": "Documentele de pe această pagină sunt încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri și vor fi actualizate ulterior cu documentele reale."
+  },
+  "publicatiiCasatoriePage": {
+    "infoTitle": "Publicații de căsătorie",
+    "infoText": "În conformitate cu prevederile legale, publicațiile de căsătorie sunt afișate timp de 10 zile la sediul primăriei și pe site-ul instituției.",
+    "publications": "publicații",
+    "noteTitle": "Notă informativă",
+    "noteText": "Documentele de pe această pagină sunt încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri și vor fi actualizate ulterior cu documentele reale."
+  },
+  "publicatiiVanzarePage": {
+    "infoTitle": "Publicații de vânzare",
+    "infoText": "Publicațiile de vânzare sunt afișate în conformitate cu prevederile Codului de procedură civilă și cu solicitările birourilor executorilor judecătorești.",
+    "publications": "publicații",
+    "noteTitle": "Notă informativă",
+    "noteText": "Documentele de pe această pagină sunt încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri și vor fi actualizate ulterior cu documentele reale."
+  },
+  "receptieLucrariPage": {
+    "infoTitle": "Recepție lucrări de construcții",
+    "infoText": "Documentație necesară pentru realizarea recepției la terminarea lucrărilor de construcții.",
+    "initialDocsTitle": "Documente inițiale",
+    "initialDocsDesc": "Se depun la registratura primăriei",
+    "doc1Title": "Convocator comisie de recepție",
+    "doc1Desc": "Formular cam. 11 Parter – se depune la registratura primăriei cu cel puțin 15 zile înainte de data stabilită de beneficiarul autorizației pentru realizarea recepției",
+    "doc2": "Dovada achitării cotelor către Inspectoratul de Stat în Construcții – Bihor",
+    "onSiteDocsTitle": "Documente pentru ziua recepției",
+    "onSiteDocsDesc": "La data stabilită pentru recepție, prin grija beneficiarului, se vor preda reprezentantului primăriei următoarele documente (ele NU se depun împreună cu convocatorul, ci se prezintă pe teren)",
+    "siteDoc1": "Referatele proiectanților (arhitect, structurist, instalații etc)",
+    "siteDoc2": "Referatul dirigintelui de șantier",
+    "siteDoc3": "Copii ale tuturor dispozițiilor de șantier",
+    "siteDoc4": "Certificat de performanță energetică actualizat",
+    "siteDoc5": "Plan de situație / Plan de amplasament actualizat, întocmit de topograf autorizat ANCPI",
+    "siteDoc6": "Formularul-tip \"PROCES-VERBAL DE RECEPȚIE la terminarea lucrărilor\" (cam. 11 Parter) - 2 exemplare originale",
+    "noteTitle": "Notă informativă",
+    "noteText": "Formularele necesare pot fi obținute de la camera 11, Parter, din sediul Primăriei Municipiului Salonta."
+  },
+  "regulamentePublicePage": {
+    "infoTitle": "Regulamente",
+    "infoText": "Regulamentele adoptate de Consiliul Local al Municipiului Salonta și aprobate prin hotărâri ale acestuia.",
+    "currentTitle": "Regulamente în vigoare",
+    "archiveTitle": "Regulamente arhivă",
+    "documents": "documente",
+    "noteTitle": "Notă informativă",
+    "noteText": "Documentele de pe această pagină sunt încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri și vor fi actualizate ulterior cu documentele reale."
   }
 }
 

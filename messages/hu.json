@@ -934,6 +934,63 @@
     "spatiiVerziDesc": "Helyi zöldterületi nyilvántartás",
     "noteTitle": "Tájékoztatás",
     "noteText": "Az ezen az oldalon található dokumentumok az adatbázisból töltődnek be. A '#' jelöléssel ellátott linkek helykitöltők, amelyek később frissülnek a valódi dokumentumokkal."
+  },
+  "oferteTerenPage": {
+    "infoTitle": "17/2014-es törvény",
+    "infoText": "A külterületen található mezőgazdasági földterületek értékesítése a 17/2014-es törvény szerint a társtulajdonosok, bérlők, szomszédok és a román állam elővásárlási jogának tiszteletben tartásával történik.",
+    "registryTitle": "Eladási ajánlatok nyilvántartása",
+    "period": "Időszak",
+    "noteTitle": "Tájékoztatás",
+    "noteText": "Az ezen az oldalon található dokumentumok az adatbázisból töltődnek be. A '#' jelöléssel ellátott linkek helykitöltők, amelyek később frissülnek a valódi dokumentumokkal."
+  },
+  "planuriUrbanisticePage": {
+    "infoTitle": "Városrendezési tervek",
+    "infoText": "Az Általános Városrendezési Terv (PUG) meghatározza a telekhasználatra, a közlekedési hálózat szervezésére és a település közműfejlesztésére vonatkozó szabályozásokat.",
+    "pugDesc": "Általános Városrendezési Terv",
+    "noteTitle": "Tájékoztatás",
+    "noteText": "Az ezen az oldalon található dokumentumok az adatbázisból töltődnek be. A '#' jelöléssel ellátott linkek helykitöltők, amelyek később frissülnek a valódi dokumentumokkal."
+  },
+  "publicatiiCasatoriePage": {
+    "infoTitle": "Házassági hirdetmények",
+    "infoText": "A jogszabályoknak megfelelően a házassági hirdetményeket 10 napig kifüggesztik a polgármesteri hivatal székhelyén és az intézmény honlapján.",
+    "publications": "hirdetmény",
+    "noteTitle": "Tájékoztatás",
+    "noteText": "Az ezen az oldalon található dokumentumok az adatbázisból töltődnek be. A '#' jelöléssel ellátott linkek helykitöltők, amelyek később frissülnek a valódi dokumentumokkal."
+  },
+  "publicatiiVanzarePage": {
+    "infoTitle": "Eladási hirdetmények",
+    "infoText": "Az eladási hirdetményeket a Polgári Eljárásjogi Törvénykönyv rendelkezéseinek és a végrehajtói irodák kérelmeinek megfelelően teszik közzé.",
+    "publications": "hirdetmény",
+    "noteTitle": "Tájékoztatás",
+    "noteText": "Az ezen az oldalon található dokumentumok az adatbázisból töltődnek be. A '#' jelöléssel ellátott linkek helykitöltők, amelyek később frissülnek a valódi dokumentumokkal."
+  },
+  "receptieLucrariPage": {
+    "infoTitle": "Építési munkák átvétele",
+    "infoText": "A munkálatok befejezésekor szükséges dokumentáció az átvételi eljáráshoz.",
+    "initialDocsTitle": "Kezdeti dokumentumok",
+    "initialDocsDesc": "A polgármesteri hivatal iktatójánál benyújtandó",
+    "doc1Title": "Átvételi bizottság összehívója",
+    "doc1Desc": "11. szoba, Földszint – a polgármesteri hivatal iktatójánál kell benyújtani legalább 15 nappal az engedély kedvezményezettje által az átvételre kitűzött időpont előtt",
+    "doc2": "Az Állami Építésügyi Felügyelet – Bihor részére befizetett díjak igazolása",
+    "onSiteDocsTitle": "Átvételi napon szükséges dokumentumok",
+    "onSiteDocsDesc": "Az átvételre kitűzött napon a kedvezményezett gondoskodik arról, hogy a következő dokumentumokat átadja a polgármesteri hivatal képviselőjének (ezeket NEM kell az összehívóval együtt benyújtani, hanem a helyszínen kell bemutatni)",
+    "siteDoc1": "Tervezői referenciák (építész, statikus, épületgépész stb.)",
+    "siteDoc2": "Műszaki ellenőr referenciája",
+    "siteDoc3": "Az összes építési rendelkezés másolata",
+    "siteDoc4": "Aktualizált energetikai tanúsítvány",
+    "siteDoc5": "Aktualizált helyszínrajz / Elhelyezési terv, ANCPI által felhatalmazott földmérő által készítve",
+    "siteDoc6": "\"ÁTVÉTELI JEGYZŐKÖNYV a munkálatok befejezésekor\" típusűrlap (11. szoba, Földszint) - 2 eredeti példány",
+    "noteTitle": "Tájékoztatás",
+    "noteText": "A szükséges űrlapok a Nagyszalonta Polgármesteri Hivatal 11. számú irodájában (Földszint) szerezhetők be."
+  },
+  "regulamentePublicePage": {
+    "infoTitle": "Szabályzatok",
+    "infoText": "Nagyszalonta Helyi Tanácsa által elfogadott és határozataival jóváhagyott szabályzatok.",
+    "currentTitle": "Hatályos szabályzatok",
+    "archiveTitle": "Archív szabályzatok",
+    "documents": "dokumentum",
+    "noteTitle": "Tájékoztatás",
+    "noteText": "Az ezen az oldalon található dokumentumok az adatbázisból töltődnek be. A '#' jelöléssel ellátott linkek helykitöltők, amelyek később frissülnek a valódi dokumentumokkal."
   }
 }
 

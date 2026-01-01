@@ -1,10 +1,8 @@
 import { getTranslations } from 'next-intl/server';
-import { useTranslations } from 'next-intl';
-import { Wheat, Calendar, Download, MapPin, Ruler } from 'lucide-react';
+import { Wheat, Download, FileText, Calendar } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
 
@@ -14,39 +12,34 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return { title: t('oferteTerenuri') };
 }
 
-// Mock data - will be replaced with database
-const LAND_OFFERS = [
-  {
-    id: 1,
-    date: '2025-12-15',
-    title: 'Ofertă vânzare teren arabil - Tarlaua 45',
-    location: 'Extravilan Salonta, Tarlaua 45',
-    surface: '2.5 ha',
-    price: '35.000 €',
-    status: 'activ',
+// Types
+interface Document {
+  id: number;
+  title: string;
+  period: string;
+  pdfUrl: string;
+}
+
+// Mock data - will be replaced with database fetch
+const REGISTRU_DOCS: Document[] = [
+  { 
+    id: 1, 
+    title: 'Registrul de evidență a ofertelor de vânzare a terenurilor agricole situate în extravilan', 
+    period: '25.04.2025 - 17.12.2025',
+    pdfUrl: '#' 
   },
-  {
-    id: 2,
-    date: '2025-12-10',
-    title: 'Ofertă vânzare teren agricol - Zona Vest',
-    location: 'Extravilan Salonta, Zona Vest',
-    surface: '1.2 ha',
-    price: '18.000 €',
-    status: 'activ',
-  },
-  {
-    id: 3,
-    date: '2025-12-05',
-    title: 'Ofertă vânzare pășune - Tarlaua 12',
-    location: 'Extravilan Salonta, Tarlaua 12',
-    surface: '5.0 ha',
-    price: '45.000 €',
-    status: 'expirat',
+  { 
+    id: 2, 
+    title: 'Registrul de evidență a ofertelor de vânzare a terenurilor agricole situate în extravilan', 
+    period: '01.01.2022 - 25.04.2025',
+    pdfUrl: '#' 
   },
 ];
 
-export default function OferteTerenPage() {
-  const t = useTranslations('navigation');
+export default async function OferteTerenPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'navigation' });
+  const tPage = await getTranslations({ locale, namespace: 'oferteTerenPage' });
 
   return (
     <>
@@ -58,62 +51,77 @@ export default function OferteTerenPage() {
 
       <Section background="white">
         <Container>
-          <div className="max-w-4xl mx-auto">
-            <div className="bg-green-50 border border-green-200 rounded-xl p-4 mb-8">
-              <p className="text-green-800 text-sm">
-                <strong>Legea nr. 17/2014:</strong> Vânzarea terenurilor agricole situate în extravilan se face
-                cu respectarea dreptului de preempțiune al coproprietarilor, arendașilor, vecinilor și statului român.
-              </p>
-            </div>
+          <div className="max-w-5xl mx-auto">
+            {/* Info Banner */}
+            <Card className="mb-8 bg-green-50 border-green-200">
+              <CardContent className="pt-6">
+                <div className="flex items-start gap-4">
+                  <Wheat className="w-8 h-8 text-green-600 shrink-0" />
+                  <div>
+                    <h3 className="font-semibold text-green-900 mb-2">{tPage('infoTitle')}</h3>
+                    <p className="text-green-800 text-sm">
+                      {tPage('infoText')}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-            <div className="space-y-4">
-              {LAND_OFFERS.map((offer) => (
-                <Card key={offer.id} hover>
-                  <CardContent className="pt-6">
-                    <div className="flex items-start justify-between gap-4">
+            {/* Documents Section */}
+            <div className="mb-8">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
+                  <FileText className="w-5 h-5 text-green-700" />
+                </div>
+                <h2 className="text-xl font-bold text-gray-900">{tPage('registryTitle')}</h2>
+              </div>
+
+              <div className="space-y-3">
+                {REGISTRU_DOCS.map((doc) => (
+                  <Card key={doc.id} hover>
+                    <CardContent className="flex items-center justify-between pt-6">
                       <div className="flex items-start gap-4">
                         <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center shrink-0">
-                          <Wheat className="w-5 h-5 text-green-600" />
+                          <FileText className="w-5 h-5 text-green-600" />
                         </div>
                         <div>
-                          <div className="flex items-center gap-2 mb-1">
-                            <Badge variant={offer.status === 'activ' ? 'success' : 'secondary'}>
-                              {offer.status === 'activ' ? 'Activ' : 'Expirat'}
-                            </Badge>
-                            <span className="text-sm text-gray-500 flex items-center gap-1">
-                              <Calendar className="w-4 h-4" />
-                              {new Date(offer.date).toLocaleDateString('ro-RO')}
-                            </span>
-                          </div>
-                          <h3 className="font-semibold text-gray-900 mb-2">{offer.title}</h3>
-                          <div className="flex flex-wrap gap-4 text-sm text-gray-600">
-                            <span className="flex items-center gap-1">
-                              <MapPin className="w-4 h-4" />
-                              {offer.location}
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <Ruler className="w-4 h-4" />
-                              {offer.surface}
-                            </span>
-                            <span className="font-semibold text-green-600">
-                              {offer.price}
-                            </span>
-                          </div>
+                          <h3 className="font-medium text-gray-900">{doc.title}</h3>
+                          <span className="text-sm text-gray-500 flex items-center gap-1 mt-1">
+                            <Calendar className="w-4 h-4" />
+                            {tPage('period')}: {doc.period}
+                          </span>
                         </div>
                       </div>
-                      <button className="flex items-center gap-1 px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 shrink-0">
-                        <Download className="w-4 h-4" />
+                      <a
+                        href={doc.pdfUrl}
+                        className="flex items-center gap-1 px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-green-300 transition-colors shrink-0 ml-4"
+                      >
+                        <Download className="w-4 h-4 text-green-600" />
                         PDF
-                      </button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+                      </a>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
             </div>
+
+            {/* Info Note */}
+            <Card className="bg-gray-50 border-gray-200">
+              <CardContent className="pt-6">
+                <div className="flex items-start gap-4">
+                  <FileText className="w-8 h-8 text-gray-400 shrink-0" />
+                  <div>
+                    <h3 className="font-semibold text-gray-700 mb-2">{tPage('noteTitle')}</h3>
+                    <p className="text-gray-600 text-sm">
+                      {tPage('noteText')}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </Container>
       </Section>
     </>
   );
 }
-

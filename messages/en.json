@@ -934,6 +934,63 @@
     "spatiiVerziDesc": "Local registry of green spaces",
     "noteTitle": "Information Note",
     "noteText": "Documents on this page are loaded from the database. Links marked with '#' are placeholders and will be updated later with actual documents."
+  },
+  "oferteTerenPage": {
+    "infoTitle": "Law no. 17/2014",
+    "infoText": "The sale of agricultural land located in extravilan areas is carried out in compliance with the preemption right of co-owners, tenants, neighbors, and the Romanian state, according to Law no. 17/2014.",
+    "registryTitle": "Registry of Sale Offers",
+    "period": "Period",
+    "noteTitle": "Information Note",
+    "noteText": "Documents on this page are loaded from the database. Links marked with '#' are placeholders and will be updated later with actual documents."
+  },
+  "planuriUrbanisticePage": {
+    "infoTitle": "Urban Plans",
+    "infoText": "The General Urban Plan (PUG) establishes regulations regarding land use, traffic network organization, and the development of public utilities in the locality.",
+    "pugDesc": "General Urban Plan",
+    "noteTitle": "Information Note",
+    "noteText": "Documents on this page are loaded from the database. Links marked with '#' are placeholders and will be updated later with actual documents."
+  },
+  "publicatiiCasatoriePage": {
+    "infoTitle": "Marriage Publications",
+    "infoText": "In accordance with legal provisions, marriage publications are displayed for 10 days at the city hall headquarters and on the institution's website.",
+    "publications": "publications",
+    "noteTitle": "Information Note",
+    "noteText": "Documents on this page are loaded from the database. Links marked with '#' are placeholders and will be updated later with actual documents."
+  },
+  "publicatiiVanzarePage": {
+    "infoTitle": "Sale Publications",
+    "infoText": "Sale publications are displayed in accordance with the provisions of the Civil Procedure Code and requests from bailiff offices.",
+    "publications": "publications",
+    "noteTitle": "Information Note",
+    "noteText": "Documents on this page are loaded from the database. Links marked with '#' are placeholders and will be updated later with actual documents."
+  },
+  "receptieLucrariPage": {
+    "infoTitle": "Construction Works Reception",
+    "infoText": "Documentation required for the reception at the completion of construction works.",
+    "initialDocsTitle": "Initial Documents",
+    "initialDocsDesc": "To be submitted at the city hall registry",
+    "doc1Title": "Reception committee convocation",
+    "doc1Desc": "Form room 11, Ground Floor – to be submitted at the city hall registry at least 15 days before the date set by the authorization beneficiary for the reception",
+    "doc2": "Proof of payment of fees to the State Construction Inspectorate – Bihor",
+    "onSiteDocsTitle": "Documents for Reception Day",
+    "onSiteDocsDesc": "On the date set for reception, through the beneficiary's care, the following documents shall be handed over to the city hall representative (they are NOT submitted together with the convocation, but presented on site)",
+    "siteDoc1": "Designers' reports (architect, structural engineer, installations, etc.)",
+    "siteDoc2": "Site supervisor's report",
+    "siteDoc3": "Copies of all site orders",
+    "siteDoc4": "Updated energy performance certificate",
+    "siteDoc5": "Updated site plan / Location plan, prepared by ANCPI authorized surveyor",
+    "siteDoc6": "Standard form \"RECEPTION REPORT at completion of works\" (room 11, Ground Floor) - 2 original copies",
+    "noteTitle": "Information Note",
+    "noteText": "The required forms can be obtained from room 11, Ground Floor, at Salonta City Hall headquarters."
+  },
+  "regulamentePublicePage": {
+    "infoTitle": "Regulations",
+    "infoText": "Regulations adopted by the Local Council of Salonta Municipality and approved by its decisions.",
+    "currentTitle": "Current Regulations",
+    "archiveTitle": "Archived Regulations",
+    "documents": "documents",
+    "noteTitle": "Information Note",
+    "noteText": "Documents on this page are loaded from the database. Links marked with '#' are placeholders and will be updated later with actual documents."
   }
 }
 
