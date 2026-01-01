@@ -848,10 +848,10 @@ export default async function BugetPage({ params }: { params: Promise<{ locale: 
                     <p className="text-primary-800 text-sm">
                       {tPage('infoText')}
                     </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
 
             {/* Budget by Year */}
             {BUDGET_DATA.map((yearData) => (
@@ -869,8 +869,8 @@ export default async function BugetPage({ params }: { params: Promise<{ locale: 
                 <div className="space-y-3">
                   {yearData.sections.map((section) => (
                     <BudgetSectionCard key={section.id} section={section} />
-                  ))}
-                </div>
+              ))}
+            </div>
               </div>
             ))}
 

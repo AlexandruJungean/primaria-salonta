@@ -915,6 +915,25 @@
     "documentsTitle": "Tax and Fee Documents",
     "noteTitle": "Information Note",
     "noteText": "Documents on this page are loaded from the database. Links marked with '#' are placeholders and will be updated later with actual documents."
+  },
+  "licitatiiPage": {
+    "infoTitle": "Public Auctions",
+    "infoText": "Public auctions take place at the Salonta City Hall headquarters. For registration, please consult the documents attached to each auction.",
+    "auctionsTitle": "Auction Announcements",
+    "noteTitle": "Information Note",
+    "noteText": "Documents on this page are loaded from the database. Links marked with '#' are placeholders and will be updated later with actual documents."
+  },
+  "mediuPage": {
+    "infoTitle": "Environmental Protection",
+    "infoText": "Salonta City Hall provides citizens with information on environmental protection, waste management, water quality, and green spaces.",
+    "salubrizareTitle": "Waste Management",
+    "salubrizareDesc": "Documents on waste management and sanitation services",
+    "apaCanalTitle": "Water, Sewage",
+    "apaCanalDesc": "Drinking water quality analysis bulletins",
+    "spatiiVerziTitle": "Green Spaces",
+    "spatiiVerziDesc": "Local registry of green spaces",
+    "noteTitle": "Information Note",
+    "noteText": "Documents on this page are loaded from the database. Links marked with '#' are placeholders and will be updated later with actual documents."
   }
 }
 

@@ -915,6 +915,25 @@
     "documentsTitle": "Documente impozite și taxe",
     "noteTitle": "Notă informativă",
     "noteText": "Documentele de pe această pagină sunt încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri și vor fi actualizate ulterior cu documentele reale."
+  },
+  "licitatiiPage": {
+    "infoTitle": "Licitații publice",
+    "infoText": "Licitațiile publice se desfășoară la sediul Primăriei Municipiului Salonta. Pentru înscriere, vă rugăm să consultați documentele atașate fiecărei licitații.",
+    "auctionsTitle": "Anunțuri licitații",
+    "noteTitle": "Notă informativă",
+    "noteText": "Documentele de pe această pagină sunt încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri și vor fi actualizate ulterior cu documentele reale."
+  },
+  "mediuPage": {
+    "infoTitle": "Protecția mediului",
+    "infoText": "Primăria Municipiului Salonta pune la dispoziția cetățenilor informații privind protecția mediului, salubrizarea, calitatea apei și spațiile verzi.",
+    "salubrizareTitle": "Salubrizare",
+    "salubrizareDesc": "Documente privind gestionarea deșeurilor și serviciile de salubrizare",
+    "apaCanalTitle": "Apă, canal",
+    "apaCanalDesc": "Buletine de analiză a calității apei potabile",
+    "spatiiVerziTitle": "Spații verzi",
+    "spatiiVerziDesc": "Registrul local al spațiilor verzi",
+    "noteTitle": "Notă informativă",
+    "noteText": "Documentele de pe această pagină sunt încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri și vor fi actualizate ulterior cu documentele reale."
   }
 }
 

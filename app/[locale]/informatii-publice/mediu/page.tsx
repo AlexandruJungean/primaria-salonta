@@ -1,9 +1,11 @@
 import { getTranslations } from 'next-intl/server';
-import { useTranslations } from 'next-intl';
-import { Leaf } from 'lucide-react';
+import { Leaf, FileText } from 'lucide-react';
+import { Container } from '@/components/ui/container';
+import { Section } from '@/components/ui/section';
+import { Card, CardContent } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
-import { ComingSoon } from '@/components/pages/coming-soon';
+import { MediuCollapsibleSections } from './collapsible-sections';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -11,8 +13,10 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return { title: t('mediu') };
 }
 
-export default function MediuPage() {
-  const t = useTranslations('navigation');
+export default async function MediuPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'navigation' });
+  const tPage = await getTranslations({ locale, namespace: 'mediuPage' });
 
   return (
     <>
@@ -21,8 +25,45 @@ export default function MediuPage() {
         { label: t('mediu') }
       ]} />
       <PageHeader titleKey="mediu" icon="leaf" />
-      <ComingSoon pageName="Mediu" />
+
+      <Section background="white">
+        <Container>
+          <div className="max-w-5xl mx-auto">
+            {/* Info Banner */}
+            <Card className="mb-8 bg-green-50 border-green-200">
+              <CardContent className="pt-6">
+                <div className="flex items-start gap-4">
+                  <Leaf className="w-8 h-8 text-green-600 shrink-0" />
+                  <div>
+                    <h3 className="font-semibold text-green-900 mb-2">{tPage('infoTitle')}</h3>
+                    <p className="text-green-800 text-sm">
+                      {tPage('infoText')}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Collapsible Sections */}
+            <MediuCollapsibleSections />
+
+            {/* Info Note */}
+            <Card className="bg-gray-50 border-gray-200">
+              <CardContent className="pt-6">
+                <div className="flex items-start gap-4">
+                  <FileText className="w-8 h-8 text-gray-400 shrink-0" />
+                  <div>
+                    <h3 className="font-semibold text-gray-700 mb-2">{tPage('noteTitle')}</h3>
+                    <p className="text-gray-600 text-sm">
+                      {tPage('noteText')}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </Container>
+      </Section>
     </>
   );
 }
-

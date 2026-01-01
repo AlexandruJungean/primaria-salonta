@@ -915,6 +915,25 @@
     "documentsTitle": "Adó- és illetékdokumentumok",
     "noteTitle": "Tájékoztatás",
     "noteText": "Az ezen az oldalon található dokumentumok az adatbázisból töltődnek be. A '#' jelöléssel ellátott linkek helykitöltők, amelyek később frissülnek a valódi dokumentumokkal."
+  },
+  "licitatiiPage": {
+    "infoTitle": "Nyilvános árverések",
+    "infoText": "A nyilvános árverések Nagyszalonta Polgármesteri Hivatalának székhelyén zajlanak. A jelentkezéshez kérjük, tanulmányozza az egyes árverésekhez csatolt dokumentumokat.",
+    "auctionsTitle": "Árverési hirdetmények",
+    "noteTitle": "Tájékoztatás",
+    "noteText": "Az ezen az oldalon található dokumentumok az adatbázisból töltődnek be. A '#' jelöléssel ellátott linkek helykitöltők, amelyek később frissülnek a valódi dokumentumokkal."
+  },
+  "mediuPage": {
+    "infoTitle": "Környezetvédelem",
+    "infoText": "Nagyszalonta Polgármesteri Hivatala a környezetvédelemmel, hulladékkezeléssel, vízminőséggel és zöldterületekkel kapcsolatos információkat bocsát a polgárok rendelkezésére.",
+    "salubrizareTitle": "Hulladékkezelés",
+    "salubrizareDesc": "Hulladékgazdálkodási és közszolgáltatási dokumentumok",
+    "apaCanalTitle": "Víz, csatorna",
+    "apaCanalDesc": "Ivóvízminőségi elemzési bulletinek",
+    "spatiiVerziTitle": "Zöldterületek",
+    "spatiiVerziDesc": "Helyi zöldterületi nyilvántartás",
+    "noteTitle": "Tájékoztatás",
+    "noteText": "Az ezen az oldalon található dokumentumok az adatbázisból töltődnek be. A '#' jelöléssel ellátott linkek helykitöltők, amelyek később frissülnek a valódi dokumentumokkal."
   }
 }
 
