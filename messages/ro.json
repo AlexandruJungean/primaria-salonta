@@ -703,6 +703,17 @@
       "urbanismAmenajare": "Urbanism și amenajarea teritoriului",
       "transparenta": "Transparență"
     }
+  },
+  "hotarariPage": {
+    "description": "Hotărârile adoptate de Consiliul Local al Municipiului Salonta în ședințele ordinare și extraordinare.",
+    "procesVerbal": "Proces verbal ședința CLMS din {date}",
+    "continueReading": "Continuă lectura",
+    "sessionDecisions": "Hotărârile adoptate în această ședință",
+    "procesVerbalTitle": "Proces verbal ședința CLMS din {date}",
+    "procesVerbalDesc": "Documentul oficial al ședinței Consiliului Local",
+    "download": "Descarcă",
+    "decisionsTitle": "Hotărâri adoptate",
+    "backToList": "Înapoi la lista hotărârilor"
   }
 }
 

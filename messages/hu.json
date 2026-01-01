@@ -703,6 +703,17 @@
       "urbanismAmenajare": "Városrendezés és területfejlesztés",
       "transparenta": "Átláthatóság"
     }
+  },
+  "hotarariPage": {
+    "description": "Nagyszalonta Város Helyi Tanácsának rendes és rendkívüli ülésein elfogadott határozatok.",
+    "procesVerbal": "HTHM {date}-i ülésének jegyzőkönyve",
+    "continueReading": "Folytatás",
+    "sessionDecisions": "Az ülésen elfogadott határozatok",
+    "procesVerbalTitle": "HTHM {date}-i ülésének jegyzőkönyve",
+    "procesVerbalDesc": "A Helyi Tanács ülésének hivatalos dokumentuma",
+    "download": "Letöltés",
+    "decisionsTitle": "Elfogadott határozatok",
+    "backToList": "Vissza a határozatok listájához"
   }
 }
 

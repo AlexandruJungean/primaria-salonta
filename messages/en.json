@@ -703,6 +703,17 @@
       "urbanismAmenajare": "Urban Planning and Land Development",
       "transparenta": "Transparency"
     }
+  },
+  "hotarariPage": {
+    "description": "Decisions adopted by the Local Council of Salonta Municipality in ordinary and extraordinary sessions.",
+    "procesVerbal": "Session minutes SMLC from {date}",
+    "continueReading": "Continue reading",
+    "sessionDecisions": "Decisions adopted in this session",
+    "procesVerbalTitle": "Session minutes SMLC from {date}",
+    "procesVerbalDesc": "Official document of the Local Council session",
+    "download": "Download",
+    "decisionsTitle": "Adopted decisions",
+    "backToList": "Back to decisions list"
   }
 }
 

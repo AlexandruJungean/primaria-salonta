@@ -119,9 +119,10 @@ const ICON_MAP: Record<string, LucideIcon> = {
   helpCircle: HelpCircle,
 };
 
-interface PageHeaderProps {
+export interface PageHeaderProps {
   titleKey: string;
   descriptionKey?: string;
+  subtitle?: string; // Direct text subtitle (not a translation key)
   icon?: string;
   namespace?: string;
   className?: string;
@@ -130,6 +131,7 @@ interface PageHeaderProps {
 export function PageHeader({
   titleKey,
   descriptionKey,
+  subtitle,
   icon,
   namespace = 'navigation',
   className,
@@ -147,7 +149,12 @@ export function PageHeader({
                 <Icon className="w-7 h-7" />
               </div>
             )}
-            <h1 className="text-3xl md:text-4xl font-bold">{t(titleKey)}</h1>
+            <div>
+              <h1 className="text-3xl md:text-4xl font-bold">{t(titleKey)}</h1>
+              {subtitle && (
+                <p className="text-lg text-primary-200 mt-1">{subtitle}</p>
+              )}
+            </div>
           </div>
           {descriptionKey && (
             <p className="text-lg text-primary-100">{t(descriptionKey)}</p>
