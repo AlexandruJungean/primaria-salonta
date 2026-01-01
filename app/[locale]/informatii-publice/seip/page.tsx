@@ -1,20 +1,22 @@
 import { getTranslations } from 'next-intl/server';
 import { useTranslations } from 'next-intl';
-import { Network, ExternalLink, FileCheck, Shield } from 'lucide-react';
+import { Info, MapPin, Clock } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
+import { SeipCollapsibleSections } from './collapsible-sections';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'navigation' });
-  return { title: t('seip') };
+  const t = await getTranslations({ locale, namespace: 'seipPage' });
+  return { title: t('title') };
 }
 
 export default function SeipPage() {
   const t = useTranslations('navigation');
+  const tPage = useTranslations('seipPage');
 
   return (
     <>
@@ -26,96 +28,54 @@ export default function SeipPage() {
 
       <Section background="white">
         <Container>
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                Sistem Electronic Integrat al Primăriei
-              </h2>
-              <p className="text-gray-600">
-                SEIP este platforma electronică care permite cetățenilor și agenților economici să
-                depună online cereri și documente către Primăria Municipiului Salonta.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-6 mb-8">
-              <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <FileCheck className="w-5 h-5 text-blue-600" />
-                    Depunere documente online
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-700 text-sm mb-4">
-                    Depuneți cereri, petiții și alte documente direct din confortul casei dumneavoastră.
-                  </p>
-                  <a
-                    href="https://seip.salonta.ro"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                  >
-                    Accesează SEIP <ExternalLink className="w-4 h-4" />
-                  </a>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gradient-to-br from-green-50 to-green-100 border-green-200">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Shield className="w-5 h-5 text-green-600" />
-                    Siguranță și confidențialitate
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-700 text-sm">
-                    Platforma SEIP utilizează cele mai înalte standarde de securitate pentru protecția
-                    datelor dumneavoastră personale, în conformitate cu GDPR.
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Network className="w-5 h-5 text-primary-600" />
-                  Servicii disponibile în SEIP
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ul className="grid md:grid-cols-2 gap-2 text-sm text-gray-700">
-                  <li className="flex items-center gap-2">
-                    <span className="w-2 h-2 bg-primary-500 rounded-full" />
-                    Depunere petiții
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="w-2 h-2 bg-primary-500 rounded-full" />
-                    Solicitări certificate de urbanism
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="w-2 h-2 bg-primary-500 rounded-full" />
-                    Solicitări autorizații de construire
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="w-2 h-2 bg-primary-500 rounded-full" />
-                    Declarații fiscale
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="w-2 h-2 bg-primary-500 rounded-full" />
-                    Solicitări acte stare civilă
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="w-2 h-2 bg-primary-500 rounded-full" />
-                    Solicitări asistență socială
-                  </li>
-                </ul>
+          <div className="max-w-5xl mx-auto">
+            {/* Info Banner */}
+            <Card className="mb-8 border-primary-200 bg-gradient-to-r from-primary-50 to-blue-50">
+              <CardContent className="pt-6">
+                <div className="flex gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-primary-100 flex items-center justify-center shrink-0">
+                    <Info className="w-6 h-6 text-primary-600" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold text-gray-900 mb-2">{tPage('title')}</h2>
+                    <p className="text-gray-700 mb-4">{tPage('description')}</p>
+                    <p className="text-sm text-gray-600">{tPage('formsLocation')}</p>
+                  </div>
+                </div>
               </CardContent>
             </Card>
+
+            {/* Contact Info */}
+            <div className="grid sm:grid-cols-2 gap-4 mb-8">
+              <Card className="bg-gray-50">
+                <CardContent className="pt-6">
+                  <div className="flex items-start gap-3">
+                    <MapPin className="w-5 h-5 text-primary-600 shrink-0 mt-0.5" />
+                    <div>
+                      <h3 className="font-semibold text-gray-900 mb-1">{tPage('location')}</h3>
+                      <p className="text-sm text-gray-600">{tPage('locationDetails')}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="bg-gray-50">
+                <CardContent className="pt-6">
+                  <div className="flex items-start gap-3">
+                    <Clock className="w-5 h-5 text-primary-600 shrink-0 mt-0.5" />
+                    <div>
+                      <h3 className="font-semibold text-gray-900 mb-1">{tPage('founded')}</h3>
+                      <p className="text-sm text-gray-600">{tPage('foundedDetails')}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Departments with Collapsible Sections */}
+            <SeipCollapsibleSections />
           </div>
         </Container>
       </Section>
     </>
   );
 }
-

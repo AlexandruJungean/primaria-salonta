@@ -1,12 +1,12 @@
 import { getTranslations } from 'next-intl/server';
 import { useTranslations } from 'next-intl';
-import { AlertCircle, Calendar, Download, User } from 'lucide-react';
+import { Info } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
+import { SomatiiCollapsibleYears } from './collapsible-years';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -14,36 +14,9 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return { title: t('somatii') };
 }
 
-// Mock data - will be replaced with database
-const SUMMONS = [
-  {
-    id: 1,
-    date: '2025-12-15',
-    title: 'Somație pentru plata impozitului pe clădiri',
-    debtor: 'P*** I***',
-    deadline: '2025-12-30',
-    status: 'activ',
-  },
-  {
-    id: 2,
-    date: '2025-12-12',
-    title: 'Somație pentru plata taxei de habitat',
-    debtor: 'M*** A***',
-    deadline: '2025-12-27',
-    status: 'activ',
-  },
-  {
-    id: 3,
-    date: '2025-12-10',
-    title: 'Somație pentru plata impozitului pe teren',
-    debtor: 'C*** N***',
-    deadline: '2025-12-25',
-    status: 'expirat',
-  },
-];
-
 export default function SomatiiPage() {
   const t = useTranslations('navigation');
+  const tPage = useTranslations('somatiiPage');
 
   return (
     <>
@@ -56,66 +29,27 @@ export default function SomatiiPage() {
       <Section background="white">
         <Container>
           <div className="max-w-4xl mx-auto">
-            <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-8">
-              <div className="flex items-start gap-3">
-                <AlertCircle className="w-6 h-6 text-red-500 shrink-0" />
-                <div>
-                  <h3 className="font-semibold text-red-800 mb-1">Atenție!</h3>
-                  <p className="text-red-700 text-sm">
-                    Somațiile afișate pe site reprezintă ultima cale legală de comunicare a obligațiilor de plată,
-                    după epuizarea celorlalte metode de notificare. Neplata în termenul indicat poate atrage
-                    executarea silită și perceperea de penalități.
-                  </p>
+            {/* Info Banner */}
+            <Card className="mb-8 border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50">
+              <CardContent className="pt-6">
+                <div className="flex gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center shrink-0">
+                    <Info className="w-6 h-6 text-amber-600" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-bold text-gray-900 mb-2">{tPage('infoTitle')}</h2>
+                    <p className="text-gray-700 text-sm">{tPage('infoText')}</p>
+                  </div>
                 </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
 
-            <div className="space-y-4">
-              {SUMMONS.map((summon) => (
-                <Card key={summon.id} hover className="border-l-4 border-l-red-400">
-                  <CardContent className="pt-6">
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 rounded-lg bg-red-100 flex items-center justify-center shrink-0">
-                          <AlertCircle className="w-5 h-5 text-red-600" />
-                        </div>
-                        <div>
-                          <div className="flex items-center gap-2 mb-1">
-                            <Badge variant={summon.status === 'activ' ? 'error' : 'secondary'}>
-                              {summon.status === 'activ' ? 'Activ' : 'Expirat'}
-                            </Badge>
-                            <span className="text-sm text-gray-500 flex items-center gap-1">
-                              <Calendar className="w-4 h-4" />
-                              {new Date(summon.date).toLocaleDateString('ro-RO')}
-                            </span>
-                          </div>
-                          <h3 className="font-semibold text-gray-900 mb-2">{summon.title}</h3>
-                          <div className="flex flex-wrap gap-4 text-sm text-gray-600">
-                            <span className="flex items-center gap-1">
-                              <User className="w-4 h-4" />
-                              Debitor: {summon.debtor}
-                            </span>
-                            <span className="text-red-600 font-medium">
-                              Termen: {new Date(summon.deadline).toLocaleDateString('ro-RO')}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                      <button className="flex items-center gap-1 px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 shrink-0">
-                        <Download className="w-4 h-4" />
-                        PDF
-                      </button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+            {/* Collapsible Years */}
+            <SomatiiCollapsibleYears />
 
+            {/* Footer Info */}
             <div className="mt-8 p-4 bg-gray-50 rounded-xl text-center">
-              <p className="text-gray-600 text-sm">
-                Pentru informații suplimentare sau pentru achitarea obligațiilor, vă rugăm să vă prezentați
-                la Serviciul Impozite și Taxe Locale din cadrul Primăriei Municipiului Salonta.
-              </p>
+              <p className="text-gray-600 text-sm">{tPage('footerText')}</p>
             </div>
           </div>
         </Container>
@@ -123,4 +57,3 @@ export default function SomatiiPage() {
     </>
   );
 }
-

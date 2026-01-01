@@ -1,26 +1,89 @@
-import { getTranslations } from 'next-intl/server';
+'use client';
+
+import { useState } from 'react';
+import { ChevronDown, Download, FileText } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { Download, FileText, Info, ExternalLink } from 'lucide-react';
-import { Container } from '@/components/ui/container';
-import { Section } from '@/components/ui/section';
-import { Card, CardContent } from '@/components/ui/card';
-import { Breadcrumbs } from '@/components/layout/breadcrumbs';
-import { PageHeader } from '@/components/pages/page-header';
 import Link from 'next/link';
 
-export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
-  const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'navigation' });
-  return { title: t('formulare') };
+interface Form {
+  title: string;
+  url: string;
+}
+
+interface FormCategory {
+  id: string;
+  titleKey: string;
+  icon: string;
+  forms: Form[];
+}
+
+interface CategorySectionProps {
+  category: FormCategory;
+  defaultOpen?: boolean;
+}
+
+function CategorySection({ category, defaultOpen = false }: CategorySectionProps) {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
+  const tf = useTranslations('formularePage');
+
+  return (
+    <div className={`border border-gray-200 rounded-xl overflow-hidden ${isOpen ? 'bg-gray-50' : 'bg-white'}`}>
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className={`w-full flex items-center justify-between p-4 hover:bg-gray-100 transition-colors ${isOpen ? 'bg-white border-b border-gray-200' : ''}`}
+      >
+        <div className="flex items-center gap-3">
+          <span className="text-2xl">{category.icon}</span>
+          <h2 className="text-lg font-semibold text-gray-900">
+            {tf(`categories.${category.titleKey}`)}
+          </h2>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-gray-500">
+            {category.forms.length} {tf('forms')}
+          </span>
+          <ChevronDown 
+            className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} 
+          />
+        </div>
+      </button>
+      
+      <div 
+        className={`overflow-hidden transition-all duration-300 ease-in-out ${
+          isOpen ? 'max-h-[5000px] opacity-100' : 'max-h-0 opacity-0'
+        }`}
+      >
+        <div className="grid gap-2 p-4">
+          {category.forms.map((form, index) => (
+            <div 
+              key={index}
+              className="flex items-center justify-between gap-3 p-3 bg-white rounded-lg hover:bg-gray-100 transition-colors border border-gray-100"
+            >
+              <div className="flex items-center gap-2 min-w-0">
+                <FileText className="w-4 h-4 text-gray-400 shrink-0" />
+                <span className="text-sm text-gray-700">{form.title}</span>
+              </div>
+              <Link
+                href={form.url}
+                className="flex items-center gap-1 px-2 py-1 bg-gray-200 text-gray-700 hover:bg-gray-300 rounded text-xs font-medium shrink-0"
+              >
+                <Download className="w-3 h-3" />
+                PDF
+              </Link>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 }
 
 // Form categories with their forms - all documents come from database
-const FORM_CATEGORIES = [
+const FORM_CATEGORIES: FormCategory[] = [
   {
     id: 'achizitii',
     titleKey: 'achizitiiPublice',
     icon: '📋',
-    color: 'blue',
     forms: [
       { title: 'Formulare-achiziții-publice-directe', url: '#' },
       { title: 'Formulare-achiziții-publice-cerere-de-oferte', url: '#' },
@@ -30,7 +93,6 @@ const FORM_CATEGORIES = [
     id: 'asistenta',
     titleKey: 'asistentaSociala',
     icon: '🤝',
-    color: 'rose',
     forms: [
       { title: 'Cerere pentru acordarea indemnizației de creștere a copilului', url: '#' },
       { title: 'Cerere pentru încadrarea copilului cu dizabilități în grad de handicap', url: '#' },
@@ -47,7 +109,6 @@ const FORM_CATEGORIES = [
     id: 'constructii',
     titleKey: 'autorizariConstructii',
     icon: '🏗️',
-    color: 'amber',
     forms: [
       { title: 'Cerere prelungire CU', url: '#' },
       { title: 'Model panou', url: '#' },
@@ -70,7 +131,6 @@ const FORM_CATEGORIES = [
     id: 'agricol',
     titleKey: 'birouAgricol',
     icon: '🌾',
-    color: 'green',
     forms: [
       { title: 'Declarație înscriere în Registrul agricol 2020-2024', url: '#' },
       { title: 'Acte necesare pentru înscrierea contractului de arendă sau de comodat în R.A.', url: '#' },
@@ -86,7 +146,6 @@ const FORM_CATEGORIES = [
     id: 'centrulzi',
     titleKey: 'centrulZi',
     icon: '👴',
-    color: 'purple',
     forms: [
       { title: 'Cerere de admitere', url: '#' },
     ]
@@ -95,7 +154,6 @@ const FORM_CATEGORIES = [
     id: 'dezvoltare',
     titleKey: 'dezvoltareUrbana',
     icon: '🏙️',
-    color: 'indigo',
     forms: [
       { title: 'Cerere comerț ocazional stradal', url: '#' },
       { title: 'Cerere închiriere teren sezonier', url: '#' },
@@ -127,7 +185,6 @@ const FORM_CATEGORIES = [
     id: 'diverse',
     titleKey: 'diverse',
     icon: '📁',
-    color: 'gray',
     forms: [
       { title: 'Formular de înscriere în Registrul de Evidență a sistemelor individuale adecvate pentru colectarea apelor uzate al Municipiului Salonta', url: '#' },
       { title: 'Formular înscriere Registru SIA pentru epurare', url: '#' },
@@ -141,7 +198,6 @@ const FORM_CATEGORIES = [
     id: 'evidenta',
     titleKey: 'evidentaPopulatiei',
     icon: '🪪',
-    color: 'cyan',
     forms: [
       { title: 'Cerere pentru eliberarea actului de identitate', url: '#' },
       { title: 'Cerere pentru înscrierea în actul de identitate a mențiunii privind stabilirea reședinței', url: '#' },
@@ -153,7 +209,6 @@ const FORM_CATEGORIES = [
     id: 'impozite',
     titleKey: 'impoziteTaxe',
     icon: '💰',
-    color: 'emerald',
     forms: [
       { title: 'Împuternicire', url: '#' },
       { title: 'PF Anexă la Declarație clădiri', url: '#' },
@@ -190,7 +245,6 @@ const FORM_CATEGORIES = [
     id: 'protectie',
     titleKey: 'protectieCivila',
     icon: '🛡️',
-    color: 'orange',
     forms: [
       { title: 'Cerere privind acordarea sumei forfetare prevăzute din Ordonanța de urgență a Guvernului nr. 15 din 2022', url: '#' },
     ]
@@ -199,7 +253,6 @@ const FORM_CATEGORIES = [
     id: 'resurse',
     titleKey: 'resurseUmane',
     icon: '👥',
-    color: 'teal',
     forms: [
       { title: 'Formular înscriere concurs funcții publice', url: '#' },
       { title: 'Formular înscriere funcții contractuale', url: '#' },
@@ -210,7 +263,6 @@ const FORM_CATEGORIES = [
     id: 'starecivila',
     titleKey: 'stareCivila',
     icon: '📜',
-    color: 'pink',
     forms: [
       { title: 'Cerere adeverință înhumare', url: '#' },
       { title: 'Cerere de rectificare acte de stare civilă', url: '#' },
@@ -239,7 +291,6 @@ const FORM_CATEGORIES = [
     id: 'urbanism',
     titleKey: 'urbanismAmenajare',
     icon: '🗺️',
-    color: 'violet',
     forms: [
       { title: 'Cerere adeverință schimbare denumire stradă', url: '#' },
       { title: 'Cerere certificat nomenclatură stradală și adresă', url: '#' },
@@ -254,7 +305,6 @@ const FORM_CATEGORIES = [
     id: 'transparenta',
     titleKey: 'transparenta',
     icon: '🔍',
-    color: 'slate',
     forms: [
       { title: 'Cerere informații de interes public', url: '#' },
       { title: 'Reclamație privind transparența', url: '#' },
@@ -262,102 +312,17 @@ const FORM_CATEGORIES = [
   },
 ];
 
-const COLOR_MAP: Record<string, { bg: string; text: string; border: string }> = {
-  blue: { bg: 'bg-blue-100', text: 'text-blue-700', border: 'border-blue-200' },
-  rose: { bg: 'bg-rose-100', text: 'text-rose-700', border: 'border-rose-200' },
-  amber: { bg: 'bg-amber-100', text: 'text-amber-700', border: 'border-amber-200' },
-  green: { bg: 'bg-green-100', text: 'text-green-700', border: 'border-green-200' },
-  purple: { bg: 'bg-purple-100', text: 'text-purple-700', border: 'border-purple-200' },
-  indigo: { bg: 'bg-indigo-100', text: 'text-indigo-700', border: 'border-indigo-200' },
-  gray: { bg: 'bg-gray-100', text: 'text-gray-700', border: 'border-gray-200' },
-  cyan: { bg: 'bg-cyan-100', text: 'text-cyan-700', border: 'border-cyan-200' },
-  emerald: { bg: 'bg-emerald-100', text: 'text-emerald-700', border: 'border-emerald-200' },
-  orange: { bg: 'bg-orange-100', text: 'text-orange-700', border: 'border-orange-200' },
-  teal: { bg: 'bg-teal-100', text: 'text-teal-700', border: 'border-teal-200' },
-  pink: { bg: 'bg-pink-100', text: 'text-pink-700', border: 'border-pink-200' },
-  violet: { bg: 'bg-violet-100', text: 'text-violet-700', border: 'border-violet-200' },
-  slate: { bg: 'bg-slate-100', text: 'text-slate-700', border: 'border-slate-200' },
-};
-
-export default function FormularePage() {
-  const t = useTranslations('navigation');
-  const tf = useTranslations('formularePage');
-
+export function FormulareCollapsibleCategories() {
   return (
-    <>
-      <Breadcrumbs items={[
-        { label: t('serviciiOnline'), href: '/servicii-online' },
-        { label: t('formulare') }
-      ]} />
-      <PageHeader titleKey="formulare" icon="clipboardList" />
-
-      <Section background="white">
-        <Container>
-          <div className="max-w-4xl mx-auto">
-            
-            {/* Info card */}
-            <Card className="mb-8 bg-primary-50 border-primary-200">
-              <CardContent className="p-5">
-                <div className="flex gap-4">
-                  <Info className="w-5 h-5 text-primary-600 shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-sm text-gray-700">{tf('intro')}</p>
-                    <Link 
-                      href="#" 
-                      target="_blank"
-                      className="inline-flex items-center gap-1 mt-2 text-sm text-primary-600 hover:text-primary-700 font-medium"
-                    >
-                      <ExternalLink className="w-3 h-3" />
-                      {tf('metodologie')}
-                    </Link>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Categories */}
-            <div className="space-y-8">
-              {FORM_CATEGORIES.map((category) => {
-                const colors = COLOR_MAP[category.color] || COLOR_MAP.gray;
-                return (
-                  <div key={category.id}>
-                    <div className={`flex items-center gap-3 mb-4 p-3 rounded-lg ${colors.bg} ${colors.border} border`}>
-                      <span className="text-2xl">{category.icon}</span>
-                      <h2 className={`text-lg font-semibold ${colors.text}`}>
-                        {tf(`categories.${category.titleKey}`)}
-                      </h2>
-                      <span className={`ml-auto text-sm ${colors.text} opacity-75`}>
-                        {category.forms.length} {tf('forms')}
-                      </span>
-                    </div>
-                    <div className="grid gap-2">
-                      {category.forms.map((form, index) => (
-                        <div 
-                          key={index}
-                          className="flex items-center justify-between gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-                        >
-                          <div className="flex items-center gap-2 min-w-0">
-                            <FileText className="w-4 h-4 text-gray-400 shrink-0" />
-                            <span className="text-sm text-gray-700">{form.title}</span>
-                          </div>
-                          <Link
-                            href={form.url}
-                            className="flex items-center gap-1 px-2 py-1 bg-gray-200 text-gray-700 hover:bg-gray-300 rounded text-xs font-medium shrink-0"
-                          >
-                            <Download className="w-3 h-3" />
-                            PDF
-                          </Link>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-          </div>
-        </Container>
-      </Section>
-    </>
+    <div className="space-y-4">
+      {FORM_CATEGORIES.map((category, index) => (
+        <CategorySection
+          key={category.id}
+          category={category}
+          defaultOpen={index === 0}
+        />
+      ))}
+    </div>
   );
 }
+

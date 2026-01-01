@@ -122,7 +122,7 @@
     "serviciiOnline": "Servicii online",
     "platiOnline": "Plăți online",
     "petitiiOnline": "Petiții online",
-    "formulare": "Formulare tipizate",
+    "formulare": "Formulare online",
     "stiri": "Știri",
     "camereWeb": "Camere web",
     "contact": "Contact",
@@ -991,6 +991,31 @@
     "documents": "documente",
     "noteTitle": "Notă informativă",
     "noteText": "Documentele de pe această pagină sunt încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri și vor fi actualizate ulterior cu documentele reale."
+  },
+  "reteleTelecomPage": {
+    "infoTitle": "Rețele telecomunicații",
+    "infoText": "Conform Legii nr. 159/2016 privind regimul infrastructurii rețelelor de comunicații electronice, documentele referitoare la accesul pe proprietatea publică sau privată pentru construirea de rețele de telecomunicații."
+  },
+  "seipPage": {
+    "title": "Serviciul Public Comunitar de Evidență Informatizată a Persoanei",
+    "description": "A fost înființat prin HCL nr.6/2005 sub autoritatea Consiliului local și se află sub coordonarea secretarului municipiului.",
+    "formsLocation": "Formularele și lista documentelor necesare eliberării actelor în această materie se găsesc la sediul Primăriei, cam.5 parter.",
+    "location": "Locație",
+    "locationDetails": "Sediul Primăriei Municipiului Salonta, Camera 5, Parter",
+    "founded": "Înființare",
+    "foundedDetails": "HCL nr. 6/2005, sub autoritatea Consiliului Local"
+  },
+  "solicitareInformatiiPage": {
+    "infoTitle": "Solicitare informații de interes public (L. 544/2001)",
+    "infoText": "Conform Legii nr. 544/2001 privind liberul acces la informațiile de interes public, orice persoană are dreptul să solicite și să obțină informații de interes public de la autoritățile și instituțiile publice.",
+    "formTitle": "Cerere informații de interes public",
+    "formDescription": "Formular pentru solicitarea informațiilor de interes public"
+  },
+  "somatiiPage": {
+    "infoTitle": "Somații și anunțuri colective",
+    "infoText": "Conform prevederilor legale, somațiile și anunțurile colective pentru comunicarea prin publicitate a actelor administrative fiscale sunt afișate pe site-ul Primăriei Municipiului Salonta.",
+    "documents": "documente",
+    "footerText": "Pentru informații suplimentare sau pentru achitarea obligațiilor, vă rugăm să vă prezentați la Serviciul Impozite și Taxe Locale din cadrul Primăriei Municipiului Salonta."
   }
 }
 

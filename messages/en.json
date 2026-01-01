@@ -122,7 +122,7 @@
     "serviciiOnline": "Online Services",
     "platiOnline": "Online Payments",
     "petitiiOnline": "Online Petitions",
-    "formulare": "Standard Forms",
+    "formulare": "Online Forms",
     "stiri": "News",
     "camereWeb": "Webcams",
     "contact": "Contact",
@@ -991,6 +991,31 @@
     "documents": "documents",
     "noteTitle": "Information Note",
     "noteText": "Documents on this page are loaded from the database. Links marked with '#' are placeholders and will be updated later with actual documents."
+  },
+  "reteleTelecomPage": {
+    "infoTitle": "Telecommunications Networks",
+    "infoText": "According to Law no. 159/2016 on the regime of electronic communications network infrastructure, documents regarding access to public or private property for the construction of telecommunications networks."
+  },
+  "seipPage": {
+    "title": "Public Community Service for Computerized Person Records",
+    "description": "Established by Local Council Decision no. 6/2005 under the authority of the Local Council and is under the coordination of the municipality secretary.",
+    "formsLocation": "Forms and the list of documents required for issuing documents in this matter can be found at the City Hall headquarters, room 5, ground floor.",
+    "location": "Location",
+    "locationDetails": "Salonta City Hall, Room 5, Ground Floor",
+    "founded": "Established",
+    "foundedDetails": "LCL no. 6/2005, under the authority of the Local Council"
+  },
+  "solicitareInformatiiPage": {
+    "infoTitle": "Request for Public Interest Information (Law 544/2001)",
+    "infoText": "According to Law no. 544/2001 on free access to public interest information, any person has the right to request and obtain public interest information from authorities and public institutions.",
+    "formTitle": "Public Interest Information Request",
+    "formDescription": "Form for requesting public interest information"
+  },
+  "somatiiPage": {
+    "infoTitle": "Summons and Collective Announcements",
+    "infoText": "According to legal provisions, summons and collective announcements for public communication of fiscal administrative acts are posted on the website of Salonta City Hall.",
+    "documents": "documents",
+    "footerText": "For additional information or to settle obligations, please visit the Local Taxes and Fees Service at Salonta City Hall."
   }
 }
 

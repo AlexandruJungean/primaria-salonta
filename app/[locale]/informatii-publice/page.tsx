@@ -3,7 +3,7 @@ import { useTranslations } from 'next-intl';
 import { 
   FileSearch, ShoppingCart, Wallet, Receipt, BadgeCheck, Hammer, Home, Map, Leaf, ShieldCheck, Siren,
   FileText, Dog, Megaphone, FileSignature, Gavel, Wheat, Heart, Tag, HardHat, ScrollText, Radio, Network,
-  FileQuestion, AlertCircle
+  FileQuestion, AlertCircle, ClipboardList
 } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
@@ -28,6 +28,7 @@ const SECTIONS = [
   { id: 'certificateUrbanism', href: '/informatii-publice/certificate-urbanism', icon: Home },
   { id: 'concursuri', href: '/informatii-publice/concursuri', icon: BadgeCheck },
   { id: 'dispozitii', href: '/informatii-publice/dispozitii', icon: FileSignature },
+  { id: 'formulare', href: '/informatii-publice/formulare', icon: ClipboardList },
   { id: 'gdpr', href: '/informatii-publice/gdpr', icon: ShieldCheck },
   { id: 'taxeImpozite', href: '/informatii-publice/taxe-impozite', icon: Receipt },
   { id: 'licitatii', href: '/informatii-publice/licitatii', icon: Gavel },

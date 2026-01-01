@@ -123,6 +123,7 @@ export const MAIN_NAVIGATION: NavSection[] = [
           { id: 'taxeImpozite', href: '/informatii-publice/taxe-impozite', icon: Receipt },
           { id: 'concursuri', href: '/informatii-publice/concursuri', icon: BadgeCheck },
           { id: 'acteNecesare', href: '/informatii-publice/acte-necesare', icon: FileText },
+          { id: 'formulare', href: '/informatii-publice/formulare', icon: ClipboardList },
           { id: 'adapostCaini', href: '/informatii-publice/adapost-caini', icon: Dog },
         ],
       },
@@ -145,7 +146,6 @@ export const MAIN_NAVIGATION: NavSection[] = [
         items: [
           { id: 'platiOnline', href: '/servicii-online/plati', icon: CreditCard },
           { id: 'petitiiOnline', href: '/servicii-online/petitii', icon: Send },
-          { id: 'formulare', href: '/servicii-online/formulare', icon: ClipboardList },
           { id: 'problemeSociale', href: '/servicii-online/probleme-sociale', icon: Heart },
         ],
       },
@@ -222,6 +222,7 @@ export const MAIN_NAVIGATION: NavSection[] = [
         groupIcon: FileSearch,
         items: [
           { id: 'licitatii', href: '/informatii-publice/licitatii', icon: Gavel },
+          { id: 'formulare', href: '/informatii-publice/formulare', icon: ClipboardList },
           { id: 'oferteTerenuri', href: '/informatii-publice/oferte-terenuri', icon: Wheat },
           { id: 'receptieLucrari', href: '/informatii-publice/receptie-lucrari', icon: HardHat },
           { id: 'regulamente', href: '/informatii-publice/regulamente', icon: ScrollText },

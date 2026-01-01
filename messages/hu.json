@@ -122,7 +122,7 @@
     "serviciiOnline": "Online szolgáltatások",
     "platiOnline": "Online fizetés",
     "petitiiOnline": "Online beadványok",
-    "formulare": "Nyomtatványok",
+    "formulare": "Online nyomtatványok",
     "stiri": "Hírek",
     "camereWeb": "Webkamerák",
     "contact": "Kapcsolat",
@@ -991,6 +991,31 @@
     "documents": "dokumentum",
     "noteTitle": "Tájékoztatás",
     "noteText": "Az ezen az oldalon található dokumentumok az adatbázisból töltődnek be. A '#' jelöléssel ellátott linkek helykitöltők, amelyek később frissülnek a valódi dokumentumokkal."
+  },
+  "reteleTelecomPage": {
+    "infoTitle": "Távközlési hálózatok",
+    "infoText": "Az elektronikus hírközlési hálózatok infrastruktúrájának szabályozásáról szóló 159/2016. törvény értelmében a köz- vagy magántulajdonhoz való hozzáférésre vonatkozó dokumentumok távközlési hálózatok építéséhez."
+  },
+  "seipPage": {
+    "title": "Személyi Nyilvántartási Közszolgálat",
+    "description": "A 6/2005. számú HCL határozattal alapították a Helyi Tanács fennhatósága alatt, és a község titkárának irányítása alatt áll.",
+    "formsLocation": "Az okmányok kiállításához szükséges űrlapok és dokumentumok listája a Polgármesteri Hivatal épületében, a 5. számú irodában (földszint) található.",
+    "location": "Helyszín",
+    "locationDetails": "Nagyszalonta Polgármesteri Hivatal, 5. iroda, Földszint",
+    "founded": "Alapítás",
+    "foundedDetails": "6/2005. számú HCL, a Helyi Tanács fennhatósága alatt"
+  },
+  "solicitareInformatiiPage": {
+    "infoTitle": "Közérdekű információk kérése (544/2001. törvény)",
+    "infoText": "A közérdekű információkhoz való szabad hozzáférésről szóló 544/2001. törvény értelmében bármely személy jogosult közérdekű információkat kérni és kapni a hatóságoktól és közintézményektől.",
+    "formTitle": "Közérdekű információ kérelem",
+    "formDescription": "Űrlap közérdekű információk kéréséhez"
+  },
+  "somatiiPage": {
+    "infoTitle": "Felszólítások és közös hirdetmények",
+    "infoText": "A jogszabályi előírásoknak megfelelően az adóügyi közigazgatási aktusok nyilvános közléséhez szükséges felszólítások és közös hirdetmények Nagyszalonta Polgármesteri Hivatalának weboldalán kerülnek közzétételre.",
+    "documents": "dokumentum",
+    "footerText": "További információkért vagy a kötelezettségek rendezéséért kérjük, forduljon a Nagyszalonta Polgármesteri Hivatala Helyi Adó és Illeték Szolgálatához."
   }
 }
 
