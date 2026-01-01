@@ -1,6 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { useTranslations } from 'next-intl';
-import { LayoutGrid, Download } from 'lucide-react';
+import { FileText, Download, Network } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { Card, CardContent } from '@/components/ui/card';
@@ -13,8 +13,16 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return { title: t('organigrama') };
 }
 
+// Mock data - will be replaced with database content
+const ORGANIGRAMA_DOCS = [
+  { id: 1, title: 'Organigrama', url: '#' },
+  { id: 2, title: 'Statul de funcții – funcții publice', url: '#' },
+  { id: 3, title: 'Statul de funcții – contractuali', url: '#' },
+];
+
 export default function OrganigramaPage() {
   const t = useTranslations('navigation');
+  const to = useTranslations('organigramaPage');
 
   return (
     <>
@@ -26,76 +34,58 @@ export default function OrganigramaPage() {
 
       <Section background="white">
         <Container>
-          <div className="max-w-5xl mx-auto">
-            <p className="text-lg text-gray-600 mb-8 text-center">
-              Structura organizatorică a Primăriei Municipiului Salonta
-            </p>
+          <div className="max-w-3xl mx-auto">
+            
+            {/* Section Header */}
+            <Card className="mb-6">
+              <CardContent className="p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-primary-100 flex items-center justify-center">
+                    <Network className="w-6 h-6 text-primary-700" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold text-gray-900">{to('institutionOrgChart')}</h2>
+                    <p className="text-sm text-gray-500">{to('subtitle')}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-            {/* Simplified org chart */}
-            <div className="space-y-6">
-              {/* Top level */}
-              <div className="flex justify-center">
-                <Card className="bg-primary-900 text-white">
-                  <CardContent className="text-center pt-6 px-8">
-                    <h3 className="font-bold text-lg">PRIMAR</h3>
-                    <p className="text-primary-200 text-sm">Török László</p>
+            {/* Documents List */}
+            <div className="space-y-3">
+              {ORGANIGRAMA_DOCS.map((doc) => (
+                <Card key={doc.id} className="hover:shadow-md transition-shadow">
+                  <CardContent className="p-0">
+                    <div className="flex items-center justify-between p-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center">
+                          <FileText className="w-5 h-5 text-gray-500" />
+                        </div>
+                        <span className="font-medium text-gray-900">{doc.title}</span>
+                      </div>
+                      <a
+                        href={doc.url}
+                        className="flex items-center gap-2 px-4 py-2 bg-primary-900 text-white rounded-lg hover:bg-primary-800 transition-colors text-sm font-medium"
+                      >
+                        <Download className="w-4 h-4" />
+                        PDF
+                      </a>
+                    </div>
                   </CardContent>
                 </Card>
-              </div>
-
-              {/* Second level */}
-              <div className="flex justify-center gap-8">
-                <Card className="bg-primary-700 text-white">
-                  <CardContent className="text-center pt-6 px-6">
-                    <h3 className="font-bold">VICEPRIMAR</h3>
-                    <p className="text-primary-200 text-sm">Horváth János</p>
-                  </CardContent>
-                </Card>
-                <Card className="bg-primary-700 text-white">
-                  <CardContent className="text-center pt-6 px-6">
-                    <h3 className="font-bold">SECRETAR GENERAL</h3>
-                    <p className="text-primary-200 text-sm">-</p>
-                  </CardContent>
-                </Card>
-              </div>
-
-              {/* Departments */}
-              <div className="grid md:grid-cols-3 gap-4 mt-8">
-                {[
-                  'Serviciul Buget-Contabilitate',
-                  'Serviciul Impozite și Taxe',
-                  'Serviciul Urbanism',
-                  'Serviciul Juridic',
-                  'Serviciul Resurse Umane',
-                  'Serviciul Relații cu Publicul',
-                  'Serviciul Achiziții Publice',
-                  'Serviciul Tehnic',
-                  'Serviciul Social',
-                ].map((dept, idx) => (
-                  <Card key={idx}>
-                    <CardContent className="text-center pt-4">
-                      <p className="text-sm font-medium text-gray-700">{dept}</p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+              ))}
             </div>
 
-            <div className="mt-12 text-center">
-              <Card className="bg-gray-50 inline-block">
-                <CardContent className="flex items-center gap-4 pt-6">
-                  <span className="text-gray-700">Descarcă organigrama completă</span>
-                  <button className="flex items-center gap-2 px-4 py-2 bg-primary-900 text-white rounded-lg hover:bg-primary-800 transition-colors">
-                    <Download className="w-4 h-4" />
-                    PDF
-                  </button>
-                </CardContent>
-              </Card>
+            {/* Info Note */}
+            <div className="mt-8 p-4 bg-gray-50 rounded-xl">
+              <p className="text-sm text-gray-600 text-center">
+                {to('infoNote')}
+              </p>
             </div>
+
           </div>
         </Container>
       </Section>
     </>
   );
 }
-

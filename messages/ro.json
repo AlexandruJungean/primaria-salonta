@@ -255,8 +255,17 @@
   },
   "leadership": {
     "title": "Conducerea Primăriei",
+    "subtitle": "Primarul, viceprimarul și secretarul municipiului",
     "audienceSchedule": "Program audiențe",
-    "contactInfo": "Date de contact"
+    "contactInfo": "Date de contact",
+    "education": "Studii",
+    "subordinateDepartments": "Are în directă subordonare",
+    "mainResponsibilities": "Principale atribuții"
+  },
+  "organigramaPage": {
+    "institutionOrgChart": "Organigrama instituției",
+    "subtitle": "Structura organizatorică a Primăriei Municipiului Salonta",
+    "infoNote": "Documentele sunt actualizate periodic. Pentru informații suplimentare, contactați Serviciul Resurse Umane."
   },
   "publicHours": {
     "title": "Program cu publicul",

@@ -255,8 +255,17 @@
   },
   "leadership": {
     "title": "A Polgármesteri Hivatal vezetősége",
+    "subtitle": "A polgármester, alpolgármester és a város titkára",
     "audienceSchedule": "Fogadóórák",
-    "contactInfo": "Elérhetőségek"
+    "contactInfo": "Elérhetőségek",
+    "education": "Tanulmányok",
+    "subordinateDepartments": "Közvetlen alárendeltségében",
+    "mainResponsibilities": "Főbb feladatai"
+  },
+  "organigramaPage": {
+    "institutionOrgChart": "Intézményi szervezeti ábra",
+    "subtitle": "Nagyszalonta Polgármesteri Hivatalának szervezeti felépítése",
+    "infoNote": "A dokumentumok rendszeresen frissülnek. További információkért forduljon a Humánerőforrás Szolgálathoz."
   },
   "publicHours": {
     "title": "Ügyfélfogadás",

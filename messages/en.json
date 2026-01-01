@@ -255,8 +255,17 @@
   },
   "leadership": {
     "title": "City Hall Leadership",
+    "subtitle": "The Mayor, Deputy Mayor and Secretary of the municipality",
     "audienceSchedule": "Audience schedule",
-    "contactInfo": "Contact information"
+    "contactInfo": "Contact information",
+    "education": "Education",
+    "subordinateDepartments": "Directly subordinate departments",
+    "mainResponsibilities": "Main responsibilities"
+  },
+  "organigramaPage": {
+    "institutionOrgChart": "Institution Organization Chart",
+    "subtitle": "Organizational structure of Salonta City Hall",
+    "infoNote": "Documents are updated periodically. For additional information, contact the Human Resources Service."
   },
   "publicHours": {
     "title": "Public Hours",
