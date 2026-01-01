@@ -273,17 +273,6 @@ export const MAIN_NAVIGATION: NavSection[] = [
           { id: 'svsu', href: '/programe/svsu', icon: Siren },
         ],
       },
-      // Public Information group (administration-relevant)
-      {
-        groupId: 'informatiiPublice',
-        groupHref: '/informatii-publice',
-        groupIcon: FileSearch,
-        items: [
-          { id: 'buget', href: '/informatii-publice/buget', icon: Wallet },
-          { id: 'gdpr', href: '/informatii-publice/gdpr', icon: ShieldCheck },
-          { id: 'coronavirus', href: '/informatii-publice/coronavirus', icon: Siren },
-        ],
-      },
       // Transparency group
       {
         groupId: 'transparenta',
@@ -294,6 +283,17 @@ export const MAIN_NAVIGATION: NavSection[] = [
           { id: 'dezbateriPublice', href: '/transparenta/dezbateri-publice', icon: Speech },
           { id: 'buletinInformativ', href: '/transparenta/buletin-informativ', icon: Info },
           { id: 'generale', href: '/transparenta/generale', icon: FileText },
+        ],
+      },
+      // Public Information group (administration-relevant)
+      {
+        groupId: 'informatiiPublice',
+        groupHref: '/informatii-publice',
+        groupIcon: FileSearch,
+        items: [
+          { id: 'buget', href: '/informatii-publice/buget', icon: Wallet },
+          { id: 'gdpr', href: '/informatii-publice/gdpr', icon: ShieldCheck },
+          { id: 'coronavirus', href: '/informatii-publice/coronavirus', icon: Siren },
         ],
       },
       // Reports & Studies group
