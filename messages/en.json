@@ -887,6 +887,16 @@
     "documents": "documents",
     "noteTitle": "Information Note",
     "noteText": "Documents on this page are loaded from the database. Links marked with '#' are placeholders and will be updated later with actual documents."
+  },
+  "concursuriPage": {
+    "infoTitle": "Competitions and Vacancies",
+    "infoText": "Competitions for vacant positions at Salonta City Hall and mayor's dispositions regarding their organization.",
+    "formsTitle": "Required Forms",
+    "currentJobsTitle": "Job Announcements",
+    "dispositionsTitle": "Mayor's Dispositions",
+    "documents": "documents",
+    "noteTitle": "Information Note",
+    "noteText": "Documents on this page are loaded from the database. Links marked with '#' are placeholders and will be updated later with actual documents."
   }
 }
 

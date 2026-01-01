@@ -887,6 +887,16 @@
     "documents": "documente",
     "noteTitle": "Notă informativă",
     "noteText": "Documentele de pe această pagină sunt încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri și vor fi actualizate ulterior cu documentele reale."
+  },
+  "concursuriPage": {
+    "infoTitle": "Concursuri și posturi vacante",
+    "infoText": "Concursuri pentru ocuparea posturilor vacante în cadrul Primăriei Municipiului Salonta și dispoziții ale primarului privind organizarea acestora.",
+    "formsTitle": "Formulare necesare",
+    "currentJobsTitle": "Anunțuri posturi scoase la concurs",
+    "dispositionsTitle": "Dispoziții ale primarului",
+    "documents": "documente",
+    "noteTitle": "Notă informativă",
+    "noteText": "Documentele de pe această pagină sunt încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri și vor fi actualizate ulterior cu documentele reale."
   }
 }
 
