@@ -58,6 +58,15 @@ export function Header() {
               >
                 Instagram
               </a>
+              <a
+                href="https://www.tiktok.com/@primariasalonta_"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-secondary-300 transition-colors"
+                aria-label="TikTok"
+              >
+                TikTok
+              </a>
               <div className="border-l border-white/30 pl-4 overflow-visible">
                 <LanguageSwitcher variant="topbar" />
               </div>

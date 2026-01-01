@@ -120,35 +120,42 @@ export function MegaMenu() {
                     >
                       {section.groups.map((group) => {
                         const GroupIcon = group.groupIcon;
+                        const groupTitle = t(group.groupId);
+                        const hasTitle = groupTitle && groupTitle.trim() !== '';
                         return (
                           <div key={group.groupId} className="space-y-2">
-                            {/* Group Header */}
-                            {group.groupHref ? (
-                              <Link
-                                href={group.groupHref}
-                                className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-primary-50 transition-colors group"
-                              >
-                                {GroupIcon && (
-                                  <GroupIcon className="w-4 h-4 text-primary-600" />
-                                )}
-                                <span className="text-sm font-semibold text-gray-900 group-hover:text-primary-700">
-                                  {t(group.groupId)}
-                                </span>
-                                <ChevronRight className="w-3.5 h-3.5 text-gray-400 group-hover:text-primary-600 ml-auto" />
-                              </Link>
-                            ) : (
-                              <div className="flex items-center gap-2 px-2 py-1.5">
-                                {GroupIcon && (
-                                  <GroupIcon className="w-4 h-4 text-primary-600" />
-                                )}
-                                <span className="text-sm font-semibold text-gray-900">
-                                  {t(group.groupId)}
-                                </span>
-                              </div>
+                            {/* Group Header - only show if title exists */}
+                            {hasTitle && (
+                              group.groupHref ? (
+                                <Link
+                                  href={group.groupHref}
+                                  className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-primary-50 transition-colors group"
+                                >
+                                  {GroupIcon && (
+                                    <GroupIcon className="w-4 h-4 text-primary-600" />
+                                  )}
+                                  <span className="text-sm font-semibold text-gray-900 group-hover:text-primary-700">
+                                    {groupTitle}
+                                  </span>
+                                  <ChevronRight className="w-3.5 h-3.5 text-gray-400 group-hover:text-primary-600 ml-auto" />
+                                </Link>
+                              ) : (
+                                <div className="flex items-center gap-2 px-2 py-1.5">
+                                  {GroupIcon && (
+                                    <GroupIcon className="w-4 h-4 text-primary-600" />
+                                  )}
+                                  <span className="text-sm font-semibold text-gray-900">
+                                    {groupTitle}
+                                  </span>
+                                </div>
+                              )
                             )}
 
                             {/* Group Items */}
-                            <div className="space-y-0.5 pl-1 border-l-2 border-gray-100 ml-2">
+                            <div className={cn(
+                              "space-y-0.5",
+                              hasTitle ? "pl-1 border-l-2 border-gray-100 ml-2" : "pl-0 ml-0"
+                            )}>
                               {group.items.map((item) => {
                                 const ItemIcon = item.icon;
                                 return (
@@ -184,7 +191,8 @@ export function MegaMenu() {
                       <div
                         className={cn(
                           'grid gap-x-6 gap-y-1',
-                          section.standaloneItems.length > 4 ? 'grid-cols-2' : 'grid-cols-1'
+                          section.standaloneItems.length > 6 ? 'grid-cols-3' : 
+                          section.standaloneItems.length > 3 ? 'grid-cols-2' : 'grid-cols-1'
                         )}
                       >
                         {section.standaloneItems.map((item) => {

@@ -69,6 +69,14 @@ import {
   Info,
   FileArchive,
   Flag,
+  Dog,
+  FileSignature,
+  Tag,
+  HardHat,
+  Radio,
+  Network,
+  FileQuestion,
+  AlertCircle,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -106,6 +114,30 @@ export const MAIN_NAVIGATION: NavSection[] = [
     href: '/servicii-online',
     icon: Users,
     groups: [
+      // Public Information group - Column 1 (citizen-relevant)
+      {
+        groupId: 'informatiiPublice',
+        groupHref: '/informatii-publice',
+        groupIcon: FileSearch,
+        items: [
+          { id: 'taxeImpozite', href: '/informatii-publice/taxe-impozite', icon: Receipt },
+          { id: 'concursuri', href: '/informatii-publice/concursuri', icon: BadgeCheck },
+          { id: 'formulareOnline', href: '/servicii-online/formulare', icon: ClipboardList },
+          { id: 'acteNecesare', href: '/informatii-publice/acte-necesare', icon: FileText },
+          { id: 'adapostCaini', href: '/informatii-publice/adapost-caini', icon: Dog },
+        ],
+      },
+      // Public Information group - Column 2 (citizen-relevant continuation)
+      {
+        groupId: 'informatiiPubliceContinuare',
+        groupIcon: FileSearch,
+        items: [
+          { id: 'anunturi', href: '/informatii-publice/anunturi', icon: Megaphone },
+          { id: 'publicatiiCasatorie', href: '/informatii-publice/publicatii-casatorie', icon: Heart },
+          { id: 'somatii', href: '/informatii-publice/somatii', icon: AlertCircle },
+          { id: 'solicitareInformatii', href: '/informatii-publice/solicitare-informatii', icon: FileQuestion },
+        ],
+      },
       // Online Services group
       {
         groupId: 'serviciiOnline',
@@ -141,16 +173,6 @@ export const MAIN_NAVIGATION: NavSection[] = [
           { id: 'centrulZi', href: '/institutii/centrul-de-zi', icon: Users },
         ],
       },
-      // Public Information group (citizen-relevant)
-      {
-        groupId: 'informatiiPublice',
-        groupHref: '/informatii-publice',
-        groupIcon: FileSearch,
-        items: [
-          { id: 'taxeImpozite', href: '/informatii-publice/taxe-impozite', icon: Receipt },
-          { id: 'concursuri', href: '/informatii-publice/concursuri', icon: BadgeCheck },
-        ],
-      },
       // City Hall services group
       {
         groupId: 'primaria',
@@ -180,7 +202,7 @@ export const MAIN_NAVIGATION: NavSection[] = [
     href: '/informatii-publice',
     icon: Briefcase,
     groups: [
-      // Public Information group (business-relevant)
+      // Public Information group - Column 1 (business-relevant)
       {
         groupId: 'informatiiPublice',
         groupHref: '/informatii-publice',
@@ -193,6 +215,20 @@ export const MAIN_NAVIGATION: NavSection[] = [
           { id: 'taxeImpozite', href: '/informatii-publice/taxe-impozite', icon: Receipt },
           { id: 'concursuri', href: '/informatii-publice/concursuri', icon: BadgeCheck },
           { id: 'mediu', href: '/informatii-publice/mediu', icon: Leaf },
+        ],
+      },
+      // Public Information group - Column 2 (business-relevant continuation)
+      {
+        groupId: 'informatiiPubliceContinuare',
+        groupIcon: FileSearch,
+        items: [
+          { id: 'licitatii', href: '/informatii-publice/licitatii', icon: Gavel },
+          { id: 'oferteTerenuri', href: '/informatii-publice/oferte-terenuri', icon: Wheat },
+          { id: 'receptieLucrari', href: '/informatii-publice/receptie-lucrari', icon: HardHat },
+          { id: 'regulamente', href: '/informatii-publice/regulamente', icon: ScrollText },
+          { id: 'reteleTelecom', href: '/informatii-publice/retele-telecom', icon: Radio },
+          { id: 'publicatiiVanzare', href: '/informatii-publice/publicatii-vanzare', icon: Tag },
+          { id: 'formulareOnline', href: '/servicii-online/formulare', icon: ClipboardList },
         ],
       },
       // Locality - Economy
@@ -262,6 +298,21 @@ export const MAIN_NAVIGATION: NavSection[] = [
           { id: 'rapoarteActivitate', href: '/consiliul-local/rapoarte-activitate', icon: BarChart3 },
         ],
       },
+      // Public Information group (administration-relevant)
+      {
+        groupId: 'informatiiPublice',
+        groupHref: '/informatii-publice',
+        groupIcon: FileSearch,
+        items: [
+          { id: 'buget', href: '/informatii-publice/buget', icon: Wallet },
+          { id: 'gdpr', href: '/informatii-publice/gdpr', icon: ShieldCheck },
+          { id: 'dispozitii', href: '/informatii-publice/dispozitii', icon: FileSignature },
+          { id: 'regulamente', href: '/informatii-publice/regulamente', icon: ScrollText },
+          { id: 'seip', href: '/informatii-publice/seip', icon: Network },
+          { id: 'somatii', href: '/informatii-publice/somatii', icon: AlertCircle },
+          { id: 'coronavirus', href: '/informatii-publice/coronavirus', icon: Siren },
+        ],
+      },
       // Official Monitor group
       {
         groupId: 'monitorulOficial',
@@ -286,17 +337,6 @@ export const MAIN_NAVIGATION: NavSection[] = [
           { id: 'dezbateriPublice', href: '/transparenta/dezbateri-publice', icon: Speech },
           { id: 'buletinInformativ', href: '/transparenta/buletin-informativ', icon: Info },
           { id: 'generale', href: '/transparenta/generale', icon: FileText },
-        ],
-      },
-      // Public Information group (administration-relevant)
-      {
-        groupId: 'informatiiPublice',
-        groupHref: '/informatii-publice',
-        groupIcon: FileSearch,
-        items: [
-          { id: 'buget', href: '/informatii-publice/buget', icon: Wallet },
-          { id: 'gdpr', href: '/informatii-publice/gdpr', icon: ShieldCheck },
-          { id: 'coronavirus', href: '/informatii-publice/coronavirus', icon: Siren },
         ],
       },
       // Reports & Studies group
