@@ -124,7 +124,10 @@
     "voluntariat": "Önkéntesség (Hamarosan)",
     "agentiEconomici": "Gazdasági szereplők (Hamarosan)",
     "problemeSociale": "Szociális problémák – nyomtatványok",
-    "coronavirus": "Koronavírus információk"
+    "coronavirus": "Koronavírus információk",
+    "rapoarteStudii": "Jelentések és tanulmányok",
+    "rapoarteAudit": "Könyvvizsgálati jelentések",
+    "studii": "Tanulmányok"
   },
   "homepage": {
     "welcome": "Üdvözöljük",
@@ -723,6 +726,23 @@
     "wealthDeclaration": "Vagyonnyilatkozat",
     "interestDeclaration": "Érdekeltségi nyilatkozat",
     "infoText": "A nyilatkozatok a törvényi előírásoknak megfelelően kerülnek közzétételre, és elérhetők a Nemzeti Integritási Ügynökség (ANI) weboldalán is. A dokumentum eléréséhez kattintson a tanácsos neve melletti megfelelő gombra."
+  },
+  "rapoarteActivitatePage": {
+    "description": "Nagyszalonta Város Helyi Tanácsa helyi tanácsosainak és szakbizottságainak tevékenységi jelentései.",
+    "mandateTitle": "{period} mandátumban benyújtott",
+    "forYear": "{year}. évre",
+    "committees": "Bizottságok",
+    "councilors": "Tanácsosok",
+    "committeeReports": "Bizottsági jelentések",
+    "councilorReports": "Tanácsosi jelentések"
+  },
+  "rapoarteAuditPage": {
+    "description": "A Romániai Számvevőszék által Nagyszalonta Polgármesteri Hivatala számára készített könyvvizsgálati jelentések.",
+    "infoText": "A könyvvizsgálati jelentések a hatályos jogszabályoknak megfelelően kerülnek közzétételre, és PDF formátumban letölthetők."
+  },
+  "studiiPage": {
+    "description": "Nagyszalonta Város projektjeihez készített megvalósíthatósági és egyéb tanulmányok.",
+    "noStudies": "Jelenleg nincsenek közzétett tanulmányok."
   }
 }
 

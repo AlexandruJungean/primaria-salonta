@@ -47,6 +47,19 @@ export function MegaMenu() {
     return groupItems + standaloneItems;
   };
 
+  // Get number of columns based on section size
+  const getColumnCount = (section: NavSection) => {
+    const groupCount = section.groups?.length || 0;
+    const totalItems = getTotalItems(section);
+    
+    // 4 columns for very large menus (City Hall section has 7 groups)
+    if (groupCount >= 6 || totalItems > 25) return 4;
+    // 3 columns for large menus
+    if (groupCount >= 4 || totalItems > 12) return 3;
+    // 2 columns for medium menus
+    return 2;
+  };
+
   return (
     <nav className="flex items-center">
       {/* Main Navigation - 4 user-centric categories */}
@@ -54,8 +67,7 @@ export function MegaMenu() {
         const hasContent =
           (section.groups && section.groups.length > 0) ||
           (section.standaloneItems && section.standaloneItems.length > 0);
-        const totalItems = getTotalItems(section);
-        const isLargeMenu = totalItems > 12;
+        const columnCount = getColumnCount(section);
 
         return (
           <div
@@ -91,7 +103,9 @@ export function MegaMenu() {
                 <div
                   className={cn(
                     'bg-white rounded-xl shadow-2xl border border-gray-200 p-5 animate-in fade-in slide-in-from-top-2 duration-200',
-                    isLargeMenu ? 'min-w-[720px] max-w-[900px]' : 'min-w-[520px] max-w-[640px]'
+                    columnCount === 4 && 'min-w-[900px] max-w-[1100px]',
+                    columnCount === 3 && 'min-w-[720px] max-w-[900px]',
+                    columnCount === 2 && 'min-w-[520px] max-w-[640px]'
                   )}
                 >
                   {/* Groups */}
@@ -99,7 +113,9 @@ export function MegaMenu() {
                     <div
                       className={cn(
                         'grid gap-6',
-                        isLargeMenu ? 'grid-cols-3' : 'grid-cols-2'
+                        columnCount === 4 && 'grid-cols-4',
+                        columnCount === 3 && 'grid-cols-3',
+                        columnCount === 2 && 'grid-cols-2'
                       )}
                     >
                       {section.groups.map((group) => {

@@ -124,7 +124,10 @@
     "voluntariat": "Volunteering (Coming Soon)",
     "agentiEconomici": "Business Directory (Coming Soon)",
     "problemeSociale": "Social Problems – forms",
-    "coronavirus": "Coronavirus Information"
+    "coronavirus": "Coronavirus Information",
+    "rapoarteStudii": "Reports and Studies",
+    "rapoarteAudit": "Audit Reports",
+    "studii": "Studies"
   },
   "homepage": {
     "welcome": "Welcome",
@@ -723,6 +726,23 @@
     "wealthDeclaration": "Wealth declaration",
     "interestDeclaration": "Interest declaration",
     "infoText": "Declarations are published in accordance with legal provisions and are also available on the National Integrity Agency (ANI) website. To access a document, click the corresponding button next to the councilor's name."
+  },
+  "rapoarteActivitatePage": {
+    "description": "Activity reports of local councilors and specialized committees of the Salonta Municipal Local Council.",
+    "mandateTitle": "Submitted during mandate {period}",
+    "forYear": "For year {year}",
+    "committees": "Committees",
+    "councilors": "Councilors",
+    "committeeReports": "Committee reports",
+    "councilorReports": "Councilor reports"
+  },
+  "rapoarteAuditPage": {
+    "description": "Audit reports conducted by the Romanian Court of Accounts for Salonta City Hall.",
+    "infoText": "Audit reports are published in accordance with current legislation and are available for download in PDF format."
+  },
+  "studiiPage": {
+    "description": "Feasibility studies and other studies conducted for Salonta Municipality projects.",
+    "noStudies": "No studies published at this time."
   }
 }
 

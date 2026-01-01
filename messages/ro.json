@@ -124,7 +124,10 @@
     "voluntariat": "Voluntariat (În curând)",
     "agentiEconomici": "Agenți economici (În curând)",
     "problemeSociale": "Probleme sociale – formulare",
-    "coronavirus": "Informații coronavirus"
+    "coronavirus": "Informații coronavirus",
+    "rapoarteStudii": "Rapoarte și studii",
+    "rapoarteAudit": "Rapoarte de audit",
+    "studii": "Studii"
   },
   "homepage": {
     "welcome": "Bine ați venit",
@@ -723,6 +726,23 @@
     "wealthDeclaration": "Declarație de avere",
     "interestDeclaration": "Declarație de interese",
     "infoText": "Declarațiile sunt publicate conform prevederilor legale și sunt disponibile și pe site-ul Agenției Naționale de Integritate (ANI). Pentru accesarea unui document, apăsați butonul corespunzător din dreptul numelui consilierului."
+  },
+  "rapoarteActivitatePage": {
+    "description": "Rapoartele de activitate ale consilierilor locali și comisiilor de specialitate ale Consiliului Local al Municipiului Salonta.",
+    "mandateTitle": "Depuse în mandatul {period}",
+    "forYear": "Pt. anul {year}",
+    "committees": "Comisii",
+    "councilors": "Consilieri",
+    "committeeReports": "Rapoarte comisii",
+    "councilorReports": "Rapoarte consilieri"
+  },
+  "rapoarteAuditPage": {
+    "description": "Rapoartele de audit realizate de Curtea de Conturi a României pentru Primăria Municipiului Salonta.",
+    "infoText": "Rapoartele de audit sunt publicate conform legislației în vigoare și sunt disponibile pentru descărcare în format PDF."
+  },
+  "studiiPage": {
+    "description": "Studii de fezabilitate și alte studii realizate pentru proiectele Municipiului Salonta.",
+    "noStudies": "Nu există studii publicate momentan."
   }
 }
 

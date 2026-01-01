@@ -130,6 +130,17 @@ export const MAIN_NAVIGATION: NavSection[] = [
           { id: 'generale', href: '/transparenta/generale', icon: FileText },
         ],
       },
+      // Social Institutions group
+      {
+        groupId: 'institutii',
+        groupHref: '/institutii',
+        groupIcon: Building,
+        items: [
+          { id: 'asistentaMedicala', href: '/institutii/asistenta-medicala', icon: Heart },
+          { id: 'cantinaSociala', href: '/institutii/cantina-sociala', icon: Utensils },
+          { id: 'centrulZi', href: '/institutii/centrul-de-zi', icon: Users },
+        ],
+      },
       // Public Information group (citizen-relevant)
       {
         groupId: 'informatiiPublice',
@@ -148,17 +159,6 @@ export const MAIN_NAVIGATION: NavSection[] = [
         items: [
           { id: 'program', href: '/primaria/program', icon: Calendar },
           { id: 'audiente', href: '/primaria/audiente', icon: Mic },
-        ],
-      },
-      // Social Institutions group
-      {
-        groupId: 'institutii',
-        groupHref: '/institutii',
-        groupIcon: Building,
-        items: [
-          { id: 'asistentaMedicala', href: '/institutii/asistenta-medicala', icon: Heart },
-          { id: 'cantinaSociala', href: '/institutii/cantina-sociala', icon: Utensils },
-          { id: 'centrulZi', href: '/institutii/centrul-de-zi', icon: Users },
         ],
       },
     ],
@@ -259,16 +259,18 @@ export const MAIN_NAVIGATION: NavSection[] = [
           { id: 'alteDocumente', href: '/monitorul-oficial/alte-documente', icon: FolderOpen },
         ],
       },
-      // Transparency group
+      // Programs & Strategies group
       {
-        groupId: 'transparenta',
-        groupHref: '/transparenta',
-        groupIcon: Eye,
+        groupId: 'programe',
+        groupHref: '/programe',
+        groupIcon: Target,
         items: [
-          { id: 'anunturi', href: '/transparenta/anunturi', icon: Megaphone },
-          { id: 'dezbateriPublice', href: '/transparenta/dezbateri-publice', icon: Speech },
-          { id: 'buletinInformativ', href: '/transparenta/buletin-informativ', icon: Info },
-          { id: 'generale', href: '/transparenta/generale', icon: FileText },
+          { id: 'strategieDezvoltare', href: '/programe/strategie-dezvoltare', icon: TrendingUp },
+          { id: 'pmud', href: '/programe/pmud', icon: Bus },
+          { id: 'pnrr', href: '/programe/pnrr', icon: Euro },
+          { id: 'proiecteEuropene', href: '/programe/proiecte-europene', icon: Globe },
+          { id: 'proiecteLocale', href: '/programe/proiecte-locale', icon: MapPin },
+          { id: 'svsu', href: '/programe/svsu', icon: Siren },
         ],
       },
       // Public Information group (administration-relevant)
@@ -282,18 +284,26 @@ export const MAIN_NAVIGATION: NavSection[] = [
           { id: 'coronavirus', href: '/informatii-publice/coronavirus', icon: Siren },
         ],
       },
-      // Programs & Strategies group
+      // Transparency group
       {
-        groupId: 'programe',
-        groupHref: '/programe',
-        groupIcon: Target,
+        groupId: 'transparenta',
+        groupHref: '/transparenta',
+        groupIcon: Eye,
         items: [
-          { id: 'strategieDezvoltare', href: '/programe/strategie-dezvoltare', icon: TrendingUp },
-          { id: 'pmud', href: '/programe/pmud', icon: Bus },
-          { id: 'pnrr', href: '/programe/pnrr', icon: Euro },
-          { id: 'proiecteEuropene', href: '/programe/proiecte-europene', icon: Globe },
-          { id: 'proiecteLocale', href: '/programe/proiecte-locale', icon: MapPin },
-          { id: 'svsu', href: '/programe/svsu', icon: Siren },
+          { id: 'anunturi', href: '/transparenta/anunturi', icon: Megaphone },
+          { id: 'dezbateriPublice', href: '/transparenta/dezbateri-publice', icon: Speech },
+          { id: 'buletinInformativ', href: '/transparenta/buletin-informativ', icon: Info },
+          { id: 'generale', href: '/transparenta/generale', icon: FileText },
+        ],
+      },
+      // Reports & Studies group
+      {
+        groupId: 'rapoarteStudii',
+        groupHref: '/rapoarte-studii',
+        groupIcon: FileSearch,
+        items: [
+          { id: 'rapoarteAudit', href: '/rapoarte-studii/rapoarte', icon: ShieldCheck },
+          { id: 'studii', href: '/rapoarte-studii/studii', icon: FileSearch },
         ],
       },
     ],
