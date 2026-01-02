@@ -1,4 +1,3 @@
-import { getTranslations } from 'next-intl/server';
 import { useTranslations } from 'next-intl';
 import { Target, Map, Euro, Globe, Building, Building2, Siren, ShieldCheck } from 'lucide-react';
 import { Container } from '@/components/ui/container';
@@ -7,11 +6,17 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
 import { Link } from '@/components/ui/link';
+import { generatePageMetadata } from '@/lib/seo/metadata';
+import { WebPageJsonLd } from '@/lib/seo/json-ld';
+import { type Locale } from '@/i18n/routing';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'navigation' });
-  return { title: t('programe') };
+  return generatePageMetadata({
+    pageKey: 'programe',
+    locale: locale as Locale,
+    path: '/programe',
+  });
 }
 
 const SECTIONS = [
@@ -30,6 +35,11 @@ export default function ProgramePage() {
 
   return (
     <>
+      <WebPageJsonLd
+        title="Programe și Proiecte"
+        description="Programe și proiecte ale Primăriei Municipiului Salonta"
+        url="/programe"
+      />
       <Breadcrumbs items={[{ label: t('programe') }]} />
       <PageHeader titleKey="programe" icon="target" />
 

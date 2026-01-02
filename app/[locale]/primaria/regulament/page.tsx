@@ -6,11 +6,16 @@ import { Section } from '@/components/ui/section';
 import { Card, CardContent } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
+import { generatePageMetadata, BreadcrumbJsonLd } from '@/lib/seo';
+import type { Locale } from '@/lib/seo/config';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'navigation' });
-  return { title: t('regulament') };
+  return generatePageMetadata({
+    pageKey: 'regulamentOrganizare',
+    locale: locale as Locale,
+    path: '/primaria/regulament',
+  });
 }
 
 // Mock data - will be replaced with database content

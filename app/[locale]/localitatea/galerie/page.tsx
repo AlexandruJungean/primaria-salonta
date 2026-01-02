@@ -6,11 +6,16 @@ import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
+import { generatePageMetadata, BreadcrumbJsonLd } from '@/lib/seo';
+import type { Locale } from '@/lib/seo/config';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'navigation' });
-  return { title: t('galerie') };
+  return generatePageMetadata({
+    pageKey: 'galerie',
+    locale: locale as Locale,
+    path: '/localitatea/galerie',
+  });
 }
 
 const GALLERY_IMAGES = [

@@ -6,10 +6,30 @@ import { NewsSection } from '@/components/sections/news-section';
 import { UpcomingEventsSection } from '@/components/sections/upcoming-events-section';
 import { CityMapSection } from '@/components/sections/city-map-section';
 import { ExternalLinksSection } from '@/components/sections/external-links-section';
+import { generatePageMetadata } from '@/lib/seo/metadata';
+import { WebPageJsonLd } from '@/lib/seo/json-ld';
+import { type Locale } from '@/i18n/routing';
 
-export default function HomePage() {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  return generatePageMetadata({
+    pageKey: 'home',
+    locale: locale as Locale,
+    path: '',
+  });
+}
+
+export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  
   return (
     <>
+      <WebPageJsonLd
+        title="Primăria Municipiului Salonta"
+        description="Site-ul oficial al Primăriei Municipiului Salonta - Bihor, România"
+        url=""
+        locale={locale}
+      />
       {/* Hero Section with Image Carousel */}
       <HeroCarousel />
 

@@ -6,11 +6,16 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
 import { Link } from '@/components/ui/link';
+import { generatePageMetadata, BreadcrumbJsonLd } from '@/lib/seo';
+import type { Locale } from '@/lib/seo/config';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'navigation' });
-  return { title: t('taxeImpozite') };
+  return generatePageMetadata({
+    pageKey: 'taxeImpozite',
+    locale: locale as Locale,
+    path: '/informatii-publice/taxe-impozite',
+  });
 }
 
 // Types

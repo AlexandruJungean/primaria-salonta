@@ -1,15 +1,20 @@
-import { getTranslations } from 'next-intl/server';
+import { useTranslations } from 'next-intl';
 import { Hammer, Calendar, Download, FileText, Archive, FolderOpen } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
+import { generatePageMetadata, BreadcrumbJsonLd } from '@/lib/seo';
+import type { Locale } from '@/lib/seo/config';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'navigation' });
-  return { title: t('autorizatiiConstruire') };
+  return generatePageMetadata({
+    pageKey: 'autorizatiiConstruire',
+    locale: locale as Locale,
+    path: '/informatii-publice/autorizatii-construire',
+  });
 }
 
 // Types for building permits
@@ -117,6 +122,7 @@ function PermitsByYear({ permits, year }: { permits: PermitPeriod[]; year: numbe
 
 export default async function AutorizatiiConstruirePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
+  const { getTranslations } = await import('next-intl/server');
   const t = await getTranslations({ locale, namespace: 'navigation' });
   const tPage = await getTranslations({ locale, namespace: 'autorizatiiConstruirePage' });
 
@@ -126,6 +132,13 @@ export default async function AutorizatiiConstruirePage({ params }: { params: Pr
 
   return (
     <>
+      <BreadcrumbJsonLd
+        items={[
+          { name: 'Acasă', url: '/' },
+          { name: t('informatiiPublice'), url: '/informatii-publice' },
+          { name: t('autorizatiiConstruire'), url: '/informatii-publice/autorizatii-construire' },
+        ]}
+      />
       <Breadcrumbs items={[
         { label: t('informatiiPublice'), href: '/informatii-publice' },
         { label: t('autorizatiiConstruire') }

@@ -8,11 +8,16 @@ import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
 import Link from 'next/link';
 import { FormulareCollapsibleCategories } from './collapsible-categories';
+import { generatePageMetadata, BreadcrumbJsonLd } from '@/lib/seo';
+import type { Locale } from '@/lib/seo/config';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'navigation' });
-  return { title: t('formulare') };
+  return generatePageMetadata({
+    pageKey: 'formulare',
+    locale: locale as Locale,
+    path: '/informatii-publice/formulare',
+  });
 }
 
 export default function FormularePage() {

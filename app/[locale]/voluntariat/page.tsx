@@ -7,6 +7,7 @@ import { Section } from '@/components/ui/section';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
+import { WebPageJsonLd } from '@/lib/seo/json-ld';
 import { type LucideIcon } from 'lucide-react';
 
 // Types for volunteering documents
@@ -129,6 +130,11 @@ export default function VoluntariatPage() {
 
   return (
     <>
+      <WebPageJsonLd
+        title="Voluntariat"
+        description="Programul de voluntariat al Primăriei Municipiului Salonta"
+        url="/voluntariat"
+      />
       <Breadcrumbs items={[
         { label: t('voluntariat') }
       ]} />

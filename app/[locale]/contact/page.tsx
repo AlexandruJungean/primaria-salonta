@@ -1,5 +1,4 @@
 import { useTranslations } from 'next-intl';
-import { getTranslations } from 'next-intl/server';
 import { MapPin, Phone, Mail, Clock, Send } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section, SectionHeader } from '@/components/ui/section';
@@ -10,6 +9,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { CONTACT_INFO } from '@/lib/constants/contact';
 import { PUBLIC_HOURS } from '@/lib/constants/public-hours';
+import { generatePageMetadata } from '@/lib/seo/metadata';
+import { ContactPageJsonLd } from '@/lib/seo/json-ld';
+import { type Locale } from '@/i18n/routing';
 
 export async function generateMetadata({
   params,
@@ -17,11 +19,11 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'contact' });
-  return {
-    title: t('title'),
-    description: t('subtitle'),
-  };
+  return generatePageMetadata({
+    pageKey: 'contact',
+    locale: locale as Locale,
+    path: '/contact',
+  });
 }
 
 export default function ContactPage() {
@@ -30,6 +32,7 @@ export default function ContactPage() {
 
   return (
     <>
+      <ContactPageJsonLd />
       <Breadcrumbs items={[{ label: t('title') }]} />
 
       <Section background="white">

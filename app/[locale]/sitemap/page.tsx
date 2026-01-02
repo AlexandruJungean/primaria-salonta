@@ -1,26 +1,35 @@
 import { getTranslations } from 'next-intl/server';
-import { useTranslations } from 'next-intl';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
 import { Link } from '@/components/ui/link';
 import { MAIN_NAVIGATION, SECONDARY_NAVIGATION } from '@/lib/constants/navigation';
+import { generatePageMetadata } from '@/lib/seo/metadata';
+import { WebPageJsonLd } from '@/lib/seo/json-ld';
+import { type Locale } from '@/i18n/routing';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'footer' });
-  return { 
-    title: t('sitemap'),
-    description: 'Harta site-ului Primăriei Municipiului Salonta - toate paginile disponibile'
-  };
+  return generatePageMetadata({
+    pageKey: 'sitemap',
+    locale: locale as Locale,
+    path: '/sitemap',
+  });
 }
 
-export default function SitemapPage() {
-  const t = useTranslations('navigation');
+export default async function SitemapPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'navigation' });
 
   return (
     <>
+      <WebPageJsonLd
+        title="Harta Site-ului"
+        description="Harta completă a site-ului Primăriei Municipiului Salonta"
+        url="/sitemap"
+        locale={locale}
+      />
       <Breadcrumbs items={[{ label: 'Harta site-ului' }]} />
       <PageHeader titleKey="sitemap" namespace="footer" icon="map" />
 

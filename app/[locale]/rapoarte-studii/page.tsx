@@ -1,4 +1,3 @@
-import { getTranslations } from 'next-intl/server';
 import { useTranslations } from 'next-intl';
 import { ShieldCheck, FileSearch } from 'lucide-react';
 import { Container } from '@/components/ui/container';
@@ -7,11 +6,17 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
 import { Link } from '@/components/ui/link';
+import { generatePageMetadata } from '@/lib/seo/metadata';
+import { WebPageJsonLd } from '@/lib/seo/json-ld';
+import { type Locale } from '@/i18n/routing';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'navigation' });
-  return { title: t('rapoarteStudii') };
+  return generatePageMetadata({
+    pageKey: 'rapoarteStudii',
+    locale: locale as Locale,
+    path: '/rapoarte-studii',
+  });
 }
 
 const SECTIONS = [
@@ -25,6 +30,11 @@ export default function RapoarteStudiiPage() {
 
   return (
     <>
+      <WebPageJsonLd
+        title="Rapoarte și Studii"
+        description="Rapoarte de audit și studii ale Primăriei Municipiului Salonta"
+        url="/rapoarte-studii"
+      />
       <Breadcrumbs items={[{ label: t('rapoarteStudii') }]} />
       <PageHeader titleKey="rapoarteStudii" icon="fileSearch" />
 

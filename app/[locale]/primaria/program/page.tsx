@@ -6,6 +6,8 @@ import { Section, SectionHeader } from '@/components/ui/section';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PUBLIC_HOURS } from '@/lib/constants/public-hours';
+import { generatePageMetadata, BreadcrumbJsonLd } from '@/lib/seo';
+import type { Locale } from '@/lib/seo/config';
 
 export async function generateMetadata({
   params,
@@ -13,10 +15,11 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'publicHours' });
-  return {
-    title: t('title'),
-  };
+  return generatePageMetadata({
+    pageKey: 'program',
+    locale: locale as Locale,
+    path: '/primaria/program',
+  });
 }
 
 export default function PublicHoursPage() {

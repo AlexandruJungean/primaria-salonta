@@ -1,4 +1,3 @@
-import { getTranslations } from 'next-intl/server';
 import { useTranslations, useLocale } from 'next-intl';
 import Image from 'next/image';
 import { Link } from '@/components/ui/link';
@@ -9,6 +8,9 @@ import { Card, CardContent, CardImage } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { formatArticleDate } from '@/lib/utils/format-date';
+import { generatePageMetadata } from '@/lib/seo/metadata';
+import { WebPageJsonLd } from '@/lib/seo/json-ld';
+import { type Locale } from '@/i18n/routing';
 
 // Mock news data - will be replaced with Supabase data
 const MOCK_NEWS = [
@@ -92,11 +94,11 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'news' });
-  return {
-    title: t('title'),
-    description: t('subtitle'),
-  };
+  return generatePageMetadata({
+    pageKey: 'stiri',
+    locale: locale as Locale,
+    path: '/stiri',
+  });
 }
 
 export default function NewsPage() {
@@ -112,6 +114,11 @@ export default function NewsPage() {
 
   return (
     <>
+      <WebPageJsonLd
+        title="Știri și Anunțuri"
+        description="Știri și anunțuri de la Primăria Municipiului Salonta"
+        url="/stiri"
+      />
       <Breadcrumbs items={[{ label: t('title') }]} />
 
       <Section background="gray">

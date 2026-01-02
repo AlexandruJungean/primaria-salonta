@@ -8,6 +8,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
 import { LEADERSHIP, LEADERSHIP_INTRO } from '@/lib/constants/leadership';
+import { generatePageMetadata, BreadcrumbJsonLd } from '@/lib/seo';
+import type { Locale } from '@/lib/seo/config';
 
 export async function generateMetadata({
   params,
@@ -15,11 +17,11 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'leadership' });
-  return {
-    title: t('title'),
-    description: t('subtitle'),
-  };
+  return generatePageMetadata({
+    pageKey: 'conducere',
+    locale: locale as Locale,
+    path: '/primaria/conducere',
+  });
 }
 
 export default function LeadershipPage() {

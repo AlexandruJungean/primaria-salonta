@@ -8,11 +8,16 @@ import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
 import { LEADERSHIP } from '@/lib/constants/leadership';
 import { PUBLIC_HOURS } from '@/lib/constants/public-hours';
+import { generatePageMetadata, BreadcrumbJsonLd } from '@/lib/seo';
+import type { Locale } from '@/lib/seo/config';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'navigation' });
-  return { title: t('audiente') };
+  return generatePageMetadata({
+    pageKey: 'audiente',
+    locale: locale as Locale,
+    path: '/primaria/audiente',
+  });
 }
 
 export default function AudientePage() {

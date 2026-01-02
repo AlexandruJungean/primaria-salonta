@@ -7,11 +7,16 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
 import Link from 'next/link';
+import { generatePageMetadata, BreadcrumbJsonLd } from '@/lib/seo';
+import type { Locale } from '@/lib/seo/config';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'navigation' });
-  return { title: t('regulamente') };
+  return generatePageMetadata({
+    pageKey: 'regulamente',
+    locale: locale as Locale,
+    path: '/monitorul-oficial/regulamente',
+  });
 }
 
 // Regulamente principale - date din baza de date

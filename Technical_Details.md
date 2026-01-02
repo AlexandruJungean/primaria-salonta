@@ -13,6 +13,7 @@
 10. [Deployment Strategy](#10-deployment-strategy)
 11. [Database Schema](#11-database-schema)
 12. [Development Guidelines](#12-development-guidelines)
+13. [SEO Implementation](#13-seo-implementation)
 
 ---
 
@@ -4688,6 +4689,328 @@ module.exports = {
 
 ---
 
+## 13. SEO Implementation
+
+### 13.1 Overview
+
+The website implements comprehensive SEO following Google's best practices:
+
+- ✅ Dynamic metadata generation for all 80+ pages
+- ✅ JSON-LD structured data (Organization, Website, WebPage, Article, Event, LocalBusiness, FAQ, etc.)
+- ✅ Multilingual SEO with proper hreflang tags
+- ✅ Dynamic sitemap with priorities and change frequencies
+- ✅ Robots.txt with crawler-specific rules
+- ✅ PWA support with manifest.json
+- ✅ Open Graph and Twitter Card meta tags
+
+### 13.2 File Structure
+
+```
+lib/seo/
+├── config.ts        # Global SEO configuration and page-specific settings
+├── metadata.ts      # Metadata generation utilities
+├── json-ld.tsx      # JSON-LD structured data components
+└── index.ts         # Public exports
+
+app/
+├── sitemap.ts       # Dynamic sitemap generation
+├── robots.ts        # Robots.txt configuration
+└── manifest.ts      # PWA manifest (or public/manifest.json)
+
+public/
+├── favicon.ico
+├── icon-192x192.png
+├── icon-512x512.png
+├── apple-touch-icon.png
+├── og-image.png
+├── manifest.json
+└── browserconfig.xml
+```
+
+### 13.3 SEO Configuration
+
+```typescript
+// lib/seo/config.ts
+export const SEO_CONFIG = {
+  siteName: {
+    ro: 'Primăria Municipiului Salonta',
+    hu: 'Nagyszalonta Polgármesteri Hivatala',
+    en: 'Salonta City Hall',
+  },
+  siteUrl: 'https://salonta.ro',
+  defaultLocale: 'ro',
+  locales: ['ro', 'hu', 'en'],
+  
+  organization: {
+    name: 'Primăria Municipiului Salonta',
+    address: {
+      streetAddress: 'Str. Republicii nr. 1',
+      addressLocality: 'Salonta',
+      addressRegion: 'Bihor',
+      postalCode: '415500',
+      addressCountry: 'RO',
+    },
+    contact: {
+      phones: ['0359-409730', '0359-409731', '0259-373243'],
+      emails: ['primsal@rdslink.ro', 'primsal3@gmail.com'],
+    },
+    socialMedia: {
+      facebook: 'https://www.facebook.com/PrimariaSalontaNagyszalontaPolgarmesteriHivatala',
+      instagram: 'https://www.instagram.com/primaria.municipiuluisalonta/',
+      tiktok: 'https://www.tiktok.com/@primariasalonta_',
+    },
+  },
+  
+  images: {
+    ogImage: '/og-image.png',
+    logo: '/logo/logo.png',
+  },
+};
+```
+
+### 13.4 Metadata Generation
+
+Each page uses dynamic metadata generation:
+
+```typescript
+// Usage in page.tsx (Server Component)
+import { generatePageMetadata } from '@/lib/seo/metadata';
+import { WebPageJsonLd } from '@/lib/seo/json-ld';
+import type { Locale } from '@/i18n';
+
+type Props = {
+  params: { locale: Locale };
+};
+
+export async function generateMetadata({ params: { locale } }: Props) {
+  return generatePageMetadata({
+    pageKey: 'contact',     // Key from PAGE_SEO config
+    locale,
+    path: '/contact',
+  });
+}
+
+export default function ContactPage({ params: { locale } }: Props) {
+  return (
+    <>
+      <WebPageJsonLd locale={locale} pageKey="contact" url="/contact" />
+      {/* Page content */}
+    </>
+  );
+}
+```
+
+For document pages with year filtering:
+
+```typescript
+export async function generateMetadata({ params: { locale }, searchParams }: Props) {
+  return generateDocumentPageMetadata({
+    pageKey: 'buget',
+    locale,
+    path: '/informatii-publice/buget',
+    year: searchParams?.year,
+  });
+}
+```
+
+### 13.5 JSON-LD Structured Data
+
+Available components in `lib/seo/json-ld.tsx`:
+
+| Component | Schema Type | Use Case |
+|-----------|-------------|----------|
+| `OrganizationJsonLd` | Organization | Root layout (site-wide) |
+| `WebSiteJsonLd` | WebSite | Root layout with search action |
+| `BreadcrumbJsonLd` | BreadcrumbList | Navigation paths |
+| `WebPageJsonLd` | WebPage | Standard pages |
+| `ArticleJsonLd` | NewsArticle | News articles, announcements |
+| `EventJsonLd` | Event | Events pages |
+| `FAQJsonLd` | FAQPage | FAQ sections |
+| `GovernmentServiceJsonLd` | GovernmentService | Public services |
+| `PlaceJsonLd` | Place | Location pages |
+| `PersonJsonLd` | Person | Leadership, councilors |
+| `ContactPageJsonLd` | ContactPage | Contact page |
+| `LocalBusinessJsonLd` | GovernmentOffice | Business info |
+
+Example usage in root layout:
+
+```typescript
+// app/[locale]/layout.tsx
+export default function LocaleLayout({ children, params: { locale } }) {
+  return (
+    <>
+      <OrganizationJsonLd locale={locale} />
+      <WebSiteJsonLd locale={locale} />
+      {children}
+    </>
+  );
+}
+```
+
+### 13.6 Sitemap Configuration
+
+The sitemap (`app/sitemap.ts`) generates entries for all pages with:
+
+- **Priority levels**: 1.0 (homepage) → 0.3 (legal pages)
+- **Change frequencies**: daily, weekly, monthly, yearly
+- **Hreflang alternates** for all 3 languages
+- **X-default** pointing to Romanian
+
+```typescript
+// app/sitemap.ts
+export default function sitemap(): MetadataRoute.Sitemap {
+  const pages = [
+    { path: '', priority: 1.0, changeFrequency: 'daily' },
+    { path: '/stiri', priority: 0.95, changeFrequency: 'daily' },
+    { path: '/servicii-online', priority: 0.95, changeFrequency: 'weekly' },
+    // ... 80+ pages
+  ];
+  
+  // Generate multilingual entries with alternates
+  return pages.flatMap(page => 
+    locales.map(locale => ({
+      url: `${baseUrl}/${locale}${page.path}`,
+      lastModified: new Date(),
+      changeFrequency: page.changeFrequency,
+      priority: page.priority,
+      alternates: {
+        languages: {
+          ro: `${baseUrl}/ro${page.path}`,
+          hu: `${baseUrl}/hu${page.path}`,
+          en: `${baseUrl}/en${page.path}`,
+          'x-default': `${baseUrl}/ro${page.path}`,
+        },
+      },
+    }))
+  );
+}
+```
+
+### 13.7 Robots.txt Configuration
+
+```typescript
+// app/robots.ts
+export default function robots(): MetadataRoute.Robots {
+  return {
+    rules: [
+      { userAgent: '*', allow: '/', disallow: ['/api/', '/admin/', '/_next/'] },
+      { userAgent: 'Googlebot', allow: '/', disallow: ['/api/', '/admin/'] },
+      { userAgent: 'Googlebot-Image', allow: ['/images/', '/logo/', '/og-image.png'] },
+      { userAgent: 'Bingbot', allow: '/', disallow: ['/api/', '/admin/'] },
+    ],
+    sitemap: 'https://salonta.ro/sitemap.xml',
+    host: 'https://salonta.ro',
+  };
+}
+```
+
+### 13.8 PWA Support
+
+**manifest.json** provides:
+- App name in multiple languages
+- Icons (192x192, 512x512)
+- Theme colors matching brand
+- Display mode (standalone)
+
+**browserconfig.xml** provides:
+- Windows tile configuration
+- Square and wide tile images
+- Brand color for tiles
+
+### 13.9 Required Images
+
+| Image | Size | Purpose |
+|-------|------|---------|
+| `/favicon.ico` | 32x32 | Browser tab icon |
+| `/icon-192x192.png` | 192x192 | PWA icon (Android) |
+| `/icon-512x512.png` | 512x512 | PWA splash (Android) |
+| `/apple-touch-icon.png` | 180x180 | iOS home screen icon |
+| `/og-image.png` | 1200x630 | Social sharing default image |
+| `/logo/logo.png` | Any | Organization logo |
+
+### 13.10 Client Components SEO
+
+For pages that must be client components, create a `layout.tsx` wrapper:
+
+```typescript
+// app/[locale]/client-page/layout.tsx
+import { generatePageMetadata } from '@/lib/seo/metadata';
+import { WebPageJsonLd } from '@/lib/seo/json-ld';
+import type { Locale } from '@/i18n';
+
+type Props = {
+  params: { locale: Locale };
+};
+
+export async function generateMetadata({ params: { locale } }: Props) {
+  return generatePageMetadata({
+    pageKey: 'clientPage',
+    locale,
+    path: '/client-page',
+  });
+}
+
+export default function ClientPageLayout({
+  children,
+  params: { locale },
+}: {
+  children: React.ReactNode;
+  params: { locale: Locale };
+}) {
+  return (
+    <>
+      <WebPageJsonLd locale={locale} pageKey="clientPage" url="/client-page" />
+      {children}
+    </>
+  );
+}
+```
+
+This pattern is used for:
+- `/voluntariat`
+- `/camere-web`
+- `/evenimente`
+- `/agenti-economici`
+- All interactive pages requiring client-side state
+
+### 13.11 SEO Best Practices Implemented
+
+1. **Meta Tags**:
+   - Unique title and description per page
+   - Keywords relevant to content
+   - Canonical URLs to prevent duplicate content
+   - Open Graph tags for social sharing
+   - Twitter Cards for Twitter/X
+
+2. **Structured Data**:
+   - Organization schema in root layout
+   - WebSite schema with search action
+   - WebPage schema on all pages
+   - Article schema for news
+   - Event schema for events
+   - LocalBusiness for contact info
+
+3. **Multilingual SEO**:
+   - Proper hreflang tags
+   - x-default for language fallback
+   - Translated titles and descriptions
+   - Locale in URL structure
+
+4. **Technical SEO**:
+   - Fast loading (Next.js SSR/SSG)
+   - Mobile-friendly responsive design
+   - Proper heading hierarchy (H1-H6)
+   - Alt text on images
+   - Semantic HTML
+
+5. **Sitemap**:
+   - All pages included
+   - Priority based on importance
+   - Change frequency based on update patterns
+   - Multilingual alternates
+
+---
+
 ## Appendix: Quick Reference
 
 ### A. Environment Variables Checklist
@@ -4823,9 +5146,18 @@ When migrating from mock data to database:
 
 ---
 
-*Document Version: 2.0*
+*Document Version: 3.0*
 *Last Updated: January 2, 2026*
 *Author: Development Team*
+
+**Changelog v3.0:**
+- Added comprehensive SEO Implementation section (Section 13)
+- Documented metadata generation utilities
+- Documented JSON-LD structured data components
+- Documented sitemap and robots.txt configuration
+- Documented PWA support (manifest.json, browserconfig.xml)
+- Added client component SEO pattern with layout.tsx
+- Updated deployment from Vercel to Netlify
 
 **Changelog v2.0:**
 - Added comprehensive RLS policies for public read / admin write access

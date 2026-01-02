@@ -8,6 +8,8 @@ import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
 import { Link } from '@/components/ui/link';
 import { notFound } from 'next/navigation';
+import { generatePageMetadata, BreadcrumbJsonLd } from '@/lib/seo';
+import type { Locale } from '@/lib/seo/config';
 
 // Mock data - will be replaced with database content
 const SESSIONS_DATA: Record<string, {
@@ -185,14 +187,20 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const session = SESSIONS_DATA[slug];
   
   if (!session) {
-    return { title: 'Hotărâri' };
+    return generatePageMetadata({
+      pageKey: 'hotarari',
+      locale: locale as Locale,
+      path: '/consiliul-local/hotarari',
+    });
   }
 
-  const t = await getTranslations({ locale, namespace: 'navigation' });
-  return { 
-    title: `${t('hotarari')} - ${session.date}`,
-    description: `Hotărârile Consiliului Local din ședința din ${session.date}`
-  };
+  return generatePageMetadata({
+    pageKey: 'hotarari',
+    locale: locale as Locale,
+    path: `/consiliul-local/hotarari/${slug}`,
+    customTitle: `Hotărâri Consiliul Local - ${session.date}`,
+    customDescription: `Hotărârile Consiliului Local din ședința din ${session.date}`,
+  });
 }
 
 export async function generateStaticParams() {

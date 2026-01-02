@@ -6,11 +6,16 @@ import { Section } from '@/components/ui/section';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
+import { generatePageMetadata, BreadcrumbJsonLd } from '@/lib/seo';
+import type { Locale } from '@/lib/seo/config';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'navigation' });
-  return { title: t('anunturi') };
+  return generatePageMetadata({
+    pageKey: 'transparentaAnunturi',
+    locale: locale as Locale,
+    path: '/transparenta/anunturi',
+  });
 }
 
 // Types for announcements

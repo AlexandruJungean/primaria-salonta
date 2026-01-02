@@ -6,6 +6,8 @@ import { Section, SectionHeader } from '@/components/ui/section';
 import { Card, CardContent } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PAYMENT_LINKS, type PaymentLink } from '@/lib/constants/payment-links';
+import { generatePageMetadata, BreadcrumbJsonLd } from '@/lib/seo';
+import type { Locale } from '@/lib/seo/config';
 
 const ICONS = {
   CreditCard,
@@ -19,11 +21,11 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'payments' });
-  return {
-    title: t('title'),
-    description: t('subtitle'),
-  };
+  return generatePageMetadata({
+    pageKey: 'platiOnline',
+    locale: locale as Locale,
+    path: '/servicii-online/plati',
+  });
 }
 
 function PaymentCard({ payment, locale }: { payment: PaymentLink; locale: 'ro' | 'hu' | 'en' }) {
