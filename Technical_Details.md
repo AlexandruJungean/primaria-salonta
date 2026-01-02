@@ -3553,7 +3553,7 @@ export function AdminLoginForm({ error: initialError, redirectTo }: AdminLoginFo
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-              placeholder="admin@primaria-salonta.ro"
+              placeholder="admin@salonta.ro"
               required
             />
           </div>
@@ -4530,71 +4530,62 @@ npm install react-google-recaptcha-v3
 
 ## 10. Deployment Strategy
 
-### 10.1 Vercel Configuration
+### 10.1 Netlify Configuration
 
-```json
-// vercel.json
-{
-  "framework": "nextjs",
-  "regions": ["fra1"],
-  "env": {
-    "NEXT_PUBLIC_SITE_URL": "https://primaria-salonta.vercel.app"
-  },
-  "headers": [
-    {
-      "source": "/api/(.*)",
-      "headers": [
-        { "key": "Access-Control-Allow-Credentials", "value": "true" },
-        { "key": "Access-Control-Allow-Origin", "value": "*" },
-        { "key": "Access-Control-Allow-Methods", "value": "GET,POST,PUT,DELETE,OPTIONS" },
-        { "key": "Access-Control-Allow-Headers", "value": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version" }
-      ]
-    }
-  ]
-}
+The project is deployed on **Netlify**. Configuration is handled via `netlify.toml` in the project root:
+
+```toml
+# netlify.toml
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NEXT_PUBLIC_SITE_URL = "https://salonta.ro"
+  NODE_VERSION = "20"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[[headers]]
+  for = "/api/*"
+  [headers.values]
+    Access-Control-Allow-Credentials = "true"
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
+    Access-Control-Allow-Headers = "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
 ```
 
-### 10.2 CI/CD Pipeline
+### 10.2 Netlify Redirects
 
-```yaml
-# .github/workflows/deploy.yml
-name: Deploy to Vercel
+Redirects are configured in `public/_redirects`:
 
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-      
-      - name: Install dependencies
-        run: npm ci
-      
-      - name: Run linting
-        run: npm run lint
-      
-      - name: Run type check
-        run: npm run type-check
-      
-      - name: Build
-        run: npm run build
-        env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-          NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
 ```
+# Redirect www to non-www
+https://www.salonta.ro/* https://salonta.ro/:splat 301!
+
+# Force HTTPS
+http://salonta.ro/* https://salonta.ro/:splat 301!
+http://www.salonta.ro/* https://salonta.ro/:splat 301!
+```
+
+### 10.3 Environment Variables (Netlify Dashboard)
+
+Set the following environment variables in Netlify Dashboard → Site settings → Environment variables:
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`
+- `NEXT_PUBLIC_SITE_URL` = `https://salonta.ro`
+- `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`
 
 ---
 
@@ -4792,7 +4783,7 @@ When migrating from mock data to database:
    ```sql
    -- After user signs up via Supabase Auth
    INSERT INTO admin_users (id, email, full_name, role)
-   VALUES ('user-uuid-here', 'admin@primaria-salonta.ro', 'Administrator', 'super_admin');
+   VALUES ('user-uuid-here', 'admin@salonta.ro', 'Administrator', 'super_admin');
    ```
 
 4. **Migrate Mock Data**

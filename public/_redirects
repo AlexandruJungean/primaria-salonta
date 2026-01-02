@@ -1,8 +1,8 @@
 # Redirect www to non-www (or vice versa - choose one)
-# This redirects www.primaria-salonta.ro to primaria-salonta.ro
-https://www.primaria-salonta.ro/* https://primaria-salonta.ro/:splat 301!
+# This redirects www.salonta.ro to salonta.ro
+https://www.salonta.ro/* https://salonta.ro/:splat 301!
 
 # Force HTTPS
-http://primaria-salonta.ro/* https://primaria-salonta.ro/:splat 301!
-http://www.primaria-salonta.ro/* https://primaria-salonta.ro/:splat 301!
+http://salonta.ro/* https://salonta.ro/:splat 301!
+http://www.salonta.ro/* https://salonta.ro/:splat 301!
 

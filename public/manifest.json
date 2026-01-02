@@ -2,22 +2,26 @@
   "name": "Primăria Municipiului Salonta",
   "short_name": "Primăria Salonta",
   "description": "Site-ul oficial al Primăriei Municipiului Salonta - Informații pentru cetățeni, servicii online, transparență și comunitate.",
-  "start_url": "/ro",
+  "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#1e3a5f",
+  "background_color": "#F8F9FA",
+  "theme_color": "#1E3A5F",
   "orientation": "portrait-primary",
   "scope": "/",
   "lang": "ro",
+  "dir": "ltr",
+  "categories": ["government", "public services", "local government"],
+  "iarc_rating_id": "",
+  "prefer_related_applications": false,
   "icons": [
     {
-      "src": "/icon-192.png",
+      "src": "/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/icon-512.png",
+      "src": "/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
@@ -25,33 +29,42 @@
     {
       "src": "/apple-touch-icon.png",
       "sizes": "180x180",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     }
   ],
-  "categories": ["government", "public services"],
-  "screenshots": [],
   "shortcuts": [
     {
       "name": "Plăți Online",
       "short_name": "Plăți",
       "description": "Plătește taxe și impozite online",
-      "url": "/ro/servicii-online/plati",
-      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+      "url": "/ro/servicii-online/plati"
+    },
+    {
+      "name": "Formulare",
+      "short_name": "Formulare",
+      "description": "Descarcă formulare tipizate",
+      "url": "/ro/informatii-publice/formulare"
     },
     {
       "name": "Contact",
       "short_name": "Contact",
       "description": "Contactează Primăria",
-      "url": "/ro/contact",
-      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+      "url": "/ro/contact"
     },
     {
-      "name": "Program",
-      "short_name": "Program",
-      "description": "Program cu publicul",
-      "url": "/ro/primaria/program",
-      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+      "name": "Știri",
+      "short_name": "Știri",
+      "description": "Ultimele știri și anunțuri",
+      "url": "/ro/stiri"
     }
-  ]
+  ],
+  "related_applications": [],
+  "handle_links": "preferred",
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
+  "edge_side_panel": {
+    "preferred_width": 400
+  }
 }
-

@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -9,6 +9,13 @@ import '../globals.css';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { AccessibilityToolbar } from '@/components/features/accessibility-toolbar';
+import { 
+  SEO_CONFIG, 
+  OrganizationJsonLd, 
+  WebSiteJsonLd,
+  LocalBusinessJsonLd,
+  DEFAULT_ICONS,
+} from '@/lib/seo';
 
 const openSans = Open_Sans({
   variable: '--font-open-sans',
@@ -22,7 +29,18 @@ const sourceSerif = Source_Serif_4({
   display: 'swap',
 });
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://primaria-salonta.ro';
+const baseUrl = SEO_CONFIG.siteUrl;
+
+// Viewport configuration
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#1E3A5F' },
+    { media: '(prefers-color-scheme: dark)', color: '#1E3A5F' },
+  ],
+};
 
 export async function generateMetadata({
   params,
@@ -31,17 +49,18 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'metadata' });
+  const siteName = SEO_CONFIG.siteName[locale as keyof typeof SEO_CONFIG.siteName] || SEO_CONFIG.siteName.ro;
 
   return {
     title: {
       default: t('title'),
-      template: `%s | ${t('title')}`,
+      template: `%s | ${siteName}`,
     },
     description: t('description'),
     keywords: t('keywords'),
-    authors: [{ name: 'Primăria Municipiului Salonta' }],
-    creator: 'Primăria Municipiului Salonta',
-    publisher: 'Primăria Municipiului Salonta',
+    authors: [{ name: SEO_CONFIG.organization.name, url: baseUrl }],
+    creator: SEO_CONFIG.organization.name,
+    publisher: SEO_CONFIG.organization.name,
     formatDetection: {
       email: true,
       address: true,
@@ -61,103 +80,82 @@ export async function generateMetadata({
       title: t('title'),
       description: t('description'),
       url: baseUrl,
-      siteName: t('title'),
+      siteName: siteName,
       locale: locale === 'ro' ? 'ro_RO' : locale === 'hu' ? 'hu_HU' : 'en_US',
       type: 'website',
       images: [
         {
-          url: '/og-image.jpg',
+          url: `${baseUrl}${SEO_CONFIG.images.ogImage}`,
           width: 1200,
           height: 630,
           alt: t('title'),
+          type: 'image/jpeg',
         },
       ],
     },
     twitter: {
       card: 'summary_large_image',
+      site: SEO_CONFIG.twitter.handle,
+      creator: SEO_CONFIG.twitter.handle,
       title: t('title'),
       description: t('description'),
-      images: ['/og-image.jpg'],
+      images: [`${baseUrl}${SEO_CONFIG.images.ogImage}`],
     },
     robots: {
       index: true,
       follow: true,
+      nocache: false,
       googleBot: {
         index: true,
         follow: true,
+        noimageindex: false,
         'max-video-preview': -1,
         'max-image-preview': 'large',
         'max-snippet': -1,
       },
     },
-    icons: {
-      icon: [
-        { url: '/favicon.ico', sizes: 'any' },
-        { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
-        { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
-      ],
-      apple: [
-        { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
-      ],
-    },
+    icons: DEFAULT_ICONS,
     manifest: '/manifest.json',
+    category: 'government',
+    classification: 'Government Website',
+    referrer: 'origin-when-cross-origin',
     verification: {
       // Add Google Search Console verification when available
       // google: 'your-google-verification-code',
+      // yandex: 'your-yandex-verification-code',
+      // bing: 'your-bing-verification-code',
+    },
+    appleWebApp: {
+      capable: true,
+      statusBarStyle: 'default',
+      title: siteName,
+    },
+    other: {
+      'msapplication-TileColor': '#1E3A5F',
+      'msapplication-config': '/browserconfig.xml',
+      'theme-color': '#1E3A5F',
+      'color-scheme': 'light',
+      'format-detection': 'telephone=yes',
+      'mobile-web-app-capable': 'yes',
+      'apple-mobile-web-app-capable': 'yes',
+      'apple-mobile-web-app-status-bar-style': 'default',
+      // Geo tags for local SEO
+      'geo.region': 'RO-BH',
+      'geo.placename': 'Salonta',
+      'geo.position': `${SEO_CONFIG.organization.geo.latitude};${SEO_CONFIG.organization.geo.longitude}`,
+      'ICBM': `${SEO_CONFIG.organization.geo.latitude}, ${SEO_CONFIG.organization.geo.longitude}`,
     },
   };
 }
 
-// JSON-LD Structured Data for Organization
-function OrganizationJsonLd() {
-  const structuredData = {
-    '@context': 'https://schema.org',
-    '@type': 'GovernmentOrganization',
-    name: 'Primăria Municipiului Salonta',
-    alternateName: ['Salonta City Hall', 'Nagyszalonta Polgármesteri Hivatal'],
-    url: baseUrl,
-    logo: `${baseUrl}/logo/logo.png`,
-    image: `${baseUrl}/og-image.jpg`,
-    description: 'Site-ul oficial al Primăriei Municipiului Salonta - Informații pentru cetățeni, servicii online, transparență și comunitate.',
-    address: {
-      '@type': 'PostalAddress',
-      streetAddress: 'Str. Republicii nr. 1',
-      addressLocality: 'Salonta',
-      addressRegion: 'Bihor',
-      postalCode: '415500',
-      addressCountry: 'RO',
-    },
-    geo: {
-      '@type': 'GeoCoordinates',
-      latitude: 46.8,
-      longitude: 21.65,
-    },
-    contactPoint: [
-      {
-        '@type': 'ContactPoint',
-        telephone: '+40-728-105-762',
-        contactType: 'customer service',
-        email: 'primsal3@gmail.com',
-        availableLanguage: ['Romanian', 'Hungarian', 'English'],
-      },
-    ],
-    sameAs: [
-      'https://www.facebook.com/PrimariaSalontaNagyszalontaPolgarmesteriHivatala',
-      'https://www.instagram.com/primaria.municipiuluisalonta/',
-    ],
-    openingHoursSpecification: {
-      '@type': 'OpeningHoursSpecification',
-      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-      opens: '08:00',
-      closes: '16:00',
-    },
-  };
-
+// Combined JSON-LD Structured Data for maximum SEO
+function CombinedJsonLd({ locale }: { locale: string }) {
   return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-    />
+    <>
+      <OrganizationJsonLd />
+      <WebSiteJsonLd locale={locale} />
+      <LocalBusinessJsonLd />
+    </>
   );
 }
 
@@ -185,7 +183,7 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} suppressHydrationWarning>
       <head>
-        <OrganizationJsonLd />
+        <CombinedJsonLd locale={locale} />
       </head>
       <body className={`${openSans.variable} ${sourceSerif.variable} antialiased min-h-screen flex flex-col`}>
         <NextIntlClientProvider messages={messages}>
