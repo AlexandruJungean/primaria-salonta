@@ -41,8 +41,9 @@ Develop a modern, accessible, and legally compliant website for Primăria Salont
 
 ### 2.1 Contact Information
 - **Address:** Str. Republicii nr. 1, Salonta, Bihor, Romania
-- **Email:** primsal3@gmail.com
-- **Phone:** +40 728 105 762
+- **Email:** primsal@rdslink.ro, primsal3@gmail.com
+- **Phone:** 0359-409730, 0359-409731, 0259-373243
+- **Fax:** 0359-409733
 
 ### 2.2 Social Media Presence
 | Platform | URL |
@@ -625,30 +626,86 @@ The website should reflect:
 
 ---
 
-## 8.5 Admin Dashboard (Future Development)
+## 8.5 Admin Dashboard (Production Ready)
 
 ### Overview
-A dedicated admin dashboard will be developed after the main website is approved. This dashboard will allow City Hall staff to manage all dynamic content without technical knowledge.
+A dedicated admin dashboard for City Hall staff to manage all dynamic content without technical knowledge. The dashboard uses Supabase Auth for authentication and Row Level Security (RLS) for authorization.
+
+### Authentication & Authorization
+
+| Role | Permissions | Description |
+|------|-------------|-------------|
+| **ADMIN** | Full CRUD access | Can create, read, update, delete all content |
+| **Public** | Read-only access | Can view all published content (no authentication required) |
+
+**Security Rules:**
+- ✅ All content is **publicly readable** (no authentication needed)
+- 🔐 Insert, Update, Delete operations require **ADMIN role**
+- 🔑 Admin authentication via Supabase Auth (email/password)
+- 🛡️ Row Level Security (RLS) policies enforce permissions at database level
 
 ### Admin Dashboard Features
 
 | Feature | Description | Priority |
 |---------|-------------|----------|
-| 🔐 **Authentication** | Secure login with role-based access (Admin, Editor, Viewer) | High |
-| 📰 **News Builder** | Drag-and-drop page builder for news articles (see below) | High |
+| 🔐 **Authentication** | Secure login with ADMIN role verification | High |
+| 📄 **Document Manager** | Upload, organize, compress PDFs and documents | High |
+| 🖼️ **Media Library** | Image upload with automatic compression | High |
+| ⚠️ **Confirmation Dialogs** | "Are you sure?" prompts for edit/delete actions | High |
+| 📰 **News Builder** | Drag-and-drop page builder for news articles | High |
 | 🌐 **Auto-Translation** | One-click translation via Google Cloud Translation API | High |
-| 📄 **Document Manager** | Upload and organize PDFs (HCL, dispositions, forms) | High |
-| 🖼️ **Media Library** | Image upload and gallery management | Medium |
-| 📊 **Dashboard** | Overview of content status, recent activity, analytics | Medium |
+| 📊 **Dashboard** | Overview of content status, recent activity | Medium |
 | 📅 **Scheduling** | Schedule content publication/expiration | Medium |
-| 🔍 **Search & Filter** | Find content by type, date, status | Medium |
+| 🔍 **Search & Filter** | Find content by type, date, status, year | Medium |
 | 📈 **Analytics** | View page views, downloads, popular content | Low |
 | 📧 **Notifications** | Email alerts for new petitions, contact messages | Low |
-| 👥 **Councilors** | Add/edit local council members, parties, photos (Admin only) | High |
-| 🏛️ **Commissions** | Create/edit specialty committees, assign members (Admin only) | High |
-| 📋 **Declarations** | Upload wealth & interest declarations per person/year (Admin only) | High |
-| 🏗️ **Regional Program** | Manage EU projects, status updates, documents (Admin only) | High |
-| 📁 **Local Projects** | Manage local projects by year/category (Admin only) | High |
+| 👥 **Councilors** | Add/edit local council members, parties, photos | High |
+| 🏛️ **Commissions** | Create/edit specialty committees, assign members | High |
+| 📋 **Declarations** | Upload wealth & interest declarations per person/year | High |
+| 🏗️ **Regional Program** | Manage EU projects, status updates, documents | High |
+| 📁 **Local Projects** | Manage local projects by year/category | High |
+
+### File Upload & Compression
+
+| File Type | Max Size (Before) | Compressed To | Format |
+|-----------|------------------|---------------|--------|
+| **Images** | 10 MB | < 500 KB | WebP (quality: 80) |
+| **PDFs** | 50 MB | Optimized | PDF (reduced quality images) |
+| **Documents** | 20 MB | Original | DOC, DOCX, XLS, XLSX |
+
+**Compression Features:**
+- 🖼️ **Image Compression**: Automatic WebP conversion with quality optimization
+- 📄 **PDF Optimization**: Reduce file size while maintaining readability
+- 📊 **Progress Indicator**: Show compression progress during upload
+- ✅ **Preview**: Show before/after file sizes
+- 🔄 **Batch Upload**: Support multiple file uploads with queue
+
+### Confirmation Dialog Component
+
+All destructive operations (edit, delete) require user confirmation:
+
+```
+┌─────────────────────────────────────────────┐
+│  ⚠️ Confirmare acțiune                       │
+├─────────────────────────────────────────────┤
+│                                             │
+│  Sunteți sigur că doriți să ștergeți        │
+│  acest document?                            │
+│                                             │
+│  "HCL nr. 123/2024 - Titlul documentului"   │
+│                                             │
+│  Această acțiune nu poate fi anulată.       │
+│                                             │
+├─────────────────────────────────────────────┤
+│         [Anulează]    [🗑️ Șterge]           │
+└─────────────────────────────────────────────┘
+```
+
+**Dialog Types:**
+- 🗑️ **Delete Confirmation**: Red destructive button, requires typing confirmation for critical items
+- ✏️ **Edit Confirmation**: Yellow warning button for unsaved changes
+- 📤 **Publish Confirmation**: Green action button for publishing content
+- 🔄 **Bulk Action Confirmation**: For operations affecting multiple items
 
 ### 📰 News Builder (Page Builder for Articles)
 
@@ -837,7 +894,35 @@ Dedicated interface for managing EU-funded projects under the Regional Program N
 - Admin panel setup deferred until project approval
 - Focus on design, layout, and functionality demonstration
 
-### 12.0.1 Pages Using Mock Data (To Be Migrated to Database)
+### 12.0.1 Database Migration Plan
+
+**Status:** 🟡 Ready for Migration
+
+All pages currently using mock data will be migrated to fetch data from Supabase. The migration follows this process:
+
+**Migration Steps:**
+1. ✅ Create database tables with proper schema (see Technical_Details.md)
+2. ✅ Configure Row Level Security (RLS) policies
+3. ⏳ Build Admin Dashboard for content management
+4. ⏳ Migrate mock data to database
+5. ⏳ Update page components to fetch from Supabase
+6. ⏳ Test public read access and admin write access
+
+**Admin Panel Routes:**
+```
+/admin                    → Dashboard overview
+/admin/login              → Authentication
+/admin/documents          → Document manager (all categories)
+/admin/news               → News article builder
+/admin/events             → Events management
+/admin/gallery            → Media library
+/admin/councilors         → Council members
+/admin/commissions        → Specialty committees
+/admin/declarations       → Wealth declarations
+/admin/settings           → Site settings
+```
+
+### 12.0.2 Pages Using Mock Data (To Be Migrated to Database)
 
 **Note:** All pages that display documents, images, or dynamic content will fetch data from the Supabase database. The table below shows all pages with mock data that need migration.
 
@@ -948,7 +1033,15 @@ Dedicated interface for managing EU-funded projects under the Regional Program N
 
 ---
 
-*Document Version: 1.0*
-*Last Updated: December 25, 2025*
+*Document Version: 2.0*
+*Last Updated: January 2, 2026*
 *Author: Development Team*
+
+**Changelog v2.0:**
+- Added Admin Dashboard specifications with authentication
+- Added file compression service details
+- Added confirmation dialog requirements
+- Updated contact information with correct phone numbers
+- Added database migration plan
+- Added RLS policies documentation
 

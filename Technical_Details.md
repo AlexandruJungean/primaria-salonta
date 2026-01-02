@@ -227,7 +227,10 @@ web-primaria-salonta/
 │   └── icons/
 ├── styles/
 │   └── fonts/                       # Local fonts if needed
-├── middleware.ts                    # Locale detection
+├── i18n/
+│   ├── routing.ts                   # Locale routing configuration
+│   ├── request.ts                   # Request-based i18n setup
+│   └── navigation.ts                # Navigation helpers
 ├── next.config.ts
 ├── tailwind.config.ts
 ├── tsconfig.json
@@ -991,26 +994,189 @@ CREATE TABLE covid_updates (
 
 ### 3.2 Row Level Security (RLS) Policies
 
+**Security Model:**
+- ✅ **Public Read Access**: All published content is readable without authentication
+- 🔐 **Admin Write Access**: Only users with ADMIN role can insert/update/delete
+- 🛡️ **RLS Enforcement**: Policies enforced at database level (cannot be bypassed)
+
 ```sql
+-- ============================================
+-- ADMIN USERS TABLE
+-- ============================================
+
+CREATE TABLE admin_users (
+  id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  email TEXT UNIQUE NOT NULL,
+  full_name TEXT NOT NULL,
+  role TEXT DEFAULT 'admin' CHECK (role IN ('admin', 'super_admin')),
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Enable RLS on admin_users
+ALTER TABLE admin_users ENABLE ROW LEVEL SECURITY;
+
+-- Only admins can view admin users list
+CREATE POLICY "Admins can view admin users"
+ON admin_users FOR SELECT
+USING (
+  auth.uid() IN (SELECT id FROM admin_users WHERE is_active = true)
+);
+
+-- Only super_admin can manage admin users
+CREATE POLICY "Super admins can manage admin users"
+ON admin_users FOR ALL
+USING (
+  auth.uid() IN (SELECT id FROM admin_users WHERE role = 'super_admin' AND is_active = true)
+);
+
+-- ============================================
+-- HELPER FUNCTION: Check if user is admin
+-- ============================================
+
+CREATE OR REPLACE FUNCTION is_admin()
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN EXISTS (
+    SELECT 1 FROM admin_users 
+    WHERE id = auth.uid() 
+    AND is_active = true
+  );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- ============================================
+-- RLS POLICIES FOR ALL CONTENT TABLES
+-- ============================================
+
 -- Enable RLS on all tables
 ALTER TABLE articles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE documents ENABLE ROW LEVEL SECURITY;
 ALTER TABLE events ENABLE ROW LEVEL SECURITY;
--- ... etc
+ALTER TABLE news ENABLE ROW LEVEL SECURITY;
+ALTER TABLE council_decisions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE dispositions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE regulations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE budget_documents ENABLE ROW LEVEL SECURITY;
+ALTER TABLE building_permits ENABLE ROW LEVEL SECURITY;
+ALTER TABLE urbanism_certificates ENABLE ROW LEVEL SECURITY;
+ALTER TABLE urban_plans ENABLE ROW LEVEL SECURITY;
+ALTER TABLE job_vacancies ENABLE ROW LEVEL SECURITY;
+ALTER TABLE councilors ENABLE ROW LEVEL SECURITY;
+ALTER TABLE council_commissions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE councilor_declarations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE wealth_declarations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE downloadable_forms ENABLE ROW LEVEL SECURITY;
+ALTER TABLE gallery_albums ENABLE ROW LEVEL SECURITY;
+ALTER TABLE gallery_images ENABLE ROW LEVEL SECURITY;
+ALTER TABLE regional_program_projects ENABLE ROW LEVEL SECURITY;
+ALTER TABLE regional_program_documents ENABLE ROW LEVEL SECURITY;
+ALTER TABLE local_projects_years ENABLE ROW LEVEL SECURITY;
+ALTER TABLE transparency_reports ENABLE ROW LEVEL SECURITY;
+ALTER TABLE contact_submissions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE petitions ENABLE ROW LEVEL SECURITY;
 
--- Public read access for published content
-CREATE POLICY "Public can view published articles" 
-ON articles FOR SELECT 
+-- ============================================
+-- TEMPLATE: Apply to ALL content tables
+-- ============================================
+
+-- DOCUMENTS TABLE (example - repeat for all tables)
+-- Public can view all published documents (no auth required)
+CREATE POLICY "Public read access for documents"
+ON documents FOR SELECT
 USING (published = true);
 
-CREATE POLICY "Public can view published documents" 
-ON documents FOR SELECT 
-USING (published = true);
+-- Admins can view all documents (including unpublished)
+CREATE POLICY "Admin read all documents"
+ON documents FOR SELECT
+USING (is_admin());
 
--- Admin full access
-CREATE POLICY "Admins have full access to articles" 
-ON articles FOR ALL 
-USING (auth.jwt() ->> 'role' = 'admin');
+-- Admins can insert documents
+CREATE POLICY "Admin insert documents"
+ON documents FOR INSERT
+WITH CHECK (is_admin());
+
+-- Admins can update documents
+CREATE POLICY "Admin update documents"
+ON documents FOR UPDATE
+USING (is_admin())
+WITH CHECK (is_admin());
+
+-- Admins can delete documents
+CREATE POLICY "Admin delete documents"
+ON documents FOR DELETE
+USING (is_admin());
+
+-- ============================================
+-- APPLY SAME PATTERN TO ALL TABLES
+-- ============================================
+
+-- NEWS
+CREATE POLICY "Public read news" ON news FOR SELECT USING (published = true);
+CREATE POLICY "Admin read all news" ON news FOR SELECT USING (is_admin());
+CREATE POLICY "Admin insert news" ON news FOR INSERT WITH CHECK (is_admin());
+CREATE POLICY "Admin update news" ON news FOR UPDATE USING (is_admin()) WITH CHECK (is_admin());
+CREATE POLICY "Admin delete news" ON news FOR DELETE USING (is_admin());
+
+-- COUNCIL_DECISIONS
+CREATE POLICY "Public read council_decisions" ON council_decisions FOR SELECT USING (published = true);
+CREATE POLICY "Admin read all council_decisions" ON council_decisions FOR SELECT USING (is_admin());
+CREATE POLICY "Admin insert council_decisions" ON council_decisions FOR INSERT WITH CHECK (is_admin());
+CREATE POLICY "Admin update council_decisions" ON council_decisions FOR UPDATE USING (is_admin()) WITH CHECK (is_admin());
+CREATE POLICY "Admin delete council_decisions" ON council_decisions FOR DELETE USING (is_admin());
+
+-- DISPOSITIONS
+CREATE POLICY "Public read dispositions" ON dispositions FOR SELECT USING (published = true);
+CREATE POLICY "Admin read all dispositions" ON dispositions FOR SELECT USING (is_admin());
+CREATE POLICY "Admin insert dispositions" ON dispositions FOR INSERT WITH CHECK (is_admin());
+CREATE POLICY "Admin update dispositions" ON dispositions FOR UPDATE USING (is_admin()) WITH CHECK (is_admin());
+CREATE POLICY "Admin delete dispositions" ON dispositions FOR DELETE USING (is_admin());
+
+-- BUDGET_DOCUMENTS
+CREATE POLICY "Public read budget_documents" ON budget_documents FOR SELECT USING (published = true);
+CREATE POLICY "Admin read all budget_documents" ON budget_documents FOR SELECT USING (is_admin());
+CREATE POLICY "Admin insert budget_documents" ON budget_documents FOR INSERT WITH CHECK (is_admin());
+CREATE POLICY "Admin update budget_documents" ON budget_documents FOR UPDATE USING (is_admin()) WITH CHECK (is_admin());
+CREATE POLICY "Admin delete budget_documents" ON budget_documents FOR DELETE USING (is_admin());
+
+-- COUNCILORS (always public - no published flag needed)
+CREATE POLICY "Public read councilors" ON councilors FOR SELECT USING (true);
+CREATE POLICY "Admin insert councilors" ON councilors FOR INSERT WITH CHECK (is_admin());
+CREATE POLICY "Admin update councilors" ON councilors FOR UPDATE USING (is_admin()) WITH CHECK (is_admin());
+CREATE POLICY "Admin delete councilors" ON councilors FOR DELETE USING (is_admin());
+
+-- GALLERY_ALBUMS
+CREATE POLICY "Public read gallery_albums" ON gallery_albums FOR SELECT USING (published = true);
+CREATE POLICY "Admin read all gallery_albums" ON gallery_albums FOR SELECT USING (is_admin());
+CREATE POLICY "Admin insert gallery_albums" ON gallery_albums FOR INSERT WITH CHECK (is_admin());
+CREATE POLICY "Admin update gallery_albums" ON gallery_albums FOR UPDATE USING (is_admin()) WITH CHECK (is_admin());
+CREATE POLICY "Admin delete gallery_albums" ON gallery_albums FOR DELETE USING (is_admin());
+
+-- GALLERY_IMAGES (public if album is public)
+CREATE POLICY "Public read gallery_images" ON gallery_images FOR SELECT
+USING (
+  EXISTS (
+    SELECT 1 FROM gallery_albums 
+    WHERE gallery_albums.id = gallery_images.album_id 
+    AND gallery_albums.published = true
+  )
+);
+CREATE POLICY "Admin manage gallery_images" ON gallery_images FOR ALL USING (is_admin());
+
+-- CONTACT_SUBMISSIONS (only admins can view, anyone can insert)
+CREATE POLICY "Public insert contact" ON contact_submissions FOR INSERT WITH CHECK (true);
+CREATE POLICY "Admin read contact" ON contact_submissions FOR SELECT USING (is_admin());
+CREATE POLICY "Admin update contact" ON contact_submissions FOR UPDATE USING (is_admin());
+CREATE POLICY "Admin delete contact" ON contact_submissions FOR DELETE USING (is_admin());
+
+-- PETITIONS (similar to contact)
+CREATE POLICY "Public insert petitions" ON petitions FOR INSERT WITH CHECK (true);
+CREATE POLICY "Admin read petitions" ON petitions FOR SELECT USING (is_admin());
+CREATE POLICY "Admin update petitions" ON petitions FOR UPDATE USING (is_admin());
+CREATE POLICY "Admin delete petitions" ON petitions FOR DELETE USING (is_admin());
+
+-- Repeat similar patterns for all other tables...
 ```
 
 ### 3.3 Storage Buckets
@@ -1024,25 +1190,763 @@ supabase-storage/
 └── private/                # Internal documents (private)
 ```
 
+### 3.4 Storage Bucket Policies
+
+```sql
+-- Public read access for all public buckets
+CREATE POLICY "Public read documents"
+ON storage.objects FOR SELECT
+USING (bucket_id IN ('documents', 'images', 'gallery', 'avatars'));
+
+-- Admin upload/delete access
+CREATE POLICY "Admin upload files"
+ON storage.objects FOR INSERT
+WITH CHECK (is_admin());
+
+CREATE POLICY "Admin update files"
+ON storage.objects FOR UPDATE
+USING (is_admin());
+
+CREATE POLICY "Admin delete files"
+ON storage.objects FOR DELETE
+USING (is_admin());
+```
+
+---
+
+## 3.5 File Compression & Upload Service
+
+### 3.5.1 Image Compression Service
+
+```typescript
+// lib/services/image-compression.ts
+import imageCompression from 'browser-image-compression';
+
+interface CompressionOptions {
+  maxSizeMB: number;
+  maxWidthOrHeight: number;
+  useWebWorker: boolean;
+  fileType: 'image/webp' | 'image/jpeg' | 'image/png';
+  initialQuality: number;
+}
+
+const DEFAULT_OPTIONS: CompressionOptions = {
+  maxSizeMB: 0.5,           // 500KB max
+  maxWidthOrHeight: 1920,   // Max dimension
+  useWebWorker: true,       // Use web worker for performance
+  fileType: 'image/webp',   // Convert to WebP
+  initialQuality: 0.8,      // 80% quality
+};
+
+export interface CompressionResult {
+  originalFile: File;
+  compressedFile: File;
+  originalSize: number;
+  compressedSize: number;
+  compressionRatio: number;
+}
+
+export async function compressImage(
+  file: File,
+  options: Partial<CompressionOptions> = {}
+): Promise<CompressionResult> {
+  const mergedOptions = { ...DEFAULT_OPTIONS, ...options };
+  
+  const originalSize = file.size;
+  
+  try {
+    const compressedFile = await imageCompression(file, {
+      maxSizeMB: mergedOptions.maxSizeMB,
+      maxWidthOrHeight: mergedOptions.maxWidthOrHeight,
+      useWebWorker: mergedOptions.useWebWorker,
+      fileType: mergedOptions.fileType,
+      initialQuality: mergedOptions.initialQuality,
+    });
+
+    // Rename file with .webp extension
+    const newFileName = file.name.replace(/\.[^/.]+$/, '.webp');
+    const renamedFile = new File([compressedFile], newFileName, {
+      type: 'image/webp',
+    });
+
+    return {
+      originalFile: file,
+      compressedFile: renamedFile,
+      originalSize,
+      compressedSize: renamedFile.size,
+      compressionRatio: ((originalSize - renamedFile.size) / originalSize) * 100,
+    };
+  } catch (error) {
+    console.error('Image compression failed:', error);
+    throw error;
+  }
+}
+
+export async function compressImages(
+  files: File[],
+  options?: Partial<CompressionOptions>,
+  onProgress?: (progress: number, current: number, total: number) => void
+): Promise<CompressionResult[]> {
+  const results: CompressionResult[] = [];
+  
+  for (let i = 0; i < files.length; i++) {
+    const result = await compressImage(files[i], options);
+    results.push(result);
+    onProgress?.(((i + 1) / files.length) * 100, i + 1, files.length);
+  }
+  
+  return results;
+}
+```
+
+### 3.5.2 PDF Optimization Service (Server-Side)
+
+```typescript
+// lib/services/pdf-compression.ts
+// Note: PDF compression happens on the server using pdf-lib
+
+import { PDFDocument } from 'pdf-lib';
+
+export interface PDFCompressionResult {
+  originalSize: number;
+  compressedSize: number;
+  compressedBuffer: ArrayBuffer;
+}
+
+export async function compressPDF(
+  pdfBuffer: ArrayBuffer
+): Promise<PDFCompressionResult> {
+  const originalSize = pdfBuffer.byteLength;
+  
+  // Load the PDF
+  const pdfDoc = await PDFDocument.load(pdfBuffer, {
+    ignoreEncryption: true,
+  });
+  
+  // Save with compression options
+  const compressedBytes = await pdfDoc.save({
+    useObjectStreams: true,      // Compress object streams
+    addDefaultPage: false,       // Don't add empty pages
+    objectsPerTick: 50,          // Process in batches
+  });
+  
+  return {
+    originalSize,
+    compressedSize: compressedBytes.byteLength,
+    compressedBuffer: compressedBytes.buffer,
+  };
+}
+```
+
+### 3.5.3 File Upload Hook with Compression
+
+```typescript
+// hooks/use-file-upload.ts
+'use client';
+
+import { useState } from 'react';
+import { createClient } from '@/lib/supabase/client';
+import { compressImage, CompressionResult } from '@/lib/services/image-compression';
+
+interface UploadOptions {
+  bucket: 'documents' | 'images' | 'gallery' | 'avatars';
+  path?: string;
+  compress?: boolean;
+}
+
+interface UploadProgress {
+  status: 'idle' | 'compressing' | 'uploading' | 'complete' | 'error';
+  progress: number;
+  originalSize?: number;
+  compressedSize?: number;
+  error?: string;
+}
+
+interface UploadResult {
+  url: string;
+  path: string;
+  originalSize: number;
+  finalSize: number;
+}
+
+export function useFileUpload() {
+  const [uploadProgress, setUploadProgress] = useState<UploadProgress>({
+    status: 'idle',
+    progress: 0,
+  });
+  
+  const supabase = createClient();
+
+  const uploadFile = async (
+    file: File,
+    options: UploadOptions
+  ): Promise<UploadResult> => {
+    const { bucket, path = '', compress = true } = options;
+    
+    let fileToUpload = file;
+    let originalSize = file.size;
+    
+    // Compress images if enabled
+    if (compress && file.type.startsWith('image/')) {
+      setUploadProgress({
+        status: 'compressing',
+        progress: 0,
+        originalSize: file.size,
+      });
+      
+      const result = await compressImage(file);
+      fileToUpload = result.compressedFile;
+      
+      setUploadProgress({
+        status: 'compressing',
+        progress: 100,
+        originalSize: result.originalSize,
+        compressedSize: result.compressedSize,
+      });
+    }
+    
+    // Generate unique filename
+    const timestamp = Date.now();
+    const safeName = fileToUpload.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+    const filePath = path ? `${path}/${timestamp}-${safeName}` : `${timestamp}-${safeName}`;
+    
+    // Upload to Supabase Storage
+    setUploadProgress((prev) => ({
+      ...prev,
+      status: 'uploading',
+      progress: 0,
+    }));
+    
+    const { data, error } = await supabase.storage
+      .from(bucket)
+      .upload(filePath, fileToUpload, {
+        cacheControl: '3600',
+        upsert: false,
+      });
+    
+    if (error) {
+      setUploadProgress({
+        status: 'error',
+        progress: 0,
+        error: error.message,
+      });
+      throw error;
+    }
+    
+    // Get public URL
+    const { data: urlData } = supabase.storage
+      .from(bucket)
+      .getPublicUrl(data.path);
+    
+    setUploadProgress({
+      status: 'complete',
+      progress: 100,
+      originalSize,
+      compressedSize: fileToUpload.size,
+    });
+    
+    return {
+      url: urlData.publicUrl,
+      path: data.path,
+      originalSize,
+      finalSize: fileToUpload.size,
+    };
+  };
+
+  const uploadFiles = async (
+    files: File[],
+    options: UploadOptions,
+    onProgress?: (current: number, total: number) => void
+  ): Promise<UploadResult[]> => {
+    const results: UploadResult[] = [];
+    
+    for (let i = 0; i < files.length; i++) {
+      const result = await uploadFile(files[i], options);
+      results.push(result);
+      onProgress?.(i + 1, files.length);
+    }
+    
+    return results;
+  };
+
+  const resetProgress = () => {
+    setUploadProgress({ status: 'idle', progress: 0 });
+  };
+
+  return {
+    uploadFile,
+    uploadFiles,
+    uploadProgress,
+    resetProgress,
+  };
+}
+```
+
+### 3.5.4 Required Dependencies
+
+```bash
+npm install browser-image-compression pdf-lib
+```
+
+---
+
+## 3.6 Admin Confirmation Dialog Component
+
+### 3.6.1 Confirmation Dialog Component
+
+```typescript
+// components/admin/confirmation-dialog.tsx
+'use client';
+
+import { useState } from 'react';
+import { AlertTriangle, Trash2, Edit3, CheckCircle, X } from 'lucide-react';
+import { cn } from '@/lib/utils/cn';
+
+type DialogVariant = 'delete' | 'edit' | 'publish' | 'warning';
+
+interface ConfirmationDialogProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: () => void | Promise<void>;
+  variant?: DialogVariant;
+  title: string;
+  description: string;
+  itemName?: string;
+  confirmText?: string;
+  cancelText?: string;
+  requireTypedConfirmation?: boolean;
+  confirmationPhrase?: string;
+  isLoading?: boolean;
+}
+
+const VARIANT_CONFIG = {
+  delete: {
+    icon: Trash2,
+    iconBg: 'bg-red-100',
+    iconColor: 'text-red-600',
+    buttonBg: 'bg-red-600 hover:bg-red-700',
+    buttonText: 'Șterge',
+  },
+  edit: {
+    icon: Edit3,
+    iconBg: 'bg-amber-100',
+    iconColor: 'text-amber-600',
+    buttonBg: 'bg-amber-600 hover:bg-amber-700',
+    buttonText: 'Salvează modificările',
+  },
+  publish: {
+    icon: CheckCircle,
+    iconBg: 'bg-green-100',
+    iconColor: 'text-green-600',
+    buttonBg: 'bg-green-600 hover:bg-green-700',
+    buttonText: 'Publică',
+  },
+  warning: {
+    icon: AlertTriangle,
+    iconBg: 'bg-amber-100',
+    iconColor: 'text-amber-600',
+    buttonBg: 'bg-amber-600 hover:bg-amber-700',
+    buttonText: 'Continuă',
+  },
+};
+
+export function ConfirmationDialog({
+  isOpen,
+  onClose,
+  onConfirm,
+  variant = 'warning',
+  title,
+  description,
+  itemName,
+  confirmText,
+  cancelText = 'Anulează',
+  requireTypedConfirmation = false,
+  confirmationPhrase = 'CONFIRM',
+  isLoading = false,
+}: ConfirmationDialogProps) {
+  const [typedConfirmation, setTypedConfirmation] = useState('');
+  const config = VARIANT_CONFIG[variant];
+  const Icon = config.icon;
+  
+  const canConfirm = requireTypedConfirmation
+    ? typedConfirmation === confirmationPhrase
+    : true;
+
+  const handleConfirm = async () => {
+    if (!canConfirm || isLoading) return;
+    await onConfirm();
+    setTypedConfirmation('');
+  };
+
+  const handleClose = () => {
+    if (isLoading) return;
+    setTypedConfirmation('');
+    onClose();
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      {/* Backdrop */}
+      <div
+        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        onClick={handleClose}
+      />
+      
+      {/* Dialog */}
+      <div className="relative bg-white rounded-xl shadow-2xl w-full max-w-md mx-4 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        {/* Close button */}
+        <button
+          onClick={handleClose}
+          disabled={isLoading}
+          className="absolute top-4 right-4 p-1 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition-colors disabled:opacity-50"
+        >
+          <X className="w-5 h-5" />
+        </button>
+
+        {/* Content */}
+        <div className="p-6">
+          {/* Icon */}
+          <div className={cn('w-12 h-12 rounded-full flex items-center justify-center mb-4', config.iconBg)}>
+            <Icon className={cn('w-6 h-6', config.iconColor)} />
+          </div>
+
+          {/* Title */}
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            {title}
+          </h3>
+
+          {/* Description */}
+          <p className="text-gray-600 mb-4">
+            {description}
+          </p>
+
+          {/* Item name highlight */}
+          {itemName && (
+            <div className="bg-gray-100 rounded-lg p-3 mb-4">
+              <p className="text-sm font-medium text-gray-800 truncate">
+                "{itemName}"
+              </p>
+            </div>
+          )}
+
+          {/* Typed confirmation for critical actions */}
+          {requireTypedConfirmation && (
+            <div className="mb-4">
+              <p className="text-sm text-gray-600 mb-2">
+                Tastați <span className="font-mono font-bold text-red-600">{confirmationPhrase}</span> pentru a confirma:
+              </p>
+              <input
+                type="text"
+                value={typedConfirmation}
+                onChange={(e) => setTypedConfirmation(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                placeholder={confirmationPhrase}
+                disabled={isLoading}
+              />
+            </div>
+          )}
+
+          {/* Warning text for delete */}
+          {variant === 'delete' && (
+            <p className="text-sm text-red-600 mb-4">
+              ⚠️ Această acțiune nu poate fi anulată.
+            </p>
+          )}
+        </div>
+
+        {/* Actions */}
+        <div className="flex gap-3 px-6 pb-6">
+          <button
+            onClick={handleClose}
+            disabled={isLoading}
+            className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors disabled:opacity-50"
+          >
+            {cancelText}
+          </button>
+          <button
+            onClick={handleConfirm}
+            disabled={!canConfirm || isLoading}
+            className={cn(
+              'flex-1 px-4 py-2.5 rounded-lg text-white font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed',
+              config.buttonBg
+            )}
+          >
+            {isLoading ? (
+              <span className="flex items-center justify-center gap-2">
+                <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                </svg>
+                Se procesează...
+              </span>
+            ) : (
+              confirmText || config.buttonText
+            )}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+### 3.6.2 useConfirmation Hook
+
+```typescript
+// hooks/use-confirmation.ts
+'use client';
+
+import { useState, useCallback } from 'react';
+
+interface ConfirmationState {
+  isOpen: boolean;
+  variant: 'delete' | 'edit' | 'publish' | 'warning';
+  title: string;
+  description: string;
+  itemName?: string;
+  onConfirm: () => void | Promise<void>;
+  requireTypedConfirmation?: boolean;
+}
+
+const initialState: ConfirmationState = {
+  isOpen: false,
+  variant: 'warning',
+  title: '',
+  description: '',
+  onConfirm: () => {},
+};
+
+export function useConfirmation() {
+  const [state, setState] = useState<ConfirmationState>(initialState);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const confirm = useCallback((options: Omit<ConfirmationState, 'isOpen'>) => {
+    setState({
+      ...options,
+      isOpen: true,
+    });
+  }, []);
+
+  const confirmDelete = useCallback((
+    itemName: string,
+    onConfirm: () => void | Promise<void>,
+    requireTyped = false
+  ) => {
+    confirm({
+      variant: 'delete',
+      title: 'Confirmare ștergere',
+      description: 'Sunteți sigur că doriți să ștergeți acest element?',
+      itemName,
+      onConfirm,
+      requireTypedConfirmation: requireTyped,
+    });
+  }, [confirm]);
+
+  const confirmEdit = useCallback((
+    itemName: string,
+    onConfirm: () => void | Promise<void>
+  ) => {
+    confirm({
+      variant: 'edit',
+      title: 'Salvare modificări',
+      description: 'Sunteți sigur că doriți să salvați aceste modificări?',
+      itemName,
+      onConfirm,
+    });
+  }, [confirm]);
+
+  const confirmPublish = useCallback((
+    itemName: string,
+    onConfirm: () => void | Promise<void>
+  ) => {
+    confirm({
+      variant: 'publish',
+      title: 'Confirmare publicare',
+      description: 'Sunteți sigur că doriți să publicați acest element?',
+      itemName,
+      onConfirm,
+    });
+  }, [confirm]);
+
+  const close = useCallback(() => {
+    setState(initialState);
+    setIsLoading(false);
+  }, []);
+
+  const handleConfirm = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      await state.onConfirm();
+      close();
+    } catch (error) {
+      console.error('Confirmation action failed:', error);
+      setIsLoading(false);
+    }
+  }, [state.onConfirm, close]);
+
+  return {
+    isOpen: state.isOpen,
+    variant: state.variant,
+    title: state.title,
+    description: state.description,
+    itemName: state.itemName,
+    requireTypedConfirmation: state.requireTypedConfirmation,
+    isLoading,
+    confirm,
+    confirmDelete,
+    confirmEdit,
+    confirmPublish,
+    close,
+    handleConfirm,
+  };
+}
+```
+
+### 3.6.3 Usage Example in Admin Component
+
+```typescript
+// app/admin/documents/document-list.tsx
+'use client';
+
+import { useState } from 'react';
+import { Trash2, Edit } from 'lucide-react';
+import { ConfirmationDialog } from '@/components/admin/confirmation-dialog';
+import { useConfirmation } from '@/hooks/use-confirmation';
+import { deleteDocument } from '@/lib/actions/documents';
+
+interface Document {
+  id: string;
+  title: string;
+  // ... other fields
+}
+
+export function DocumentList({ documents }: { documents: Document[] }) {
+  const confirmation = useConfirmation();
+
+  const handleDelete = async (doc: Document) => {
+    confirmation.confirmDelete(
+      doc.title,
+      async () => {
+        await deleteDocument(doc.id);
+        // Refresh the list or show success toast
+      },
+      true // Require typed confirmation for documents
+    );
+  };
+
+  return (
+    <>
+      <div className="space-y-4">
+        {documents.map((doc) => (
+          <div key={doc.id} className="flex items-center justify-between p-4 bg-white rounded-lg border">
+            <span>{doc.title}</span>
+            <div className="flex gap-2">
+              <button
+                onClick={() => {/* Navigate to edit */}}
+                className="p-2 text-amber-600 hover:bg-amber-50 rounded-lg"
+              >
+                <Edit className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => handleDelete(doc)}
+                className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Confirmation Dialog */}
+      <ConfirmationDialog
+        isOpen={confirmation.isOpen}
+        onClose={confirmation.close}
+        onConfirm={confirmation.handleConfirm}
+        variant={confirmation.variant}
+        title={confirmation.title}
+        description={confirmation.description}
+        itemName={confirmation.itemName}
+        requireTypedConfirmation={confirmation.requireTypedConfirmation}
+        confirmationPhrase="STERGE"
+        isLoading={confirmation.isLoading}
+      />
+    </>
+  );
+}
+```
+
 ---
 
 ## 4. Internationalization (i18n)
 
-### 4.1 Setup with next-intl
+### 4.1 Setup with next-intl v4 (App Router)
+
+**Note:** next-intl v4 uses a routing-based approach instead of middleware for Next.js 15+.
 
 ```typescript
-// middleware.ts
-import createMiddleware from 'next-intl/middleware';
+// i18n/routing.ts
+import { defineRouting } from 'next-intl/routing';
 
-export default createMiddleware({
+export const routing = defineRouting({
+  // A list of all locales that are supported
   locales: ['ro', 'hu', 'en'],
+
+  // Used when no locale matches
   defaultLocale: 'ro',
-  localePrefix: 'as-needed' // Only show prefix for non-default
+
+  // Don't show the locale prefix for the default locale
+  localePrefix: 'as-needed',
+
+  // Disable automatic browser locale detection - always use Romanian as default
+  localeDetection: false,
 });
 
-export const config = {
-  matcher: ['/((?!api|_next|_vercel|.*\\..*).*)']
-};
+export type Locale = (typeof routing.locales)[number];
+```
+
+```typescript
+// i18n/request.ts
+import { getRequestConfig } from 'next-intl/server';
+import { routing } from './routing';
+
+export default getRequestConfig(async ({ requestLocale }) => {
+  // This typically corresponds to the `[locale]` segment
+  let locale = await requestLocale;
+
+  // Ensure that a valid locale is used
+  if (!locale || !routing.locales.includes(locale as any)) {
+    locale = routing.defaultLocale;
+  }
+
+  return {
+    locale,
+    messages: (await import(`../messages/${locale}.json`)).default,
+  };
+});
+```
+
+```typescript
+// i18n/navigation.ts
+import { createNavigation } from 'next-intl/navigation';
+import { routing } from './routing';
+
+export const { Link, redirect, usePathname, useRouter, getPathname } =
+  createNavigation(routing);
+```
+
+```typescript
+// next.config.ts
+import createNextIntlPlugin from 'next-intl/plugin';
+
+const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {};
+
+export default withNextIntl(nextConfig);
 ```
 
 ### 4.2 Translation File Structure
@@ -2145,8 +3049,8 @@ export const LEADERSHIP = [
     id: 'primar',
     position: 'primar',
     photo: '/images/consilul local/primar-torok-laszlo.jpg',
-    email: 'primsal3@gmail.com',
-    phone: '+40 728 105 762',
+    email: 'primsal@rdslink.ro',
+    phone: '0359-409730',
     translations: {
       ro: {
         name: 'Török László',
@@ -2169,8 +3073,8 @@ export const LEADERSHIP = [
     id: 'viceprimar',
     position: 'viceprimar',
     photo: '/images/consilul local/viceprimar-horvath-janos.jpg',
-    email: 'primsal3@gmail.com',
-    phone: '+40 728 105 762',
+    email: 'primsal@rdslink.ro',
+    phone: '0359-409730',
     translations: {
       ro: {
         name: 'Horváth János',
@@ -2193,8 +3097,8 @@ export const LEADERSHIP = [
     id: 'secretar',
     position: 'secretar',
     photo: null, // TBD
-    email: 'primsal3@gmail.com',
-    phone: '+40 728 105 762',
+    email: 'primsal@rdslink.ro',
+    phone: '0359-409730',
     translations: {
       ro: {
         name: 'TBD', // To be provided
@@ -2281,15 +3185,18 @@ export const CONTACT_INFO = {
     county: 'Bihor',
     country: 'Romania',
     postalCode: '415500',
+    full: 'Str. Republicii nr.1, Salonta, Jud.Bihor',
   },
   phone: {
-    main: '+40 728 105 762',
+    main: '0359-409730',
     landline: ['0359-409730', '0359-409731', '0259-373243'],
     fax: '0359-409733',
+    display: '0359-409730, 0359-409731, 0259-373243',
   },
   email: {
-    primary: 'primsal3@gmail.com',
-    secondary: 'primsal@rdslink.ro',
+    primary: 'primsal@rdslink.ro',
+    secondary: 'primsal3@gmail.com',
+    display: 'primsal@rdslink.ro, primsal3@gmail.com',
   },
   coordinates: {
     lat: 46.8,
@@ -2347,6 +3254,826 @@ export const WEBCAMS = [
     },
   },
 ];
+```
+
+---
+
+## 6.7 Admin Dashboard Implementation
+
+### 6.7.1 Admin Route Structure
+
+```
+app/
+├── admin/
+│   ├── layout.tsx              # Admin layout with sidebar
+│   ├── page.tsx                # Dashboard overview
+│   ├── login/
+│   │   └── page.tsx            # Authentication page
+│   ├── documents/
+│   │   ├── page.tsx            # Document list
+│   │   ├── new/page.tsx        # Create document
+│   │   └── [id]/
+│   │       └── page.tsx        # Edit document
+│   ├── news/
+│   │   ├── page.tsx            # News list
+│   │   ├── new/page.tsx        # Create news
+│   │   └── [id]/page.tsx       # Edit news
+│   ├── events/
+│   │   ├── page.tsx            # Events list
+│   │   └── ...
+│   ├── gallery/
+│   │   ├── page.tsx            # Albums list
+│   │   └── [albumId]/page.tsx  # Album images
+│   ├── councilors/
+│   │   ├── page.tsx            # Councilors list
+│   │   └── ...
+│   ├── commissions/
+│   │   └── page.tsx            # Commissions management
+│   ├── declarations/
+│   │   └── page.tsx            # Wealth declarations
+│   ├── forms/
+│   │   └── page.tsx            # Downloadable forms
+│   ├── budget/
+│   │   └── page.tsx            # Budget documents
+│   ├── hcl/
+│   │   └── page.tsx            # Council decisions
+│   ├── dispositions/
+│   │   └── page.tsx            # Mayor dispositions
+│   ├── petitions/
+│   │   └── page.tsx            # View petitions
+│   ├── contact/
+│   │   └── page.tsx            # Contact submissions
+│   └── settings/
+│       └── page.tsx            # Site settings
+```
+
+### 6.7.2 Admin Authentication (Next.js 16 - Layout-based)
+
+In Next.js 16, authentication is handled at the **layout level** using Server Components instead of middleware. This approach is more performant and integrates better with the App Router.
+
+```typescript
+// lib/supabase/server.ts
+import { createServerClient as createSupabaseServerClient } from '@supabase/ssr';
+import { cookies } from 'next/headers';
+
+export async function createServerClient() {
+  const cookieStore = await cookies();
+  
+  return createSupabaseServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll();
+        },
+        setAll(cookiesToSet) {
+          try {
+            cookiesToSet.forEach(({ name, value, options }) =>
+              cookieStore.set(name, value, options)
+            );
+          } catch {
+            // Called from Server Component - ignore
+          }
+        },
+      },
+    }
+  );
+}
+
+// lib/supabase/client.ts
+import { createBrowserClient } from '@supabase/ssr';
+
+export function createClient() {
+  return createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+}
+```
+
+```typescript
+// lib/auth/get-admin.ts
+import { createServerClient } from '@/lib/supabase/server';
+import { redirect } from 'next/navigation';
+
+export interface AdminUser {
+  id: string;
+  email: string;
+  full_name: string;
+  role: 'admin' | 'super_admin';
+  is_active: boolean;
+}
+
+/**
+ * Get current admin user or redirect to login
+ * Use this in admin layouts/pages that require authentication
+ */
+export async function getAdminOrRedirect(): Promise<AdminUser> {
+  const supabase = await createServerClient();
+  
+  const { data: { session } } = await supabase.auth.getSession();
+  
+  if (!session) {
+    redirect('/admin/login');
+  }
+  
+  const { data: adminUser, error } = await supabase
+    .from('admin_users')
+    .select('*')
+    .eq('id', session.user.id)
+    .eq('is_active', true)
+    .single();
+  
+  if (error || !adminUser) {
+    // Not an admin - sign out and redirect
+    await supabase.auth.signOut();
+    redirect('/admin/login?error=unauthorized');
+  }
+  
+  return adminUser as AdminUser;
+}
+
+/**
+ * Check if current user is admin (without redirect)
+ * Use this for conditional rendering
+ */
+export async function isCurrentUserAdmin(): Promise<boolean> {
+  const supabase = await createServerClient();
+  
+  const { data: { session } } = await supabase.auth.getSession();
+  
+  if (!session) return false;
+  
+  const { data: adminUser } = await supabase
+    .from('admin_users')
+    .select('id')
+    .eq('id', session.user.id)
+    .eq('is_active', true)
+    .single();
+  
+  return !!adminUser;
+}
+```
+
+```typescript
+// app/admin/login/page.tsx
+import { redirect } from 'next/navigation';
+import { createServerClient } from '@/lib/supabase/server';
+import { AdminLoginForm } from './login-form';
+
+export default async function AdminLoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string; redirect?: string }>;
+}) {
+  const params = await searchParams;
+  const supabase = await createServerClient();
+  
+  // If already logged in as admin, redirect to dashboard
+  const { data: { session } } = await supabase.auth.getSession();
+  
+  if (session) {
+    const { data: adminUser } = await supabase
+      .from('admin_users')
+      .select('id')
+      .eq('id', session.user.id)
+      .eq('is_active', true)
+      .single();
+    
+    if (adminUser) {
+      redirect(params.redirect || '/admin');
+    }
+  }
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="w-full max-w-md">
+        <AdminLoginForm 
+          error={params.error} 
+          redirectTo={params.redirect} 
+        />
+      </div>
+    </div>
+  );
+}
+```
+
+```typescript
+// app/admin/login/login-form.tsx
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { createClient } from '@/lib/supabase/client';
+import { Lock, Mail, AlertCircle } from 'lucide-react';
+
+interface AdminLoginFormProps {
+  error?: string;
+  redirectTo?: string;
+}
+
+export function AdminLoginForm({ error: initialError, redirectTo }: AdminLoginFormProps) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState(initialError);
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const supabase = createClient();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError(undefined);
+
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (signInError) {
+      setError('Email sau parolă incorectă');
+      setIsLoading(false);
+      return;
+    }
+
+    // Verify admin status
+    const { data: { session } } = await supabase.auth.getSession();
+    
+    if (session) {
+      const { data: adminUser } = await supabase
+        .from('admin_users')
+        .select('id')
+        .eq('id', session.user.id)
+        .eq('is_active', true)
+        .single();
+
+      if (!adminUser) {
+        await supabase.auth.signOut();
+        setError('Nu aveți permisiuni de administrator');
+        setIsLoading(false);
+        return;
+      }
+    }
+
+    router.push(redirectTo || '/admin');
+    router.refresh();
+  };
+
+  return (
+    <div className="bg-white rounded-xl shadow-lg p-8">
+      {/* Logo */}
+      <div className="text-center mb-8">
+        <div className="w-16 h-16 bg-primary-900 rounded-xl flex items-center justify-center mx-auto mb-4">
+          <Lock className="w-8 h-8 text-white" />
+        </div>
+        <h1 className="text-2xl font-bold text-gray-900">Admin Panel</h1>
+        <p className="text-gray-600">Primăria Municipiului Salonta</p>
+      </div>
+
+      {/* Error message */}
+      {error && (
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3 text-red-700">
+          <AlertCircle className="w-5 h-5 flex-shrink-0" />
+          <p className="text-sm">{error}</p>
+        </div>
+      )}
+
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+            Email
+          </label>
+          <div className="relative">
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+              placeholder="admin@primaria-salonta.ro"
+              required
+            />
+          </div>
+        </div>
+
+        <div>
+          <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+            Parolă
+          </label>
+          <div className="relative">
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+              placeholder="••••••••"
+              required
+            />
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="w-full py-2.5 bg-primary-600 text-white font-medium rounded-lg hover:bg-primary-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {isLoading ? 'Se autentifică...' : 'Autentificare'}
+        </button>
+      </form>
+    </div>
+  );
+}
+```
+
+### 6.7.3 Admin Layout Component
+
+```typescript
+// app/admin/layout.tsx
+import { getAdminOrRedirect } from '@/lib/auth/get-admin';
+import { AdminSidebar } from '@/components/admin/sidebar';
+import { AdminHeader } from '@/components/admin/header';
+
+export default async function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  // This will redirect to /admin/login if not authenticated as admin
+  const adminUser = await getAdminOrRedirect();
+
+  return (
+    <div className="min-h-screen bg-gray-100">
+      <AdminSidebar user={adminUser} />
+      <div className="lg:pl-64">
+        <AdminHeader user={adminUser} />
+        <main className="p-6">
+          {children}
+        </main>
+      </div>
+    </div>
+  );
+}
+```
+
+```typescript
+// app/admin/(dashboard)/layout.tsx
+// This groups all authenticated admin pages
+// The parent layout already handles auth, so children can focus on content
+
+export default function AdminDashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return <>{children}</>;
+}
+```
+
+**Route Group Structure:**
+```
+app/
+├── admin/
+│   ├── layout.tsx              # Auth check + sidebar/header
+│   ├── login/
+│   │   ├── page.tsx            # Login page (no auth required)
+│   │   └── login-form.tsx      # Client component for login
+│   └── (dashboard)/            # Route group - inherits parent layout
+│       ├── page.tsx            # Dashboard overview
+│       ├── documents/
+│       │   └── page.tsx
+│       ├── news/
+│       │   └── page.tsx
+│       └── ...
+```
+
+**Note:** The login page is **outside** the route group so it doesn't inherit the auth-protected layout.
+
+```typescript
+// app/api/auth/signout/route.ts
+import { createServerClient } from '@/lib/supabase/server';
+import { redirect } from 'next/navigation';
+import { NextRequest } from 'next/server';
+
+export async function POST(request: NextRequest) {
+  const supabase = await createServerClient();
+  await supabase.auth.signOut();
+  redirect('/admin/login');
+}
+```
+```
+
+### 6.7.4 Admin Sidebar Navigation
+
+```typescript
+// components/admin/sidebar.tsx
+'use client';
+
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import {
+  LayoutDashboard,
+  FileText,
+  Newspaper,
+  Calendar,
+  Image,
+  Users,
+  Building2,
+  Wallet,
+  Gavel,
+  FileSignature,
+  ClipboardList,
+  DollarSign,
+  MessageSquare,
+  Mail,
+  Settings,
+  LogOut,
+} from 'lucide-react';
+import { cn } from '@/lib/utils/cn';
+
+const ADMIN_NAVIGATION = [
+  {
+    group: 'Principal',
+    items: [
+      { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
+    ],
+  },
+  {
+    group: 'Conținut',
+    items: [
+      { href: '/admin/news', label: 'Știri', icon: Newspaper },
+      { href: '/admin/events', label: 'Evenimente', icon: Calendar },
+      { href: '/admin/gallery', label: 'Galerie', icon: Image },
+      { href: '/admin/documents', label: 'Documente', icon: FileText },
+    ],
+  },
+  {
+    group: 'Consiliu Local',
+    items: [
+      { href: '/admin/councilors', label: 'Consilieri', icon: Users },
+      { href: '/admin/commissions', label: 'Comisii', icon: Building2 },
+      { href: '/admin/hcl', label: 'Hotărâri CL', icon: Gavel },
+      { href: '/admin/declarations', label: 'Declarații', icon: FileSignature },
+    ],
+  },
+  {
+    group: 'Documente Oficiale',
+    items: [
+      { href: '/admin/dispositions', label: 'Dispoziții', icon: FileText },
+      { href: '/admin/budget', label: 'Buget', icon: DollarSign },
+      { href: '/admin/forms', label: 'Formulare', icon: ClipboardList },
+    ],
+  },
+  {
+    group: 'Comunicare',
+    items: [
+      { href: '/admin/petitions', label: 'Petiții', icon: MessageSquare },
+      { href: '/admin/contact', label: 'Mesaje Contact', icon: Mail },
+    ],
+  },
+  {
+    group: 'Setări',
+    items: [
+      { href: '/admin/settings', label: 'Setări', icon: Settings },
+    ],
+  },
+];
+
+export function AdminSidebar({ user }: { user: { full_name: string; email: string } }) {
+  const pathname = usePathname();
+
+  return (
+    <aside className="fixed left-0 top-0 z-40 h-screen w-64 bg-primary-900 text-white hidden lg:block">
+      {/* Logo */}
+      <div className="flex items-center gap-3 px-6 py-4 border-b border-primary-800">
+        <div className="w-10 h-10 bg-secondary-500 rounded-lg flex items-center justify-center font-bold">
+          PS
+        </div>
+        <div>
+          <p className="font-semibold">Admin Panel</p>
+          <p className="text-xs text-primary-300">Primăria Salonta</p>
+        </div>
+      </div>
+
+      {/* Navigation */}
+      <nav className="px-3 py-4 space-y-6 overflow-y-auto h-[calc(100vh-180px)]">
+        {ADMIN_NAVIGATION.map((group) => (
+          <div key={group.group}>
+            <p className="px-3 mb-2 text-xs font-semibold text-primary-400 uppercase tracking-wider">
+              {group.group}
+            </p>
+            <ul className="space-y-1">
+              {group.items.map((item) => {
+                const isActive = pathname === item.href || 
+                  (item.href !== '/admin' && pathname.startsWith(item.href));
+                return (
+                  <li key={item.href}>
+                    <Link
+                      href={item.href}
+                      className={cn(
+                        'flex items-center gap-3 px-3 py-2 rounded-lg transition-colors',
+                        isActive
+                          ? 'bg-primary-800 text-white'
+                          : 'text-primary-300 hover:bg-primary-800/50 hover:text-white'
+                      )}
+                    >
+                      <item.icon className="w-5 h-5" />
+                      <span>{item.label}</span>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ))}
+      </nav>
+
+      {/* User section */}
+      <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-primary-800">
+        <div className="flex items-center gap-3 mb-3">
+          <div className="w-10 h-10 bg-primary-700 rounded-full flex items-center justify-center">
+            {user.full_name.charAt(0).toUpperCase()}
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="font-medium truncate">{user.full_name}</p>
+            <p className="text-xs text-primary-400 truncate">{user.email}</p>
+          </div>
+        </div>
+        <form action="/api/auth/signout" method="POST">
+          <button
+            type="submit"
+            className="flex items-center gap-2 w-full px-3 py-2 text-primary-300 hover:text-white hover:bg-primary-800 rounded-lg transition-colors"
+          >
+            <LogOut className="w-4 h-4" />
+            <span>Deconectare</span>
+          </button>
+        </form>
+      </div>
+    </aside>
+  );
+}
+```
+
+### 6.7.5 Document Manager Component
+
+```typescript
+// app/admin/documents/page.tsx
+import { Suspense } from 'react';
+import { createServerClient } from '@/lib/supabase/server';
+import { DocumentsTable } from './documents-table';
+import { DocumentFilters } from './document-filters';
+import { Plus } from 'lucide-react';
+import Link from 'next/link';
+
+export default async function DocumentsPage({
+  searchParams,
+}: {
+  searchParams: { category?: string; year?: string; search?: string };
+}) {
+  const supabase = createServerClient();
+  
+  let query = supabase
+    .from('documents')
+    .select('*')
+    .order('created_at', { ascending: false });
+  
+  if (searchParams.category) {
+    query = query.eq('category', searchParams.category);
+  }
+  
+  if (searchParams.year) {
+    query = query.eq('year', parseInt(searchParams.year));
+  }
+  
+  if (searchParams.search) {
+    query = query.ilike('file_name', `%${searchParams.search}%`);
+  }
+  
+  const { data: documents, error } = await query;
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Documente</h1>
+          <p className="text-gray-600">Gestionează documentele din toate categoriile</p>
+        </div>
+        <Link
+          href="/admin/documents/new"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+        >
+          <Plus className="w-5 h-5" />
+          Document nou
+        </Link>
+      </div>
+
+      {/* Filters */}
+      <DocumentFilters />
+
+      {/* Table */}
+      <Suspense fallback={<div>Se încarcă...</div>}>
+        <DocumentsTable documents={documents || []} />
+      </Suspense>
+    </div>
+  );
+}
+```
+
+### 6.7.6 Generic Document Categories
+
+For the admin panel, all documents are managed through a unified interface with category filtering:
+
+```typescript
+// lib/constants/admin-document-categories.ts
+export const DOCUMENT_CATEGORIES = [
+  // Informații Publice
+  { value: 'autorizatii_construire', label: 'Autorizații de construire', group: 'Informații Publice' },
+  { value: 'certificate_urbanism', label: 'Certificate de urbanism', group: 'Informații Publice' },
+  { value: 'buget', label: 'Buget', group: 'Informații Publice' },
+  { value: 'taxe_impozite', label: 'Impozite și taxe', group: 'Informații Publice' },
+  { value: 'licitatii', label: 'Licitații publice', group: 'Informații Publice' },
+  { value: 'achizitii', label: 'Achiziții publice', group: 'Informații Publice' },
+  { value: 'concursuri', label: 'Concursuri', group: 'Informații Publice' },
+  { value: 'mediu', label: 'Mediu', group: 'Informații Publice' },
+  { value: 'oferte_terenuri', label: 'Oferte terenuri agricole', group: 'Informații Publice' },
+  { value: 'planuri_urbanistice', label: 'Planuri urbanistice', group: 'Informații Publice' },
+  { value: 'publicatii_casatorie', label: 'Publicații de căsătorie', group: 'Informații Publice' },
+  { value: 'publicatii_vanzare', label: 'Publicații de vânzare', group: 'Informații Publice' },
+  { value: 'receptie_lucrari', label: 'Recepție lucrări', group: 'Informații Publice' },
+  { value: 'regulamente', label: 'Regulamente', group: 'Informații Publice' },
+  { value: 'retele_telecom', label: 'Rețele telecomunicații', group: 'Informații Publice' },
+  { value: 'somatii', label: 'Somații', group: 'Informații Publice' },
+  { value: 'formulare', label: 'Formulare online', group: 'Informații Publice' },
+  { value: 'gdpr', label: 'GDPR', group: 'Informații Publice' },
+  
+  // Consiliu Local
+  { value: 'hcl', label: 'Hotărâri Consiliu Local', group: 'Consiliu Local' },
+  { value: 'procese_verbale', label: 'Procese verbale', group: 'Consiliu Local' },
+  { value: 'ordine_zi', label: 'Ordine de zi', group: 'Consiliu Local' },
+  { value: 'declaratii_avere', label: 'Declarații de avere', group: 'Consiliu Local' },
+  { value: 'declaratii_interese', label: 'Declarații de interese', group: 'Consiliu Local' },
+  { value: 'rapoarte_activitate', label: 'Rapoarte de activitate', group: 'Consiliu Local' },
+  
+  // Primăria
+  { value: 'dispozitii', label: 'Dispoziții Primar', group: 'Primăria' },
+  { value: 'rapoarte_primar', label: 'Rapoarte anuale Primar', group: 'Primăria' },
+  { value: 'organigrama', label: 'Organigramă', group: 'Primăria' },
+  { value: 'rof', label: 'ROF', group: 'Primăria' },
+  
+  // Monitorul Oficial Local
+  { value: 'mol_statut', label: 'Statutul UAT', group: 'Monitorul Oficial' },
+  { value: 'mol_regulamente', label: 'Regulamente administrative', group: 'Monitorul Oficial' },
+  { value: 'mol_financiar', label: 'Documente financiare', group: 'Monitorul Oficial' },
+  { value: 'mol_alte', label: 'Alte documente', group: 'Monitorul Oficial' },
+  
+  // Transparență
+  { value: 'anunturi', label: 'Anunțuri', group: 'Transparență' },
+  { value: 'dezbateri_publice', label: 'Dezbateri publice', group: 'Transparență' },
+  { value: 'buletin_informativ', label: 'Buletin informativ', group: 'Transparență' },
+  
+  // Programe
+  { value: 'proiecte_europene', label: 'Proiecte europene', group: 'Programe' },
+  { value: 'proiecte_locale', label: 'Proiecte locale', group: 'Programe' },
+  { value: 'strategie', label: 'Strategii', group: 'Programe' },
+  { value: 'pnrr', label: 'PNRR', group: 'Programe' },
+  { value: 'pmud', label: 'PMUD', group: 'Programe' },
+  
+  // Rapoarte
+  { value: 'audit', label: 'Rapoarte audit', group: 'Rapoarte' },
+  { value: 'studii', label: 'Studii', group: 'Rapoarte' },
+] as const;
+
+export type DocumentCategory = typeof DOCUMENT_CATEGORIES[number]['value'];
+```
+
+### 6.7.7 Server Actions for CRUD Operations
+
+```typescript
+// lib/actions/documents.ts
+'use server';
+
+import { revalidatePath } from 'next/cache';
+import { createServerClient } from '@/lib/supabase/server';
+
+export async function createDocument(formData: FormData) {
+  const supabase = createServerClient();
+  
+  // Verify admin
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) throw new Error('Unauthorized');
+  
+  const { data: adminUser } = await supabase
+    .from('admin_users')
+    .select('id')
+    .eq('id', session.user.id)
+    .eq('is_active', true)
+    .single();
+  
+  if (!adminUser) throw new Error('Unauthorized');
+  
+  const data = {
+    category: formData.get('category') as string,
+    subcategory: formData.get('subcategory') as string | null,
+    file_url: formData.get('file_url') as string,
+    file_name: formData.get('file_name') as string,
+    file_size: parseInt(formData.get('file_size') as string),
+    year: formData.get('year') ? parseInt(formData.get('year') as string) : null,
+    document_number: formData.get('document_number') as string | null,
+    document_date: formData.get('document_date') as string | null,
+    published: formData.get('published') === 'true',
+  };
+  
+  const { error } = await supabase.from('documents').insert(data);
+  
+  if (error) throw error;
+  
+  revalidatePath('/admin/documents');
+  revalidatePath('/informatii-publice');
+}
+
+export async function updateDocument(id: string, formData: FormData) {
+  const supabase = createServerClient();
+  
+  // Verify admin (same as above)
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) throw new Error('Unauthorized');
+  
+  const { data: adminUser } = await supabase
+    .from('admin_users')
+    .select('id')
+    .eq('id', session.user.id)
+    .eq('is_active', true)
+    .single();
+  
+  if (!adminUser) throw new Error('Unauthorized');
+  
+  const data = {
+    category: formData.get('category') as string,
+    subcategory: formData.get('subcategory') as string | null,
+    file_name: formData.get('file_name') as string,
+    year: formData.get('year') ? parseInt(formData.get('year') as string) : null,
+    document_number: formData.get('document_number') as string | null,
+    document_date: formData.get('document_date') as string | null,
+    published: formData.get('published') === 'true',
+  };
+  
+  const { error } = await supabase
+    .from('documents')
+    .update(data)
+    .eq('id', id);
+  
+  if (error) throw error;
+  
+  revalidatePath('/admin/documents');
+  revalidatePath('/informatii-publice');
+}
+
+export async function deleteDocument(id: string) {
+  const supabase = createServerClient();
+  
+  // Verify admin
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) throw new Error('Unauthorized');
+  
+  const { data: adminUser } = await supabase
+    .from('admin_users')
+    .select('id')
+    .eq('id', session.user.id)
+    .eq('is_active', true)
+    .single();
+  
+  if (!adminUser) throw new Error('Unauthorized');
+  
+  // Get document to delete file from storage
+  const { data: document } = await supabase
+    .from('documents')
+    .select('file_url')
+    .eq('id', id)
+    .single();
+  
+  if (document?.file_url) {
+    // Extract path from URL and delete from storage
+    const path = document.file_url.split('/').pop();
+    if (path) {
+      await supabase.storage.from('documents').remove([path]);
+    }
+  }
+  
+  const { error } = await supabase
+    .from('documents')
+    .delete()
+    .eq('id', id);
+  
+  if (error) throw error;
+  
+  revalidatePath('/admin/documents');
+  revalidatePath('/informatii-publice');
+}
 ```
 
 ---
@@ -2993,7 +4720,38 @@ module.exports = {
 
 ✅ = Required | ⚡ = Required for specific features | ❓ = Optional
 
-### B. Useful Commands
+### B. Additional Dependencies for Admin Panel
+
+```bash
+# Supabase SSR (for Next.js 15+ Server Components)
+npm install @supabase/ssr
+
+# Image compression (client-side)
+npm install browser-image-compression
+
+# PDF manipulation (server-side)
+npm install pdf-lib
+
+# Data tables
+npm install @tanstack/react-table
+
+# Date picker
+npm install react-day-picker
+
+# Rich text editor (for news builder)
+npm install @tiptap/react @tiptap/starter-kit @tiptap/extension-image @tiptap/extension-link
+
+# File upload UI
+npm install react-dropzone
+```
+
+**Note:** The project already has these dependencies installed:
+- `@supabase/supabase-js` - Core Supabase client
+- `zod` - Schema validation
+- `react-hook-form` + `@hookform/resolvers` - Form handling
+- `date-fns` - Date utilities
+
+### C. Useful Commands
 
 ```bash
 # Development
@@ -3011,7 +4769,46 @@ npx supabase login   # Login to Supabase
 npx supabase init    # Initialize Supabase
 npx supabase db push # Push schema changes
 npx supabase gen types typescript --linked > types/database.ts
+
+# Admin Panel Setup
+npx supabase db reset                   # Reset database with RLS policies
+npm run seed:admin                      # Create first admin user (custom script)
 ```
+
+### D. Database Migration Checklist
+
+When migrating from mock data to database:
+
+1. **Create Tables**
+   ```bash
+   npx supabase db push
+   ```
+
+2. **Apply RLS Policies**
+   - Run all `CREATE POLICY` statements from section 3.2
+   - Verify with: `SELECT * FROM pg_policies;`
+
+3. **Create First Admin User**
+   ```sql
+   -- After user signs up via Supabase Auth
+   INSERT INTO admin_users (id, email, full_name, role)
+   VALUES ('user-uuid-here', 'admin@primaria-salonta.ro', 'Administrator', 'super_admin');
+   ```
+
+4. **Migrate Mock Data**
+   - Export mock data from page files
+   - Transform to database format
+   - Insert via admin panel or SQL scripts
+
+5. **Update Page Components**
+   - Replace mock data with Supabase queries
+   - Use server components for data fetching
+   - Implement error handling and loading states
+
+6. **Test Access Control**
+   - Verify public can read published content
+   - Verify only admins can modify content
+   - Test RLS policies with different users
 
 ### C. Google Cloud Translation API Setup
 
@@ -3035,7 +4832,18 @@ npx supabase gen types typescript --linked > types/database.ts
 
 ---
 
-*Document Version: 1.0*
-*Last Updated: December 25, 2025*
+*Document Version: 2.0*
+*Last Updated: January 2, 2026*
 *Author: Development Team*
+
+**Changelog v2.0:**
+- Added comprehensive RLS policies for public read / admin write access
+- Added admin_users table and is_admin() helper function
+- Added file compression services (image + PDF)
+- Added confirmation dialog component and hook
+- Added admin dashboard implementation details
+- Added document categories for unified management
+- Added server actions for CRUD operations
+- Updated contact information with correct phone numbers
+- Added migration checklist and additional dependencies
 
