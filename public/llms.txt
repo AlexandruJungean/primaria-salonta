@@ -16,47 +16,137 @@ This is the official government website for Salonta City Hall (Primăria Municip
 ## Key Sections
 
 ### For Citizens (Pentru cetățeni)
-- Online payments for taxes and fees
-- Online petitions and requests
-- Downloadable forms
-- Public schedule and audience hours
-- Announcements and job postings
-- Social services information
+- **Online Services** (/servicii-online)
+  - Online payments for taxes and fees (/servicii-online/plati)
+  - Online petitions and requests (/servicii-online/petitii)
+  - Social problems forms (/servicii-online/probleme-sociale)
+- **Public Information** (/informatii-publice)
+  - Online forms - downloadable forms organized by category (/informatii-publice/formulare)
+  - Local taxes and fees (/informatii-publice/taxe-impozite)
+  - Job postings and competitions (/informatii-publice/concursuri)
+  - Required documents for various procedures (/informatii-publice/acte-necesare)
+  - Dog shelter information (/informatii-publice/adapost-caini)
+  - Announcements (/informatii-publice/anunturi)
+  - Marriage publications (/informatii-publice/publicatii-casatorie)
+  - Summons and collective announcements (/informatii-publice/somatii)
+  - Request for public interest information - Law 544/2001 (/informatii-publice/solicitare-informatii)
+  - SEIP - Public Community Service for Computerized Person Records (/informatii-publice/seip)
+- **Transparency** (/transparenta)
+  - Public announcements (/transparenta/anunturi)
+  - Public debates (/transparenta/dezbateri-publice)
+  - Information bulletin (/transparenta/buletin-informativ)
+- **Institutions** (/institutii)
+  - Medical assistance (/institutii/asistenta-medicala)
+  - Social canteen (/institutii/cantina-sociala)
+  - Day center for elderly (/institutii/centrul-de-zi)
+- **City Hall Services** (/primaria)
+  - Working hours (/primaria/program)
+  - Audience schedule (/primaria/audiente)
+- Report a problem (/raporteaza-problema)
+- Events calendar (/evenimente)
+- Civil status (/stare-civila)
+- Agricultural registry (/registru-agricol)
+- Health information (/sanatate)
+- Education (/educatie)
+- Transport (/transport)
+- Volunteering (/voluntariat)
+- FAQ (/faq)
 
 ### For Businesses (Pentru firme)
-- Public procurement information
-- Building permits and authorizations
-- Urban planning certificates
-- Tax information
-- Environment regulations
+- **Public Information** (/informatii-publice)
+  - Public procurement (/informatii-publice/achizitii)
+  - Building permits (/informatii-publice/autorizatii-construire)
+  - Urban planning certificates (/informatii-publice/certificate-urbanism)
+  - Urban plans (/informatii-publice/planuri-urbanistice)
+  - Public auctions (/informatii-publice/licitatii)
+  - Land offers - Law 17/2015 (/informatii-publice/oferte-terenuri)
+  - Construction works reception (/informatii-publice/receptie-lucrari)
+  - Regulations (/informatii-publice/regulamente)
+  - Telecommunications networks (/informatii-publice/retele-telecom)
+  - Sales publications (/informatii-publice/publicatii-vanzare)
+  - Environment - waste management, water analysis, green spaces (/informatii-publice/mediu)
+  - Online forms (/informatii-publice/formulare)
+- Economy information (/localitatea/economie)
+- Business agents (/agenti-economici)
 
 ### City Hall Administration (Primăria Salonta)
-- Mayor and leadership information
-- Local Council members and committees
-- Transparency and budget information
-- Official decisions and regulations
-- Annual reports
-- GDPR information
+- **City Hall** (/primaria)
+  - Mayor and leadership (/primaria/conducere)
+  - Organizational chart (/primaria/organigrama)
+  - Working hours (/primaria/program)
+  - Audience schedule (/primaria/audiente)
+  - Asset declarations (/primaria/declaratii-avere)
+  - Annual reports (/primaria/rapoarte-anuale)
+  - Legislation (/primaria/legislatie)
+  - City Hall regulations (/primaria/regulament)
+- **Local Council** (/consiliul-local)
+  - Local councilors (/consiliul-local/consilieri)
+  - Committees (/consiliul-local/comisii)
+  - Meeting agendas (/consiliul-local/ordine-de-zi)
+  - Council decisions (/consiliul-local/hotarari)
+  - Republished decisions (/consiliul-local/hotarari-republicate)
+  - Asset declarations (/consiliul-local/declaratii-avere)
+  - Activity reports (/consiliul-local/rapoarte-activitate)
+- **Programs & Strategies** (/programe)
+  - Development strategy (/programe/strategie-dezvoltare)
+  - PMUD - Sustainable Urban Mobility Plan (/programe/pmud)
+  - PNRR projects (/programe/pnrr)
+  - European projects (/programe/proiecte-europene)
+  - Local projects (/programe/proiecte-locale)
+  - Northwest Regional Program (/programe/program-regional-nord-vest)
+  - SVSU - Voluntary Emergency Service (/programe/svsu)
+  - SNA - National Anti-corruption Strategy (/programe/sna)
+- **Official Monitor** (/monitorul-oficial)
+  - UAT statute (/monitorul-oficial/statut)
+  - Regulations (/monitorul-oficial/regulamente)
+  - Council decisions (/monitorul-oficial/hotarari)
+  - Mayor's dispositions (/monitorul-oficial/dispozitii)
+  - Financial documents (/monitorul-oficial/documente-financiare)
+  - Other documents (/monitorul-oficial/alte-documente)
+- **Public Information** (/informatii-publice)
+  - Budget (/informatii-publice/buget)
+  - GDPR (/informatii-publice/gdpr)
+  - Mayor's dispositions (/informatii-publice/dispozitii)
+  - Coronavirus information (/informatii-publice/coronavirus)
+- **Reports & Studies** (/rapoarte-studii)
+  - Audit reports (/rapoarte-studii/rapoarte)
+  - Studies (/rapoarte-studii/studii)
+- **Transparency** (/transparenta)
 
 ### Tourist Information (Turist în Salonta)
-- City location and history
-- Cultural attractions and events
-- Photo gallery and virtual tour
-- Museums: Arany János Museum Complex
-- Cultural institutions: Cultural House, Library
-- Twin cities and honorary citizens
+- **The City** (/localitatea)
+  - Location (/localitatea/localizare)
+  - History (/localitatea/istoric)
+  - Culture (/localitatea/cultura)
+  - Photo gallery (/localitatea/galerie)
+  - Virtual tour (/localitatea/excursie-virtuala)
+  - Digital map (/localitatea/harta-digitala)
+  - Twin cities (/localitatea/orase-infratite)
+  - Honorary citizens (/localitatea/cetateni-de-onoare)
+  - Economy (/localitatea/economie)
+- **Cultural Institutions** (/institutii)
+  - Cultural House (/institutii/casa-cultura)
+  - Library (/institutii/biblioteca)
+  - Arany János Museum Complex (/institutii/muzeu)
+  - Great Bustard Nest - Nature center (/institutii/cuibul-dropiei)
+  - Swimming pool (/institutii/bazin-inot)
+- Sports (/sport)
+- Events (/evenimente)
+- Webcams (/camere-web)
 
 ## Important Contact Information
 
 - **Address**: Str. Republicii nr. 1, Salonta, Bihor, Romania (415500)
-- **Phone**: +40 728 105 762
-- **Email**: primsal3@gmail.com
+- **Phone**: 0359-409730, 0359-409731, 0259-373243
+- **Fax**: 0359-409733
+- **Email**: primsal@rdslink.ro, primsal3@gmail.com
 - **Working Hours**: Monday - Friday, 8:00 - 16:00
 
 ## Social Media
 
 - Facebook: https://www.facebook.com/PrimariaSalontaNagyszalontaPolgarmesteriHivatala
 - Instagram: https://www.instagram.com/primaria.municipiuluisalonta/
+- TikTok: https://www.tiktok.com/@primariasalonta_
 
 ## Notable Information About Salonta
 
@@ -73,6 +163,7 @@ Salonta (Hungarian: Nagyszalonta) is a municipality in Bihor County, Romania, lo
 - **Internationalization**: next-intl for multi-language support
 - **Sitemap**: /sitemap.xml
 - **Robots**: /robots.txt
+- **HTML Sitemap**: /sitemap (human-readable)
 
 ## Allowed AI Usage
 
@@ -94,7 +185,27 @@ All pages follow the pattern: /{locale}/{section}/{page}
 - Locales: ro, hu, en
 - Example: /ro/servicii-online/plati (Romanian), /hu/servicii-online/plati (Hungarian)
 
+## Key Public Services URLs
+
+### Online Services
+- Online Payments: /{locale}/servicii-online/plati
+- Online Petitions: /{locale}/servicii-online/petitii
+- Online Forms: /{locale}/informatii-publice/formulare
+
+### Public Information
+- Taxes & Fees: /{locale}/informatii-publice/taxe-impozite
+- Job Postings: /{locale}/informatii-publice/concursuri
+- Building Permits: /{locale}/informatii-publice/autorizatii-construire
+- Urban Certificates: /{locale}/informatii-publice/certificate-urbanism
+- Budget: /{locale}/informatii-publice/buget
+- GDPR: /{locale}/informatii-publice/gdpr
+
+### Contact & Information
+- Contact: /{locale}/contact
+- Working Hours: /{locale}/primaria/program
+- Audience Schedule: /{locale}/primaria/audiente
+- FAQ: /{locale}/faq
+
 ## Last Updated
 
-December 2024
-
+January 2026
