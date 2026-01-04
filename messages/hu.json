@@ -84,7 +84,7 @@
     "achizitiiPublice": "Közbeszerzések",
     "buget": "Költségvetés",
     "taxeImpozite": "Helyi adók és illetékek",
-    "concursuri": "Versenyek/Állások",
+    "carieraConcursuri": "Karrier és versenyek",
     "autorizatiiConstruire": "Építési engedélyek",
     "certificateUrbanism": "Urbanisztikai bizonyítványok",
     "planuriUrbanistice": "Városrendezési tervek",
@@ -143,7 +143,8 @@
     "rapoarteAudit": "Könyvvizsgálati jelentések",
     "studii": "Tanulmányok",
     "sna": "NKS szektorális terv",
-    "voluntariat": "Önkéntesség"
+    "voluntariat": "Önkéntesség",
+    "sedinte": "Helyi Tanács ülései"
   },
   "homepage": {
     "welcome": "Üdvözöljük",
@@ -1016,6 +1017,116 @@
     "infoText": "A jogszabályi előírásoknak megfelelően az adóügyi közigazgatási aktusok nyilvános közléséhez szükséges felszólítások és közös hirdetmények Nagyszalonta Polgármesteri Hivatalának weboldalán kerülnek közzétételre.",
     "documents": "dokumentum",
     "footerText": "További információkért vagy a kötelezettségek rendezéséért kérjük, forduljon a Nagyszalonta Polgármesteri Hivatala Helyi Adó és Illeték Szolgálatához."
+  },
+  "sedintePage": {
+    "title": "Helyi Tanács ülései",
+    "description": "Nagyszalonta Helyi Tanácsának ülésrendje, beleértve a napirendet, jegyzőkönyveket és videófelvételeket.",
+    "scheduled": "Ütemezett",
+    "completed": "Befejezett",
+    "cancelled": "Törölve",
+    "agendaItems": "napirendi pont",
+    "viewDetails": "Részletek",
+    "upcomingSessions": "Ütemezett ülések",
+    "pastSessions": "Korábbi ülések",
+    "backToList": "Vissza az ülésekhez",
+    "date": "Dátum",
+    "time": "Időpont",
+    "location": "Helyszín",
+    "attendance": "Jelenlét",
+    "present": "Jelen",
+    "absent": "Távol",
+    "agenda": "Napirend",
+    "documents": "Dokumentumok",
+    "videoRecording": "Videófelvétel",
+    "watchVideo": "Ülés megtekintése",
+    "votes": "Szavazatok",
+    "for": "Mellette",
+    "against": "Ellene",
+    "abstain": "Tartózkodás",
+    "decision": "Határozat sz.",
+    "sessionTypes": {
+      "ordinara": "Rendes ülés",
+      "extraordinara": "Rendkívüli ülés",
+      "de_indata": "Sürgősségi ülés"
+    },
+    "agendaStatus": {
+      "approved": "Elfogadva",
+      "rejected": "Elutasítva",
+      "postponed": "Elhalasztva",
+      "withdrawn": "Visszavonva",
+      "pending": "Függőben"
+    }
+  },
+  "carieraPage": {
+    "title": "Karrier és versenyek",
+    "description": "Üres álláshelyek és álláspályázatok a Nagyszalontai Polgármesteri Hivatalnál.",
+    "backToList": "Vissza a versenyek listájához",
+    "position": "Pozíció",
+    "department": "Osztály",
+    "deadline": "Jelentkezési határidő",
+    "examDate": "Vizsga dátuma",
+    "interviewDate": "Interjú dátuma",
+    "vacancies": "Elérhető helyek",
+    "requirements": "Követelmények",
+    "education": "Tanulmányok",
+    "experience": "Tapasztalat",
+    "skills": "Szükséges készségek",
+    "otherRequirements": "Egyéb követelmények",
+    "jobDescription": "Munkakör leírása",
+    "salary": "Fizetés",
+    "schedule": "Munkaidő",
+    "location": "Helyszín",
+    "contact": "Kapcsolat",
+    "documents": "Verseny dokumentumok",
+    "deadlinePassed": "A jelentkezési határidő lejárt",
+    "applyNow": "Jelentkezz most",
+    "openPositions": "Nyitott pozíciók",
+    "closedPositions": "Lezárt versenyek",
+    "noOpenPositions": "Jelenleg nincsenek üres álláshelyek.",
+    "viewDetails": "Részletek",
+    "status": {
+      "open": "Jelentkezés nyitva",
+      "in_progress": "Verseny folyamatban",
+      "closed": "Lezárva",
+      "cancelled": "Törölve"
+    },
+    "type": {
+      "functionar_public": "Köztisztviselő",
+      "contractual": "Szerződéses alkalmazott"
+    },
+    "documentTypes": {
+      "anunt": "Hirdetmény",
+      "fisa_post": "Munkakör leírás",
+      "bibliografie": "Bibliográfia",
+      "formular_inscriere": "Jelentkezési lap",
+      "pv_selectie_dosare": "Aktaválogatási jegyzőkönyv",
+      "pv_proba_scrisa": "Írásbeli vizsga jegyzőkönyv",
+      "pv_proba_practica": "Gyakorlati vizsga jegyzőkönyv",
+      "pv_interviu": "Interjú jegyzőkönyv",
+      "pv_final": "Záró jegyzőkönyv",
+      "other": "Egyéb"
+    }
+  },
+  "raportStudiuPage": {
+    "title": "Jelentések és tanulmányok",
+    "description": "Ellenőrzési jelentések, tanulmányok és elemzések Nagyszalonta számára.",
+    "backToList": "Vissza a jelentésekhez és tanulmányokhoz",
+    "publishedAt": "Közzétéve",
+    "author": "Szerző",
+    "department": "Felelős osztály",
+    "keywords": "Kulcsszavak",
+    "summary": "Összefoglaló",
+    "descriptionLabel": "Leírás",
+    "documents": "Csatolt dokumentumok",
+    "downloadMain": "Fő dokumentum letöltése",
+    "relatedReports": "Kapcsolódó jelentések",
+    "types": {
+      "audit": "Ellenőrzési jelentés",
+      "studiu": "Tanulmány",
+      "raport_anual": "Éves jelentés",
+      "analiza": "Elemzés",
+      "evaluare": "Értékelés"
+    }
   }
 }
 

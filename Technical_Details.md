@@ -141,9 +141,6 @@ web-primaria-salonta/
 │   │   ├── evenimente/              # Events
 │   │   │   ├── page.tsx             # Events calendar + listing
 │   │   │   └── [slug]/page.tsx      # Individual event details
-│   │   ├── cariera/                 # Career & Jobs
-│   │   │   ├── page.tsx             # Job vacancies listing
-│   │   │   └── [slug]/page.tsx      # Individual job details + documents
 │   │   ├── rapoarte-studii/         # Reports & Studies
 │   │   │   ├── page.tsx             # Reports listing with filters
 │   │   │   └── [slug]/page.tsx      # Individual report details
@@ -1111,7 +1108,7 @@ CREATE INDEX idx_events_featured ON events_extended(featured) WHERE featured = t
 
 -- ============================================
 -- CARIERĂ ȘI CONCURSURI (Career & Jobs)
--- Route: /[locale]/cariera/[slug]
+-- Route: /[locale]/informatii-publice/concursuri/[slug]
 -- ============================================
 
 -- Job vacancies with slug - extended version
@@ -5587,16 +5584,28 @@ When migrating from mock data to database:
 
 ---
 
-*Document Version: 4.0*
-*Last Updated: January 4, 2026*
+*Document Version: 4.1*
+*Last Updated: January 5, 2026*
 *Author: Development Team*
+
+**Changelog v4.1:**
+- **MOVED `/cariera` to `/informatii-publice/concursuri`** - Career pages now under public info section
+  - Updated route: `/[locale]/informatii-publice/concursuri/[slug]`
+  - Renamed navigation item from "Concursuri" to "Carieră și Concursuri"
+  - Updated SEO key from `concursuri` to `carieraConcursuri`
+- **REMOVED video recording features** from council sessions
+  - Removed `hasVideo` property from session interface
+  - Removed video badge from session listings
+  - Removed video recording section from session detail pages
+  - Removed `videoUrl` from mock data and database schema
+  - Updated descriptions to not mention video recordings
 
 **Changelog v4.0:**
 - **CLARIFIED: i18n Architecture** - Pages are the SAME across languages, only content is translated
 - **Added dynamic slug routes** for:
   - `/[locale]/stiri/[slug]` - News articles with page builder
   - `/[locale]/evenimente/[slug]` - Events with calendar integration
-  - `/[locale]/cariera/[slug]` - Job vacancies with documents
+  - `/[locale]/informatii-publice/concursuri/[slug]` - Job vacancies with documents
   - `/[locale]/rapoarte-studii/[slug]` - Reports and studies
   - `/[locale]/consiliul-local/sedinte/[slug]` - Council sessions
   - `/[locale]/consiliul-local/hotarari/[slug]` - Council decisions by session

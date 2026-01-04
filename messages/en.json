@@ -84,7 +84,7 @@
     "achizitiiPublice": "Public Procurement",
     "buget": "Budget",
     "taxeImpozite": "Local Taxes and Fees",
-    "concursuri": "Competitions/Jobs",
+    "carieraConcursuri": "Career and Competitions",
     "autorizatiiConstruire": "Building Permits",
     "certificateUrbanism": "Urbanism Certificates",
     "planuriUrbanistice": "Urban Plans",
@@ -143,7 +143,8 @@
     "rapoarteAudit": "Audit Reports",
     "studii": "Studies",
     "sna": "NAS Sectoral Plan",
-    "voluntariat": "Volunteering"
+    "voluntariat": "Volunteering",
+    "sedinte": "Local Council Sessions"
   },
   "homepage": {
     "welcome": "Welcome",
@@ -1016,6 +1017,116 @@
     "infoText": "According to legal provisions, summons and collective announcements for public communication of fiscal administrative acts are posted on the website of Salonta City Hall.",
     "documents": "documents",
     "footerText": "For additional information or to settle obligations, please visit the Local Taxes and Fees Service at Salonta City Hall."
+  },
+  "sedintePage": {
+    "title": "Local Council Sessions",
+    "description": "Calendar of Local Council sessions of Salonta Municipality, including agendas, minutes, and video recordings.",
+    "scheduled": "Scheduled",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "agendaItems": "agenda items",
+    "viewDetails": "View details",
+    "upcomingSessions": "Upcoming Sessions",
+    "pastSessions": "Past Sessions",
+    "backToList": "Back to sessions",
+    "date": "Date",
+    "time": "Time",
+    "location": "Location",
+    "attendance": "Attendance",
+    "present": "Present",
+    "absent": "Absent",
+    "agenda": "Agenda",
+    "documents": "Documents",
+    "videoRecording": "Video Recording",
+    "watchVideo": "Watch session",
+    "votes": "Votes",
+    "for": "For",
+    "against": "Against",
+    "abstain": "Abstain",
+    "decision": "Decision no.",
+    "sessionTypes": {
+      "ordinara": "Regular Session",
+      "extraordinara": "Extraordinary Session",
+      "de_indata": "Emergency Session"
+    },
+    "agendaStatus": {
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "postponed": "Postponed",
+      "withdrawn": "Withdrawn",
+      "pending": "Pending"
+    }
+  },
+  "carieraPage": {
+    "title": "Career and Competitions",
+    "description": "Job vacancies and hiring competitions at Salonta City Hall.",
+    "backToList": "Back to job list",
+    "position": "Position",
+    "department": "Department",
+    "deadline": "Application deadline",
+    "examDate": "Exam date",
+    "interviewDate": "Interview date",
+    "vacancies": "Available positions",
+    "requirements": "Requirements",
+    "education": "Education",
+    "experience": "Experience",
+    "skills": "Required skills",
+    "otherRequirements": "Other requirements",
+    "jobDescription": "Job description",
+    "salary": "Salary",
+    "schedule": "Work schedule",
+    "location": "Location",
+    "contact": "Contact",
+    "documents": "Contest documents",
+    "deadlinePassed": "Application deadline has passed",
+    "applyNow": "Apply now",
+    "openPositions": "Open positions",
+    "closedPositions": "Closed competitions",
+    "noOpenPositions": "There are no job vacancies at this time.",
+    "viewDetails": "View details",
+    "status": {
+      "open": "Applications Open",
+      "in_progress": "Contest In Progress",
+      "closed": "Closed",
+      "cancelled": "Cancelled"
+    },
+    "type": {
+      "functionar_public": "Civil Servant",
+      "contractual": "Contract Employee"
+    },
+    "documentTypes": {
+      "anunt": "Announcement",
+      "fisa_post": "Job Description",
+      "bibliografie": "Bibliography",
+      "formular_inscriere": "Application Form",
+      "pv_selectie_dosare": "File Selection Minutes",
+      "pv_proba_scrisa": "Written Test Minutes",
+      "pv_proba_practica": "Practical Test Minutes",
+      "pv_interviu": "Interview Minutes",
+      "pv_final": "Final Minutes",
+      "other": "Other"
+    }
+  },
+  "raportStudiuPage": {
+    "title": "Reports and Studies",
+    "description": "Audit reports, studies and analyses prepared for Salonta Municipality.",
+    "backToList": "Back to reports and studies",
+    "publishedAt": "Published on",
+    "author": "Author",
+    "department": "Responsible department",
+    "keywords": "Keywords",
+    "summary": "Summary",
+    "descriptionLabel": "Description",
+    "documents": "Attached documents",
+    "downloadMain": "Download main document",
+    "relatedReports": "Related reports",
+    "types": {
+      "audit": "Audit Report",
+      "studiu": "Study",
+      "raport_anual": "Annual Report",
+      "analiza": "Analysis",
+      "evaluare": "Evaluation"
+    }
   }
 }
 

@@ -153,11 +153,10 @@ PRIMĂRIA SALONTA
 │   ├── Consilieri locali (Local Councilors) [DB]
 │   ├── Comisii de specialitate (Specialty Committees) [DB]
 │   ├── Ședințe (Sessions) [DB]
-│   │   └── [slug] (Individual Session: agenda, materials, video) [DB]
+│   │   └── [slug] (Individual Session: agenda, materials) [DB]
 │   │       ├── Dispoziție convocare
 │   │       ├── Ordine de zi
 │   │       ├── Materiale consilieri
-│   │       ├── Link streaming live
 │   │       └── Proces verbal (after session)
 │   ├── Hotărâri (Decisions) [DB]
 │   │   ├── Filtrare pe an
@@ -184,7 +183,13 @@ PRIMĂRIA SALONTA
 │   ├── Autorizații de construire (Building Permits)
 │   ├── Buget (Budget)
 │   ├── Certificate de urbanism (Urbanism Certificates)
-│   ├── Concursuri (Competitions/Jobs)
+│   ├── Carieră și Concursuri (Career & Jobs) [DB]
+│   │   ├── Listing page with filters
+│   │   └── [slug] (Individual Job with Documents) [DB]
+│   │       ├── Anunț concurs
+│   │       ├── Bibliografie
+│   │       ├── Rezultate (selectie/proba scrisă/interviu/finale)
+│   │       └── Formular înscriere
 │   ├── Dispoziții ale primarului (Mayor's Dispositions)
 │   ├── Formulare online (Online Forms)
 │   ├── GDPR
@@ -251,14 +256,6 @@ PRIMĂRIA SALONTA
 │   └── Evenimente (Events) [DB]
 │       ├── Calendar interactiv (Interactive Calendar)
 │       └── [slug] (Individual Event Page with Gallery) [DB]
-│
-├── 💼 CARIERĂ (Career & Jobs)
-│   ├── Posturi vacante (Job Vacancies) [DB]
-│   └── [slug] (Individual Job with Documents) [DB]
-│       ├── Anunț concurs
-│       ├── Bibliografie
-│       ├── Rezultate (selectie/proba scrisă/interviu/finale)
-│       └── Formular înscriere
 │
 ├── 📹 CAMERE WEB (Webcams)
 │   ├── Casa Memorială "Arany János"
@@ -1017,8 +1014,8 @@ All pages currently using mock data will be migrated to fetch data from Supabase
 #### 💼 Career & Jobs (Database-driven)
 | Page | Mock Data Location | Database Table(s) |
 |------|-------------------|-------------------|
-| Carieră (Jobs List) | `app/[locale]/cariera/page.tsx` | `job_vacancies_extended` |
-| Carieră [slug] | `app/[locale]/cariera/[slug]/page.tsx` | `job_vacancies_extended` + `job_vacancy_documents` |
+| Carieră și Concursuri (List) | `app/[locale]/informatii-publice/concursuri/page.tsx` | `job_vacancies_extended` |
+| Carieră [slug] | `app/[locale]/informatii-publice/concursuri/[slug]/page.tsx` | `job_vacancies_extended` + `job_vacancy_documents` |
 
 #### 📈 Reports & Studies (Database-driven)
 | Page | Mock Data Location | Database Table(s) |
@@ -1125,16 +1122,27 @@ All pages currently using mock data will be migrated to fetch data from Supabase
 
 ---
 
-*Document Version: 4.0*
-*Last Updated: January 4, 2026*
+*Document Version: 4.1*
+*Last Updated: January 5, 2026*
 *Author: Development Team*
+
+**Changelog v4.1:**
+- **MOVED `/cariera` to `/informatii-publice/concursuri`** - Career pages now part of public info section
+  - Route updated: `/[locale]/informatii-publice/concursuri/[slug]`
+  - Navigation renamed from "Concursuri" to "Carieră și Concursuri"
+  - SEO key changed from `concursuri` to `carieraConcursuri`
+- **REMOVED video recording features** from council sessions (`/consiliul-local/sedinte`)
+  - Removed video badge from listings
+  - Removed video recording section from detail pages
+  - Updated sitemap (removed "Link streaming live")
+  - Updated descriptions to not mention video recordings
 
 **Changelog v4.0:**
 - **CLARIFIED: i18n System** - Pages are NOT separate per language, same page renders all translations
 - **Added new dynamic routes:**
   - `/[locale]/stiri/[slug]` - News with page builder (admin can set custom slug)
   - `/[locale]/evenimente/[slug]` - Events with calendar integration
-  - `/[locale]/cariera/[slug]` - Job vacancies with hiring workflow documents
+  - `/[locale]/informatii-publice/concursuri/[slug]` - Job vacancies with hiring workflow documents
   - `/[locale]/rapoarte-studii/[slug]` - Reports and studies
   - `/[locale]/consiliul-local/sedinte/[slug]` - Council sessions with agenda & materials
   - `/[locale]/consiliul-local/hotarari/[slug]` - Council decisions grouped by session

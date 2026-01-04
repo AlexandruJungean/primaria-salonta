@@ -84,7 +84,7 @@
     "achizitiiPublice": "Achiziții publice",
     "buget": "Buget",
     "taxeImpozite": "Impozite și taxe locale",
-    "concursuri": "Concursuri",
+    "carieraConcursuri": "Carieră și concursuri",
     "autorizatiiConstruire": "Autorizații de construire",
     "certificateUrbanism": "Certificate de urbanism",
     "planuriUrbanistice": "Planuri urbanistice",
@@ -143,7 +143,8 @@
     "rapoarteAudit": "Rapoarte de audit",
     "studii": "Studii",
     "sna": "Planul sectorial SNA",
-    "voluntariat": "Voluntariat"
+    "voluntariat": "Voluntariat",
+    "sedinte": "Ședințe Consiliul Local"
   },
   "homepage": {
     "welcome": "Bine ați venit",
@@ -1016,6 +1017,116 @@
     "infoText": "Conform prevederilor legale, somațiile și anunțurile colective pentru comunicarea prin publicitate a actelor administrative fiscale sunt afișate pe site-ul Primăriei Municipiului Salonta.",
     "documents": "documente",
     "footerText": "Pentru informații suplimentare sau pentru achitarea obligațiilor, vă rugăm să vă prezentați la Serviciul Impozite și Taxe Locale din cadrul Primăriei Municipiului Salonta."
+  },
+  "sedintePage": {
+    "title": "Ședințe Consiliul Local",
+    "description": "Calendarul ședințelor Consiliului Local al Municipiului Salonta, inclusiv ordine de zi, procese verbale și înregistrări video.",
+    "scheduled": "Programată",
+    "completed": "Finalizată",
+    "cancelled": "Anulată",
+    "agendaItems": "puncte pe ordine de zi",
+    "viewDetails": "Vezi detalii",
+    "upcomingSessions": "Ședințe Programate",
+    "pastSessions": "Ședințe Anterioare",
+    "backToList": "Înapoi la ședințe",
+    "date": "Data",
+    "time": "Ora",
+    "location": "Locație",
+    "attendance": "Prezență",
+    "present": "Prezenți",
+    "absent": "Absenți",
+    "agenda": "Ordine de zi",
+    "documents": "Documente",
+    "videoRecording": "Înregistrare video",
+    "watchVideo": "Vizionează ședința",
+    "votes": "Voturi",
+    "for": "Pentru",
+    "against": "Împotrivă",
+    "abstain": "Abțineri",
+    "decision": "Hotărârea nr.",
+    "sessionTypes": {
+      "ordinara": "Ședință Ordinară",
+      "extraordinara": "Ședință Extraordinară",
+      "de_indata": "Ședință de Îndată"
+    },
+    "agendaStatus": {
+      "approved": "Aprobat",
+      "rejected": "Respins",
+      "postponed": "Amânat",
+      "withdrawn": "Retras",
+      "pending": "În așteptare"
+    }
+  },
+  "carieraPage": {
+    "title": "Carieră și Concursuri",
+    "description": "Posturi vacante și concursuri de angajare la Primăria Municipiului Salonta.",
+    "backToList": "Înapoi la lista de concursuri",
+    "position": "Poziție",
+    "department": "Departament",
+    "deadline": "Termen limită înscriere",
+    "examDate": "Data examenului",
+    "interviewDate": "Data interviului",
+    "vacancies": "Locuri disponibile",
+    "requirements": "Cerințe",
+    "education": "Studii",
+    "experience": "Experiență",
+    "skills": "Abilități necesare",
+    "otherRequirements": "Alte cerințe",
+    "jobDescription": "Descrierea postului",
+    "salary": "Salariu",
+    "schedule": "Program de lucru",
+    "location": "Locație",
+    "contact": "Contact",
+    "documents": "Documente concurs",
+    "deadlinePassed": "Termenul de înscriere a expirat",
+    "applyNow": "Aplică acum",
+    "openPositions": "Posturi deschise",
+    "closedPositions": "Concursuri finalizate",
+    "noOpenPositions": "Nu există posturi vacante în acest moment.",
+    "viewDetails": "Vezi detalii",
+    "status": {
+      "open": "Înscrieri deschise",
+      "in_progress": "Concurs în desfășurare",
+      "closed": "Finalizat",
+      "cancelled": "Anulat"
+    },
+    "type": {
+      "functionar_public": "Funcționar Public",
+      "contractual": "Personal Contractual"
+    },
+    "documentTypes": {
+      "anunt": "Anunț",
+      "fisa_post": "Fișa postului",
+      "bibliografie": "Bibliografie",
+      "formular_inscriere": "Formular înscriere",
+      "pv_selectie_dosare": "PV selecție dosare",
+      "pv_proba_scrisa": "PV probă scrisă",
+      "pv_proba_practica": "PV probă practică",
+      "pv_interviu": "PV interviu",
+      "pv_final": "PV final",
+      "other": "Altele"
+    }
+  },
+  "raportStudiuPage": {
+    "title": "Rapoarte și Studii",
+    "description": "Rapoarte de audit, studii și analize elaborate pentru Municipiul Salonta.",
+    "backToList": "Înapoi la rapoarte și studii",
+    "publishedAt": "Publicat la",
+    "author": "Autor",
+    "department": "Departament responsabil",
+    "keywords": "Cuvinte cheie",
+    "summary": "Rezumat",
+    "descriptionLabel": "Descriere",
+    "documents": "Documente atașate",
+    "downloadMain": "Descarcă documentul principal",
+    "relatedReports": "Rapoarte similare",
+    "types": {
+      "audit": "Raport de Audit",
+      "studiu": "Studiu",
+      "raport_anual": "Raport Anual",
+      "analiza": "Analiză",
+      "evaluare": "Evaluare"
+    }
   }
 }
 

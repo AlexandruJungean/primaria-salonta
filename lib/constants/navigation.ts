@@ -121,7 +121,7 @@ export const MAIN_NAVIGATION: NavSection[] = [
         groupIcon: FileSearch,
         items: [
           { id: 'taxeImpozite', href: '/informatii-publice/taxe-impozite', icon: Receipt },
-          { id: 'concursuri', href: '/informatii-publice/concursuri', icon: BadgeCheck },
+          { id: 'carieraConcursuri', href: '/informatii-publice/concursuri', icon: BadgeCheck },
           { id: 'acteNecesare', href: '/informatii-publice/acte-necesare', icon: FileText },
           { id: 'formulare', href: '/informatii-publice/formulare', icon: ClipboardList },
           { id: 'adapostCaini', href: '/informatii-publice/adapost-caini', icon: Dog },
@@ -212,7 +212,7 @@ export const MAIN_NAVIGATION: NavSection[] = [
           { id: 'certificateUrbanism', href: '/informatii-publice/certificate-urbanism', icon: HomeIcon },
           { id: 'planuriUrbanistice', href: '/informatii-publice/planuri-urbanistice', icon: Map },
           { id: 'taxeImpozite', href: '/informatii-publice/taxe-impozite', icon: Receipt },
-          { id: 'concursuri', href: '/informatii-publice/concursuri', icon: BadgeCheck },
+          { id: 'carieraConcursuri', href: '/informatii-publice/concursuri', icon: BadgeCheck },
           { id: 'mediu', href: '/informatii-publice/mediu', icon: Leaf },
         ],
       },
@@ -290,6 +290,7 @@ export const MAIN_NAVIGATION: NavSection[] = [
         items: [
           { id: 'consilieriLocali', href: '/consiliul-local/consilieri', icon: Users },
           { id: 'comisii', href: '/consiliul-local/comisii', icon: Briefcase },
+          { id: 'sedinte', href: '/consiliul-local/sedinte', icon: Calendar },
           { id: 'ordineZi', href: '/consiliul-local/ordine-de-zi', icon: ListChecks },
           { id: 'hotarari', href: '/consiliul-local/hotarari', icon: Gavel },
           { id: 'hotarariRepublicate', href: '/consiliul-local/hotarari-republicate', icon: FileStack },
@@ -437,6 +438,6 @@ export const QUICK_LINKS = [
   { id: 'petitiiOnline', href: '/servicii-online/petitii', icon: Send },
   { id: 'taxeImpozite', href: '/informatii-publice/taxe-impozite', icon: Receipt },
   { id: 'anunturi', href: '/transparenta/anunturi', icon: Bell },
-  { id: 'concursuri', href: '/informatii-publice/concursuri', icon: BadgeCheck },
+  { id: 'carieraConcursuri', href: '/informatii-publice/concursuri', icon: BadgeCheck },
   { id: 'program', href: '/primaria/program', icon: Calendar },
 ];

@@ -293,22 +293,22 @@ export const PAGE_SEO = {
     },
   },
   
-  // Concursuri
-  concursuri: {
+  // Carieră și Concursuri
+  carieraConcursuri: {
     ro: {
-      title: 'Concursuri și Posturi Vacante - Primăria Salonta',
-      description: 'Anunțuri de angajare la Primăria Salonta - posturi vacante, concursuri, bibliografie, formulare de înscriere și rezultate.',
-      keywords: 'concursuri, posturi vacante, angajare, cariere, Primăria Salonta',
+      title: 'Carieră și Concursuri - Primăria Salonta',
+      description: 'Posturi vacante și concursuri de angajare la Primăria Municipiului Salonta. Anunțuri, cerințe, documente necesare și rezultate.',
+      keywords: 'carieră, concursuri, posturi vacante, angajare, locuri de muncă, Primăria Salonta',
     },
     hu: {
-      title: 'Álláspályázatok - Nagyszalonta Polgármesteri Hivatala',
-      description: 'Álláslehetőségek a Polgármesteri Hivatalnál - üres álláshelyek, pályázatok, bibliográfia, jelentkezési űrlapok és eredmények.',
-      keywords: 'álláspályázatok, üres álláshelyek, karrier, munka',
+      title: 'Karrier és Versenyek - Nagyszalonta Polgármesteri Hivatala',
+      description: 'Üres álláshelyek és álláspályázatok a Nagyszalontai Polgármesteri Hivatalnál. Hirdetmények, követelmények, dokumentumok és eredmények.',
+      keywords: 'karrier, álláspályázatok, üres álláshelyek, munkalehetőségek',
     },
     en: {
-      title: 'Job Vacancies - Salonta City Hall',
-      description: 'Job announcements at Salonta City Hall - vacancies, competitions, bibliography, application forms and results.',
-      keywords: 'job vacancies, careers, employment, Salonta City Hall',
+      title: 'Career and Competitions - Salonta City Hall',
+      description: 'Job vacancies and hiring competitions at Salonta City Hall. Announcements, requirements, documents and results.',
+      keywords: 'career, job vacancies, hiring competitions, employment, Salonta City Hall',
     },
   },
   
@@ -2078,7 +2078,27 @@ export const PAGE_SEO = {
       keywords: 'asset declarations, councilors, interests, transparency',
     },
   },
-} as const;
+
+  // Ședințe Consiliul Local
+  sedinte: {
+    ro: {
+      title: 'Ședințe Consiliul Local - Primăria Salonta',
+      description: 'Calendarul ședințelor Consiliului Local al Municipiului Salonta - ordine de zi, procese verbale, hotărâri și înregistrări video.',
+      keywords: 'ședințe consiliu local, ordine de zi, procese verbale, hotărâri, Salonta',
+    },
+    hu: {
+      title: 'Helyi Tanács Ülései - Nagyszalonta',
+      description: 'Nagyszalonta Helyi Tanácsának ülésrendje - napirend, jegyzőkönyvek, határozatok és videófelvételek.',
+      keywords: 'helyi tanács ülések, napirend, jegyzőkönyvek, határozatok',
+    },
+    en: {
+      title: 'Local Council Sessions - Salonta City Hall',
+      description: 'Calendar of Local Council sessions of Salonta Municipality - agendas, minutes, decisions and video recordings.',
+      keywords: 'local council sessions, agendas, minutes, decisions, Salonta',
+    },
+  },
+
+  } as const;
 
 export type PageKey = keyof typeof PAGE_SEO;
 export type Locale = typeof SEO_CONFIG.locales[number];
