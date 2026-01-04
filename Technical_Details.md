@@ -135,10 +135,29 @@ web-primaria-salonta/
 │   │   │   ├── plati/page.tsx
 │   │   │   ├── petitii/page.tsx
 │   │   │   └── formulare/page.tsx
-│   │   ├── stiri/                   # News
-│   │   │   ├── page.tsx
-│   │   │   └── [slug]/page.tsx
+│   │   ├── stiri/                   # News & Announcements
+│   │   │   ├── page.tsx             # News listing with categories
+│   │   │   └── [slug]/page.tsx      # Individual article (page builder content)
 │   │   ├── evenimente/              # Events
+│   │   │   ├── page.tsx             # Events calendar + listing
+│   │   │   └── [slug]/page.tsx      # Individual event details
+│   │   ├── cariera/                 # Career & Jobs
+│   │   │   ├── page.tsx             # Job vacancies listing
+│   │   │   └── [slug]/page.tsx      # Individual job details + documents
+│   │   ├── rapoarte-studii/         # Reports & Studies
+│   │   │   ├── page.tsx             # Reports listing with filters
+│   │   │   └── [slug]/page.tsx      # Individual report details
+│   │   ├── consiliul-local/         # Local Council
+│   │   │   ├── page.tsx
+│   │   │   ├── consilieri/page.tsx
+│   │   │   ├── comisii/page.tsx
+│   │   │   ├── sedinte/
+│   │   │   │   ├── page.tsx         # Sessions listing by date
+│   │   │   │   └── [slug]/page.tsx  # Individual session (agenda, materials, decisions)
+│   │   │   ├── hotarari/
+│   │   │   │   ├── page.tsx         # Decisions listing with year filter
+│   │   │   │   └── [slug]/page.tsx  # Decisions by session date or individual decision
+│   │   │   └── ...
 │   │   ├── camere-web/              # Webcams
 │   │   ├── contact/                 # Contact
 │   │   └── sitemap/                 # Sitemap
@@ -991,6 +1010,407 @@ CREATE TABLE covid_updates (
   published BOOLEAN DEFAULT true,
   created_at TIMESTAMPTZ DEFAULT now()
 );
+
+-- ============================================
+-- DYNAMIC SLUG PAGES
+-- ============================================
+
+-- ============================================
+-- ȘTIRI ȘI ANUNȚURI (News & Announcements)
+-- Route: /[locale]/stiri/[slug]
+-- ============================================
+
+-- News articles table is defined above (news, news_sections, news_section_images)
+-- Admins can specify custom slug when creating articles
+-- The page builder (news_sections) allows flexible content:
+--   - text, heading, image, gallery, quote, list, video, document, divider, callout, table
+
+-- ============================================
+-- EVENIMENTE (Events)
+-- Route: /[locale]/evenimente/[slug]
+-- ============================================
+
+-- Events table - extended with slug support
+CREATE TABLE events_extended (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  slug TEXT UNIQUE NOT NULL,
+  -- Event details
+  event_date DATE NOT NULL,
+  event_end_date DATE, -- For multi-day events
+  event_time TIME,
+  event_end_time TIME,
+  location TEXT,
+  location_address TEXT,
+  location_coordinates JSONB, -- {lat, lng}
+  -- Visual
+  featured_image_url TEXT,
+  banner_image_url TEXT,
+  -- Status
+  is_recurring BOOLEAN DEFAULT false,
+  recurrence_pattern TEXT, -- 'weekly', 'monthly', 'yearly'
+  featured BOOLEAN DEFAULT false,
+  published BOOLEAN DEFAULT false,
+  -- Romanian (primary)
+  title_ro TEXT NOT NULL,
+  description_ro TEXT,
+  content_ro TEXT, -- Full event details
+  -- Hungarian (auto-translated)
+  title_hu TEXT,
+  description_hu TEXT,
+  content_hu TEXT,
+  -- English (auto-translated)
+  title_en TEXT,
+  description_en TEXT,
+  content_en TEXT,
+  -- Translation
+  translation_status TEXT DEFAULT 'pending',
+  -- Timestamps
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Event gallery images
+CREATE TABLE event_images (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  event_id UUID REFERENCES events_extended(id) ON DELETE CASCADE,
+  image_url TEXT NOT NULL,
+  sort_order INTEGER DEFAULT 0,
+  -- Romanian (primary)
+  caption_ro TEXT,
+  alt_text_ro TEXT,
+  -- Hungarian (auto-translated)
+  caption_hu TEXT,
+  alt_text_hu TEXT,
+  -- English (auto-translated)
+  caption_en TEXT,
+  alt_text_en TEXT,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Event attached documents
+CREATE TABLE event_documents (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  event_id UUID REFERENCES events_extended(id) ON DELETE CASCADE,
+  file_url TEXT NOT NULL,
+  file_name TEXT NOT NULL,
+  file_size INTEGER,
+  sort_order INTEGER DEFAULT 0,
+  -- Romanian (primary)
+  title_ro TEXT NOT NULL,
+  -- Hungarian (auto-translated)
+  title_hu TEXT,
+  -- English (auto-translated)
+  title_en TEXT,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Indexes for events
+CREATE INDEX idx_events_date ON events_extended(event_date DESC);
+CREATE INDEX idx_events_published ON events_extended(published, event_date);
+CREATE INDEX idx_events_featured ON events_extended(featured) WHERE featured = true;
+
+-- ============================================
+-- CARIERĂ ȘI CONCURSURI (Career & Jobs)
+-- Route: /[locale]/cariera/[slug]
+-- ============================================
+
+-- Job vacancies with slug - extended version
+CREATE TABLE job_vacancies_extended (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  slug TEXT UNIQUE NOT NULL,
+  -- Job details
+  position_type TEXT NOT NULL CHECK (position_type IN (
+    'functie_publica',           -- Funcție publică
+    'personal_contractual',      -- Personal contractual
+    'manager',                   -- Manager/Director
+    'specialist',                -- Specialist
+    'auxiliar'                   -- Personal auxiliar
+  )),
+  department TEXT NOT NULL,      -- Compartiment/Serviciu
+  grade TEXT,                    -- Grad profesional (ex: superior, principal, asistent)
+  level TEXT,                    -- Nivel funcție (execuție, conducere)
+  positions_count INTEGER DEFAULT 1, -- Număr posturi
+  -- Dates
+  application_deadline DATE NOT NULL,
+  exam_date DATE,
+  interview_date DATE,
+  results_date DATE,
+  -- Status
+  status TEXT DEFAULT 'activ' CHECK (status IN ('activ', 'in_desfasurare', 'finalizat', 'anulat')),
+  published BOOLEAN DEFAULT true,
+  -- Romanian (primary)
+  title_ro TEXT NOT NULL,
+  requirements_ro TEXT,          -- Cerințe generale
+  specific_requirements_ro TEXT, -- Cerințe specifice
+  responsibilities_ro TEXT,      -- Responsabilități
+  benefits_ro TEXT,              -- Beneficii
+  how_to_apply_ro TEXT,          -- Cum se aplică
+  -- Hungarian (auto-translated)
+  title_hu TEXT,
+  requirements_hu TEXT,
+  specific_requirements_hu TEXT,
+  responsibilities_hu TEXT,
+  benefits_hu TEXT,
+  how_to_apply_hu TEXT,
+  -- English (auto-translated)
+  title_en TEXT,
+  requirements_en TEXT,
+  specific_requirements_en TEXT,
+  responsibilities_en TEXT,
+  benefits_en TEXT,
+  how_to_apply_en TEXT,
+  -- Translation
+  translation_status TEXT DEFAULT 'pending',
+  -- Documents
+  announcement_pdf_url TEXT,     -- Anunț concurs
+  bibliography_pdf_url TEXT,     -- Bibliografie
+  form_pdf_url TEXT,             -- Formular înscriere
+  results_pdf_url TEXT,          -- Rezultate finale
+  -- Timestamps
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Job vacancy documents (multiple per job)
+CREATE TABLE job_vacancy_documents (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  job_id UUID REFERENCES job_vacancies_extended(id) ON DELETE CASCADE,
+  document_type TEXT NOT NULL CHECK (document_type IN (
+    'anunt',                     -- Anunț concurs
+    'bibliografie',              -- Bibliografie
+    'formular',                  -- Formular înscriere
+    'calendar',                  -- Calendar desfășurare
+    'rezultate_selectie',        -- Rezultate selecție dosare
+    'rezultate_proba_scrisa',    -- Rezultate probă scrisă
+    'rezultate_interviu',        -- Rezultate interviu
+    'rezultate_finale',          -- Rezultate finale
+    'contestatie',               -- Contestații
+    'altele'                     -- Alte documente
+  )),
+  file_url TEXT NOT NULL,
+  file_name TEXT NOT NULL,
+  upload_date DATE DEFAULT CURRENT_DATE,
+  sort_order INTEGER DEFAULT 0,
+  -- Romanian (primary)
+  title_ro TEXT NOT NULL,
+  -- Hungarian (auto-translated)
+  title_hu TEXT,
+  -- English (auto-translated)
+  title_en TEXT,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Job vacancy table columns for listing display:
+-- | Coloană | Descriere |
+-- |---------|-----------|
+-- | Titlu post | title_ro/hu/en |
+-- | Departament | department |
+-- | Tip poziție | position_type |
+-- | Nr. posturi | positions_count |
+-- | Termen limită | application_deadline |
+-- | Status | status |
+-- | Acțiuni | View/Edit buttons |
+
+-- Indexes for jobs
+CREATE INDEX idx_jobs_deadline ON job_vacancies_extended(application_deadline DESC);
+CREATE INDEX idx_jobs_status ON job_vacancies_extended(status);
+CREATE INDEX idx_jobs_published ON job_vacancies_extended(published, status);
+
+-- ============================================
+-- ȘEDINȚE CONSILIU LOCAL (Council Sessions)
+-- Route: /[locale]/consiliul-local/sedinte/[slug]
+-- ============================================
+
+-- Council sessions with slug
+CREATE TABLE council_sessions_extended (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  slug TEXT UNIQUE NOT NULL,    -- Generated from date, e.g., "sedinta-28-ianuarie-2025"
+  -- Session details
+  session_date DATE NOT NULL,
+  session_time TIME NOT NULL,
+  session_type TEXT DEFAULT 'ordinara' CHECK (session_type IN ('ordinara', 'extraordinara', 'de_indata')),
+  location TEXT DEFAULT 'Sala de ședințe a Consiliului Local',
+  -- Live streaming
+  is_live BOOLEAN DEFAULT false,
+  zoom_url TEXT,
+  meeting_id TEXT,
+  passcode TEXT,
+  -- Status
+  status TEXT DEFAULT 'programata' CHECK (status IN ('programata', 'in_desfasurare', 'finalizata', 'anulata')),
+  published BOOLEAN DEFAULT true,
+  -- Romanian (primary) - titles don't need translation for legal documents
+  title_ro TEXT NOT NULL,       -- e.g., "Ședința ordinară din 28 ianuarie 2025"
+  -- Timestamps
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Session documents (agenda, convocation, minutes, etc.)
+CREATE TABLE council_session_documents (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  session_id UUID REFERENCES council_sessions_extended(id) ON DELETE CASCADE,
+  document_type TEXT NOT NULL CHECK (document_type IN (
+    'dispozitie_convocare',      -- Dispoziție de convocare
+    'ordine_zi',                 -- Ordine de zi
+    'materiale_consilieri',     -- Materiale pentru consilieri
+    'proiect_hotarare',         -- Proiect de hotărâre
+    'proces_verbal',            -- Proces verbal
+    'inregistrare_video',       -- Link înregistrare video
+    'altele'                    -- Alte documente
+  )),
+  file_url TEXT NOT NULL,
+  file_name TEXT NOT NULL,
+  sort_order INTEGER DEFAULT 0,
+  title TEXT NOT NULL,           -- Romanian only (legal)
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Session agenda items
+CREATE TABLE council_session_agenda (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  session_id UUID REFERENCES council_sessions_extended(id) ON DELETE CASCADE,
+  item_number INTEGER NOT NULL,
+  title TEXT NOT NULL,           -- Romanian only
+  description TEXT,
+  project_pdf_url TEXT,         -- Link to project document
+  decision_id UUID,             -- Link to adopted decision (after session)
+  sort_order INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Indexes for sessions
+CREATE INDEX idx_sessions_date ON council_sessions_extended(session_date DESC);
+CREATE INDEX idx_sessions_status ON council_sessions_extended(status);
+
+-- ============================================
+-- HOTĂRÂRI CONSILIU LOCAL (Council Decisions)
+-- Route: /[locale]/consiliul-local/hotarari/[slug]
+-- ============================================
+
+-- Council decisions with slug and session grouping
+CREATE TABLE council_decisions_extended (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  slug TEXT UNIQUE NOT NULL,     -- e.g., "hcl-123-2025" or "sedinta-28-ianuarie-2025"
+  -- Decision details
+  decision_number TEXT NOT NULL, -- e.g., "123"
+  decision_date DATE NOT NULL,
+  year INTEGER NOT NULL,
+  -- Session reference (for grouping by session date)
+  session_id UUID REFERENCES council_sessions_extended(id),
+  session_date DATE,             -- Denormalized for faster queries
+  -- Category
+  category TEXT,                 -- e.g., "buget", "urbanism", "social", etc.
+  -- Status
+  is_republished BOOLEAN DEFAULT false, -- Hotărâre republicată
+  is_modified BOOLEAN DEFAULT false,    -- Hotărâre modificată
+  modifies_decision_id UUID,     -- Reference to decision it modifies
+  published BOOLEAN DEFAULT true,
+  -- Content
+  title TEXT NOT NULL,           -- Romanian only (legal document)
+  summary TEXT,                  -- Brief summary
+  decision_pdf_url TEXT,         -- Main decision PDF
+  -- Timestamps
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now(),
+  UNIQUE(decision_number, year)
+);
+
+-- Council decision annexes
+CREATE TABLE council_decision_annexes (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  decision_id UUID REFERENCES council_decisions_extended(id) ON DELETE CASCADE,
+  annex_number TEXT,             -- e.g., "Anexa 1"
+  file_url TEXT NOT NULL,
+  file_name TEXT NOT NULL,
+  title TEXT NOT NULL,
+  sort_order INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- View for decisions grouped by session date
+CREATE VIEW council_decisions_by_session AS
+SELECT 
+  session_date,
+  COUNT(*) as decisions_count,
+  array_agg(id ORDER BY decision_number) as decision_ids
+FROM council_decisions_extended
+WHERE published = true
+GROUP BY session_date
+ORDER BY session_date DESC;
+
+-- Indexes for decisions
+CREATE INDEX idx_decisions_year ON council_decisions_extended(year DESC, decision_number);
+CREATE INDEX idx_decisions_session ON council_decisions_extended(session_date DESC);
+CREATE INDEX idx_decisions_category ON council_decisions_extended(category);
+
+-- ============================================
+-- RAPOARTE ȘI STUDII (Reports & Studies)
+-- Route: /[locale]/rapoarte-studii/[slug]
+-- ============================================
+
+-- Reports and Studies with slug support
+CREATE TABLE reports_studies (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  slug TEXT UNIQUE NOT NULL,
+  -- Type classification
+  report_type TEXT NOT NULL CHECK (report_type IN (
+    'raport_audit',              -- Raport audit Curtea de Conturi
+    'raport_anual',              -- Raport anual primar/instituție
+    'raport_activitate',         -- Raport de activitate
+    'studiu_fezabilitate',       -- Studiu de fezabilitate
+    'studiu_impact',             -- Studiu de impact
+    'analiza',                   -- Analiză
+    'cercetare',                 -- Cercetare
+    'evaluare',                  -- Evaluare
+    'altele'                     -- Alte documente
+  )),
+  category TEXT,                 -- Sub-category for filtering
+  year INTEGER,
+  -- Visual
+  cover_image_url TEXT,
+  -- Status
+  published BOOLEAN DEFAULT true,
+  featured BOOLEAN DEFAULT false,
+  -- Romanian (primary)
+  title_ro TEXT NOT NULL,
+  description_ro TEXT,
+  summary_ro TEXT,               -- Executive summary
+  -- Hungarian (auto-translated for titles/summaries only)
+  title_hu TEXT,
+  description_hu TEXT,
+  summary_hu TEXT,
+  -- English (auto-translated)
+  title_en TEXT,
+  description_en TEXT,
+  summary_en TEXT,
+  -- Translation
+  translation_status TEXT DEFAULT 'pending',
+  -- Main document
+  document_pdf_url TEXT,
+  file_size INTEGER,
+  -- Timestamps
+  published_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Reports studies attachments (multiple files per report)
+CREATE TABLE reports_studies_attachments (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  report_id UUID REFERENCES reports_studies(id) ON DELETE CASCADE,
+  file_url TEXT NOT NULL,
+  file_name TEXT NOT NULL,
+  file_size INTEGER,
+  attachment_type TEXT DEFAULT 'anexa' CHECK (attachment_type IN ('anexa', 'date', 'grafice', 'altele')),
+  sort_order INTEGER DEFAULT 0,
+  title TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Indexes for reports
+CREATE INDEX idx_reports_type ON reports_studies(report_type);
+CREATE INDEX idx_reports_year ON reports_studies(year DESC);
+CREATE INDEX idx_reports_published ON reports_studies(published, published_at DESC);
 ```
 
 ### 3.2 Row Level Security (RLS) Policies
@@ -1882,6 +2302,27 @@ export function DocumentList({ documents }: { documents: Document[] }) {
 ---
 
 ## 4. Internationalization (i18n)
+
+### 4.0 Multi-Language Architecture
+
+**IMPORTANT: All pages are the SAME across languages - only the content is translated.**
+
+The website does NOT have separate pages for different languages. Instead:
+- **Single codebase**: Each page exists once (e.g., `app/[locale]/stiri/[slug]/page.tsx`)
+- **URL-based locale**: `/ro/stiri/articol-nou`, `/hu/stiri/articol-nou`, `/en/stiri/articol-nou` all render the SAME page
+- **Content translation**: Database stores content in all 3 languages (columns: `title_ro`, `title_hu`, `title_en`)
+- **UI translation**: Static UI text is translated via JSON files (`messages/ro.json`, `messages/hu.json`, `messages/en.json`)
+
+**How it works:**
+1. User visits `/hu/stiri/articol-nou`
+2. Next.js extracts `locale = "hu"` from the URL
+3. Page fetches article from database with Hungarian content: `title_hu`, `content_hu`
+4. UI elements (buttons, labels) come from `messages/hu.json`
+5. Same page component renders everything in Hungarian
+
+**Slug sharing:**
+- Slugs are language-agnostic (e.g., `zilele-salontane-2025`)
+- The same slug works for all locales: `/ro/evenimente/zilele-salontane-2025` and `/hu/evenimente/zilele-salontane-2025`
 
 ### 4.1 Setup with next-intl v4 (App Router)
 
@@ -5146,9 +5587,29 @@ When migrating from mock data to database:
 
 ---
 
-*Document Version: 3.0*
-*Last Updated: January 2, 2026*
+*Document Version: 4.0*
+*Last Updated: January 4, 2026*
 *Author: Development Team*
+
+**Changelog v4.0:**
+- **CLARIFIED: i18n Architecture** - Pages are the SAME across languages, only content is translated
+- **Added dynamic slug routes** for:
+  - `/[locale]/stiri/[slug]` - News articles with page builder
+  - `/[locale]/evenimente/[slug]` - Events with calendar integration
+  - `/[locale]/cariera/[slug]` - Job vacancies with documents
+  - `/[locale]/rapoarte-studii/[slug]` - Reports and studies
+  - `/[locale]/consiliul-local/sedinte/[slug]` - Council sessions
+  - `/[locale]/consiliul-local/hotarari/[slug]` - Council decisions by session
+- **Extended database schema** with:
+  - `events_extended`, `event_images`, `event_documents` tables
+  - `job_vacancies_extended`, `job_vacancy_documents` tables
+  - `council_sessions_extended`, `council_session_documents`, `council_session_agenda` tables
+  - `council_decisions_extended`, `council_decision_annexes` tables
+  - `reports_studies`, `reports_studies_attachments` tables
+- **Added job vacancy document types** for complete hiring workflow
+- **Added council session document types** for full session lifecycle
+- **Updated folder structure** with new dynamic routes
+- **Added .gitignore entries** for documente_descarcate and scripts folders
 
 **Changelog v3.0:**
 - Added comprehensive SEO Implementation section (Section 13)

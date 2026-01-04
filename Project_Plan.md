@@ -150,13 +150,25 @@ PRIMĂRIA SALONTA
 │   └── Rapoarte anuale ale Primarului (Mayor's Annual Reports)
 │
 ├── 📜 CONSILIUL LOCAL (Local Council)
-│   ├── Consilieri locali (Local Councilors)
-│   ├── Comisii de specialitate (Specialty Committees)
-│   ├── Ordine de zi (Agendas)
-│   ├── Hotărâri și procese verbale (Decisions and Minutes)
-│   ├── Hotărâri republicate (Republished Decisions)
-│   ├── Declarații de avere (Wealth Declarations)
-│   └── Rapoarte de activitate (Activity Reports)
+│   ├── Consilieri locali (Local Councilors) [DB]
+│   ├── Comisii de specialitate (Specialty Committees) [DB]
+│   ├── Ședințe (Sessions) [DB]
+│   │   └── [slug] (Individual Session: agenda, materials, video) [DB]
+│   │       ├── Dispoziție convocare
+│   │       ├── Ordine de zi
+│   │       ├── Materiale consilieri
+│   │       ├── Link streaming live
+│   │       └── Proces verbal (after session)
+│   ├── Hotărâri (Decisions) [DB]
+│   │   ├── Filtrare pe an
+│   │   ├── Căutare text
+│   │   └── [slug] (Decisions by Session Date) [DB]
+│   │       ├── Listă hotărâri adoptate
+│   │       ├── Procese verbale
+│   │       └── Anexe
+│   ├── Hotărâri republicate (Republished Decisions) [DB]
+│   ├── Declarații de avere (Wealth Declarations) [DB]
+│   └── Rapoarte de activitate (Activity Reports) [DB]
 │
 ├── 📊 TRANSPARENȚĂ (Transparency)
 │   ├── Generale (General)
@@ -207,8 +219,13 @@ PRIMĂRIA SALONTA
 │   └── Serviciul Voluntar pentru situații de urgență (SVSU)
 │
 ├── 📈 RAPOARTE ȘI STUDII (Reports and Studies)
-│   ├── Raportul de audit al Curții de Conturi
-│   └── Studii (Studies)
+│   ├── Listing cu filtre (tip raport, an, categorie) [DB]
+│   └── [slug] (Individual Report/Study) [DB]
+│       ├── Raport audit Curtea de Conturi
+│       ├── Raport anual primar
+│       ├── Studii de fezabilitate
+│       ├── Studii de impact
+│       └── Analize și evaluări
 │
 ├── 📚 MONITORUL OFICIAL LOCAL (Local Official Monitor) [MANDATORY]
 │   ├── Statutul UAT (Territorial Unit Statute)
@@ -228,11 +245,20 @@ PRIMĂRIA SALONTA
 │   └── Stadiu cereri (Request Status)
 │
 ├── 📰 ȘTIRI ȘI EVENIMENTE (News and Events)
-│   ├── Știri (News)
-│   │   └── [slug] (Individual News Article Page)
-│   ├── Anunțuri (Announcements)
-│   └── Evenimente (Events)
-│       └── [slug] (Individual Event Page)
+│   ├── Știri (News) [DB]
+│   │   └── [slug] (Individual News Article with Page Builder) [DB]
+│   ├── Anunțuri (Announcements) [DB - category filter on news]
+│   └── Evenimente (Events) [DB]
+│       ├── Calendar interactiv (Interactive Calendar)
+│       └── [slug] (Individual Event Page with Gallery) [DB]
+│
+├── 💼 CARIERĂ (Career & Jobs)
+│   ├── Posturi vacante (Job Vacancies) [DB]
+│   └── [slug] (Individual Job with Documents) [DB]
+│       ├── Anunț concurs
+│       ├── Bibliografie
+│       ├── Rezultate (selectie/proba scrisă/interviu/finale)
+│       └── Formular înscriere
 │
 ├── 📹 CAMERE WEB (Webcams)
 │   ├── Casa Memorială "Arany János"
@@ -273,6 +299,14 @@ These must be displayed prominently with their respective images:
 | Română (Romanian) | `ro` | Default (Primary content language) |
 | Magyar (Hungarian) | `hu` | Secondary (significant Hungarian minority in Salonta) |
 | English | `en` | Tertiary (tourists, international) |
+
+**⚠️ IMPORTANT: Pages are NOT separate for each language!**
+
+All pages are the SAME component across all languages - only the content is translated:
+- `/ro/stiri/articol-important` and `/hu/stiri/articol-important` render the SAME page component
+- The page reads `locale` from URL and fetches appropriate translations from database
+- Slugs are shared across languages (no separate Hungarian/English slugs)
+- Example: Event "Zilele Salontane 2025" uses slug `zilele-salontane-2025` for all 3 languages
 
 **Implementation:**
 - Language selector in header
@@ -754,7 +788,7 @@ The News Builder provides a drag-and-drop interface for creating rich news artic
 | Field | Description |
 |-------|-------------|
 | Title | Article title (auto-translated to HU/EN) |
-| Slug | URL-friendly identifier (auto-generated) |
+| Slug | URL-friendly identifier (**admin can customize or auto-generate**) |
 | Category | anunturi, consiliu, proiecte, stiri, comunicate |
 | Featured Image | Main image for listings and social sharing |
 | Excerpt | Short summary for listings (auto-translated) |
@@ -764,6 +798,11 @@ The News Builder provides a drag-and-drop interface for creating rich news artic
 | Published At | Publication date/time |
 | Expires At | Optional expiration date |
 | Featured | Mark as featured for homepage display |
+
+**Slug Generation:**
+- Auto-generated from title: "Anunț important pentru cetățeni" → `anunt-important-pentru-cetateni`
+- Admin can customize: `anunt-cetateni-2025`
+- Same slug used for all languages: `/ro/stiri/anunt-cetateni-2025`, `/hu/stiri/anunt-cetateni-2025`
 
 **Available Content Blocks (Sections):**
 | Block Type | Description |
@@ -969,19 +1008,33 @@ All pages currently using mock data will be migrated to fetch data from Supabase
 | Page | Mock Data Location | Database Table(s) |
 |------|-------------------|-------------------|
 | Homepage - News Section | `components/sections/news-section.tsx` | `news` |
-| Homepage - Events Section | `lib/constants/events.ts` | `events` |
+| Homepage - Events Section | `lib/constants/events.ts` | `events_extended` |
 | Știri (News List) | `app/[locale]/stiri/page.tsx` | `news` |
 | Știri [slug] (Article Detail) | `app/[locale]/stiri/[slug]/page.tsx` | `news` + `news_sections` + `news_section_images` |
-| Evenimente (Events) | `lib/constants/events.ts` | `events` |
+| Evenimente (Events List) | `lib/constants/events.ts` | `events_extended` |
+| Evenimente [slug] | `app/[locale]/evenimente/[slug]/page.tsx` | `events_extended` + `event_images` + `event_documents` |
+
+#### 💼 Career & Jobs (Database-driven)
+| Page | Mock Data Location | Database Table(s) |
+|------|-------------------|-------------------|
+| Carieră (Jobs List) | `app/[locale]/cariera/page.tsx` | `job_vacancies_extended` |
+| Carieră [slug] | `app/[locale]/cariera/[slug]/page.tsx` | `job_vacancies_extended` + `job_vacancy_documents` |
+
+#### 📈 Reports & Studies (Database-driven)
+| Page | Mock Data Location | Database Table(s) |
+|------|-------------------|-------------------|
+| Rapoarte și Studii (List) | `app/[locale]/rapoarte-studii/page.tsx` | `reports_studies` |
+| Rapoarte [slug] | `app/[locale]/rapoarte-studii/[slug]/page.tsx` | `reports_studies` + `reports_studies_attachments` |
 
 #### 📜 Council & Officials (Database-driven)
 | Page | Mock Data Location | Database Table(s) |
 |------|-------------------|-------------------|
 | Consilieri Locali | `app/[locale]/consiliul-local/consilieri/page.tsx` | `councilors` + `council_commissions` |
 | Comisii de specialitate | `app/[locale]/consiliul-local/comisii/page.tsx` | `council_commissions` + `commission_members` |
-| Hotărâri CL | `app/[locale]/consiliul-local/hotarari/page.tsx` | `council_decisions` |
-| Procese Verbale | `app/[locale]/consiliul-local/procese-verbale/page.tsx` | `council_minutes` |
-| Ședințe CL | `app/[locale]/consiliul-local/sedinte/page.tsx` | `council_sessions` |
+| Ședințe CL (List) | `app/[locale]/consiliul-local/sedinte/page.tsx` | `council_sessions_extended` |
+| Ședințe [slug] | `app/[locale]/consiliul-local/sedinte/[slug]/page.tsx` | `council_sessions_extended` + `council_session_documents` + `council_session_agenda` |
+| Hotărâri CL (List) | `app/[locale]/consiliul-local/hotarari/page.tsx` | `council_decisions_extended` |
+| Hotărâri [slug] | `app/[locale]/consiliul-local/hotarari/[slug]/page.tsx` | `council_decisions_extended` + `council_decision_annexes` |
 | Declarații Avere (Primăria) | `app/[locale]/primaria/declaratii-avere/page.tsx` | `wealth_declarations` |
 | Declarații Avere (Consiliu) | `app/[locale]/consiliul-local/declaratii-avere/page.tsx` | `councilor_declarations` |
 
@@ -1072,9 +1125,23 @@ All pages currently using mock data will be migrated to fetch data from Supabase
 
 ---
 
-*Document Version: 3.0*
-*Last Updated: January 2, 2026*
+*Document Version: 4.0*
+*Last Updated: January 4, 2026*
 *Author: Development Team*
+
+**Changelog v4.0:**
+- **CLARIFIED: i18n System** - Pages are NOT separate per language, same page renders all translations
+- **Added new dynamic routes:**
+  - `/[locale]/stiri/[slug]` - News with page builder (admin can set custom slug)
+  - `/[locale]/evenimente/[slug]` - Events with calendar integration
+  - `/[locale]/cariera/[slug]` - Job vacancies with hiring workflow documents
+  - `/[locale]/rapoarte-studii/[slug]` - Reports and studies
+  - `/[locale]/consiliul-local/sedinte/[slug]` - Council sessions with agenda & materials
+  - `/[locale]/consiliul-local/hotarari/[slug]` - Council decisions grouped by session
+- **Updated sitemap** with new routes and [DB] markers for database-driven pages
+- **Updated migration tables** with new database tables
+- **Added slug customization** for news articles
+- **Updated .gitignore** to exclude migration scripts and downloaded documents
 
 **Changelog v3.0:**
 - Added comprehensive SEO Implementation section (5.7)

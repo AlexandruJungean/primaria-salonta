@@ -115,7 +115,7 @@ export async function generateMetadata({
       },
     },
     icons: DEFAULT_ICONS,
-    manifest: '/manifest.json',
+    // manifest: '/manifest.json', // Dezactivat pentru a preveni popup-ul PWA pe mobil
     category: 'government',
     classification: 'Government Website',
     referrer: 'origin-when-cross-origin',
@@ -125,20 +125,22 @@ export async function generateMetadata({
       // yandex: 'your-yandex-verification-code',
       // bing: 'your-bing-verification-code',
     },
-    appleWebApp: {
-      capable: true,
-      statusBarStyle: 'default',
-      title: siteName,
-    },
+    // appleWebApp dezactivat pentru a preveni popup-ul PWA pe iOS
+    // appleWebApp: {
+    //   capable: true,
+    //   statusBarStyle: 'default',
+    //   title: siteName,
+    // },
     other: {
       'msapplication-TileColor': '#1E3A5F',
       'msapplication-config': '/browserconfig.xml',
       'theme-color': '#1E3A5F',
       'color-scheme': 'light',
       'format-detection': 'telephone=yes',
-      'mobile-web-app-capable': 'yes',
-      'apple-mobile-web-app-capable': 'yes',
-      'apple-mobile-web-app-status-bar-style': 'default',
+      // Dezactivate pentru a preveni popup-ul PWA pe mobil
+      // 'mobile-web-app-capable': 'yes',
+      // 'apple-mobile-web-app-capable': 'yes',
+      // 'apple-mobile-web-app-status-bar-style': 'default',
       // Geo tags for local SEO
       'geo.region': 'RO-BH',
       'geo.placename': 'Salonta',

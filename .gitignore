@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Migration scripts and downloaded documents (not part of the project)
+/documente_descarcate/
+/scripts/
