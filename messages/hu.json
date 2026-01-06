@@ -1,8 +1,8 @@
 {
   "metadata": {
     "title": "Nagyszalonta Polgármesteri Hivatala | Hivatalos Oldal",
-    "description": "Nagyszalonta Város Polgármesteri Hivatalának hivatalos weboldala - Információk a polgárok számára, online szolgáltatások, átláthatóság és közösség.",
-    "keywords": "Nagyszalonta Polgármesteri Hivatal, Nagyszalonta, Bihar, közszolgáltatások, helyi közigazgatás, város, Romania"
+    "description": "Nagyszalonta Polgármesteri Hivatalának hivatalos weboldala Bihar megyében - Online szolgáltatások, adók, illetékek, átláthatóság és közösségi események.",
+    "keywords": "Nagyszalonta Polgármesteri Hivatal, Nagyszalonta, Bihar, közszolgáltatások, helyi közigazgatás, város, Romania, adók"
   },
   "common": {
     "search": "Keresés",
@@ -173,6 +173,9 @@
     "fax": "Fax",
     "email": "E-mail",
     "schedule": "Ügyfélfogadás",
+    "program": "Munkaprogram",
+    "contactUs": "Lépjen velünk kapcsolatba információkért és segítségért",
+    "contactPage": "Kapcsolat oldal megtekintése",
     "followUs": "Kövessen minket",
     "usefulLinks": "Hasznos linkek",
     "legalInfo": "Jogi információk",

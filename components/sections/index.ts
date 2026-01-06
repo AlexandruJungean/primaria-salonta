@@ -1,4 +1,5 @@
 // Re-export all section components
+export * from './contact-info-section';
 export * from './external-links-section';
 export * from './hero-carousel';
 export * from './news-section';

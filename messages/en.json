@@ -1,8 +1,8 @@
 {
   "metadata": {
     "title": "Salonta City Hall | Official Website | Bihor, Romania",
-    "description": "Official website of Salonta City Hall - Information for citizens, online services, transparency and community.",
-    "keywords": "Salonta City Hall, Salonta, Bihor, public services, local administration, Romania, municipality"
+    "description": "Official website of Salonta City Hall in Bihor County, Romania - Online services, taxes, forms, transparency and local events for citizens.",
+    "keywords": "Salonta City Hall, Salonta, Bihor, public services, local administration, Romania, municipality, taxes"
   },
   "common": {
     "search": "Search",
@@ -173,6 +173,9 @@
     "fax": "Fax",
     "email": "Email",
     "schedule": "Schedule",
+    "program": "Working Hours",
+    "contactUs": "Contact us for information and assistance",
+    "contactPage": "View contact page",
     "followUs": "Follow us",
     "usefulLinks": "Useful Links",
     "legalInfo": "Legal Information",

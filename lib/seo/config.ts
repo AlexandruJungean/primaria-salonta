@@ -68,18 +68,18 @@ export const PAGE_SEO = {
   // Homepage
   home: {
     ro: {
-      title: 'Primăria Municipiului Salonta | Site Oficial',
-      description: 'Site-ul oficial al Primăriei Municipiului Salonta - Informații pentru cetățeni, servicii online, transparență, taxe și impozite, formulare, anunțuri și evenimente.',
+      title: 'Primăria Municipiului Salonta | Site Oficial | Bihor',
+      description: 'Site-ul oficial al Primăriei Salonta, Bihor - Servicii online pentru cetățeni, taxe și impozite, formulare, transparență și evenimente locale.',
       keywords: 'Primăria Salonta, Municipiul Salonta, Bihor, servicii publice, administrație locală, taxe impozite, formulare online, anunțuri',
     },
     hu: {
       title: 'Nagyszalonta Polgármesteri Hivatala | Hivatalos Oldal',
-      description: 'Nagyszalonta Polgármesteri Hivatalának hivatalos weboldala - Információk polgároknak, online szolgáltatások, átláthatóság, adók és illetékek.',
+      description: 'Nagyszalonta Polgármesteri Hivatalának hivatalos weboldala Bihar megyében - Online szolgáltatások, adók, illetékek, átláthatóság és közösségi események.',
       keywords: 'Nagyszalonta, Polgármesteri Hivatal, Bihar megye, közszolgáltatások, helyi önkormányzat, adók',
     },
     en: {
-      title: 'Salonta City Hall | Official Website',
-      description: 'Official website of Salonta City Hall - Information for citizens, online services, transparency, taxes, forms, announcements and events.',
+      title: 'Salonta City Hall | Official Website | Bihor, Romania',
+      description: 'Official website of Salonta City Hall in Bihor County, Romania - Online services, taxes, forms, transparency and local events for citizens.',
       keywords: 'Salonta City Hall, Salonta Municipality, Bihor, public services, local administration, taxes',
     },
   },

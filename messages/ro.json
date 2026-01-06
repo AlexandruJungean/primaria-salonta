@@ -1,8 +1,8 @@
 {
   "metadata": {
     "title": "Primăria Municipiului Salonta | Site Oficial | Bihor",
-    "description": "Site-ul oficial al Primăriei Municipiului Salonta - Informații pentru cetățeni, servicii online, transparență și comunitate.",
-    "keywords": "Primăria Salonta, Salonta, Bihor, servicii publice, administrație locală, primărie, municipiul Salonta, Bihor"
+    "description": "Site-ul oficial al Primăriei Salonta, Bihor - Servicii online pentru cetățeni, taxe și impozite, formulare, transparență și evenimente locale.",
+    "keywords": "Primăria Salonta, Salonta, Bihor, servicii publice, administrație locală, primărie, municipiul Salonta, taxe impozite"
   },
   "common": {
     "search": "Căutare",
@@ -173,6 +173,9 @@
     "fax": "Fax",
     "email": "Email",
     "schedule": "Program",
+    "program": "Program de lucru",
+    "contactUs": "Contactați-ne pentru informații și asistență",
+    "contactPage": "Vezi pagina de contact",
     "followUs": "Urmărește-ne",
     "usefulLinks": "Link-uri utile",
     "legalInfo": "Informații legale",

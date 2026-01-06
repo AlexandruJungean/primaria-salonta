@@ -5,6 +5,7 @@ import { QuickLinksSection } from '@/components/sections/quick-links';
 import { NewsSection } from '@/components/sections/news-section';
 import { UpcomingEventsSection } from '@/components/sections/upcoming-events-section';
 import { CityMapSection } from '@/components/sections/city-map-section';
+import { ContactInfoSection } from '@/components/sections/contact-info-section';
 import { ExternalLinksSection } from '@/components/sections/external-links-section';
 import { generatePageMetadata } from '@/lib/seo/metadata';
 import { WebPageJsonLd } from '@/lib/seo/json-ld';
@@ -50,6 +51,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
       {/* Interactive City Map */}
       <CityMapSection />
+
+      {/* Contact Information - Local SEO */}
+      <ContactInfoSection />
 
       {/* External Partner Links */}
       <ExternalLinksSection />
