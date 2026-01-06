@@ -17,7 +17,7 @@ const MOCK_NEWS = [
   {
     id: '1',
     slug: 'despre-violenta-domestica',
-    image: '/images/primaria-salonta-1.jpg',
+    image: '/images/primaria-salonta-1.webp',
     date: '2025-11-11',
     category: 'anunturi',
     translations: {
@@ -29,7 +29,7 @@ const MOCK_NEWS = [
   {
     id: '2',
     slug: 'ajutor-incalzire-locuinta-2025',
-    image: '/images/primaria-salonta-2.jpg',
+    image: '/images/primaria-salonta-2.webp',
     date: '2025-10-31',
     category: 'anunturi',
     translations: {
@@ -41,7 +41,7 @@ const MOCK_NEWS = [
   {
     id: '3',
     slug: 'subventii-sociale-2026',
-    image: '/images/sedinta-consiliu-salonta-1.jpg',
+    image: '/images/sedinta-consiliu-salonta-1.webp',
     date: '2025-10-16',
     category: 'anunturi',
     translations: {
@@ -53,7 +53,7 @@ const MOCK_NEWS = [
   {
     id: '4',
     slug: 'sedinta-consiliu-local-decembrie',
-    image: '/images/sedinta-consiliu-salonta-2.jpg',
+    image: '/images/sedinta-consiliu-salonta-2.webp',
     date: '2025-12-10',
     category: 'consiliu',
     translations: {
@@ -65,7 +65,7 @@ const MOCK_NEWS = [
   {
     id: '5',
     slug: 'program-sarbatori-2025',
-    image: '/images/primaria-salonta-1.jpg',
+    image: '/images/primaria-salonta-1.webp',
     date: '2025-12-20',
     category: 'anunturi',
     translations: {
@@ -77,7 +77,7 @@ const MOCK_NEWS = [
   {
     id: '6',
     slug: 'proiect-modernizare-parc',
-    image: '/images/parc-salonta-1.jpg',
+    image: '/images/parc-salonta-1.webp',
     date: '2025-09-15',
     category: 'proiecte',
     translations: {

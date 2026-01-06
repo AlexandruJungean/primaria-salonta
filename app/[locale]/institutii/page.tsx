@@ -21,14 +21,14 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 }
 
 const INSTITUTIONS = [
-  { id: 'casaCultura', href: '/institutii/casa-cultura', icon: Building, image: '/images/casa-de-cultura-salonta-1.jpg' },
-  { id: 'biblioteca', href: '/institutii/biblioteca', icon: BookOpen, image: '/images/primaria-salonta-1.jpg' },
-  { id: 'muzeu', href: '/institutii/muzeu', icon: Landmark, image: '/images/muzeu-salonta.jpg' },
+  { id: 'casaCultura', href: '/institutii/casa-cultura', icon: Building, image: '/images/casa-de-cultura-salonta-1.webp' },
+  { id: 'biblioteca', href: '/institutii/biblioteca', icon: BookOpen, image: '/images/primaria-salonta-1.webp' },
+  { id: 'muzeu', href: '/institutii/muzeu', icon: Landmark, image: '/images/muzeu-salonta.webp' },
   { id: 'asistentaMedicala', href: '/institutii/asistenta-medicala', icon: Heart, image: null },
   { id: 'cantinaSociala', href: '/institutii/cantina-sociala', icon: Utensils, image: null },
   { id: 'centrulZi', href: '/institutii/centrul-de-zi', icon: Users, image: null },
   { id: 'cuibulDropiei', href: '/institutii/cuibul-dropiei', icon: Bird, image: null },
-  { id: 'bazinInot', href: '/institutii/bazin-inot', icon: Waves, image: '/images/bazin-de-inot-salonta-1.jpeg' },
+  { id: 'bazinInot', href: '/institutii/bazin-inot', icon: Waves, image: '/images/bazin-de-inot-salonta-1.webp' },
 ];
 
 export default function InstitutiiPage() {

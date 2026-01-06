@@ -36,7 +36,7 @@ export default function CasaCulturaPage() {
             <div>
               <div className="relative aspect-video rounded-xl overflow-hidden mb-6">
                 <Image
-                  src="/images/casa-de-cultura-salonta-1.jpg"
+                  src="/images/casa-de-cultura-salonta-1.webp"
                   alt="Casa de Cultură Zilahy Lajos"
                   fill
                   className="object-cover"

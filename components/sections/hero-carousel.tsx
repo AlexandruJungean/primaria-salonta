@@ -69,7 +69,7 @@ export function HeroCarousel() {
           {/* Logo */}
           <div className="animate-fade-in">
             <Image
-              src="/logo/logo-transparent.png"
+              src="/logo/logo-transparent.webp"
               alt="Primăria Salonta"
               width={200}
               height={200}

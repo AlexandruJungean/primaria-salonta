@@ -36,7 +36,7 @@ export default function BazinInotPage() {
             <div>
               <div className="relative aspect-video rounded-xl overflow-hidden mb-4">
                 <Image
-                  src="/images/bazin-de-inot-salonta-1.jpeg"
+                  src="/images/bazin-de-inot-salonta-1.webp"
                   alt="Bazinul de Înot Salonta"
                   fill
                   className="object-cover"
@@ -45,7 +45,7 @@ export default function BazinInotPage() {
               </div>
               <div className="relative aspect-video rounded-xl overflow-hidden">
                 <Image
-                  src="/images/bazin-de-inot-salonta-2.jpeg"
+                  src="/images/bazin-de-inot-salonta-2.webp"
                   alt="Bazinul de Înot Salonta"
                   fill
                   className="object-cover"

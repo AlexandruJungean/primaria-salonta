@@ -50,9 +50,9 @@ export const SEO_CONFIG = {
   
   // Default images
   images: {
-    ogImage: '/og-image.png',
+    ogImage: '/og-image.webp',
     logo: '/logo/logo.png',
-    logoTransparent: '/logo/logo-transparent.png',
+    logoTransparent: '/logo/logo-transparent.webp',
     favicon: '/favicon.ico',
   },
   

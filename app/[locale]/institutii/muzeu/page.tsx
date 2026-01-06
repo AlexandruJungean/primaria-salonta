@@ -36,7 +36,7 @@ export default function MuzeuPage() {
             <div>
               <div className="relative aspect-video rounded-xl overflow-hidden mb-6">
                 <Image
-                  src="/images/muzeu-salonta.jpg"
+                  src="/images/muzeu-salonta.webp"
                   alt="Complexul Muzeal Arany János"
                   fill
                   className="object-cover"

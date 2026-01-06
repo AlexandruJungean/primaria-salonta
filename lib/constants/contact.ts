@@ -33,7 +33,7 @@ export const EXTERNAL_LINKS = [
   {
     id: 'fiipregatit',
     url: 'https://fiipregatit.ro/',
-    image: '/references/Fiipregatit.jpg',
+    image: '/references/Fiipregatit.webp',
     translations: {
       ro: {
         title: 'Fii Pregătit',
@@ -52,7 +52,7 @@ export const EXTERNAL_LINKS = [
   {
     id: 'infocons',
     url: 'https://fiiunexemplu.ro/',
-    image: '/references/InfoCons-Fii-Un-Exemplu.jpg',
+    image: '/references/InfoCons-Fii-Un-Exemplu.webp',
     translations: {
       ro: {
         title: 'InfoCons - Fii un Exemplu',
@@ -71,7 +71,7 @@ export const EXTERNAL_LINKS = [
   {
     id: 'sipoca',
     url: 'https://sgg.gov.ro/1/guvernare-transparenta-deschisa-si-participativa-standardizare-armonizare-dialog-imbunatatit-proiect-sipoca-35/',
-    image: '/references/banner-sipoca35.jpg',
+    image: '/references/banner-sipoca35.webp',
     translations: {
       ro: {
         title: 'SIPOCA 35',

@@ -75,7 +75,7 @@ const MOCK_NEWS_DETAILS: Record<string, {
     id: '1',
     slug: 'despre-violenta-domestica',
     category: 'anunturi',
-    featured_image_url: '/images/primaria-salonta-1.jpg',
+    featured_image_url: '/images/primaria-salonta-1.webp',
     published_at: '2025-11-11T10:00:00Z',
     author: {
       name: 'Biroul de Comunicare',
@@ -198,7 +198,7 @@ const MOCK_NEWS_DETAILS: Record<string, {
     id: '2',
     slug: 'ajutor-incalzire-locuinta-2025',
     category: 'anunturi',
-    featured_image_url: '/images/primaria-salonta-2.jpg',
+    featured_image_url: '/images/primaria-salonta-2.webp',
     published_at: '2025-10-31T09:00:00Z',
     author: {
       name: 'Serviciul Social',
@@ -307,7 +307,7 @@ const MOCK_NEWS_DETAILS: Record<string, {
     id: '4',
     slug: 'sedinta-consiliu-local-decembrie',
     category: 'consiliu',
-    featured_image_url: '/images/sedinta-consiliu-salonta-2.jpg',
+    featured_image_url: '/images/sedinta-consiliu-salonta-2.webp',
     published_at: '2025-12-10T08:00:00Z',
     author: {
       name: 'Secretariat Consiliu Local',
@@ -387,7 +387,7 @@ const MOCK_NEWS_DETAILS: Record<string, {
         sort_order: 4,
         content: { ro: '', hu: '', en: '' },
         metadata: {
-          image_url: '/images/sedinta-consiliu-salonta-1.jpg',
+          image_url: '/images/sedinta-consiliu-salonta-1.webp',
           alt_text: {
             ro: 'Sala de ședințe a Consiliului Local',
             hu: 'A Helyi Tanács ülésterme',

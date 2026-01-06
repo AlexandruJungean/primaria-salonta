@@ -28,7 +28,7 @@ export const EVENTS: Event[] = [
     time: '10:00',
     location: 'Primăria Salonta',
     category: 'administrativ',
-    image: '/images/sedinta-consiliu-salonta-1.jpg',
+    image: '/images/sedinta-consiliu-salonta-1.webp',
     translations: {
       ro: { 
         title: 'Ședință Consiliu Local', 
@@ -51,7 +51,7 @@ export const EVENTS: Event[] = [
     time: '17:00',
     location: 'Biblioteca Municipală "Teodor Neș"',
     category: 'cultural',
-    image: '/images/casa-memoriala-salonta-1.jpg',
+    image: '/images/casa-memoriala-salonta-1.webp',
     translations: {
       ro: { 
         title: 'Lansare de carte: "Salonta de ieri și de azi"', 
@@ -74,7 +74,7 @@ export const EVENTS: Event[] = [
     time: '16:00',
     location: 'Casa de Cultură "Zilahy Lajos"',
     category: 'cultural',
-    image: '/images/casa-de-cultura-salonta-1.jpg',
+    image: '/images/casa-de-cultura-salonta-1.webp',
     translations: {
       ro: { 
         title: 'Ziua Unirii Principatelor Române - Spectacol festiv', 
@@ -97,7 +97,7 @@ export const EVENTS: Event[] = [
     time: '18:00',
     location: 'Casa de Cultură "Zilahy Lajos"',
     category: 'cultural',
-    image: '/images/casa-de-cultura-salonta-1.jpg',
+    image: '/images/casa-de-cultura-salonta-1.webp',
     translations: {
       ro: { 
         title: 'Concert de Dragobete', 
@@ -120,7 +120,7 @@ export const EVENTS: Event[] = [
     time: '09:00',
     location: 'Piața Centrală',
     category: 'comunitar',
-    image: '/images/parc-salonta-1.jpg',
+    image: '/images/parc-salonta-1.webp',
     translations: {
       ro: { 
         title: 'Mărțișor - Târg de primăvară', 
@@ -143,7 +143,7 @@ export const EVENTS: Event[] = [
     time: '17:00',
     location: 'Casa de Cultură "Zilahy Lajos"',
     category: 'cultural',
-    image: '/images/casa-de-cultura-salonta-1.jpg',
+    image: '/images/casa-de-cultura-salonta-1.webp',
     translations: {
       ro: { 
         title: 'Concert dedicat Zilei Femeii', 
@@ -166,7 +166,7 @@ export const EVENTS: Event[] = [
     time: '12:00',
     location: 'Bisericile din Salonta',
     category: 'comunitar',
-    image: '/images/biserica-salonta-3.jpg',
+    image: '/images/biserica-salonta-3.webp',
     translations: {
       ro: { 
         title: 'Sărbătorile Pascale - Slujbe și evenimente', 
@@ -189,7 +189,7 @@ export const EVENTS: Event[] = [
     time: '10:00',
     location: 'Parcul Central',
     category: 'comunitar',
-    image: '/images/parc-salonta-2.jpg',
+    image: '/images/parc-salonta-2.webp',
     translations: {
       ro: { 
         title: 'Ziua Muncii - Picnic în parc', 
@@ -212,7 +212,7 @@ export const EVENTS: Event[] = [
     time: '10:00',
     location: 'Parcul Central',
     category: 'comunitar',
-    image: '/images/parc-salonta-1.jpg',
+    image: '/images/parc-salonta-1.webp',
     translations: {
       ro: { 
         title: 'Ziua Copilului - Jocuri și ateliere creative', 
@@ -235,7 +235,7 @@ export const EVENTS: Event[] = [
     time: '10:00',
     location: 'Centrul Orașului',
     category: 'festival',
-    image: '/images/primaria-salonta-1.jpg',
+    image: '/images/primaria-salonta-1.webp',
     translations: {
       ro: { 
         title: 'Zilele Salontane 2025', 
@@ -258,7 +258,7 @@ export const EVENTS: Event[] = [
     time: '16:00',
     location: 'Complexul Muzeal Arany János',
     category: 'cultural',
-    image: '/images/muzeu-salonta.jpg',
+    image: '/images/muzeu-salonta.webp',
     translations: {
       ro: { 
         title: 'Festivalul Arany János', 
@@ -281,7 +281,7 @@ export const EVENTS: Event[] = [
     time: '09:00',
     location: 'Stadionul Municipal',
     category: 'sport',
-    image: '/images/sport/campionat-freeflight-salonta-1.jpg',
+    image: '/images/sport/campionat-freeflight-salonta-1.webp',
     translations: {
       ro: { 
         title: 'Cupa Salonta - Turneu de fotbal', 
@@ -304,7 +304,7 @@ export const EVENTS: Event[] = [
     time: '11:00',
     location: 'Piața Centrală',
     category: 'administrativ',
-    image: '/images/primaria-salonta-1.jpg',
+    image: '/images/primaria-salonta-1.webp',
     translations: {
       ro: { 
         title: 'Ziua Națională a României - Ceremonie și paradă', 
@@ -327,7 +327,7 @@ export const EVENTS: Event[] = [
     time: '16:00',
     location: 'Piața Centrală',
     category: 'festival',
-    image: '/images/parc-salonta-1.jpg',
+    image: '/images/parc-salonta-1.webp',
     translations: {
       ro: { 
         title: 'Târgul de Crăciun Salonta', 

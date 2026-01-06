@@ -1,8 +1,12 @@
-# Redirect www to non-www (or vice versa - choose one)
-# This redirects www.salonta.ro to salonta.ro
-https://www.salonta.ro/* https://salonta.ro/:splat 301!
+# Consolidate redirects to minimize redirect chains
+# Order matters: most specific first
 
-# Force HTTPS
-http://salonta.ro/* https://salonta.ro/:splat 301!
+# Direct HTTP www to HTTPS non-www (single redirect instead of two)
 http://www.salonta.ro/* https://salonta.ro/:splat 301!
+
+# HTTP to HTTPS (non-www)
+http://salonta.ro/* https://salonta.ro/:splat 301!
+
+# HTTPS www to HTTPS non-www
+https://www.salonta.ro/* https://salonta.ro/:splat 301!
 

@@ -9,12 +9,12 @@ import { Button } from '@/components/ui/button';
 import { Link } from '@/components/ui/link';
 
 const GALLERY_IMAGES = [
-  { src: '/images/primaria-salonta-1.jpg', alt: 'Primăria Salonta' },
-  { src: '/images/muzeu-salonta.jpg', alt: 'Complexul Muzeal Arany János' },
-  { src: '/images/casa-de-cultura-salonta-1.jpg', alt: 'Casa de Cultură' },
-  { src: '/images/parc-salonta-1.jpg', alt: 'Parc Salonta' },
-  { src: '/images/bazin-de-inot-salonta-1.jpeg', alt: 'Bazin de Înot' },
-  { src: '/images/biserica-salonta-3.jpg', alt: 'Biserica Salonta' },
+  { src: '/images/primaria-salonta-1.webp', alt: 'Primăria Salonta' },
+  { src: '/images/muzeu-salonta.webp', alt: 'Complexul Muzeal Arany János' },
+  { src: '/images/casa-de-cultura-salonta-1.webp', alt: 'Casa de Cultură' },
+  { src: '/images/parc-salonta-1.webp', alt: 'Parc Salonta' },
+  { src: '/images/bazin-de-inot-salonta-1.webp', alt: 'Bazin de Înot' },
+  { src: '/images/biserica-salonta-3.webp', alt: 'Biserica Salonta' },
 ];
 
 export function GalleryPreviewSection() {

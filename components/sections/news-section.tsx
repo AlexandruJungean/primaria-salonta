@@ -16,7 +16,7 @@ const MOCK_NEWS = [
   {
     id: '1',
     slug: 'despre-violenta-domestica',
-    image: '/images/primaria-salonta-1.jpg',
+    image: '/images/primaria-salonta-1.webp',
     date: '2025-11-11',
     category: 'anunturi',
     translations: {
@@ -28,7 +28,7 @@ const MOCK_NEWS = [
   {
     id: '2',
     slug: 'ajutor-incalzire-locuinta-2025',
-    image: '/images/primaria-salonta-2.jpg',
+    image: '/images/primaria-salonta-2.webp',
     date: '2025-10-31',
     category: 'anunturi',
     translations: {
@@ -40,7 +40,7 @@ const MOCK_NEWS = [
   {
     id: '3',
     slug: 'subventii-sociale-2026',
-    image: '/images/sedinta-consiliu-salonta-1.jpg',
+    image: '/images/sedinta-consiliu-salonta-1.webp',
     date: '2025-10-16',
     category: 'anunturi',
     translations: {

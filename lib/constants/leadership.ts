@@ -30,7 +30,7 @@ export const LEADERSHIP: LeadershipMember[] = [
   {
     id: 'primar',
     position: 'primar',
-    photo: '/images/consilul local/primar-torok-laszlo.jpg',
+    photo: '/images/consilul local/primar-torok-laszlo.webp',
     email: 'primsal3@gmail.com',
     phone: '',
     education: {
@@ -102,7 +102,7 @@ export const LEADERSHIP: LeadershipMember[] = [
   {
     id: 'viceprimar',
     position: 'viceprimar',
-    photo: '/images/consilul local/viceprimar-horvath-janos.jpg',
+    photo: '/images/consilul local/viceprimar-horvath-janos.webp',
     email: 'primsal3@gmail.com',
     phone: '',
     education: {

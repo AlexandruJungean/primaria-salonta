@@ -44,7 +44,7 @@ export default function IstoricPage() {
             <figure className="my-8 float-right ml-8 mb-4 w-64">
               <div className="relative aspect-[3/4] rounded-lg overflow-hidden shadow-lg">
                 <Image
-                  src="/images/istoric-1.jpg"
+                  src="/images/istoric-1.webp"
                   alt={tPage('bocskaiCaption')}
                   fill
                   className="object-cover"
@@ -88,7 +88,7 @@ export default function IstoricPage() {
             <figure className="my-10">
               <div className="relative aspect-[16/10] rounded-xl overflow-hidden shadow-lg">
                 <Image
-                  src="/images/istoric-2.jpg"
+                  src="/images/istoric-2.webp"
                   alt={tPage('historicalImageCaption')}
                   fill
                   className="object-cover"

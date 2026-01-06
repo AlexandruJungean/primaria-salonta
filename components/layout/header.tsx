@@ -81,7 +81,7 @@ export function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 shrink-0">
             <Image
-              src="/logo/logo-transparent.png"
+              src="/logo/logo-transparent.webp"
               alt="Primăria Salonta"
               width={50}
               height={50}

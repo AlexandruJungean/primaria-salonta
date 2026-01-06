@@ -20,12 +20,12 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 }
 
 const TWIN_CITIES = [
-  { id: 'sarkad', image: '/images/orase-infratite/sarkad.jpg' },
-  { id: 'csepel', image: '/images/orase-infratite/csepel.jpg' },
-  { id: 'turkeve', image: '/images/orase-infratite/turkeve.jpg' },
-  { id: 'rimaszombat', image: '/images/orase-infratite/rimaszombat.jpg' },
-  { id: 'nagykoros', image: '/images/orase-infratite/nagykoros.jpg' },
-  { id: 'hajduboszormeny', image: '/images/orase-infratite/hajduboszormeny.jpg' },
+  { id: 'sarkad', image: '/images/orase-infratite/sarkad.webp' },
+  { id: 'csepel', image: '/images/orase-infratite/csepel.webp' },
+  { id: 'turkeve', image: '/images/orase-infratite/turkeve.webp' },
+  { id: 'rimaszombat', image: '/images/orase-infratite/rimaszombat.webp' },
+  { id: 'nagykoros', image: '/images/orase-infratite/nagykoros.webp' },
+  { id: 'hajduboszormeny', image: '/images/orase-infratite/hajduboszormeny.webp' },
 ];
 
 export default function OraseInfratitePage() {

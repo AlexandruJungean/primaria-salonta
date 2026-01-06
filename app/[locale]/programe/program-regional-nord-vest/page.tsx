@@ -127,28 +127,28 @@ export default function ProgramRegionalNordVestPage() {
             {/* EU Program Logos */}
             <div className="flex flex-wrap items-center justify-center gap-8 mb-10 p-6 bg-gray-50 rounded-xl">
               <Image 
-                src="/images/finantatori-proiecte/UE.png" 
+                src="/images/finantatori-proiecte/UE.webp" 
                 alt="Uniunea Europeană" 
                 width={240} 
                 height={160}
                 className="h-16 w-auto object-contain"
               />
               <Image 
-                src="/images/finantatori-proiecte/gov-ro.png" 
+                src="/images/finantatori-proiecte/gov-ro.webp" 
                 alt="Guvernul României" 
                 width={120} 
                 height={80}
                 className="h-16 w-auto object-contain"
               />
               <Image 
-                src="/images/finantatori-proiecte/ADR-nord-vest.png" 
+                src="/images/finantatori-proiecte/ADR-nord-vest.webp" 
                 alt="ADR Nord-Vest" 
                 width={120} 
                 height={80}
                 className="h-16 w-auto object-contain"
               />
               <Image 
-                src="/images/finantatori-proiecte/Regio-nord-vest.png" 
+                src="/images/finantatori-proiecte/Regio-nord-vest.webp" 
                 alt="Regio Nord-Vest" 
                 width={120} 
                 height={80}

@@ -50,7 +50,7 @@ export function Footer() {
             <div className="lg:col-span-1">
               <Link href="/" className="flex items-center gap-3 mb-6">
                 <Image
-                  src="/logo/logo-transparent.png"
+                  src="/logo/logo-transparent.webp"
                   alt="Primăria Salonta"
                   width={60}
                   height={60}

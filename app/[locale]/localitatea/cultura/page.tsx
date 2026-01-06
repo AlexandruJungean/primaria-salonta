@@ -18,15 +18,15 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 }
 
 const PERSONALITIES = [
-  { id: 'aranyJanos', image: '/images/personalitati/aranyjanos.png', name: 'Arany János' },
-  { id: 'aranyLaszlo', image: '/images/personalitati/aranylaszlo.png', name: 'Arany László' },
-  { id: 'kulinGyorgy', image: '/images/personalitati/kulingyorgy.png', name: 'Kulin György' },
-  { id: 'sinkaIstvan', image: '/images/personalitati/sinkaistvan.png', name: 'Sinka István' },
-  { id: 'zilahyLajos', image: '/images/personalitati/zilahylajos.png', name: 'Zilahy Lajos' },
-  { id: 'foldiJanos', image: '/images/personalitati/foldijanos.png', name: 'Földi János' },
-  { id: 'szekelyLaszlo', image: '/images/personalitati/szekelylaszlo.png', name: 'Székely László' },
-  { id: 'erdelyiJozsef', image: '/images/personalitati/erdelyijozsef.png', name: 'Erdélyi József' },
-  { id: 'kissIstvan', image: '/images/personalitati/kissistvan.png', name: 'Kiss István' },
+  { id: 'aranyJanos', image: '/images/personalitati/aranyjanos.webp', name: 'Arany János' },
+  { id: 'aranyLaszlo', image: '/images/personalitati/aranylaszlo.webp', name: 'Arany László' },
+  { id: 'kulinGyorgy', image: '/images/personalitati/kulingyorgy.webp', name: 'Kulin György' },
+  { id: 'sinkaIstvan', image: '/images/personalitati/sinkaistvan.webp', name: 'Sinka István' },
+  { id: 'zilahyLajos', image: '/images/personalitati/zilahylajos.webp', name: 'Zilahy Lajos' },
+  { id: 'foldiJanos', image: '/images/personalitati/foldijanos.webp', name: 'Földi János' },
+  { id: 'szekelyLaszlo', image: '/images/personalitati/szekelylaszlo.webp', name: 'Székely László' },
+  { id: 'erdelyiJozsef', image: '/images/personalitati/erdelyijozsef.webp', name: 'Erdélyi József' },
+  { id: 'kissIstvan', image: '/images/personalitati/kissistvan.webp', name: 'Kiss István' },
 ];
 
 export default function CulturaPage() {
@@ -90,7 +90,7 @@ export default function CulturaPage() {
               <div className="md:w-1/3">
                 <div className="relative aspect-[3/4] rounded-xl overflow-hidden shadow-lg">
                   <Image
-                    src="/images/personalitati/aranyjanos.png"
+                    src="/images/personalitati/aranyjanos.webp"
                     alt="Arany János"
                     fill
                     className="object-cover"

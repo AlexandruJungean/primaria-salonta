@@ -47,7 +47,7 @@ export default function HartaDigitalaPage() {
             <div className="relative rounded-2xl overflow-hidden shadow-2xl mb-12">
               {/* Map Preview Image */}
               <div className="relative h-[400px] bg-gradient-to-br from-primary-600 to-primary-800">
-                <div className="absolute inset-0 bg-[url('/images/primaria-salonta-1.jpg')] bg-cover bg-center opacity-20" />
+                <div className="absolute inset-0 bg-[url('/images/primaria-salonta-1.webp')] bg-cover bg-center opacity-20" />
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-8">
                   <Map className="w-20 h-20 mb-6 opacity-90" />
                   <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">
