@@ -340,15 +340,26 @@ The website will redirect users to the official payment portals:
 
 **Note:** These are external links - no payment processing on our website. We just provide clear navigation and descriptions for each payment option.
 
-### 5.3 Content Management System (Supabase + Admin Dashboard)
+### 5.3 Content Management System (Supabase + Cloudflare R2 + Admin Dashboard)
 **Note:** For now, all content will be **mock/placeholder data** until the project is approved. Admin dashboard will be built after main site approval.
+
+**Storage Architecture:**
+| Service | Purpose | Free Tier |
+|---------|---------|-----------|
+| **Supabase** | Database (PostgreSQL), Auth | 500MB database |
+| **Cloudflare R2** | File storage (PDFs, images) | 10GB storage, zero egress |
+
+**Why this split?**
+- Downloaded documents from old site: ~3GB (exceeds Supabase's 1GB limit)
+- Cloudflare R2 offers 10GB free with zero download costs
+- Supabase remains excellent for structured data and authentication
 
 **Admin Dashboard Features:**
 - 🔐 Secure authentication (Supabase Auth)
 - 📝 WYSIWYG content editor
 - 🌐 Automatic translation (Google Cloud Translation API)
-- 📄 PDF document upload and management
-- 🖼️ Image gallery management
+- 📄 PDF document upload and management (via Cloudflare R2)
+- 🖼️ Image gallery management (via Cloudflare R2)
 - 📊 Content scheduling and publishing workflow
 - 📈 Analytics dashboard
 
@@ -735,7 +746,11 @@ A dedicated admin dashboard for City Hall staff to manage all dynamic content wi
 | 🏗️ **Regional Program** | Manage EU projects, status updates, documents | High |
 | 📁 **Local Projects** | Manage local projects by year/category | High |
 
-### File Upload & Compression
+### File Upload & Compression (Cloudflare R2)
+
+**Storage: Cloudflare R2** (10GB free, zero egress fees)
+- Public URL: `https://documente.primariasalonta.ro`
+- S3-compatible API for easy integration
 
 | File Type | Max Size (Before) | Compressed To | Format |
 |-----------|------------------|---------------|--------|
@@ -749,6 +764,15 @@ A dedicated admin dashboard for City Hall staff to manage all dynamic content wi
 - 📊 **Progress Indicator**: Show compression progress during upload
 - ✅ **Preview**: Show before/after file sizes
 - 🔄 **Batch Upload**: Support multiple file uploads with queue
+
+**R2 Folder Structure:**
+```
+primaria-salonta/
+├── documents/       # PDFs (HCL, dispositions, forms)
+├── images/          # News, events, gallery images
+├── avatars/         # Staff photos
+└── attachments/     # Other files
+```
 
 ### Confirmation Dialog Component
 
@@ -1097,11 +1121,13 @@ All pages currently using mock data will be migrated to fetch data from Supabase
 4. ✅ Hero section: **Auto-rotating image slider with search bar**
 
 ### 12.3 Technical Setup Required
-1. Supabase project creation
-2. Google Maps API key verification
-3. Domain configuration
-4. SSL certificate
-5. Email service configuration
+1. Supabase project creation (database + auth)
+2. Cloudflare R2 bucket creation (file storage)
+3. R2 custom domain configuration (`documente.primariasalonta.ro`)
+4. Google Maps API key verification
+5. Domain configuration
+6. SSL certificate
+7. Email service configuration
 
 ---
 
@@ -1122,9 +1148,17 @@ All pages currently using mock data will be migrated to fetch data from Supabase
 
 ---
 
-*Document Version: 4.1*
-*Last Updated: January 5, 2026*
+*Document Version: 4.2*
+*Last Updated: January 6, 2026*
 *Author: Development Team*
+
+**Changelog v4.2:**
+- **ADDED Cloudflare R2 for file storage** - Split storage architecture:
+  - **Supabase**: Database (PostgreSQL) + Authentication only
+  - **Cloudflare R2**: File storage (10GB free, zero egress fees)
+- **Updated Section 5.3** with storage architecture explanation
+- **Updated file upload section** with R2 folder structure
+- **Updated technical setup** to include R2 bucket creation
 
 **Changelog v4.1:**
 - **MOVED `/cariera` to `/informatii-publice/concursuri`** - Career pages now part of public info section

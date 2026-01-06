@@ -32,8 +32,13 @@
 
 | Technology | Purpose |
 |------------|---------|
-| **Supabase** | BaaS - Database, Auth, Storage, Realtime |
+| **Supabase** | BaaS - Database (PostgreSQL), Auth, Realtime |
 | **PostgreSQL** | Relational database (via Supabase) |
+| **Cloudflare R2** | Object Storage - Documents, Images (10GB free) |
+
+**Storage Architecture:**
+- **Supabase (Free: 1GB)** → Database only (metadata, structured data) - ~50MB estimated usage
+- **Cloudflare R2 (Free: 10GB)** → File storage (PDFs, images) - ~3GB documents + images
 
 ### 1.3 Additional Libraries (Recommended)
 
@@ -261,10 +266,17 @@ web-primaria-salonta/
 ```env
 # .env.local
 
-# Supabase
+# Supabase (Database & Auth only)
 NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJxxx...
 SUPABASE_SERVICE_ROLE_KEY=eyJxxx...
+
+# Cloudflare R2 (Object Storage for documents & images)
+R2_ACCOUNT_ID=xxx
+R2_ACCESS_KEY_ID=xxx
+R2_SECRET_ACCESS_KEY=xxx
+R2_BUCKET_NAME=primaria-salonta
+NEXT_PUBLIC_R2_PUBLIC_URL=https://documente.primariasalonta.ro
 
 # Google Maps
 NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=AIzaxxx...
@@ -1597,38 +1609,191 @@ CREATE POLICY "Admin delete petitions" ON petitions FOR DELETE USING (is_admin()
 -- Repeat similar patterns for all other tables...
 ```
 
-### 3.3 Storage Buckets
+### 3.3 Storage Architecture: Cloudflare R2
+
+**Why Cloudflare R2 instead of Supabase Storage?**
+- Supabase Free Tier: 1GB storage limit
+- Downloaded documents from old website: ~3GB
+- Cloudflare R2 Free Tier: **10GB storage** + **zero egress fees**
 
 ```
-supabase-storage/
-├── documents/              # PDF documents (public)
-├── images/                 # Content images (public)
-├── gallery/                # Gallery images (public)
-├── avatars/                # Staff photos (public)
-└── private/                # Internal documents (private)
+Cloudflare R2 Bucket: primaria-salonta/
+├── documents/              # PDF documents (HCL, dispositions, etc.)
+│   ├── hotarari/           # Council decisions
+│   ├── dispozitii/         # Mayor dispositions
+│   ├── buget/              # Budget documents
+│   ├── formulare/          # Downloadable forms
+│   └── ...
+├── images/                 # Content images
+│   ├── news/               # News article images
+│   ├── events/             # Event photos
+│   └── gallery/            # Photo gallery
+├── avatars/                # Staff photos (councilors, leadership)
+└── attachments/            # Other file attachments
 ```
 
-### 3.4 Storage Bucket Policies
-
-```sql
--- Public read access for all public buckets
-CREATE POLICY "Public read documents"
-ON storage.objects FOR SELECT
-USING (bucket_id IN ('documents', 'images', 'gallery', 'avatars'));
-
--- Admin upload/delete access
-CREATE POLICY "Admin upload files"
-ON storage.objects FOR INSERT
-WITH CHECK (is_admin());
-
-CREATE POLICY "Admin update files"
-ON storage.objects FOR UPDATE
-USING (is_admin());
-
-CREATE POLICY "Admin delete files"
-ON storage.objects FOR DELETE
-USING (is_admin());
+**Public Access via Custom Domain:**
 ```
+https://documente.primariasalonta.ro/documents/hotarari/hcl-123-2024.pdf
+https://documente.primariasalonta.ro/images/news/articol-important.webp
+```
+
+### 3.4 Cloudflare R2 Configuration
+
+#### 3.4.1 R2 Client Setup
+
+```typescript
+// lib/r2/client.ts
+import { S3Client } from '@aws-sdk/client-s3';
+
+export const r2Client = new S3Client({
+  region: 'auto',
+  endpoint: `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+  credentials: {
+    accessKeyId: process.env.R2_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
+  },
+});
+
+export const R2_BUCKET = process.env.R2_BUCKET_NAME!;
+export const R2_PUBLIC_URL = process.env.NEXT_PUBLIC_R2_PUBLIC_URL!;
+```
+
+#### 3.4.2 R2 Upload Service
+
+```typescript
+// lib/r2/upload.ts
+import { PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
+import { r2Client, R2_BUCKET, R2_PUBLIC_URL } from './client';
+
+interface UploadResult {
+  key: string;
+  url: string;
+  size: number;
+}
+
+export async function uploadToR2(
+  file: Buffer | Uint8Array,
+  key: string,
+  contentType: string
+): Promise<UploadResult> {
+  const command = new PutObjectCommand({
+    Bucket: R2_BUCKET,
+    Key: key,
+    Body: file,
+    ContentType: contentType,
+    CacheControl: 'public, max-age=31536000', // 1 year cache
+  });
+
+  await r2Client.send(command);
+
+  return {
+    key,
+    url: `${R2_PUBLIC_URL}/${key}`,
+    size: file.length,
+  };
+}
+
+export async function deleteFromR2(key: string): Promise<void> {
+  const command = new DeleteObjectCommand({
+    Bucket: R2_BUCKET,
+    Key: key,
+  });
+
+  await r2Client.send(command);
+}
+
+// Generate unique file path
+export function generateFilePath(
+  folder: string,
+  fileName: string
+): string {
+  const timestamp = Date.now();
+  const safeName = fileName
+    .toLowerCase()
+    .replace(/[^a-z0-9.-]/g, '-')
+    .replace(/-+/g, '-');
+  return `${folder}/${timestamp}-${safeName}`;
+}
+```
+
+#### 3.4.3 R2 Upload API Route
+
+```typescript
+// app/api/upload/route.ts
+import { NextRequest, NextResponse } from 'next/server';
+import { uploadToR2, generateFilePath } from '@/lib/r2/upload';
+import { createServerClient } from '@/lib/supabase/server';
+
+export async function POST(request: NextRequest) {
+  // Verify admin authentication
+  const supabase = await createServerClient();
+  const { data: { session } } = await supabase.auth.getSession();
+  
+  if (!session) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const { data: adminUser } = await supabase
+    .from('admin_users')
+    .select('id')
+    .eq('id', session.user.id)
+    .eq('is_active', true)
+    .single();
+
+  if (!adminUser) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  try {
+    const formData = await request.formData();
+    const file = formData.get('file') as File;
+    const folder = formData.get('folder') as string || 'uploads';
+
+    if (!file) {
+      return NextResponse.json({ error: 'No file provided' }, { status: 400 });
+    }
+
+    const buffer = Buffer.from(await file.arrayBuffer());
+    const key = generateFilePath(folder, file.name);
+    
+    const result = await uploadToR2(buffer, key, file.type);
+
+    return NextResponse.json(result);
+  } catch (error) {
+    console.error('Upload error:', error);
+    return NextResponse.json({ error: 'Upload failed' }, { status: 500 });
+  }
+}
+```
+
+#### 3.4.4 Required Dependencies
+
+```bash
+npm install @aws-sdk/client-s3
+```
+
+#### 3.4.5 Cloudflare R2 Setup Steps
+
+1. **Create R2 Bucket:**
+   - Go to Cloudflare Dashboard → R2
+   - Create bucket: `primaria-salonta`
+   - Location: Auto (or EU for GDPR compliance)
+
+2. **Create API Token:**
+   - R2 → Manage R2 API Tokens
+   - Create token with Object Read & Write permissions
+   - Save Access Key ID and Secret Access Key
+
+3. **Configure Custom Domain (Optional but recommended):**
+   - R2 → Bucket Settings → Custom Domains
+   - Add: `documente.primariasalonta.ro`
+   - Configure DNS CNAME record
+
+4. **Set Public Access:**
+   - R2 → Bucket Settings → Public Access
+   - Enable "Allow Public Access" for the bucket
+   - Or use Custom Domain with public access
 
 ---
 
@@ -1756,19 +1921,18 @@ export async function compressPDF(
 }
 ```
 
-### 3.5.3 File Upload Hook with Compression
+### 3.5.3 File Upload Hook with Compression (Cloudflare R2)
 
 ```typescript
 // hooks/use-file-upload.ts
 'use client';
 
 import { useState } from 'react';
-import { createClient } from '@/lib/supabase/client';
 import { compressImage, CompressionResult } from '@/lib/services/image-compression';
 
 interface UploadOptions {
-  bucket: 'documents' | 'images' | 'gallery' | 'avatars';
-  path?: string;
+  folder: 'documents' | 'images' | 'gallery' | 'avatars' | 'attachments';
+  subfolder?: string;
   compress?: boolean;
 }
 
@@ -1782,7 +1946,7 @@ interface UploadProgress {
 
 interface UploadResult {
   url: string;
-  path: string;
+  key: string;
   originalSize: number;
   finalSize: number;
 }
@@ -1792,14 +1956,12 @@ export function useFileUpload() {
     status: 'idle',
     progress: 0,
   });
-  
-  const supabase = createClient();
 
   const uploadFile = async (
     file: File,
     options: UploadOptions
   ): Promise<UploadResult> => {
-    const { bucket, path = '', compress = true } = options;
+    const { folder, subfolder = '', compress = true } = options;
     
     let fileToUpload = file;
     let originalSize = file.size;
@@ -1823,38 +1985,33 @@ export function useFileUpload() {
       });
     }
     
-    // Generate unique filename
-    const timestamp = Date.now();
-    const safeName = fileToUpload.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-    const filePath = path ? `${path}/${timestamp}-${safeName}` : `${timestamp}-${safeName}`;
-    
-    // Upload to Supabase Storage
+    // Upload to Cloudflare R2 via API route
     setUploadProgress((prev) => ({
       ...prev,
       status: 'uploading',
       progress: 0,
     }));
     
-    const { data, error } = await supabase.storage
-      .from(bucket)
-      .upload(filePath, fileToUpload, {
-        cacheControl: '3600',
-        upsert: false,
-      });
+    const formData = new FormData();
+    formData.append('file', fileToUpload);
+    formData.append('folder', subfolder ? `${folder}/${subfolder}` : folder);
     
-    if (error) {
+    const response = await fetch('/api/upload', {
+      method: 'POST',
+      body: formData,
+    });
+    
+    if (!response.ok) {
+      const error = await response.json();
       setUploadProgress({
         status: 'error',
         progress: 0,
-        error: error.message,
+        error: error.message || 'Upload failed',
       });
-      throw error;
+      throw new Error(error.message || 'Upload failed');
     }
     
-    // Get public URL
-    const { data: urlData } = supabase.storage
-      .from(bucket)
-      .getPublicUrl(data.path);
+    const data = await response.json();
     
     setUploadProgress({
       status: 'complete',
@@ -1864,10 +2021,10 @@ export function useFileUpload() {
     });
     
     return {
-      url: urlData.publicUrl,
-      path: data.path,
+      url: data.url,
+      key: data.key,
       originalSize,
-      finalSize: fileToUpload.size,
+      finalSize: data.size,
     };
   };
 
@@ -1903,7 +2060,14 @@ export function useFileUpload() {
 ### 3.5.4 Required Dependencies
 
 ```bash
-npm install browser-image-compression pdf-lib
+# Image compression (client-side)
+npm install browser-image-compression
+
+# PDF manipulation (server-side)
+npm install pdf-lib
+
+# Cloudflare R2 / S3-compatible storage
+npm install @aws-sdk/client-s3
 ```
 
 ---
@@ -4473,7 +4637,7 @@ export async function updateDocument(id: string, formData: FormData) {
 }
 
 export async function deleteDocument(id: string) {
-  const supabase = createServerClient();
+  const supabase = await createServerClient();
   
   // Verify admin
   const { data: { session } } = await supabase.auth.getSession();
@@ -4488,7 +4652,7 @@ export async function deleteDocument(id: string) {
   
   if (!adminUser) throw new Error('Unauthorized');
   
-  // Get document to delete file from storage
+  // Get document to delete file from R2 storage
   const { data: document } = await supabase
     .from('documents')
     .select('file_url')
@@ -4496,10 +4660,12 @@ export async function deleteDocument(id: string) {
     .single();
   
   if (document?.file_url) {
-    // Extract path from URL and delete from storage
-    const path = document.file_url.split('/').pop();
-    if (path) {
-      await supabase.storage.from('documents').remove([path]);
+    // Extract key from R2 URL and delete from storage
+    const r2PublicUrl = process.env.NEXT_PUBLIC_R2_PUBLIC_URL!;
+    const key = document.file_url.replace(`${r2PublicUrl}/`, '');
+    if (key) {
+      const { deleteFromR2 } = await import('@/lib/r2/upload');
+      await deleteFromR2(key);
     }
   }
   
@@ -5455,19 +5621,30 @@ This pattern is used for:
 
 | Variable | Required | Description |
 |----------|----------|-------------|
+| **Supabase (Database & Auth)** | | |
 | `NEXT_PUBLIC_SUPABASE_URL` | ✅ | Supabase project URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | ✅ | Supabase anonymous key |
 | `SUPABASE_SERVICE_ROLE_KEY` | ✅ | Supabase service role key (server-side only) |
+| **Cloudflare R2 (File Storage)** | | |
+| `R2_ACCOUNT_ID` | ✅ | Cloudflare account ID |
+| `R2_ACCESS_KEY_ID` | ✅ | R2 API access key ID |
+| `R2_SECRET_ACCESS_KEY` | ✅ | R2 API secret access key |
+| `R2_BUCKET_NAME` | ✅ | R2 bucket name (e.g., `primaria-salonta`) |
+| `NEXT_PUBLIC_R2_PUBLIC_URL` | ✅ | Public URL for R2 bucket (e.g., `https://documente.primariasalonta.ro`) |
+| **Google APIs** | | |
 | `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` | ✅ | Google Maps API key |
 | `GOOGLE_TRANSLATE_API_KEY` | ✅ | Google Cloud Translation API key (server-side only) |
+| **App Configuration** | | |
 | `NEXT_PUBLIC_SITE_URL` | ✅ | Production website URL |
+| `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` | ✅ | Google reCAPTCHA v3 site key |
+| `RECAPTCHA_SECRET_KEY` | ✅ | Google reCAPTCHA v3 secret key |
+| **Email (Contact Forms)** | | |
 | `SMTP_HOST` | ⚡ | Email server host |
 | `SMTP_PORT` | ⚡ | Email server port |
 | `SMTP_USER` | ⚡ | Email username |
 | `SMTP_PASSWORD` | ⚡ | Email password |
+| **Other** | | |
 | `REVALIDATION_SECRET` | ⚡ | Secret for on-demand revalidation |
-| `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` | ✅ | Google reCAPTCHA v3 site key |
-| `RECAPTCHA_SECRET_KEY` | ✅ | Google reCAPTCHA v3 secret key |
 | `NEXT_PUBLIC_GA_ID` | ❓ | Google Analytics ID |
 
 ✅ = Required | ⚡ = Required for specific features | ❓ = Optional
@@ -5477,6 +5654,9 @@ This pattern is used for:
 ```bash
 # Supabase SSR (for Next.js 15+ Server Components)
 npm install @supabase/ssr
+
+# Cloudflare R2 / S3-compatible storage
+npm install @aws-sdk/client-s3
 
 # Image compression (client-side)
 npm install browser-image-compression
@@ -5584,9 +5764,21 @@ When migrating from mock data to database:
 
 ---
 
-*Document Version: 4.1*
-*Last Updated: January 5, 2026*
+*Document Version: 4.2*
+*Last Updated: January 6, 2026*
 *Author: Development Team*
+
+**Changelog v4.2:**
+- **ADDED Cloudflare R2 for file storage** - Replaced Supabase Storage with Cloudflare R2
+  - Supabase now used only for database (PostgreSQL) and authentication
+  - Cloudflare R2 provides 10GB free storage (vs Supabase's 1GB limit)
+  - Zero egress fees for file downloads
+  - Custom domain support (e.g., `documente.primariasalonta.ro`)
+- **Updated storage architecture** in Section 3.3 and 3.4
+- **Added R2 client, upload service, and API routes** (Section 3.4.1-3.4.5)
+- **Updated file upload hook** to use R2 instead of Supabase Storage
+- **Updated environment variables** with R2 configuration
+- **Updated delete document action** to remove files from R2
 
 **Changelog v4.1:**
 - **MOVED `/cariera` to `/informatii-publice/concursuri`** - Career pages now under public info section
