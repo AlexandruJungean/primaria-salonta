@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from 'next';
-import dynamic from 'next/dynamic';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -9,6 +8,7 @@ import '../globals.css';
 
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
+import { AccessibilityToolbar } from '@/components/features/accessibility-toolbar';
 import { 
   SEO_CONFIG, 
   OrganizationJsonLd, 
@@ -16,12 +16,6 @@ import {
   LocalBusinessJsonLd,
   DEFAULT_ICONS,
 } from '@/lib/seo';
-
-// Lazy load accessibility toolbar (not critical for initial render)
-const AccessibilityToolbar = dynamic(
-  () => import('@/components/features/accessibility-toolbar').then(mod => ({ default: mod.AccessibilityToolbar })),
-  { ssr: false }
-);
 
 const openSans = Open_Sans({
   variable: '--font-open-sans',

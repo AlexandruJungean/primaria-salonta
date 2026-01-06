@@ -17,7 +17,6 @@ const WeatherWidgetSection = dynamic(
 const CityMapSection = dynamic(
   () => import('@/components/sections/city-map-section').then(mod => ({ default: mod.CityMapSection })),
   { 
-    ssr: false, // Google Maps doesn't need SSR
     loading: () => (
       <section className="py-12 bg-white">
         <div className="container mx-auto px-4">
