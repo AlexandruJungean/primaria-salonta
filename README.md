@@ -1,36 +1,127 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🏛️ Primăria Salonta - Website Oficial
 
-## Getting Started
+Website-ul oficial al Primăriei Municipiului Salonta, dezvoltat cu Next.js 16, TypeScript și Tailwind CSS.
 
-First, run the development server:
+## 🚀 Tech Stack
+
+- **Framework:** Next.js 16.1.1
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS 4
+- **Database:** Supabase (PostgreSQL)
+- **Storage:** Cloudflare R2
+- **Hosting:** Netlify
+- **i18n:** next-intl (RO, HU, EN)
+
+## 📋 Prerequisites
+
+- Node.js 20+
+- npm sau yarn
+- Cont Supabase (gratuit)
+- Cont Cloudflare (pentru R2)
+- Cont Netlify (pentru hosting)
+
+## 🛠️ Setup Local
+
+### 1. Clonează repository-ul
+
+```bash
+git clone https://github.com/your-repo/web-primaria-salonta.git
+cd web-primaria-salonta
+```
+
+### 2. Instalează dependențele
+
+```bash
+npm install
+```
+
+### 3. Configurează environment variables
+
+Creează fișierul `.env.local`:
+
+```bash
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=https://xxxxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
+
+# Cloudflare R2
+R2_ACCESS_KEY_ID=xxxxx
+R2_SECRET_ACCESS_KEY=xxxxx
+R2_BUCKET_NAME=primaria-salonta-docs
+R2_ENDPOINT=https://xxxxx.r2.cloudflarestorage.com
+
+# App
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```
+
+Vezi `Setup_Supabase_Cloudflare.md` pentru ghidul complet de configurare.
+
+### 4. Rulează serverul de development
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Deschide [http://localhost:3000](http://localhost:3000) în browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📁 Structura Proiectului
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+web-primaria-salonta/
+├── app/
+│   ├── [locale]/          # Routing bazat pe limbă (ro, hu, en)
+│   │   ├── page.tsx       # Homepage
+│   │   ├── primaria/      # Secțiunea Primăria
+│   │   ├── consiliul-local/
+│   │   ├── stiri/
+│   │   └── ...
+│   └── api/               # API Routes
+├── components/
+│   ├── ui/                # Componente UI de bază
+│   ├── layout/            # Header, Footer, Navigation
+│   └── sections/          # Secțiuni de pagină
+├── lib/
+│   ├── supabase/          # Client Supabase
+│   ├── constants/         # Constante și configurări
+│   └── utils/             # Funcții utilitare
+├── messages/              # Traduceri (ro.json, hu.json, en.json)
+├── public/                # Assets statice
+└── docs/                  # Documentație
+```
 
-## Learn More
+## 🌐 Limbi Suportate
 
-To learn more about Next.js, take a look at the following resources:
+- 🇷🇴 Română (implicit)
+- 🇭🇺 Maghiară
+- 🇬🇧 Engleză
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📖 Documentație
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- [Technical_Details.md](./Technical_Details.md) - Detalii tehnice și scheme bază de date
+- [Project_Plan.md](./Project_Plan.md) - Planul proiectului și sitemap
+- [Setup_Supabase_Cloudflare.md](./Setup_Supabase_Cloudflare.md) - Ghid configurare infrastructură
 
-## Deploy on Vercel
+## 🚀 Deploy pe Netlify
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Conectează repository-ul la Netlify
+2. **Build command:** `npm run build`
+3. **Publish directory:** `.next`
+4. Adaugă environment variables în Netlify Dashboard
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📝 Scripts Disponibile
+
+```bash
+npm run dev       # Development server
+npm run build     # Build pentru producție
+npm run start     # Start server producție
+npm run lint      # Verificare ESLint
+```
+
+## 📄 License
+
+Acest proiect este proprietatea Primăriei Municipiului Salonta.
+
+---
+
+Dezvoltat cu ❤️ pentru comunitatea Salontei
