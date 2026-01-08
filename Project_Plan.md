@@ -1057,13 +1057,14 @@ All pages currently using mock data will be migrated to fetch data from Supabase
 | Page | Mock Data Location | Database Table(s) |
 |------|-------------------|-------------------|
 | Consilieri Locali | `app/[locale]/consiliul-local/consilieri/page.tsx` | `councilors` + `council_commissions` |
-| Comisii de specialitate | `app/[locale]/consiliul-local/comisii/page.tsx` | `council_commissions` + `commission_members` |
+| Comisii de specialitate | `app/[locale]/consiliul-local/comisii/page.tsx` | `council_commissions` + `council_member_commissions` |
 | Ședințe CL (List) | `app/[locale]/consiliul-local/sedinte/page.tsx` | `council_sessions_extended` |
 | Ședințe [slug] | `app/[locale]/consiliul-local/sedinte/[slug]/page.tsx` | `council_sessions_extended` + `council_session_documents` + `council_session_agenda` |
 | Hotărâri CL (List) | `app/[locale]/consiliul-local/hotarari/page.tsx` | `council_decisions_extended` |
 | Hotărâri [slug] | `app/[locale]/consiliul-local/hotarari/[slug]/page.tsx` | `council_decisions_extended` + `council_decision_annexes` |
-| Declarații Avere (Primăria) | `app/[locale]/primaria/declaratii-avere/page.tsx` | `wealth_declarations` |
-| Declarații Avere (Consiliu) | `app/[locale]/consiliul-local/declaratii-avere/page.tsx` | `councilor_declarations` |
+| Declarații Avere (Primăria) | `app/[locale]/primaria/declaratii-avere/page.tsx` | `asset_declarations` (department='primaria') |
+| Declarații Avere (Consiliu) | `app/[locale]/consiliul-local/declaratii-avere/page.tsx` | `asset_declarations` (department='consiliul_local') |
+| Rapoarte Activitate | `app/[locale]/consiliul-local/rapoarte-activitate/page.tsx` | `reports` (report_type='raport_activitate') |
 
 #### 📚 Monitorul Oficial Local (All Documents from Database)
 | Page | Mock Data Location | Database Table(s) |
@@ -1107,6 +1108,16 @@ All pages currently using mock data will be migrated to fetch data from Supabase
 | Galerie | `app/[locale]/localitatea/galerie/page.tsx` | `gallery_albums` + `gallery_images` |
 | Formulare | `app/[locale]/servicii-online/formulare/page.tsx` | `downloadable_forms` |
 | Probleme Sociale | `app/[locale]/servicii-online/probleme-sociale/page.tsx` | `downloadable_forms` |
+
+#### 🏛️ Instituții & Servicii (Database-driven) - NEW v4.3
+| Page | Mock Data Location | Database Table(s) |
+|------|-------------------|-------------------|
+| Camere Web | `app/[locale]/camere-web/page.tsx` | `webcams` |
+| Educație | `app/[locale]/educatie/page.tsx` | `institutions` (category='educatie') |
+| Sănătate | `app/[locale]/sanatate/page.tsx` | `institutions` (category='sanatate') |
+| Sport | `app/[locale]/sport/page.tsx` | `institutions` (category='sport') |
+| Voluntariat | `app/[locale]/voluntariat/page.tsx` | `volunteer_opportunities` |
+| FAQ | `app/[locale]/faq/page.tsx` | `faq` |
 
 ### 12.1 Required from Primăria Salonta (After Approval)
 1. ✅ Logo files - *Provided*
@@ -1154,9 +1165,30 @@ All pages currently using mock data will be migrated to fetch data from Supabase
 
 ---
 
-*Document Version: 4.2*
-*Last Updated: January 6, 2026*
+*Document Version: 4.3*
+*Last Updated: January 9, 2026*
 *Author: Development Team*
+
+**Changelog v4.3 (Ianuarie 9, 2026):**
+- **DATABASE SCHEMA UPDATES:**
+  - `asset_declarations` - Schemă combinată (avere + interese pe un singur rând per persoană/an)
+  - `webcams` - Tabel nou pentru camere web live
+  - `institutions` - Tabel nou pentru instituții (educație, sănătate, sport)
+  - `volunteer_opportunities` - Tabel nou cu coloană `sort_order`
+  - `council_member_commissions` - Junction table pentru consilieri-comisii
+  - `reports` - Documentat coloanele corecte (`report_year`, `report_date`)
+- **NEW MIGRATIONS:**
+  - `005_asset_declarations_combined.sql` - Schema combinată declarații
+  - `006_webcams_table.sql` - Tabel webcams
+- **FRONTEND UPDATES:**
+  - Paginare la `/consiliul-local/hotarari` (20 sesiuni/pagină)
+  - Icoane specifice pentru comisii la `/consiliul-local/comisii`
+  - 15+ namespace-uri noi de traduceri adăugate
+- **BUG FIXES:**
+  - Corectat `reports` service (coloane `report_year`/`report_date`)
+  - Corectat `job_vacancies` service (filtru `published_at`)
+  - Corectat tabela `faq` (nu `faqs`)
+  - Rezolvate erori RLS pentru mai multe tabele
 
 **Changelog v4.2:**
 - **ADDED Cloudflare R2 for file storage** - Split storage architecture:

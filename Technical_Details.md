@@ -321,22 +321,26 @@ NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
 > - ✅ Fără probleme de sincronizare traduceri
 > - ✅ Traduceri mereu actualizate
 
-#### Tabele Principale (21 tabele)
+#### Tabele Principale (25+ tabele)
 
 | Tabel | Scop | Pagină Frontend |
 |-------|------|-----------------|
 | `council_sessions` | Ședințe Consiliu Local | `/consiliul-local/sedinte/[slug]` |
 | `council_decisions` | Hotărâri CL | `/consiliul-local/hotarari/[slug]` |
+| `council_members` | Consilieri locali | `/consiliul-local/consilieri` |
+| `council_commissions` | Comisii de specialitate | `/consiliul-local/comisii` |
+| `council_member_commissions` | Membri în comisii (junction) | `/consiliul-local/comisii` |
 | `news` | Știri și anunțuri | `/stiri/[slug]` |
 | `events` | Evenimente | `/evenimente/[slug]` |
 | `documents` | Documente generice (buget, somații) | multiple pagini |
-| `asset_declarations` | Declarații avere | `/primaria/declaratii-avere` |
+| `asset_declarations` | Declarații avere + interese (combinate) | `/consiliul-local/declaratii-avere`, `/primaria/declaratii-avere` |
 | `job_vacancies` | Posturi concurs | `/informatii-publice/concursuri/[slug]` |
-| `reports` | Rapoarte și studii | `/rapoarte-studii/[slug]` |
+| `reports` | Rapoarte și studii | `/rapoarte-studii/*`, `/consiliul-local/rapoarte-activitate` |
 | `programs` | Programe și proiecte | `/programe/*` |
 | `staff_members` | Conducerea primăriei | `/primaria/conducere` |
-| `council_members` | Consilieri locali | `/consiliul-local/consilieri` |
-| `council_commissions` | Comisii de specialitate | `/consiliul-local/comisii` |
+| `webcams` | Camere web live | `/camere-web` |
+| `institutions` | Instituții (educație, sănătate, sport) | `/educatie`, `/sanatate`, `/sport` |
+| `volunteer_opportunities` | Oportunități voluntariat | `/voluntariat` |
 | `pages` | Pagini editabile | diverse |
 | `contact_submissions` | Formulare contact | `/contact` |
 | `petitions` | Petiții online | `/servicii-online/petitii` |
@@ -644,6 +648,172 @@ CREATE INDEX idx_news_featured ON news(featured) WHERE featured = true;
 CREATE INDEX idx_news_sections_order ON news_sections(news_id, sort_order);
 
 -- ============================================
+-- ASSET DECLARATIONS (Declarații Avere + Interese) - UPDATED v4.3
+-- Schema combinată: un rând per persoană/an cu AMBELE fișiere
+-- Migrare: supabase/migrations/005_asset_declarations_combined.sql
+-- ============================================
+
+CREATE TABLE asset_declarations (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  
+  -- Informații persoană
+  person_name TEXT NOT NULL,
+  position TEXT NOT NULL,
+  department TEXT NOT NULL CHECK (department IN ('primaria', 'consiliul_local')),
+  
+  -- An declarație
+  declaration_year INTEGER NOT NULL,
+  
+  -- Declarație de avere
+  avere_file_url TEXT,
+  avere_file_name TEXT,
+  
+  -- Declarație de interese
+  interese_file_url TEXT,
+  interese_file_name TEXT,
+  
+  -- Metadata
+  published BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  
+  -- Constrângere: cel puțin un fișier trebuie să existe
+  CONSTRAINT at_least_one_file CHECK (avere_file_url IS NOT NULL OR interese_file_url IS NOT NULL),
+  
+  -- Constrângere: combinație unică persoană + an + departament
+  CONSTRAINT unique_person_year_dept UNIQUE (person_name, declaration_year, department)
+);
+
+CREATE INDEX idx_asset_declarations_year ON asset_declarations(declaration_year DESC);
+CREATE INDEX idx_asset_declarations_person ON asset_declarations(person_name);
+CREATE INDEX idx_asset_declarations_department ON asset_declarations(department);
+
+-- ============================================
+-- WEBCAMS - NEW v4.3
+-- Migrare: supabase/migrations/006_webcams_table.sql
+-- ============================================
+
+CREATE TABLE webcams (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  name TEXT NOT NULL,
+  location TEXT,
+  description TEXT,
+  stream_url TEXT,           -- URL pentru streaming live (ex: ipcamlive.com)
+  image_url TEXT,            -- Imagine statică placeholder
+  is_active BOOLEAN DEFAULT true,
+  sort_order INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX idx_webcams_sort_order ON webcams(sort_order);
+CREATE INDEX idx_webcams_is_active ON webcams(is_active);
+
+-- ============================================
+-- INSTITUTIONS - NEW v4.3
+-- Pentru educație, sănătate, sport, cultură
+-- ============================================
+
+CREATE TABLE institutions (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  name TEXT NOT NULL,
+  description TEXT,
+  address TEXT,
+  phone TEXT,
+  email TEXT,
+  website TEXT,
+  schedule TEXT,                -- Program de funcționare
+  category TEXT NOT NULL,       -- 'educatie', 'sanatate', 'sport', 'cultura'
+  subcategory TEXT,             -- 'gradinite', 'scoli', 'licee', etc.
+  image_url TEXT,
+  is_active BOOLEAN DEFAULT true,
+  sort_order INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX idx_institutions_category ON institutions(category);
+CREATE INDEX idx_institutions_active ON institutions(is_active);
+CREATE INDEX idx_institutions_sort ON institutions(sort_order);
+
+-- ============================================
+-- VOLUNTEER OPPORTUNITIES - NEW v4.3
+-- ============================================
+
+CREATE TABLE volunteer_opportunities (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  slug TEXT UNIQUE NOT NULL,
+  title TEXT NOT NULL,
+  description TEXT,
+  organization TEXT,
+  location TEXT,
+  requirements TEXT,
+  benefits TEXT,
+  contact_person TEXT,
+  contact_email TEXT,
+  contact_phone TEXT,
+  start_date DATE,
+  end_date DATE,
+  spots_available INTEGER,
+  category TEXT,
+  is_active BOOLEAN DEFAULT true,
+  published BOOLEAN DEFAULT true,
+  sort_order INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX idx_volunteer_opportunities_active ON volunteer_opportunities(is_active);
+CREATE INDEX idx_volunteer_opportunities_category ON volunteer_opportunities(category);
+CREATE INDEX idx_volunteer_opportunities_sort ON volunteer_opportunities(sort_order);
+
+-- ============================================
+-- REPORTS (Rapoarte și Studii) - REFERENCE
+-- Coloane importante: report_year, report_date (NU published_date/year)
+-- ============================================
+
+CREATE TABLE reports (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  slug TEXT UNIQUE NOT NULL,
+  
+  report_type TEXT NOT NULL CHECK (report_type IN (
+    'raport_curtea_conturi', 'raport_activitate', 'raport_primar',
+    'studiu_fezabilitate', 'studiu_impact', 'audit', 'altele'
+  )),
+  
+  title TEXT NOT NULL,
+  summary TEXT,
+  category TEXT,              -- 'comisie', 'consilier' pentru rapoarte activitate
+  
+  report_year INTEGER,        -- ATENȚIE: folosește report_year, NU year
+  report_date DATE,           -- ATENȚIE: folosește report_date, NU published_date
+  author TEXT,
+  
+  file_url TEXT NOT NULL,
+  file_name TEXT NOT NULL,
+  file_size INTEGER,
+  
+  published BOOLEAN DEFAULT true,
+  source_url TEXT,
+  
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX idx_reports_type ON reports(report_type);
+CREATE INDEX idx_reports_year ON reports(report_year DESC);
+
+-- ============================================
+-- COUNCIL MEMBER COMMISSIONS (Junction Table)
+-- Legătură între consilieri și comisii
+-- ============================================
+
+CREATE TABLE council_member_commissions (
+  member_id UUID REFERENCES council_members(id) ON DELETE CASCADE,
+  commission_id UUID REFERENCES council_commissions(id) ON DELETE CASCADE,
+  role TEXT NOT NULL CHECK (role IN ('president', 'secretary', 'member')),
+  PRIMARY KEY (member_id, commission_id)
+);
+
+-- ============================================
 -- REGIONAL PROGRAM NORD-VEST 2021-2027
 -- ============================================
 
@@ -891,17 +1061,18 @@ CREATE TABLE commission_members (
   UNIQUE(commission_id, councilor_id)
 );
 
+-- ⚠️ DEPRECATED: Folosește `asset_declarations` (vezi secțiunea ASSET DECLARATIONS mai sus)
 -- Councilor Declarations (wealth & interests) - Romanian only
-CREATE TABLE councilor_declarations (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  councilor_id UUID REFERENCES councilors(id) ON DELETE CASCADE,
-  declaration_type TEXT NOT NULL CHECK (declaration_type IN ('avere', 'interese')),
-  year INTEGER NOT NULL,
-  category TEXT NOT NULL CHECK (category IN ('alesi_locali', 'functionari_publici')),
-  context TEXT, -- 'pt. începerea mandatului', 'pt. încetare', etc.
-  pdf_url TEXT NOT NULL,
-  created_at TIMESTAMPTZ DEFAULT now()
-);
+-- CREATE TABLE councilor_declarations (
+--   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+--   councilor_id UUID REFERENCES councilors(id) ON DELETE CASCADE,
+--   declaration_type TEXT NOT NULL CHECK (declaration_type IN ('avere', 'interese')),
+--   year INTEGER NOT NULL,
+--   category TEXT NOT NULL CHECK (category IN ('alesi_locali', 'functionari_publici')),
+--   context TEXT,
+--   pdf_url TEXT NOT NULL,
+--   created_at TIMESTAMPTZ DEFAULT now()
+-- );
 
 -- Budget Documents - Romanian only
 CREATE TABLE budget_documents (
@@ -939,17 +1110,18 @@ CREATE TABLE job_vacancies (
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
+-- ⚠️ DEPRECATED: Folosește `asset_declarations` (vezi secțiunea ASSET DECLARATIONS mai sus)
 -- Wealth Declarations - Romanian only
-CREATE TABLE wealth_declarations (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  person_name TEXT NOT NULL,
-  position TEXT NOT NULL,
-  year INTEGER NOT NULL,
-  declaration_type TEXT NOT NULL CHECK (declaration_type IN ('avere', 'interese')),
-  pdf_url TEXT NOT NULL,
-  published BOOLEAN DEFAULT true,
-  created_at TIMESTAMPTZ DEFAULT now()
-);
+-- CREATE TABLE wealth_declarations (
+--   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+--   person_name TEXT NOT NULL,
+--   position TEXT NOT NULL,
+--   year INTEGER NOT NULL,
+--   declaration_type TEXT NOT NULL CHECK (declaration_type IN ('avere', 'interese')),
+--   pdf_url TEXT NOT NULL,
+--   published BOOLEAN DEFAULT true,
+--   created_at TIMESTAMPTZ DEFAULT now()
+-- );
 
 -- Building Permits - Romanian only
 CREATE TABLE building_permits (
@@ -1522,8 +1694,9 @@ ALTER TABLE urban_plans ENABLE ROW LEVEL SECURITY;
 ALTER TABLE job_vacancies ENABLE ROW LEVEL SECURITY;
 ALTER TABLE councilors ENABLE ROW LEVEL SECURITY;
 ALTER TABLE council_commissions ENABLE ROW LEVEL SECURITY;
-ALTER TABLE councilor_declarations ENABLE ROW LEVEL SECURITY;
-ALTER TABLE wealth_declarations ENABLE ROW LEVEL SECURITY;
+-- ALTER TABLE councilor_declarations ENABLE ROW LEVEL SECURITY;  -- DEPRECATED
+-- ALTER TABLE wealth_declarations ENABLE ROW LEVEL SECURITY;     -- DEPRECATED
+ALTER TABLE asset_declarations ENABLE ROW LEVEL SECURITY;         -- NEW: tabel unificat
 ALTER TABLE downloadable_forms ENABLE ROW LEVEL SECURITY;
 ALTER TABLE gallery_albums ENABLE ROW LEVEL SECURITY;
 ALTER TABLE gallery_images ENABLE ROW LEVEL SECURITY;
@@ -5795,9 +5968,39 @@ When migrating from mock data to database:
 
 ---
 
-*Document Version: 4.2*
-*Last Updated: January 6, 2026*
+*Document Version: 4.3*
+*Last Updated: January 9, 2026*
 *Author: Development Team*
+
+**Changelog v4.3 (Ianuarie 9, 2026):**
+- **UPDATED `asset_declarations` table** - Schemă combinată pentru declarații avere + interese
+  - Un singur rând per persoană/an conține AMBELE fișiere (avere + interese)
+  - Coloane noi: `avere_file_url`, `avere_file_name`, `interese_file_url`, `interese_file_name`
+  - Eliminat: `declaration_type`, `file_url` (schema veche)
+  - Adăugat `department` CHECK ('primaria', 'consiliul_local')
+  - Migrare: `supabase/migrations/005_asset_declarations_combined.sql`
+- **NEW `webcams` table** - Camere web live pentru pagina `/camere-web`
+  - Coloane: `name`, `location`, `stream_url`, `image_url`, `is_active`, `sort_order`
+  - Migrare: `supabase/migrations/006_webcams_table.sql`
+- **NEW `institutions` table** - Instituții pentru educație, sănătate, sport
+  - Coloane: `name`, `category`, `subcategory`, `address`, `phone`, `email`, `schedule`
+  - Categorii: 'educatie', 'sanatate', 'sport', 'cultura'
+- **NEW `volunteer_opportunities` table** - Oportunități de voluntariat
+  - Coloane: `title`, `organization`, `requirements`, `spots_available`, `sort_order`
+- **FIXED `reports` service** - Corectat numele coloanelor
+  - `published_date` → `report_date`
+  - `year` → `report_year`
+- **ADDED `council_member_commissions` junction table** - Legături consilieri-comisii
+  - `role` CHECK: 'president', 'secretary', 'member'
+- **ADDED pagination** la `/consiliul-local/hotarari` (20 sesiuni per pagină)
+- **ADDED 15+ translation namespaces** pentru pagini noi:
+  - `sportPage`, `petitiiPage`, `strategieDezvoltarePage`, `educatiePage`, `faqPage`
+  - `transportPage`, `registruAgricolPage`, `raporteazaProblemaPage`, `camereWebPage`
+  - `agentiEconomiciPage`, `stareCivilaPage`, `sanatatePage`
+- **ADDED navigation keys**: `petitii`, `concursuri`, `ordineDezi`
+- **FIXED RLS policies** pentru `asset_declarations` și `webcams`
+  - Eliminat policy-uri duplicate
+  - Optimizat cu `(SELECT auth.role())` pentru performanță
 
 **Changelog v4.2:**
 - **ADDED Cloudflare R2 for file storage** - Replaced Supabase Storage with Cloudflare R2
