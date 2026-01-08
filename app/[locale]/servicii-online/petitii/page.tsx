@@ -12,7 +12,7 @@ import type { Locale } from '@/lib/seo/config';
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   return generatePageMetadata({
-    pageKey: 'petitii',
+    pageKey: 'petitiiOnline',
     locale: locale as Locale,
     path: '/servicii-online/petitii',
   });

@@ -104,10 +104,6 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Configurare pentru fișiere mari
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
+// Route segment config pentru fișiere mari
+export const runtime = 'nodejs';
+export const maxDuration = 60; // Timp maxim de procesare (secunde)

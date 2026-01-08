@@ -87,7 +87,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     locale: locale as Locale,
     path: `/rapoarte-studii/${slug}`,
     customTitle: report.title,
-    customDescription: report.description?.substring(0, 160) || undefined,
+    customDescription: report.summary?.substring(0, 160) || undefined,
   });
 }
 
@@ -197,9 +197,9 @@ export default async function RaportStudiuDetailPage({
                     <TypeIcon className="w-4 h-4 mr-1" />
                     {typeLabel[locale as keyof typeof typeLabel] || typeLabel.ro}
                   </Badge>
-                  {report.year && (
+                  {report.report_year && (
                     <Badge variant="outline" className="bg-white/20 text-white border-white/30">
-                      {report.year}
+                      {report.report_year}
                     </Badge>
                   )}
                 </div>
@@ -211,10 +211,10 @@ export default async function RaportStudiuDetailPage({
 
                 {/* Meta Info */}
                 <div className="flex flex-wrap gap-6 text-sm text-gray-600 mb-6">
-                  {report.published_date && (
+                  {report.report_date && (
                     <div className="flex items-center gap-2">
                       <Calendar className="w-4 h-4 text-gray-400" />
-                      <span>{labels.publishedAt}: {formatDate(report.published_date)}</span>
+                      <span>{labels.publishedAt}: {formatDate(report.report_date)}</span>
                     </div>
                   )}
                   {report.author && (
@@ -247,7 +247,7 @@ export default async function RaportStudiuDetailPage({
             </Card>
 
             {/* Description */}
-            {report.description && (
+            {report.summary && (
               <Card>
                 <CardHeader>
                   <CardTitle>{labels.description}</CardTitle>
@@ -255,7 +255,7 @@ export default async function RaportStudiuDetailPage({
                 <CardContent>
                   <div 
                     className="prose prose-gray max-w-none"
-                    dangerouslySetInnerHTML={{ __html: report.description }}
+                    dangerouslySetInnerHTML={{ __html: report.summary }}
                   />
                 </CardContent>
               </Card>

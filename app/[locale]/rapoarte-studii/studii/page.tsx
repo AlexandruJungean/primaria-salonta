@@ -83,14 +83,14 @@ export default async function StudiiPage({ params }: { params: Promise<{ locale:
                           </div>
                           <div>
                             <h3 className="font-medium text-gray-900">{study.title}</h3>
-                            {study.published_date && (
+                            {study.report_date && (
                               <p className="text-sm text-gray-500 mt-0.5 flex items-center gap-1.5">
                                 <Calendar className="w-3.5 h-3.5" />
-                                {formatDate(study.published_date)}
+                                {formatDate(study.report_date)}
                               </p>
                             )}
-                            {study.description && (
-                              <p className="text-sm text-gray-600 mt-1 line-clamp-2">{study.description}</p>
+                            {study.summary && (
+                              <p className="text-sm text-gray-600 mt-1 line-clamp-2">{study.summary}</p>
                             )}
                           </div>
                         </div>

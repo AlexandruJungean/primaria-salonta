@@ -13,7 +13,7 @@ import * as council from '@/lib/supabase/services/council';
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   return generatePageMetadata({
-    pageKey: 'ordineDezi',
+    pageKey: 'ordineDeZi',
     locale: locale as Locale,
     path: '/consiliul-local/ordine-de-zi',
   });

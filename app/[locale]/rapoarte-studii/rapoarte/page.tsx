@@ -80,14 +80,14 @@ export default async function RapoartePage({ params }: { params: Promise<{ local
                           </div>
                           <div>
                             <h3 className="font-medium text-gray-900">{report.title}</h3>
-                            {report.year && (
+                            {report.report_year && (
                               <p className="text-sm text-gray-500 mt-0.5 flex items-center gap-1.5">
                                 <Calendar className="w-3.5 h-3.5" />
-                                {labels.year} {report.year}
+                                {labels.year} {report.report_year}
                               </p>
                             )}
-                            {report.description && (
-                              <p className="text-sm text-gray-600 mt-1 line-clamp-2">{report.description}</p>
+                            {report.summary && (
+                              <p className="text-sm text-gray-600 mt-1 line-clamp-2">{report.summary}</p>
                             )}
                           </div>
                         </div>
