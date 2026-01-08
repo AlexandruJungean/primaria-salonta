@@ -272,11 +272,11 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJxxx...
 SUPABASE_SERVICE_ROLE_KEY=eyJxxx...
 
 # Cloudflare R2 (Object Storage for documents & images)
-R2_ACCOUNT_ID=xxx
+R2_ENDPOINT=https://<ACCOUNT_ID>.r2.cloudflarestorage.com
 R2_ACCESS_KEY_ID=xxx
 R2_SECRET_ACCESS_KEY=xxx
-R2_BUCKET_NAME=primaria-salonta
-NEXT_PUBLIC_R2_PUBLIC_URL=https://documente.primariasalonta.ro
+R2_BUCKET_NAME=primaria-salonta-docs
+R2_PUBLIC_URL=https://docs.salonta.ro
 
 # Google Maps
 NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=AIzaxxx...
@@ -308,29 +308,56 @@ NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
 
 ### 3.1 Database Schema Overview
 
+> **⚠️ IMPORTANT: Schema Simplificat (Ianuarie 2026)**
+> 
+> Baza de date stochează conținut **DOAR ÎN ROMÂNĂ**. 
+> Traducerile în maghiară și engleză se generează automat la runtime folosind Google Cloud Translation API.
+> 
+> **Fișierul schema complet:** `supabase/migrations/001_initial_schema.sql`
+> 
+> **Beneficii:**
+> - ✅ ~30% mai puține coloane în DB
+> - ✅ Schema mai simplă de întreținut
+> - ✅ Fără probleme de sincronizare traduceri
+> - ✅ Traduceri mereu actualizate
+
+#### Tabele Principale (21 tabele)
+
+| Tabel | Scop | Pagină Frontend |
+|-------|------|-----------------|
+| `council_sessions` | Ședințe Consiliu Local | `/consiliul-local/sedinte/[slug]` |
+| `council_decisions` | Hotărâri CL | `/consiliul-local/hotarari/[slug]` |
+| `news` | Știri și anunțuri | `/stiri/[slug]` |
+| `events` | Evenimente | `/evenimente/[slug]` |
+| `documents` | Documente generice (buget, somații) | multiple pagini |
+| `asset_declarations` | Declarații avere | `/primaria/declaratii-avere` |
+| `job_vacancies` | Posturi concurs | `/informatii-publice/concursuri/[slug]` |
+| `reports` | Rapoarte și studii | `/rapoarte-studii/[slug]` |
+| `programs` | Programe și proiecte | `/programe/*` |
+| `staff_members` | Conducerea primăriei | `/primaria/conducere` |
+| `council_members` | Consilieri locali | `/consiliul-local/consilieri` |
+| `council_commissions` | Comisii de specialitate | `/consiliul-local/comisii` |
+| `pages` | Pagini editabile | diverse |
+| `contact_submissions` | Formulare contact | `/contact` |
+| `petitions` | Petiții online | `/servicii-online/petitii` |
+| `faq` | Întrebări frecvente | `/faq` |
+
+#### Exemplu Structură Tabel (Simplificat)
+
 ```sql
--- Core Content Tables
-CREATE TABLE articles (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+-- Exemplu: news (doar română, fără _hu/_en)
+CREATE TABLE news (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   slug TEXT UNIQUE NOT NULL,
   category TEXT NOT NULL,
-  featured BOOLEAN DEFAULT false,
+  title TEXT NOT NULL,        -- doar română
+  excerpt TEXT,               -- doar română  
+  content TEXT,               -- doar română
+  featured_image TEXT,
   published BOOLEAN DEFAULT false,
   published_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ DEFAULT now(),
   updated_at TIMESTAMPTZ DEFAULT now()
-);
-
-CREATE TABLE article_translations (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  article_id UUID REFERENCES articles(id) ON DELETE CASCADE,
-  locale TEXT NOT NULL CHECK (locale IN ('ro', 'hu', 'en')),
-  title TEXT NOT NULL,
-  excerpt TEXT,
-  content TEXT,
-  meta_title TEXT,
-  meta_description TEXT,
-  UNIQUE(article_id, locale)
 );
 
 CREATE TABLE documents (
@@ -5196,7 +5223,11 @@ Set the following environment variables in Netlify Dashboard → Site settings �
 
 ## 11. Database Schema
 
-See Section 3.1 for the complete database schema.
+> **Schema completă:** `supabase/migrations/001_initial_schema.sql`
+> 
+> **Abordare:** Conținut stocat doar în română, traduceri generate la runtime cu Google Cloud Translation API.
+
+See Section 3.1 for overview and table descriptions.
 
 ### 11.1 Document Categories
 
@@ -5626,11 +5657,11 @@ This pattern is used for:
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | ✅ | Supabase anonymous key |
 | `SUPABASE_SERVICE_ROLE_KEY` | ✅ | Supabase service role key (server-side only) |
 | **Cloudflare R2 (File Storage)** | | |
-| `R2_ACCOUNT_ID` | ✅ | Cloudflare account ID |
+| `R2_ENDPOINT` | ✅ | R2 endpoint URL (e.g., `https://<ACCOUNT_ID>.r2.cloudflarestorage.com`) |
 | `R2_ACCESS_KEY_ID` | ✅ | R2 API access key ID |
 | `R2_SECRET_ACCESS_KEY` | ✅ | R2 API secret access key |
-| `R2_BUCKET_NAME` | ✅ | R2 bucket name (e.g., `primaria-salonta`) |
-| `NEXT_PUBLIC_R2_PUBLIC_URL` | ✅ | Public URL for R2 bucket (e.g., `https://documente.primariasalonta.ro`) |
+| `R2_BUCKET_NAME` | ✅ | R2 bucket name (e.g., `primaria-salonta-docs`) |
+| `R2_PUBLIC_URL` | ✅ | Public URL for R2 bucket (e.g., `https://docs.salonta.ro`) |
 | **Google APIs** | | |
 | `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` | ✅ | Google Maps API key |
 | `GOOGLE_TRANSLATE_API_KEY` | ✅ | Google Cloud Translation API key (server-side only) |

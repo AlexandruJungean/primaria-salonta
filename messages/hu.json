@@ -69,6 +69,7 @@
     "consilieriLocali": "Helyi tanácsosok",
     "comisii": "Szakbizottságok",
     "ordineZi": "Napirend",
+    "ordineDezi": "Napirend",
     "hotarari": "Határozatok és jegyzőkönyvek",
     "hotarariRepublicate": "Újraközzétett határozatok",
     "declaratiiAvereConsiliu": "Vagyonnyilatkozatok",
@@ -76,6 +77,7 @@
     "transparenta": "Átláthatóság",
     "generale": "Általános",
     "anunturi": "Hirdetmények",
+    "concursuri": "Pályázatok",
     "dezbateriPublice": "Nyilvános viták",
     "buletinInformativ": "Tájékoztató",
     "informatii": "Közérdekű Információk",
@@ -122,6 +124,7 @@
     "serviciiOnline": "Online szolgáltatások",
     "platiOnline": "Online fizetés",
     "petitiiOnline": "Online beadványok",
+    "petitii": "Beadványok",
     "formulare": "Online nyomtatványok",
     "stiri": "Hírek",
     "camereWeb": "Webkamerák",
@@ -279,6 +282,7 @@
   "leadership": {
     "title": "A Polgármesteri Hivatal vezetősége",
     "subtitle": "A polgármester, alpolgármester és a város titkára",
+    "intro": "Nagyszalonta Polgármesteri Hivatalának vezetősége a polgármesterből, alpolgármesterből és jegyzőből áll, akik biztosítják a helyi közigazgatás feladatainak ellátását.",
     "audienceSchedule": "Fogadóórák",
     "contactInfo": "Elérhetőségek",
     "education": "Tanulmányok",
@@ -309,12 +313,59 @@
     "procedureResolution": "A felvetett problémák a jogi eljárásoknak megfelelően és a hatáskörök keretein belül oldhatók meg, az újraközölt 215/2001. törvénynek megfelelően, a probléma elemzése után az illetékes osztályvezetőkkel."
   },
   "declaratiiPage": {
+    "description": "A helyi tisztségviselők és köztisztviselők vagyonnyilatkozatai és érdeknyilatkozatai a 2010. évi 176. törvény szerint.",
+    "declarationsYear": "{year}. évi nyilatkozatok",
+    "declarations": "nyilatkozat",
+    "wealth": "Vagyon",
+    "interests": "Érdekeltségek",
     "electedOfficials": "Választott tisztségviselők",
     "electedOfficialsSubtitle": "Polgármester, Alpolgármester, Helyi tanácsosok",
     "publicServants": "Köztisztviselők",
     "publicServantsSubtitle": "Nagyszalonta Polgármesteri Hivatalának alkalmazottai",
     "infoTitle": "Információk",
-    "infoText": "A vagyon- és érdekeltségi nyilatkozatok a 176/2010. számú törvény rendelkezéseinek megfelelően kerülnek közzétételre, amely a közfunkciók és közmegbízatások gyakorlásának integritásáról szól. A dokumentumok a Nemzeti Integritási Ügynökség weboldalán is elérhetők."
+    "infoText": "A vagyon- és érdekeltségi nyilatkozatok a 176/2010. számú törvény rendelkezéseinek megfelelően kerülnek közzétételre, amely a közfunkciók és közmegbízatások gyakorlásának integritásáról szól. A dokumentumok a Nemzeti Integritási Ügynökség weboldalán is elérhetők.",
+    "persons": "{count} személy"
+  },
+  "agentiEconomiciPage": {
+    "description": "Hasznos információk és dokumentumok Nagyszalonta gazdasági szereplői számára. Nyomtatványok, engedélyek és szolgáltatások a helyi üzleti környezet számára."
+  },
+  "camereWebPage": {
+    "description": "Tekintse meg élőben a Nagyszalonta különböző területeiről készült képeket a stratégiai helyszíneken elhelyezett webkamerákon keresztül."
+  },
+  "educatiePage": {
+    "description": "Nagyszalonta oktatási intézményei - óvodák, iskolák és középiskolák."
+  },
+  "stareCivilaPage": {
+    "description": "Az Anyakönyvi Szolgálat születési, házassági és halotti anyakönyvi kivonatokat, valamint egyéb hivatalos dokumentumokat állít ki.",
+    "forms": "Űrlapok",
+    "noForms": "Nincsenek elérhető űrlapok."
+  },
+  "faqPage": {
+    "description": "Gyakran ismételt kérdések a Nagyszalontai Polgármesteri Hivatal szolgáltatásairól.",
+    "noFaqs": "Nincsenek elérhető gyakran ismételt kérdések."
+  },
+  "sanatatePage": {
+    "description": "Nagyszalonta egészségügyi intézményei - kórházak, rendelőintézetek, orvosi rendelők és gyógyszertárak."
+  },
+  "sportPage": {
+    "description": "Nagyszalontán elérhető sportlétesítmények és sporttevékenységek - uszoda, sportcsarnokok és sportklubok."
+  },
+  "petitiiPage": {
+    "description": "Nyújtson be beadványokat Nagyszalonta Polgármesteri Hivatalához online vagy hagyományos módszerekkel."
+  },
+  "strategieDezvoltarePage": {
+    "description": "Nagyszalonta fejlesztési stratégiája tartalmazza a hosszú távú célkitűzéseket és fejlesztési irányokat."
+  },
+  "transportPage": {
+    "description": "Információk a tömegközlekedésről és az úthálózatról Nagyszalontán."
+  },
+  "registruAgricolPage": {
+    "description": "A Mezőgazdasági Nyilvántartási Szolgálat információkat és űrlapokat biztosít a mezőgazdasági tevékenységekhez.",
+    "forms": "Űrlapok",
+    "noForms": "Nincsenek elérhető űrlapok."
+  },
+  "raporteazaProblemaPage": {
+    "description": "Jelezzen problémát Nagyszalontán - kátyúk, meghibásodott közvilágítás, közegészségügyi problémák stb."
   },
   "rapoarteAnualePage": {
     "subtitle": "Éves jelentés Nagyszalonta Község társadalmi-gazdasági és környezeti állapotáról",
@@ -324,7 +375,21 @@
   "consilieriPage": {
     "introduction": "Nagyszalonta Községi Helyi Tanácsa a helyi érdekű ügyeket kezelő tanácskozó testület, amely a 57/2019 sürgősségi kormányrendelet (Közigazgatási Kódex) alapján működik, a későbbi módosításokkal és kiegészítésekkel. 17 tanácsosból áll, akik szakbizottságokban végzik tevékenységüket.",
     "councilorsTitle": "A Helyi Tanács összetétele",
-    "responsibilitiesTitle": "A tanácsosok főbb feladatai"
+    "responsibilitiesTitle": "A tanácsosok főbb feladatai",
+    "responsibilities": [
+      "Jóváhagyja vagy véleményezi a gazdasági-társadalmi fejlesztési tanulmányokat, előrejelzéseket és programokat, a területrendezési és városrendezési dokumentációkat, beleértve a megyei, regionális és határon átnyúló együttműködési programokban való részvételt.",
+      "Jóváhagyja a helyi költségvetést, a hiteleket, a hitelátviteleket és a költségvetési tartalék felhasználását; jóváhagyja a költségvetési év lezárását; megállapítja a helyi adókat és illetékeket.",
+      "Kezeli a község vagy város köz- és magántulajdonát.",
+      "Dönt a község vagy város köztulajdonának kezelésébe adásáról, koncesszióba adásáról vagy bérbeadásáról, valamint a helyi közszolgáltatásokról.",
+      "Közintézményeket, kereskedelmi társaságokat és helyi közszolgáltatásokat alapít; figyelemmel kíséri, ellenőrzi és elemzi tevékenységüket.",
+      "Dönt a helyi érdekű önálló vállalatok alapításáról és átszervezéséről; gyakorolja az általa alapított kereskedelmi társaságokban a részvényesi jogokat.",
+      "Elemzi és jóváhagyja a települések területrendezési és városrendezési dokumentációit; jóváhagyja a helyi költségvetésből árvíz-, tűz- és katasztrófavédelmire fordított pénzeszközöket.",
+      "Megállapítja az utak, hidak és a helyi közlekedési infrastruktúra építéséhez, karbantartásához és korszerűsítéséhez szükséges intézkedéseket.",
+      "Hatáskörén belül jóváhagyja a helyi beruházások műszaki-gazdasági dokumentációit.",
+      "Hozzájárul tudományos, kulturális, művészeti, sport- és szabadidős tevékenységek szervezéséhez.",
+      "A környezet védelme és helyreállítása érdekében cselekszik; hozzájárul a műemlékek, parkok és természetvédelmi területek védelméhez.",
+      "Biztosítja a kereskedelem szabadságát és ösztönzi a szabad kezdeményezést."
+    ]
   },
   "comisiiPage": {
     "description": "A Helyi Tanács szakbizottságai elemzik és véleményezik a határozattervezeteket, mielőtt azokat a Helyi Tanács plenáris ülésén szavazásra bocsátanák."
@@ -547,7 +612,7 @@
     "hotelsTitle": "Szállás",
     "hotelSlaviaDesc": "4 csillagos szálloda étteremmel, a város történelmi központjában, román és szlovák specialitásokkal.",
     "motelMilleniumDesc": "Megfizethető szálláshely modern felszereltséggel és ingyenes parkolással.",
-    "ancoraDesc": "Étteremmel rendelkező panzió, szállást és hagyományos román ételeket kínál.",
+    "hotelAncoraDesc": "Étteremmel rendelkező panzió, szállást és hagyományos román ételeket kínál.",
     "tourismAgenciesTitle": "Utazási irodák",
     "turistsalDesc": "Több mint 12 éves tapasztalattal rendelkező utazási iroda, magyarországi, horvátországi és nemzetközi körút csomagokat kínál.",
     "investorCTA": "Érdekli a befektetés Nagyszalontán?",

@@ -7,6 +7,7 @@ import { UpcomingEventsSection } from '@/components/sections/upcoming-events-sec
 import { generatePageMetadata } from '@/lib/seo/metadata';
 import { WebPageJsonLd } from '@/lib/seo/json-ld';
 import { type Locale } from '@/i18n/routing';
+import { getLatestNews, getUpcomingEvents } from '@/lib/supabase/services';
 
 // Dynamic imports for below-the-fold components (reduces initial JS bundle)
 const WeatherWidgetSection = dynamic(
@@ -51,6 +52,12 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   
+  // Fetch data from Supabase
+  const [latestNews, upcomingEvents] = await Promise.all([
+    getLatestNews(3),
+    getUpcomingEvents(4),
+  ]);
+  
   return (
     <>
       <WebPageJsonLd
@@ -72,10 +79,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <QuickLinksSection />
 
       {/* Latest News */}
-      <NewsSection />
+      <NewsSection news={latestNews} />
 
       {/* Upcoming Events */}
-      <UpcomingEventsSection />
+      <UpcomingEventsSection events={upcomingEvents} />
 
       {/* Interactive City Map */}
       <CityMapSection />

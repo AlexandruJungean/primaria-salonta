@@ -69,6 +69,7 @@
     "consilieriLocali": "Local Councilors",
     "comisii": "Specialty Committees",
     "ordineZi": "Agendas",
+    "ordineDezi": "Agendas",
     "hotarari": "Decisions and Minutes",
     "hotarariRepublicate": "Republished Decisions",
     "declaratiiAvereConsiliu": "Wealth Declarations",
@@ -76,6 +77,7 @@
     "transparenta": "Transparency",
     "generale": "General",
     "anunturi": "Announcements",
+    "concursuri": "Competitions",
     "dezbateriPublice": "Public Debates",
     "buletinInformativ": "Informative Bulletin",
     "informatii": "Public Information",
@@ -122,6 +124,7 @@
     "serviciiOnline": "Online Services",
     "platiOnline": "Online Payments",
     "petitiiOnline": "Online Petitions",
+    "petitii": "Petitions",
     "formulare": "Online Forms",
     "stiri": "News",
     "camereWeb": "Webcams",
@@ -279,6 +282,7 @@
   "leadership": {
     "title": "City Hall Leadership",
     "subtitle": "The Mayor, Deputy Mayor and Secretary of the municipality",
+    "intro": "The leadership of Salonta City Hall consists of the mayor, deputy mayor and general secretary, who ensure the fulfillment of the responsibilities of the local public administration.",
     "audienceSchedule": "Audience schedule",
     "contactInfo": "Contact information",
     "education": "Education",
@@ -309,12 +313,59 @@
     "procedureResolution": "The raised issues can be resolved according to legal procedures and within the limits of competence, as established by Law 215/2001 republished, after analyzing the problem with the heads of the relevant departments."
   },
   "declaratiiPage": {
+    "description": "Asset and interest declarations of local elected officials and public servants, according to Law no. 176/2010 on integrity in exercising public functions and dignities.",
+    "declarationsYear": "Declarations for year {year}",
+    "declarations": "declarations",
+    "wealth": "Wealth",
+    "interests": "Interests",
     "electedOfficials": "Elected Officials",
     "electedOfficialsSubtitle": "Mayor, Deputy Mayor, Local Councilors",
     "publicServants": "Public Servants",
     "publicServantsSubtitle": "Employees of Salonta City Hall",
     "infoTitle": "Information",
-    "infoText": "Wealth and interest declarations are published in accordance with the provisions of Law no. 176/2010 regarding integrity in the exercise of public functions and dignities. Documents are also available on the National Integrity Agency website."
+    "infoText": "Wealth and interest declarations are published in accordance with the provisions of Law no. 176/2010 regarding integrity in the exercise of public functions and dignities. Documents are also available on the National Integrity Agency website.",
+    "persons": "{count} persons"
+  },
+  "agentiEconomiciPage": {
+    "description": "Useful information and documents for economic agents in Salonta Municipality. Forms, authorizations and services for the local business environment."
+  },
+  "camereWebPage": {
+    "description": "View live images from different areas of Salonta Municipality through webcams placed in strategic locations."
+  },
+  "educatiePage": {
+    "description": "Educational institutions in Salonta Municipality - kindergartens, schools and high schools."
+  },
+  "stareCivilaPage": {
+    "description": "The Civil Status Service issues birth, marriage and death certificates, as well as other official documents.",
+    "forms": "Forms",
+    "noForms": "No forms available."
+  },
+  "faqPage": {
+    "description": "Frequently asked questions about the services offered by Salonta Municipality.",
+    "noFaqs": "No frequently asked questions available."
+  },
+  "sanatatePage": {
+    "description": "Health institutions in Salonta Municipality - hospitals, clinics, medical offices and pharmacies."
+  },
+  "sportPage": {
+    "description": "Sports facilities and activities available in Salonta Municipality - swimming pool, sports halls and sports clubs."
+  },
+  "petitiiPage": {
+    "description": "Submit petitions to Salonta City Hall online or through traditional methods."
+  },
+  "strategieDezvoltarePage": {
+    "description": "The development strategy of Salonta Municipality includes long-term objectives and development directions."
+  },
+  "transportPage": {
+    "description": "Information about public transport and road infrastructure in Salonta Municipality."
+  },
+  "registruAgricolPage": {
+    "description": "The Agricultural Registry Service provides information and forms for agricultural activities.",
+    "forms": "Forms",
+    "noForms": "No forms available."
+  },
+  "raporteazaProblemaPage": {
+    "description": "Report a problem in Salonta Municipality - potholes, broken lights, sanitation issues, etc."
   },
   "rapoarteAnualePage": {
     "subtitle": "Annual report on the socio-economic and environmental status of Salonta Municipality",
@@ -324,7 +375,21 @@
   "consilieriPage": {
     "introduction": "The Local Council of Salonta Municipality is the deliberative authority that manages issues of local interest, operating under GEO 57/2019 on the Administrative Code, with subsequent amendments and additions. It consists of 17 councilors who carry out their activity in specialized Committees.",
     "councilorsTitle": "Local Council Composition",
-    "responsibilitiesTitle": "Main responsibilities of the councilors"
+    "responsibilitiesTitle": "Main responsibilities of the councilors",
+    "responsibilities": [
+      "Approves or endorses, as appropriate, studies, forecasts and socio-economic development programs, territorial organization and planning documentation, including participation in county, regional, zonal and cross-border cooperation programs.",
+      "Approves the local budget, loans, credit transfers and the use of budget reserves; approves the closure of the budget year; establishes local taxes and fees, as well as special fees.",
+      "Administers the public and private domain of the commune or city.",
+      "Decides on granting administration, concession or lease of public property of the commune or city, as well as local public services.",
+      "Establishes public institutions, commercial companies and local public services; monitors, controls and analyzes their activity; establishes organization and operation norms for local public institutions and services.",
+      "Decides on the establishment and reorganization of autonomous local companies; exercises all shareholder rights in commercial companies it has established; decides on the privatization of these companies.",
+      "Analyzes and approves territorial planning and urban planning documentation for localities; approves allocation of local budget funds for flood, fire, disaster and dangerous weather protection.",
+      "Establishes measures for the construction, maintenance and modernization of roads, bridges, and local communication infrastructure.",
+      "Approves, within its competence, technical-economic documentation for local investment works and ensures conditions for their implementation.",
+      "Contributes to organizing scientific, cultural, artistic, sports and leisure activities.",
+      "Acts for the protection and restoration of the environment to improve quality of life; contributes to the protection, conservation, restoration and enhancement of historical and architectural monuments, parks and nature reserves.",
+      "Ensures freedom of trade and encourages free initiative."
+    ]
   },
   "comisiiPage": {
     "description": "The specialized committees of the Local Council analyze and approve draft decisions before they are submitted to a vote in the Local Council plenary."
@@ -547,7 +612,7 @@
     "hotelsTitle": "Accommodation",
     "hotelSlaviaDesc": "4-star hotel with restaurant, located in the historic center, featuring Romanian and Slovak specialties.",
     "motelMilleniumDesc": "Affordable accommodation with modern facilities and free parking.",
-    "ancoraDesc": "Guesthouse with restaurant, offering accommodation and traditional Romanian dishes.",
+    "hotelAncoraDesc": "Guesthouse with restaurant, offering accommodation and traditional Romanian dishes.",
     "tourismAgenciesTitle": "Tourism Agencies",
     "turistsalDesc": "Travel agency with over 12 years of experience, offering tour packages to Hungary, Croatia and international circuits.",
     "investorCTA": "Interested in Investing in Salonta?",

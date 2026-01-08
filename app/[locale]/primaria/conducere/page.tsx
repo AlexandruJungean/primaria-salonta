@@ -1,15 +1,24 @@
 import { getTranslations } from 'next-intl/server';
-import { useTranslations, useLocale } from 'next-intl';
 import Image from 'next/image';
-import { Phone, Mail, Calendar, User, GraduationCap, Building2, ClipboardList } from 'lucide-react';
+import { Phone, Mail, Calendar, User } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { Card, CardContent } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
-import { LEADERSHIP, LEADERSHIP_INTRO } from '@/lib/constants/leadership';
-import { generatePageMetadata, BreadcrumbJsonLd } from '@/lib/seo';
+import { getLeadership } from '@/lib/supabase/services';
+import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
+
+const POSITION_LABELS: Record<string, Record<string, string>> = {
+  primar: { ro: 'Primar', hu: 'Polgármester', en: 'Mayor' },
+  viceprimar: { ro: 'Viceprimar', hu: 'Alpolgármester', en: 'Vice Mayor' },
+  secretar: { ro: 'Secretar General', hu: 'Titkár', en: 'General Secretary' },
+  administrator: { ro: 'Administrator Public', hu: 'Közigazgató', en: 'Public Administrator' },
+  director: { ro: 'Director', hu: 'Igazgató', en: 'Director' },
+  sef_serviciu: { ro: 'Șef Serviciu', hu: 'Osztályvezető', en: 'Department Head' },
+  altele: { ro: 'Funcționar', hu: 'Tisztviselő', en: 'Official' },
+};
 
 export async function generateMetadata({
   params,
@@ -24,10 +33,17 @@ export async function generateMetadata({
   });
 }
 
-export default function LeadershipPage() {
-  const t = useTranslations('leadership');
-  const tNav = useTranslations('navigation');
-  const locale = useLocale() as 'ro' | 'hu' | 'en';
+export default async function LeadershipPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const t = await getTranslations('leadership');
+  const tNav = await getTranslations('navigation');
+
+  // Fetch leadership from database
+  const leadership = await getLeadership();
 
   return (
     <>
@@ -44,28 +60,26 @@ export default function LeadershipPage() {
           {/* Introduction */}
           <div className="max-w-4xl mx-auto mb-12">
             <p className="text-lg text-gray-600 text-center leading-relaxed">
-              {LEADERSHIP_INTRO[locale]}
+              {t('intro')}
             </p>
           </div>
 
-          {/* Leadership Cards */}
-          <div className="space-y-12 max-w-5xl mx-auto">
-            {LEADERSHIP.map((leader, index) => {
-              const translation = leader.translations[locale];
-              const education = leader.education[locale];
-              const departments = leader.subordinateDepartments[locale];
-              const responsibilities = leader.mainResponsibilities[locale];
-
-              return (
+          {leadership.length === 0 ? (
+            <div className="text-center py-12 text-gray-500">
+              <p>Nu există informații despre conducere momentan.</p>
+            </div>
+          ) : (
+            <div className="space-y-12 max-w-5xl mx-auto">
+              {leadership.map((leader, index) => (
                 <Card key={leader.id} className="overflow-hidden">
                   <div className="md:flex md:items-start">
                     {/* Photo Section */}
                     <div className="md:w-64 lg:w-72 shrink-0">
                       <div className="aspect-[3/4] relative bg-gradient-to-br from-primary-100 to-primary-50">
-                        {leader.photo ? (
+                        {leader.photo_url ? (
                           <Image
-                            src={leader.photo}
-                            alt={translation.name}
+                            src={leader.photo_url}
+                            alt={leader.name}
                             fill
                             className="object-cover object-top"
                             sizes="(max-width: 768px) 100vw, 280px"
@@ -84,10 +98,10 @@ export default function LeadershipPage() {
                       {/* Header */}
                       <div className="mb-6">
                         <span className="inline-block px-3 py-1 bg-primary-100 text-primary-800 text-sm font-medium rounded-full mb-3">
-                          {translation.position}
+                          {POSITION_LABELS[leader.position_type]?.[locale] || leader.position_type}
                         </span>
                         <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
-                          {translation.name}
+                          {leader.name}
                         </h2>
                       </div>
 
@@ -99,78 +113,49 @@ export default function LeadershipPage() {
                             <span className="text-sm">{leader.phone}</span>
                           </div>
                         )}
-                        <div className="flex items-center gap-2 text-gray-600">
-                          <Mail className="w-4 h-4 text-primary-600" />
-                          <a
-                            href={`mailto:${leader.email}`}
-                            className="text-sm text-primary-700 hover:underline"
-                          >
-                            {leader.email}
-                          </a>
-                        </div>
-                        <div className="flex items-center gap-2 text-gray-600">
-                          <Calendar className="w-4 h-4 text-primary-600" />
-                          <span className="text-sm">{translation.audienceSchedule}</span>
-                        </div>
+                        {leader.email && (
+                          <div className="flex items-center gap-2 text-gray-600">
+                            <Mail className="w-4 h-4 text-primary-600" />
+                            <a
+                              href={`mailto:${leader.email}`}
+                              className="text-sm text-primary-700 hover:underline"
+                            >
+                              {leader.email}
+                            </a>
+                          </div>
+                        )}
+                        {leader.reception_hours && (
+                          <div className="flex items-center gap-2 text-gray-600">
+                            <Calendar className="w-4 h-4 text-primary-600" />
+                            <span className="text-sm">{leader.reception_hours}</span>
+                          </div>
+                        )}
                       </div>
 
-                      {/* Education */}
-                      {education.length > 0 && (
+                      {/* Bio */}
+                      {leader.bio && (
                         <div className="mb-6">
-                          <div className="flex items-center gap-2 mb-3">
-                            <GraduationCap className="w-5 h-5 text-primary-600" />
-                            <h3 className="font-semibold text-gray-900">{t('education')}</h3>
-                          </div>
-                          <ul className="space-y-2">
-                            {education.map((edu, i) => (
-                              <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
-                                <span className="w-1.5 h-1.5 rounded-full bg-primary-400 mt-2 shrink-0" />
-                                {edu}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-
-                      {/* Subordinate Departments */}
-                      {departments.length > 0 && (
-                        <div className="mb-6">
-                          <div className="flex items-center gap-2 mb-3">
-                            <Building2 className="w-5 h-5 text-primary-600" />
-                            <h3 className="font-semibold text-gray-900">{t('subordinateDepartments')}</h3>
-                          </div>
-                          <div className="grid sm:grid-cols-2 gap-2">
-                            {departments.map((dept, i) => (
-                              <div
-                                key={i}
-                                className="flex items-center gap-2 text-sm text-gray-600 bg-gray-50 px-3 py-2 rounded-lg"
-                              >
-                                <span className="w-1.5 h-1.5 rounded-full bg-primary-400 shrink-0" />
-                                {dept}
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Main Responsibilities */}
-                      {responsibilities && (
-                        <div>
-                          <div className="flex items-center gap-2 mb-3">
-                            <ClipboardList className="w-5 h-5 text-primary-600" />
-                            <h3 className="font-semibold text-gray-900">{t('mainResponsibilities')}</h3>
-                          </div>
                           <p className="text-sm text-gray-600 leading-relaxed">
-                            {responsibilities}
+                            {leader.bio}
+                          </p>
+                        </div>
+                      )}
+
+                      {/* Responsibilities */}
+                      {leader.responsibilities && (
+                        <div>
+                          <h3 className="font-semibold text-gray-900 mb-3">{t('mainResponsibilities')}</h3>
+                          <p className="text-sm text-gray-600 leading-relaxed">
+                            {leader.responsibilities}
                           </p>
                         </div>
                       )}
                     </CardContent>
                   </div>
                 </Card>
-              );
-            })}
-          </div>
+              ))}
+            </div>
+          )}
         </Container>
       </Section>
     </>

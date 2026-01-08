@@ -69,6 +69,7 @@
     "consilieriLocali": "Consilieri locali",
     "comisii": "Comisii de specialitate",
     "ordineZi": "Ordine de zi",
+    "ordineDezi": "Ordine de zi",
     "hotarari": "Hotărâri și procese verbale",
     "hotarariRepublicate": "Hotărâri republicate",
     "declaratiiAvereConsiliu": "Declarații de avere",
@@ -76,6 +77,7 @@
     "transparenta": "Transparență",
     "generale": "Generale",
     "anunturi": "Anunțuri",
+    "concursuri": "Concursuri",
     "dezbateriPublice": "Dezbateri publice",
     "buletinInformativ": "Buletin informativ",
     "informatii": "Informații Publice",
@@ -122,6 +124,7 @@
     "serviciiOnline": "Servicii online",
     "platiOnline": "Plăți online",
     "petitiiOnline": "Petiții online",
+    "petitii": "Petiții",
     "formulare": "Formulare online",
     "stiri": "Știri",
     "camereWeb": "Camere web",
@@ -279,6 +282,7 @@
   "leadership": {
     "title": "Conducerea Primăriei",
     "subtitle": "Primarul, viceprimarul și secretarul municipiului",
+    "intro": "Conducerea Primăriei Municipiului Salonta este formată din primar, viceprimar și secretar general, care asigură îndeplinirea atribuțiilor ce revin administrației publice locale.",
     "audienceSchedule": "Program audiențe",
     "contactInfo": "Date de contact",
     "education": "Studii",
@@ -309,12 +313,59 @@
     "procedureResolution": "Problemele ridicate vor putea fi soluționate conform procedurilor legale și în limitele de competență, așa cum sunt stabilite de Legea 215/2001 republicată, după analizarea problemei cu șefii compartimentelor de resort."
   },
   "declaratiiPage": {
+    "description": "Declarațiile de avere și de interese ale aleșilor locali și funcționarilor publici, conform Legii nr. 176/2010 privind integritatea în exercitarea funcțiilor și demnităților publice.",
     "electedOfficials": "Aleși locali",
     "electedOfficialsSubtitle": "Primar, Viceprimar, Consilieri locali",
     "publicServants": "Funcționari publici",
     "publicServantsSubtitle": "Angajații Primăriei Municipiului Salonta",
     "infoTitle": "Informații",
-    "infoText": "Declarațiile de avere și de interese sunt publicate conform prevederilor Legii nr. 176/2010 privind integritatea în exercitarea funcțiilor și demnităților publice. Documentele sunt disponibile și pe site-ul Agenției Naționale de Integritate."
+    "infoText": "Declarațiile de avere și de interese sunt publicate conform prevederilor Legii nr. 176/2010 privind integritatea în exercitarea funcțiilor și demnităților publice. Documentele sunt disponibile și pe site-ul Agenției Naționale de Integritate.",
+    "declarationsYear": "Declarații pentru anul {year}",
+    "declarations": "declarații",
+    "wealth": "Avere",
+    "interests": "Interese",
+    "persons": "{count} persoane"
+  },
+  "agentiEconomiciPage": {
+    "description": "Informații și documente utile pentru agenții economici din Municipiul Salonta. Formulare, autorizații și servicii pentru mediul de afaceri local."
+  },
+  "camereWebPage": {
+    "description": "Vizualizați în timp real imagini live din diferite zone ale Municipiului Salonta prin camerele web amplasate în locații strategice."
+  },
+  "educatiePage": {
+    "description": "Instituțiile de învățământ din Municipiul Salonta - grădinițe, școli și licee."
+  },
+  "stareCivilaPage": {
+    "description": "Serviciul de Stare Civilă eliberează certificate de naștere, căsătorie și deces, precum și alte documente oficiale.",
+    "forms": "Formulare",
+    "noForms": "Nu există formulare disponibile."
+  },
+  "faqPage": {
+    "description": "Întrebări frecvente despre serviciile oferite de Primăria Municipiului Salonta.",
+    "noFaqs": "Nu există întrebări frecvente disponibile."
+  },
+  "sanatatePage": {
+    "description": "Instituții de sănătate din Municipiul Salonta - spitale, policlinici, cabinete medicale și farmacii."
+  },
+  "sportPage": {
+    "description": "Facilități și activități sportive disponibile în Municipiul Salonta - bazin de înot, săli de sport și cluburi sportive."
+  },
+  "petitiiPage": {
+    "description": "Depuneți petiții către Primăria Municipiului Salonta online sau prin metodele tradiționale."
+  },
+  "strategieDezvoltarePage": {
+    "description": "Strategia de dezvoltare a Municipiului Salonta cuprinde obiectivele și direcțiile de dezvoltare pe termen lung."
+  },
+  "transportPage": {
+    "description": "Informații despre transportul public și infrastructura rutieră din Municipiul Salonta."
+  },
+  "registruAgricolPage": {
+    "description": "Serviciul Registru Agricol oferă informații și formulare pentru activități agricole.",
+    "forms": "Formulare",
+    "noForms": "Nu există formulare disponibile."
+  },
+  "raporteazaProblemaPage": {
+    "description": "Raportează o problemă din Municipiul Salonta - gropi în asfalt, iluminat defect, probleme de salubritate etc."
   },
   "rapoarteAnualePage": {
     "subtitle": "Raport anual privind starea socio-economică și de mediu a Municipiului Salonta",
@@ -324,7 +375,21 @@
   "consilieriPage": {
     "introduction": "Consiliul Local al municipiului Salonta este autoritatea deliberativă, care gestionează problemele de interes local, desfășurând activitatea în baza OUG 57/2019 privind Codul Administrativ, cu modificările și completările ulterioare. Este format din 17 consilieri care își desfășoară activitatea în Comisii de specialitate.",
     "councilorsTitle": "Componența Consiliului Local",
-    "responsibilitiesTitle": "Atribuțiile principale ale consilierilor"
+    "responsibilitiesTitle": "Atribuțiile principale ale consilierilor",
+    "responsibilities": [
+      "Avizează sau aprobă, după caz, studii, prognoze și programe de dezvoltare economico-socială, de organizare și amenajare a teritoriului, documentații de amenajare a teritoriului și urbanism, inclusiv participarea la programe de dezvoltare județeană, regională, zonală și de cooperare transfrontalieră, în condițiile legii.",
+      "Aprobă bugetul local, împrumuturile, virările de credite și modul de utilizare a rezervei bugetare; aprobă contul de încheiere a exercițiului bugetar; stabilește impozite și taxe locale, precum și taxe speciale, în condițiile legii.",
+      "Administrează domeniul public și domeniul privat al comunei sau orașului.",
+      "Hotărăște darea în administrare, concesionarea sau închirierea bunurilor proprietate publică a comunei sau orașului, după caz, precum și a serviciilor publice de interes local, în condițiile legii.",
+      "Înființează instituții publice, societăți comerciale și servicii publice de interes local; urmărește, controlează și analizează activitatea acestora; instituie, cu respectarea criteriilor generale stabilite prin lege, norme de organizare și funcționare pentru instituțiile și serviciile publice de interes local.",
+      "Hotărăște asupra înființării și reorganizării regiilor autonome de interes local; exercită, în numele unității administrativ-teritoriale, toate drepturile acționarului la societățile comerciale pe care le-a înființat; hotărăște asupra privatizării acestor societăți comerciale.",
+      "Analizează și aprobă, în condițiile legii, documentațiile de amenajare a teritoriului și urbanism ale localităților, stabilind mijloacele materiale și financiare necesare în vederea realizării acestora; aprobă alocarea de fonduri din bugetul local pentru acțiuni de apărare împotriva inundațiilor, incendiilor, dezastrelor și fenomenelor meteorologice periculoase.",
+      "Stabilește măsurile necesare pentru construirea, întreținerea și modernizarea drumurilor, podurilor, precum și a întregii infrastructuri aparținând căilor de comunicații de interes local.",
+      "Aprobă, în limitele competențelor sale, documentațiile tehnico-economice pentru lucrările de investiții de interes local și asigură condițiile necesare în vederea realizării acestora.",
+      "Contribuie la organizarea de activități științifice, culturale, artistice, sportive și de agrement.",
+      "Acționează pentru protecția și refacerea mediului înconjurător, în scopul creșterii calității vieții; contribuie la protecția, conservarea, restaurarea și punerea în valoare a monumentelor istorice și de arhitectură, a parcurilor și rezervațiilor naturale, în condițiile legii.",
+      "Asigură libertatea comerțului și încurajează libera inițiativă, în condițiile legii."
+    ]
   },
   "comisiiPage": {
     "description": "Comisiile de specialitate ale Consiliului Local analizează și avizează proiectele de hotărâri înainte de a fi supuse votului în plenul Consiliului Local."
@@ -547,7 +612,7 @@
     "hotelsTitle": "Cazare",
     "hotelSlaviaDesc": "Hotel de 4 stele cu restaurant, situat în centrul istoric al municipiului, cu specialități românești și slovace.",
     "motelMilleniumDesc": "Unitate de cazare accesibilă, cu facilități moderne și parcare gratuită.",
-    "ancoraDesc": "Pensiune cu restaurant, oferind cazare și preparate tradiționale românești.",
+    "hotelAncoraDesc": "Pensiune cu restaurant, oferind cazare și preparate tradiționale românești.",
     "tourismAgenciesTitle": "Agenții de turism",
     "turistsalDesc": "Agenție de turism cu peste 12 ani de experiență, oferind pachete turistice pentru Ungaria, Croația și circuite internaționale.",
     "investorCTA": "Interesat să investești în Salonta?",

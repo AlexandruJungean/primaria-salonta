@@ -1,226 +1,164 @@
-'use client';
-
-import { useState } from 'react';
-import { useTranslations } from 'next-intl';
-import { Info, Send, User, Building2 } from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
+import { FileText, Mail, Info, ExternalLink } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
-import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
+import { Link } from '@/components/ui/link';
+import { generatePageMetadata } from '@/lib/seo';
+import type { Locale } from '@/lib/seo/config';
 
-type PersonType = 'fizica' | 'juridica';
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  return generatePageMetadata({
+    pageKey: 'petitii',
+    locale: locale as Locale,
+    path: '/servicii-online/petitii',
+  });
+}
 
-export default function PetitiiPage() {
-  const t = useTranslations('petitions');
-  const tNav = useTranslations('navigation');
-  const [personType, setPersonType] = useState<PersonType>('fizica');
+export default async function PetitiiPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'navigation' });
+  const tp = await getTranslations({ locale, namespace: 'petitiiPage' });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // TODO: Add reCAPTCHA verification here
-    // Handle form submission
-    alert(t('submitSuccess'));
+  const pageLabels = {
+    ro: {
+      infoTitle: 'Ce este o petiție?',
+      infoText: 'Petiția reprezintă cererea, reclamația, sesizarea sau propunerea formulată în scris ori prin poștă electronică, pe care un cetățean o adresează autorităților și instituțiilor publice.',
+      howToTitle: 'Cum depuneți o petiție?',
+      howToOptions: [
+        'Online prin formularul de mai jos',
+        'Prin email la adresa registratura@salonta.ro',
+        'Depunere fizică la Registratura Primăriei',
+        'Prin poștă la adresa: Primăria Municipiului Salonta, str. Republicii nr. 1, cod 415500',
+      ],
+      formTitle: 'Formular petiție online',
+      responseTime: 'Termen de răspuns: 30 de zile calendaristice',
+      submitPetition: 'Trimite petiția',
+      name: 'Nume complet',
+      email: 'Adresa de email',
+      phone: 'Telefon (opțional)',
+      subject: 'Subiect',
+      content: 'Conținutul petiției',
+      submit: 'Trimite',
+      contactTitle: 'Contact Registratură',
+    },
+    hu: {
+      infoTitle: 'Mi a beadvány?',
+      infoText: 'A beadvány írásban vagy elektronikus levélben megfogalmazott kérelem, panasz, bejelentés vagy javaslat, amelyet egy állampolgár a hatóságokhoz és közintézményekhez intéz.',
+      howToTitle: 'Hogyan nyújthat be beadványt?',
+      howToOptions: [
+        'Online az alábbi űrlapon keresztül',
+        'E-mailben a registratura@salonta.ro címre',
+        'Személyesen a Polgármesteri Hivatal iktató irodájában',
+        'Postai úton: Nagyszalonta Polgármesteri Hivatala, str. Republicii nr. 1, 415500',
+      ],
+      formTitle: 'Online beadvány űrlap',
+      responseTime: 'Válaszadási határidő: 30 naptári nap',
+      submitPetition: 'Beadvány küldése',
+      name: 'Teljes név',
+      email: 'E-mail cím',
+      phone: 'Telefon (opcionális)',
+      subject: 'Tárgy',
+      content: 'A beadvány tartalma',
+      submit: 'Küldés',
+      contactTitle: 'Iktató elérhetősége',
+    },
+    en: {
+      infoTitle: 'What is a petition?',
+      infoText: 'A petition is a request, complaint, report or proposal formulated in writing or by email, which a citizen addresses to public authorities and institutions.',
+      howToTitle: 'How to submit a petition?',
+      howToOptions: [
+        'Online through the form below',
+        'By email to registratura@salonta.ro',
+        'Physical submission at the City Hall Registry',
+        'By mail to: Salonta City Hall, str. Republicii nr. 1, 415500',
+      ],
+      formTitle: 'Online petition form',
+      responseTime: 'Response time: 30 calendar days',
+      submitPetition: 'Submit petition',
+      name: 'Full name',
+      email: 'Email address',
+      phone: 'Phone (optional)',
+      subject: 'Subject',
+      content: 'Petition content',
+      submit: 'Submit',
+      contactTitle: 'Registry Contact',
+    },
   };
+
+  const labels = pageLabels[locale as keyof typeof pageLabels] || pageLabels.en;
 
   return (
     <>
       <Breadcrumbs items={[
-        { label: tNav('serviciiOnline'), href: '/servicii-online' },
-        { label: tNav('petitiiOnline') }
+        { label: t('serviciiOnline'), href: '/servicii-online' },
+        { label: t('petitii') }
       ]} />
-      <PageHeader titleKey="petitiiOnline" namespace="navigation" icon="send" />
+      <PageHeader titleKey="petitii" icon="fileText" />
 
       <Section background="white">
         <Container>
           <div className="max-w-3xl mx-auto">
-            {/* Definition */}
-            <div className="bg-blue-50 border border-blue-100 rounded-xl p-6 mb-8">
-              <h2 className="text-lg font-semibold text-gray-900 mb-3">{t('title')}</h2>
-              <p className="text-gray-700 text-sm leading-relaxed">
-                {t('definition')}
-              </p>
-              <p className="text-xs text-gray-500 mt-2 italic">
-                {t('legalReference')}
-              </p>
-            </div>
+            <p className="text-lg text-gray-600 mb-8 text-center">
+              {tp('description')}
+            </p>
 
-            <Card>
-              <CardContent className="pt-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('formTitle')}</h2>
-                
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  {/* Person Type Selector */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      {t('personType')}:
-                    </label>
-                    <div className="flex gap-4">
-                      <button
-                        type="button"
-                        onClick={() => setPersonType('fizica')}
-                        className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg border-2 transition-all ${
-                          personType === 'fizica'
-                            ? 'border-primary-600 bg-primary-50 text-primary-700'
-                            : 'border-gray-200 hover:border-gray-300 text-gray-600'
-                        }`}
-                      >
-                        <User className="w-5 h-5" />
-                        {t('personFizica')}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setPersonType('juridica')}
-                        className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg border-2 transition-all ${
-                          personType === 'juridica'
-                            ? 'border-primary-600 bg-primary-50 text-primary-700'
-                            : 'border-gray-200 hover:border-gray-300 text-gray-600'
-                        }`}
-                      >
-                        <Building2 className="w-5 h-5" />
-                        {t('personJuridica')}
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Fields for Persoana Fizica */}
-                  {personType === 'fizica' && (
-                    <div className="grid sm:grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          {t('nume')} *
-                        </label>
-                        <Input required placeholder={t('numePlaceholder')} />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          {t('prenume')} *
-                        </label>
-                        <Input required placeholder={t('prenumePlaceholder')} />
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Fields for Persoana Juridica */}
-                  {personType === 'juridica' && (
-                    <div className="space-y-4 p-4 bg-gray-50 rounded-lg">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          {t('denumire')} *
-                        </label>
-                        <Input required placeholder={t('denumirePlaceholder')} />
-                      </div>
-                      <div className="grid sm:grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            {t('reprezentantLegal')} *
-                          </label>
-                          <Input required placeholder={t('reprezentantPlaceholder')} />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            {t('cui')} *
-                          </label>
-                          <Input required placeholder={t('cuiPlaceholder')} />
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Contact Fields */}
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        {t('email')} *
-                      </label>
-                      <Input type="email" required placeholder="email@exemplu.ro" />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        {t('telefon')}
-                      </label>
-                      <Input type="tel" placeholder="07XX XXX XXX" />
-                    </div>
-                  </div>
-
-                  {/* Address Section */}
-                  <div className="border-t border-gray-200 pt-6">
-                    <h3 className="text-lg font-medium text-gray-900 mb-4">{t('adresaTitle')}</h3>
-                    <div className="grid sm:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          {t('tara')} *
-                        </label>
-                        <Input required defaultValue="România" />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          {t('judet')} *
-                        </label>
-                        <Input required placeholder={t('judetPlaceholder')} />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          {t('localitate')} *
-                        </label>
-                        <Input required placeholder={t('localitatePlaceholder')} />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          {t('adresa')} *
-                        </label>
-                        <Input required placeholder={t('adresaPlaceholder')} />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Message */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      {t('mesaj')} *
-                    </label>
-                    <Textarea 
-                      rows={8} 
-                      required 
-                      placeholder={t('mesajPlaceholder')}
-                      className="resize-y"
-                    />
-                  </div>
-
-                  {/* File Attachment */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      {t('atasareFisier')}
-                    </label>
-                    <input
-                      type="file"
-                      multiple
-                      className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100 cursor-pointer"
-                    />
-                    <p className="text-xs text-gray-500 mt-1">{t('fileHint')}</p>
-                  </div>
-
-                  {/* TODO: Add Google reCAPTCHA v3 here */}
-                  {/* <ReCAPTCHA sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY} /> */}
-
-                  <Button type="submit" className="w-full" size="lg">
-                    <Send className="w-4 h-4" />
-                    {t('submit')}
-                  </Button>
-                </form>
+            {/* Info Card */}
+            <Card className="mb-6 bg-blue-50 border-blue-200">
+              <CardContent className="p-6">
+                <h3 className="font-semibold text-blue-900 mb-2 flex items-center gap-2">
+                  <Info className="w-5 h-5" />
+                  {labels.infoTitle}
+                </h3>
+                <p className="text-blue-800 text-sm">{labels.infoText}</p>
               </CardContent>
             </Card>
 
-            <Card className="mt-6 bg-amber-50 border-amber-200">
-              <CardContent className="pt-6">
-                <div className="flex gap-3">
-                  <Info className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-                  <p className="text-sm text-amber-800">
-                    {t('disclaimer')}
-                  </p>
+            {/* How To Card */}
+            <Card className="mb-6">
+              <CardHeader>
+                <CardTitle className="text-lg">{labels.howToTitle}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2">
+                  {labels.howToOptions.map((option, index) => (
+                    <li key={index} className="flex items-start gap-2 text-gray-700">
+                      <span className="w-6 h-6 bg-primary-100 text-primary-700 rounded-full flex items-center justify-center text-sm font-medium shrink-0">
+                        {index + 1}
+                      </span>
+                      {option}
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+
+            {/* Response Time Notice */}
+            <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg mb-6 text-center">
+              <p className="text-amber-800 font-medium">{labels.responseTime}</p>
+            </div>
+
+            {/* Contact Link */}
+            <Card className="bg-gray-50">
+              <CardContent className="p-6 text-center">
+                <h3 className="font-semibold text-gray-900 mb-4">{labels.contactTitle}</h3>
+                <div className="flex flex-wrap justify-center gap-4">
+                  <a
+                    href="mailto:registratura@salonta.ro"
+                    className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-800"
+                  >
+                    <Mail className="w-4 h-4" />
+                    registratura@salonta.ro
+                  </a>
+                  <Link
+                    href="/contact"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-primary-600 text-white font-medium rounded-lg hover:bg-primary-700 transition-colors"
+                  >
+                    {t('contact')}
+                  </Link>
                 </div>
               </CardContent>
             </Card>

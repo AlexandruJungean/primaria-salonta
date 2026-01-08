@@ -45,3 +45,6 @@ next-env.d.ts
 /scripts/
 /docs/
 /extracted_content/
+/site_content/
+/supabase/
+/url_mapping.json

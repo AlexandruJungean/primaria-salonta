@@ -322,10 +322,16 @@ All pages are the SAME component across all languages - only the content is tran
 
 **Google Cloud Translation API Integration:**
 - Admin writes content in **Romanian only** (primary language)
-- System automatically translates to Hungarian and English on save
-- Translations stored in database alongside original content
-- Manual override option for corrections
+- Database stores **only Romanian content** (simplified schema)
+- Translations generated **at runtime** via Google Cloud Translation API
+- Translations cached for performance (Redis/memory cache)
 - API Key: `GOOGLE_TRANSLATE_API_KEY` (server-side only)
+
+**Benefits of Runtime Translation:**
+- ✅ Simpler database schema (~30% fewer columns)
+- ✅ No translation sync issues
+- ✅ Always up-to-date translations
+- ✅ Easier content management for admins
 
 ### 5.2 Online Payment System ✅ CONFIRMED
 

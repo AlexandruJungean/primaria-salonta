@@ -1,12 +1,6 @@
-'use client';
-
-import { useTranslations } from 'next-intl';
-import { useParams } from 'next/navigation';
+import { getTranslations } from 'next-intl/server';
+import { notFound } from 'next/navigation';
 import { 
-  Building2,
-  Bike,
-  Home,
-  Landmark,
   ExternalLink,
   ArrowLeft,
   Download,
@@ -15,270 +9,81 @@ import {
   Euro,
   ChevronDown,
   ChevronUp,
-  Image as ImageIcon
 } from 'lucide-react';
-import { useState } from 'react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
-import { PageHeader } from '@/components/pages/page-header';
 import { Link } from '@/components/ui/link';
+import { generatePageMetadata } from '@/lib/seo';
+import type { Locale } from '@/lib/seo/config';
+import * as programs from '@/lib/supabase/services/programs';
 import Image from 'next/image';
-import { type LucideIcon } from 'lucide-react';
 
-// Types
-interface ProjectDocument {
-  label: string;
-  url: string;
-  date?: string;
-}
+// ============================================
+// METADATA
+// ============================================
 
-interface StatusUpdate {
-  period: string;
-  date: string;
-  title: string;
-  content: string;
-  images?: { src: string; alt: string; caption?: string }[];
-}
-
-interface StatusCategory {
-  title: string;
-  updates: StatusUpdate[];
-}
-
-interface ProjectDetail {
-  id: string;
-  title: string;
-  shortTitle: string;
-  smisCode: string;
-  icon: LucideIcon;
-  color: string;
-  description?: string;
-  totalValue?: string;
-  eligibleValue?: string;
-  fedrValue?: string;
-  nationalValue?: string;
-  documents: ProjectDocument[];
-  statusCategories?: StatusCategory[];
-}
-
-// Projects data - these would come from database in production
-const PROJECTS_DATA: Record<string, ProjectDetail> = {
-  'coridor-mobilitate-301398': {
-    id: 'coridor-mobilitate-301398',
-    title: 'Coridor de mobilitate urbană prin crearea pistelor de biciclete și coridor prioritar pentru mijloc de transport în comun ecologic. Traseul I de la est la vest și traseul II de la sud la vest în Municipiul Salonta',
-    shortTitle: 'Creare coridor de mobilitate urbană',
-    smisCode: '301398',
-    icon: Bike,
-    color: 'emerald',
-    totalValue: '73.741.896,01 lei',
-    eligibleValue: '70.158.693,21 lei',
-    fedrValue: '59.634.889,23 lei',
-    nationalValue: '9.120.630,12 lei',
-    documents: [
-      { label: 'Comunicat de presă privind demararea proiectului', url: '#', date: '26.04.2024' },
-    ],
-    statusCategories: [
-      {
-        title: 'Stadiu la 4 luni',
-        updates: [
-          {
-            period: 'August 2024',
-            date: 'August 2024',
-            title: 'Stadiu implementare - August 2024',
-            content: 'Unitatea Administrativ Teritorială Municipiul Salonta și Agenția de Dezvoltare Regională Nord-Vest, au semnat în data de 26.04.2024, contractul de finanțare pentru obiectivul de investiții "CORIDOR DE MOBILITATE URBANĂ PRIN CREAREA PISTELOR DE BICICLETE ȘI CORIDOR PRIORITAR PENTRU MIJLOC DE TRANSPORT ÎN COMUN ECOLOGIC. TRASEUL I DE LA EST LA VEST ȘI TRASEUL II DE LA SUD LA VEST ÎN MUNICIPIUL SALONTA", cod SMIS: 301398.',
-            images: [],
-          },
-          {
-            period: 'Decembrie 2024',
-            date: 'Decembrie 2024',
-            title: 'Stadiu implementare - Decembrie 2024',
-            content: 'Au fost continuate lucrările de implementare conform graficului stabilit.',
-            images: [],
-          },
-          {
-            period: 'Aprilie 2025',
-            date: 'Aprilie 2025',
-            title: 'Stadiu implementare - Aprilie 2025',
-            content: 'Progres semnificativ în implementarea proiectului.',
-            images: [],
-          },
-          {
-            period: 'August 2025',
-            date: 'August 2025',
-            title: 'Stadiu implementare - August 2025',
-            content: 'În perioada mai 2025 – octombrie 2025 au fost realizate următoarele activități pentru implementare a proiectului:\n\n• Au fost executate lucrări etapizat, începând cu străzile: Bartók Béla, Rákóczi Ferenc, Crișan, Piața Unirii.\n• A fost semnat contractul pentru furnizarea mijloacelor de transport și a stațiilor de reîncărcare;\n• A fost emis ordinul de livrare a mijloacelor de transport și a stațiilor de reîncărcare;\n• Au fost realizate măsuri de informare și publicitate și realizarea acestora în conformitate cu Manualul de identitate vizuală pentru Programul Regional Nord-Vest 2021-2027.',
-            images: [
-              { src: '/images/projects/nord-vest/coridor-mobilitate/piata-unirii.webp', alt: 'Piața Unirii', caption: 'Piața Unirii' },
-              { src: '/images/projects/nord-vest/coridor-mobilitate/bartok-bela.webp', alt: 'Bartok Bela', caption: 'Bartok Bela' },
-              { src: '/images/projects/nord-vest/coridor-mobilitate/rakoczi-ferencz.webp', alt: 'Rakoczi Ferencz', caption: 'Rakoczi Ferencz' },
-              { src: '/images/projects/nord-vest/coridor-mobilitate/crisan.webp', alt: 'Crișan', caption: 'Crișan' },
-            ],
-          },
-        ],
-      },
-      {
-        title: 'Stadiu la 6 luni',
-        updates: [
-          {
-            period: 'Octombrie 2024',
-            date: 'Octombrie 2024',
-            title: 'Stadiu implementare - Octombrie 2024',
-            content: 'Actualizare stadiu la 6 luni.',
-            images: [],
-          },
-          {
-            period: 'Aprilie 2025',
-            date: 'Aprilie 2025',
-            title: 'Stadiu implementare - Aprilie 2025',
-            content: 'Actualizare stadiu la 6 luni.',
-            images: [],
-          },
-          {
-            period: 'Octombrie 2025',
-            date: 'Octombrie 2025',
-            title: 'Stadiu implementare - Octombrie 2025',
-            content: 'Actualizare stadiu la 6 luni.',
-            images: [],
-          },
-        ],
-      },
-    ],
-  },
-  'casa-roth-armin-311797': {
-    id: 'casa-roth-armin-311797',
-    title: 'Reabilitare interioară și dotare Casa Roth Armin',
-    shortTitle: 'Reabilitare interioară și dotare Casa Roth Armin',
-    smisCode: '311797',
-    icon: Home,
-    color: 'amber',
-    documents: [
-      { label: 'Comunicat de presă privind demararea proiectului', url: '#' },
-    ],
-    statusCategories: [],
-  },
-  'parc-specializare-319239': {
-    id: 'parc-specializare-319239',
-    title: 'Realizare Parc de Specializare Inteligentă',
-    shortTitle: 'Realizare Parc de Specializare Inteligentă',
-    smisCode: '319239',
-    icon: Landmark,
-    color: 'violet',
-    documents: [
-      { label: 'Comunicat de presă privind demararea proiectului', url: '#' },
-    ],
-    statusCategories: [],
-  },
-};
-
-// Color utilities
-const getColorClasses = (color: string) => {
-  const colors: Record<string, { bg: string; text: string; border: string; badge: string }> = {
-    emerald: { bg: 'bg-emerald-100', text: 'text-emerald-700', border: 'border-emerald-200', badge: 'bg-emerald-600' },
-    amber: { bg: 'bg-amber-100', text: 'text-amber-700', border: 'border-amber-200', badge: 'bg-amber-600' },
-    violet: { bg: 'bg-violet-100', text: 'text-violet-700', border: 'border-violet-200', badge: 'bg-violet-600' },
-    blue: { bg: 'bg-blue-100', text: 'text-blue-700', border: 'border-blue-200', badge: 'bg-blue-600' },
-  };
-  return colors[color] || colors.blue;
-};
-
-// Status update component
-function StatusUpdateCard({ update, isExpanded, onToggle }: { 
-  update: StatusUpdate; 
-  isExpanded: boolean; 
-  onToggle: () => void;
-}) {
-  return (
-    <div className="border border-gray-200 rounded-lg overflow-hidden">
-      <button
-        onClick={onToggle}
-        className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors text-left"
-      >
-        <div className="flex items-center gap-3">
-          <Calendar className="w-5 h-5 text-gray-500" />
-          <span className="font-medium text-gray-900">{update.period}</span>
-        </div>
-        {isExpanded ? (
-          <ChevronUp className="w-5 h-5 text-gray-400" />
-        ) : (
-          <ChevronDown className="w-5 h-5 text-gray-400" />
-        )}
-      </button>
-      
-      {isExpanded && (
-        <div className="p-4 space-y-4">
-          <div className="prose prose-sm max-w-none">
-            <p className="text-gray-700 whitespace-pre-line">{update.content}</p>
-          </div>
-          
-          {update.images && update.images.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-              {update.images.map((image, idx) => (
-                <div key={idx} className="relative aspect-video rounded-lg overflow-hidden bg-gray-100">
-                  <Image
-                    src={image.src}
-                    alt={image.alt}
-                    fill
-                    className="object-cover"
-                  />
-                  {image.caption && (
-                    <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-sm py-2 px-3 text-center">
-                      {image.caption}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
-
-// Status category component
-function StatusCategorySection({ category, tp }: { category: StatusCategory; tp: (key: string) => string }) {
-  const [expandedUpdates, setExpandedUpdates] = useState<Set<number>>(new Set());
-
-  const toggleUpdate = (index: number) => {
-    setExpandedUpdates(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(index)) {
-        newSet.delete(index);
-      } else {
-        newSet.add(index);
-      }
-      return newSet;
+export async function generateMetadata({ params }: { params: Promise<{ locale: string; projectId: string }> }) {
+  const { locale, projectId } = await params;
+  const program = await programs.getProgramBySlug(projectId);
+  
+  if (!program) {
+    return generatePageMetadata({
+      pageKey: 'programRegionalNordVest',
+      locale: locale as Locale,
+      path: `/programe/program-regional-nord-vest/${projectId}`,
     });
-  };
+  }
 
-  return (
-    <div className="space-y-3">
-      <h4 className="font-semibold text-gray-800">{category.title}</h4>
-      <div className="space-y-2">
-        {category.updates.map((update, idx) => (
-          <StatusUpdateCard
-            key={idx}
-            update={update}
-            isExpanded={expandedUpdates.has(idx)}
-            onToggle={() => toggleUpdate(idx)}
-          />
-        ))}
-      </div>
-    </div>
-  );
+  return generatePageMetadata({
+    pageKey: 'programRegionalNordVest',
+    locale: locale as Locale,
+    path: `/programe/program-regional-nord-vest/${projectId}`,
+    customTitle: program.title,
+    customDescription: program.description?.substring(0, 160) || undefined,
+  });
 }
 
-export default function ProjectDetailPage() {
-  const params = useParams();
-  const projectId = params.projectId as string;
-  const t = useTranslations('navigation');
-  const tp = useTranslations('programRegionalNordVestPage');
+// ============================================
+// STATIC PARAMS
+// ============================================
 
-  const project = PROJECTS_DATA[projectId];
+export async function generateStaticParams() {
+  const slugs = await programs.getAllProgramSlugs();
+  return slugs.map(slug => ({ projectId: slug }));
+}
 
-  if (!project) {
+// ============================================
+// HELPER FUNCTIONS
+// ============================================
+
+function formatCurrency(value: number | null): string {
+  if (!value) return '-';
+  return new Intl.NumberFormat('ro-RO', {
+    style: 'currency',
+    currency: 'RON',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(value);
+}
+
+// ============================================
+// COMPONENT
+// ============================================
+
+export default async function ProjectDetailPage({ 
+  params 
+}: { 
+  params: Promise<{ locale: string; projectId: string }> 
+}) {
+  const { locale, projectId } = await params;
+  const t = await getTranslations({ locale, namespace: 'navigation' });
+  const tp = await getTranslations({ locale, namespace: 'programRegionalNordVestPage' });
+
+  const program = await programs.getProgramBySlug(projectId);
+
+  if (!program) {
     return (
       <>
         <Breadcrumbs items={[
@@ -300,15 +105,85 @@ export default function ProjectDetailPage() {
     );
   }
 
-  const colorClasses = getColorClasses(project.color);
-  const Icon = project.icon;
+  const pageLabels = {
+    ro: {
+      backToProjects: 'Înapoi la proiecte',
+      projectValue: 'Valoare proiect',
+      documents: 'Documente',
+      description: 'Descriere',
+      status: 'Status',
+      progress: 'Progres',
+      fundingSource: 'Sursa de finanțare',
+      startDate: 'Data început',
+      endDate: 'Data finalizare',
+      planned: 'Planificat',
+      inProgress: 'În desfășurare',
+      completed: 'Finalizat',
+      cancelled: 'Anulat',
+    },
+    hu: {
+      backToProjects: 'Vissza a projektekhez',
+      projectValue: 'Projekt értéke',
+      documents: 'Dokumentumok',
+      description: 'Leírás',
+      status: 'Státusz',
+      progress: 'Előrehaladás',
+      fundingSource: 'Finanszírozási forrás',
+      startDate: 'Kezdési dátum',
+      endDate: 'Befejezési dátum',
+      planned: 'Tervezett',
+      inProgress: 'Folyamatban',
+      completed: 'Befejezett',
+      cancelled: 'Törölve',
+    },
+    en: {
+      backToProjects: 'Back to projects',
+      projectValue: 'Project value',
+      documents: 'Documents',
+      description: 'Description',
+      status: 'Status',
+      progress: 'Progress',
+      fundingSource: 'Funding source',
+      startDate: 'Start date',
+      endDate: 'End date',
+      planned: 'Planned',
+      inProgress: 'In progress',
+      completed: 'Completed',
+      cancelled: 'Cancelled',
+    },
+  };
+
+  const labels = pageLabels[locale as keyof typeof pageLabels] || pageLabels.en;
+
+  const statusLabels: Record<string, string> = {
+    planificat: labels.planned,
+    in_desfasurare: labels.inProgress,
+    finalizat: labels.completed,
+    anulat: labels.cancelled,
+  };
+
+  const statusColors: Record<string, string> = {
+    planificat: 'bg-blue-100 text-blue-800',
+    in_desfasurare: 'bg-amber-100 text-amber-800',
+    finalizat: 'bg-green-100 text-green-800',
+    anulat: 'bg-red-100 text-red-800',
+  };
+
+  const formatDate = (dateStr: string | null) => {
+    if (!dateStr) return '-';
+    const date = new Date(dateStr);
+    return date.toLocaleDateString(
+      locale === 'ro' ? 'ro-RO' : locale === 'hu' ? 'hu-HU' : 'en-US',
+      { day: 'numeric', month: 'long', year: 'numeric' }
+    );
+  };
 
   return (
     <>
       <Breadcrumbs items={[
         { label: t('programe'), href: '/programe' },
         { label: t('programRegionalNordVest'), href: '/programe/program-regional-nord-vest' },
-        { label: project.shortTitle }
+        { label: program.title }
       ]} />
 
       <Section background="white">
@@ -320,22 +195,33 @@ export default function ProjectDetailPage() {
               className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-primary-600 mb-6"
             >
               <ArrowLeft className="w-4 h-4" />
-              {tp('backToProjects')}
+              {labels.backToProjects}
             </Link>
 
             {/* Project Header */}
             <Card className="mb-6">
               <CardHeader>
                 <div className="flex items-start gap-4">
-                  <div className={`w-14 h-14 rounded-xl ${colorClasses.bg} flex items-center justify-center shrink-0`}>
-                    <Icon className={`w-7 h-7 ${colorClasses.text}`} />
-                  </div>
+                  {program.featured_image ? (
+                    <div className="relative w-14 h-14 rounded-xl overflow-hidden shrink-0">
+                      <Image
+                        src={program.featured_image}
+                        alt={program.title}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-14 h-14 rounded-xl bg-primary-100 flex items-center justify-center shrink-0">
+                      <Euro className="w-7 h-7 text-primary-700" />
+                    </div>
+                  )}
                   <div>
-                    <span className={`inline-block text-xs font-semibold px-2.5 py-1 rounded ${colorClasses.badge} text-white mb-2`}>
-                      {tp('smisCode')}: {project.smisCode}
+                    <span className={`inline-block text-xs font-semibold px-2.5 py-1 rounded ${statusColors[program.status] || statusColors.planificat} mb-2`}>
+                      {statusLabels[program.status] || labels.planned}
                     </span>
                     <CardTitle className="text-xl font-bold text-gray-900 leading-snug">
-                      {project.title}
+                      {program.title}
                     </CardTitle>
                   </div>
                 </div>
@@ -343,83 +229,100 @@ export default function ProjectDetailPage() {
             </Card>
 
             {/* Project Values */}
-            {(project.totalValue || project.eligibleValue) && (
+            {program.budget && (
               <Card className="mb-6">
                 <CardContent className="pt-6">
                   <div className="flex items-center gap-2 mb-4">
                     <Euro className="w-5 h-5 text-green-600" />
-                    <h3 className="font-semibold text-gray-900">{tp('projectValue')}</h3>
+                    <h3 className="font-semibold text-gray-900">{labels.projectValue}</h3>
                   </div>
                   <div className="grid sm:grid-cols-2 gap-4">
-                    {project.totalValue && (
-                      <div className="p-3 bg-gray-50 rounded-lg">
-                        <p className="text-xs text-gray-500 uppercase tracking-wide">{tp('projectValue')}</p>
-                        <p className="text-lg font-semibold text-gray-900">{project.totalValue}</p>
-                      </div>
-                    )}
-                    {project.eligibleValue && (
-                      <div className="p-3 bg-gray-50 rounded-lg">
-                        <p className="text-xs text-gray-500 uppercase tracking-wide">{tp('eligibleValue')}</p>
-                        <p className="text-lg font-semibold text-gray-900">{project.eligibleValue}</p>
-                      </div>
-                    )}
-                    {project.fedrValue && (
+                    <div className="p-3 bg-gray-50 rounded-lg">
+                      <p className="text-xs text-gray-500 uppercase tracking-wide">{labels.projectValue}</p>
+                      <p className="text-lg font-semibold text-gray-900">{formatCurrency(program.budget)}</p>
+                    </div>
+                    {program.funding_source && (
                       <div className="p-3 bg-blue-50 rounded-lg">
-                        <p className="text-xs text-blue-600 uppercase tracking-wide">{tp('fedrValue')}</p>
-                        <p className="text-lg font-semibold text-blue-900">{project.fedrValue}</p>
-                      </div>
-                    )}
-                    {project.nationalValue && (
-                      <div className="p-3 bg-green-50 rounded-lg">
-                        <p className="text-xs text-green-600 uppercase tracking-wide">{tp('nationalValue')}</p>
-                        <p className="text-lg font-semibold text-green-900">{project.nationalValue}</p>
+                        <p className="text-xs text-blue-600 uppercase tracking-wide">{labels.fundingSource}</p>
+                        <p className="text-lg font-semibold text-blue-900">{program.funding_source}</p>
                       </div>
                     )}
                   </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Project Info */}
+            {(program.start_date || program.end_date || program.progress_percentage !== null) && (
+              <Card className="mb-6">
+                <CardContent className="pt-6">
+                  <div className="grid sm:grid-cols-3 gap-4">
+                    {program.start_date && (
+                      <div className="p-3 bg-gray-50 rounded-lg">
+                        <p className="text-xs text-gray-500 uppercase tracking-wide">{labels.startDate}</p>
+                        <p className="font-semibold text-gray-900">{formatDate(program.start_date)}</p>
+                      </div>
+                    )}
+                    {program.end_date && (
+                      <div className="p-3 bg-gray-50 rounded-lg">
+                        <p className="text-xs text-gray-500 uppercase tracking-wide">{labels.endDate}</p>
+                        <p className="font-semibold text-gray-900">{formatDate(program.end_date)}</p>
+                      </div>
+                    )}
+                    {program.progress_percentage !== null && (
+                      <div className="p-3 bg-gray-50 rounded-lg">
+                        <p className="text-xs text-gray-500 uppercase tracking-wide">{labels.progress}</p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div 
+                              className="h-full bg-green-500 rounded-full"
+                              style={{ width: `${program.progress_percentage}%` }}
+                            />
+                          </div>
+                          <span className="font-semibold text-gray-900">{program.progress_percentage}%</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Description */}
+            {(program.description || program.content) && (
+              <Card className="mb-6">
+                <CardHeader>
+                  <CardTitle>{labels.description}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div 
+                    className="prose prose-gray max-w-none"
+                    dangerouslySetInnerHTML={{ __html: program.content || program.description || '' }}
+                  />
                 </CardContent>
               </Card>
             )}
 
             {/* Documents */}
-            {project.documents && project.documents.length > 0 && (
+            {program.documents && program.documents.length > 0 && (
               <Card className="mb-6">
                 <CardContent className="pt-6">
                   <div className="flex items-center gap-2 mb-4">
                     <FileText className="w-5 h-5 text-gray-600" />
-                    <h3 className="font-semibold text-gray-900">{tp('documents')}</h3>
+                    <h3 className="font-semibold text-gray-900">{labels.documents}</h3>
                   </div>
                   <div className="space-y-2">
-                    {project.documents.map((doc, idx) => (
+                    {program.documents.map((doc) => (
                       <a
-                        key={idx}
-                        href={doc.url}
+                        key={doc.id}
+                        href={doc.file_url}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-3 p-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors"
                       >
                         <Download className="w-5 h-5 text-gray-500" />
-                        <span className="flex-1 text-gray-700">{doc.label}</span>
-                        {doc.date && (
-                          <span className="text-sm text-gray-400">{doc.date}</span>
-                        )}
+                        <span className="flex-1 text-gray-700">{doc.title}</span>
                       </a>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Project Status */}
-            {project.statusCategories && project.statusCategories.length > 0 && (
-              <Card className="mb-6">
-                <CardContent className="pt-6">
-                  <div className="flex items-center gap-2 mb-4">
-                    <Calendar className="w-5 h-5 text-gray-600" />
-                    <h3 className="font-semibold text-gray-900">{tp('statusDescription')}</h3>
-                  </div>
-                  <div className="space-y-6">
-                    {project.statusCategories.map((category, idx) => (
-                      <StatusCategorySection key={idx} category={category} tp={tp} />
                     ))}
                   </div>
                 </CardContent>
@@ -476,4 +379,3 @@ export default function ProjectDetailPage() {
     </>
   );
 }
-

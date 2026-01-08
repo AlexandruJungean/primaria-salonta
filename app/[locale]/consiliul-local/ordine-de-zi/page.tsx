@@ -1,226 +1,182 @@
-'use client';
-
-import { useTranslations } from 'next-intl';
-import { useState } from 'react';
-import { Calendar, Download, Video, ExternalLink, ChevronDown, ChevronUp, Clock, Key } from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
+import { Calendar, Download, Video, ExternalLink, Clock, Key } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { Card, CardContent } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
+import { Link } from '@/components/ui/link';
+import { generatePageMetadata } from '@/lib/seo';
+import type { Locale } from '@/lib/seo/config';
+import * as council from '@/lib/supabase/services/council';
 
-// Mock data - will be replaced with database content
-const SESSIONS = [
-  {
-    id: '2025-12-30',
-    date: '30 decembrie 2025',
-    time: '10:00',
-    convocationUrl: '#',
-    zoomUrl: 'https://us06web.zoom.us/j/9317513142?pwd=YWNTZHlsRndMMzhpaTFuNzNyb25sQT09&omn=81621638037',
-    meetingId: '931 751 3142',
-    passcode: 'r0mb8r',
-  },
-  {
-    id: '2025-12-15',
-    date: '15 decembrie 2025',
-    time: '15:00',
-    convocationUrl: '#',
-    zoomUrl: 'https://us06web.zoom.us/j/9317513142?pwd=YWNTZHlsRndMMzhpaTFuNzNyb25sQT09&omn=82201768025',
-    meetingId: '931 751 3142',
-    passcode: 'r0mb8r',
-  },
-  {
-    id: '2025-11-27',
-    date: '27 noiembrie 2025',
-    time: '15:00',
-    convocationUrl: '#',
-    zoomUrl: 'https://us06web.zoom.us/j/9317513142?pwd=YWNTZHlsRndMMzhpaTFuNzNyb25sQT09&omn=85176517240',
-    meetingId: '931 751 3142',
-    passcode: 'r0mb8r',
-  },
-  {
-    id: '2025-10-30',
-    date: '30 octombrie 2025',
-    time: '15:00',
-    convocationUrl: '#',
-    zoomUrl: 'https://us06web.zoom.us/j/9317513142?pwd=YWNTZHlsRndMMzhpaTFuNzNyb25sQT09&omn=88640378992',
-    meetingId: '931 751 3142',
-    passcode: 'r0mb8r',
-  },
-  {
-    id: '2025-09-30',
-    date: '30 septembrie 2025',
-    time: '15:00',
-    convocationUrl: '#',
-    zoomUrl: 'https://us06web.zoom.us/j/9317513142?pwd=YWNTZHlsRndMMzhpaTFuNzNyb25sQT09&omn=81436950488',
-    meetingId: '931 751 3142',
-    passcode: 'r0mb8r',
-  },
-  {
-    id: '2025-09-25',
-    date: '25 septembrie 2025',
-    time: '15:00',
-    convocationUrl: '#',
-    zoomUrl: 'https://us06web.zoom.us/j/9317513142?pwd=YWNTZHlsRndMMzhpaTFuNzNyb25sQT09&omn=84182415635',
-    meetingId: '931 751 3142',
-    passcode: 'r0mb8r',
-  },
-  {
-    id: '2025-08-27',
-    date: '27 august 2025',
-    time: '15:00',
-    convocationUrl: '#',
-    zoomUrl: 'https://us06web.zoom.us/j/9317513142?pwd=YWNTZHlsRndMMzhpaTFuNzNyb25sQT09&omn=88228441893',
-    meetingId: '931 751 3142',
-    passcode: 'r0mb8r',
-  },
-  {
-    id: '2025-07-31',
-    date: '31 iulie 2025',
-    time: '15:00',
-    convocationUrl: '#',
-    zoomUrl: 'https://us06web.zoom.us/j/9317513142?pwd=YWNTZHlsRndMMzhpaTFuNzNyb25sQT09&omn=87993869077',
-    meetingId: '931 751 3142',
-    passcode: 'r0mb8r',
-  },
-  {
-    id: '2025-07-02',
-    date: '2 iulie 2025',
-    time: '15:00',
-    convocationUrl: '#',
-    zoomUrl: 'https://us06web.zoom.us/j/9317513142?pwd=YWNTZHlsRndMMzhpaTFuNzNyb25sQT09&omn=88226879875',
-    meetingId: '931 751 3142',
-    passcode: 'r0mb8r',
-  },
-  {
-    id: '2025-06-26',
-    date: '26 iunie 2025',
-    time: '15:00',
-    convocationUrl: '#',
-    zoomUrl: 'https://us06web.zoom.us/j/9317513142?pwd=YWNTZHlsRndMMzhpaTFuNzNyb25sQT09&omn=84073843069',
-    meetingId: '931 751 3142',
-    passcode: 'r0mb8r',
-  },
-];
-
-function SessionCard({ session }: { session: typeof SESSIONS[0] }) {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const ts = useTranslations('sessionsPage');
-
-  return (
-    <Card className="overflow-hidden">
-      <CardContent className="p-0">
-        {/* Header - Always visible */}
-        <button
-          onClick={() => setIsExpanded(!isExpanded)}
-          className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors text-left"
-        >
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-lg bg-primary-100 flex items-center justify-center shrink-0">
-              <Calendar className="w-6 h-6 text-primary-700" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-900">{session.date}</h3>
-              <p className="text-sm text-gray-500">
-                {ts('liveAt')} {session.time}
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <a
-              href={session.convocationUrl}
-              onClick={(e) => e.stopPropagation()}
-              className="flex items-center gap-2 px-3 py-1.5 text-sm bg-primary-900 text-white rounded-lg hover:bg-primary-800 transition-colors"
-            >
-              <Download className="w-4 h-4" />
-              {ts('convocation')}
-            </a>
-            {isExpanded ? (
-              <ChevronUp className="w-5 h-5 text-gray-400" />
-            ) : (
-              <ChevronDown className="w-5 h-5 text-gray-400" />
-            )}
-          </div>
-        </button>
-
-        {/* Expanded Details */}
-        {isExpanded && (
-          <div className="px-4 pb-4 pt-0 border-t border-gray-100">
-            <div className="mt-4 p-4 bg-blue-50 rounded-xl">
-              <div className="flex items-center gap-2 mb-3">
-                <Video className="w-5 h-5 text-blue-600" />
-                <h4 className="font-semibold text-blue-900">{ts('liveStream')}</h4>
-              </div>
-              
-              <div className="space-y-3">
-                <div className="flex items-center gap-2 text-sm">
-                  <Clock className="w-4 h-4 text-blue-600" />
-                  <span className="text-blue-800">
-                    {ts('startTime')}: <strong>{session.time}</strong>
-                  </span>
-                </div>
-
-                <div>
-                  <p className="text-sm text-blue-800 mb-1">Zoom Meeting:</p>
-                  <a
-                    href={session.zoomUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm text-blue-700 hover:text-blue-900 break-all"
-                  >
-                    <ExternalLink className="w-4 h-4 shrink-0" />
-                    {session.zoomUrl}
-                  </a>
-                </div>
-
-                <div className="flex flex-wrap gap-4 text-sm">
-                  <div className="flex items-center gap-2">
-                    <span className="text-blue-800">Meeting ID:</span>
-                    <code className="bg-blue-100 px-2 py-0.5 rounded font-mono text-blue-900">
-                      {session.meetingId}
-                    </code>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Key className="w-4 h-4 text-blue-600" />
-                    <span className="text-blue-800">Passcode:</span>
-                    <code className="bg-blue-100 px-2 py-0.5 rounded font-mono text-blue-900">
-                      {session.passcode}
-                    </code>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-      </CardContent>
-    </Card>
-  );
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  return generatePageMetadata({
+    pageKey: 'ordineDezi',
+    locale: locale as Locale,
+    path: '/consiliul-local/ordine-de-zi',
+  });
 }
 
-export default function OrdineZiPage() {
-  const t = useTranslations('navigation');
-  const ts = useTranslations('sessionsPage');
+export default async function OrdineDeZiPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'navigation' });
+
+  // Fetch sessions with their documents from database
+  const sessionsResponse = await council.getCouncilSessions({ limit: 50 });
+  const sessions = sessionsResponse.data;
+
+  const pageLabels = {
+    ro: {
+      description: 'Ordinele de zi pentru ședințele Consiliului Local al Municipiului Salonta. Ședințele sunt transmise live pe Zoom.',
+      noSessions: 'Nu există ședințe disponibile.',
+      downloadConvocation: 'Dispoziție convocare',
+      joinZoom: 'Participă pe Zoom',
+      meetingId: 'Meeting ID',
+      passcode: 'Cod acces',
+      viewDetails: 'Vezi detalii ședință',
+    },
+    hu: {
+      description: 'Nagyszalonta Helyi Tanácsa üléseinek napirendjei. Az ülések élő közvetítése Zoomon történik.',
+      noSessions: 'Nincsenek elérhető ülések.',
+      downloadConvocation: 'Összehívási rendelkezés',
+      joinZoom: 'Csatlakozás Zoomon',
+      meetingId: 'Meeting ID',
+      passcode: 'Hozzáférési kód',
+      viewDetails: 'Ülés részletei',
+    },
+    en: {
+      description: 'Agendas for the sessions of the Local Council of Salonta Municipality. Sessions are broadcast live on Zoom.',
+      noSessions: 'No sessions available.',
+      downloadConvocation: 'Convocation order',
+      joinZoom: 'Join on Zoom',
+      meetingId: 'Meeting ID',
+      passcode: 'Passcode',
+      viewDetails: 'View session details',
+    },
+  };
+
+  const labels = pageLabels[locale as keyof typeof pageLabels] || pageLabels.en;
+
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString(
+      locale === 'ro' ? 'ro-RO' : locale === 'hu' ? 'hu-HU' : 'en-US',
+      { day: 'numeric', month: 'long', year: 'numeric' }
+    );
+  };
+
+  const formatTime = (timeStr: string | null) => {
+    if (!timeStr) return null;
+    const parts = timeStr.split(':');
+    return `${parts[0]}:${parts[1]}`;
+  };
+
+  // Zoom meeting details (these are static for now)
+  const zoomDetails = {
+    url: 'https://us06web.zoom.us/j/9317513142?pwd=YWNTZHlsRndMMzhpaTFuNzNyb25sQT09',
+    meetingId: '931 751 3142',
+    passcode: 'r0mb8r',
+  };
 
   return (
     <>
       <Breadcrumbs items={[
         { label: t('consiliulLocal'), href: '/consiliul-local' },
-        { label: t('ordineZi') }
+        { label: t('ordineDezi') }
       ]} />
-      <PageHeader titleKey="ordineZi" icon="clipboardList" />
+      <PageHeader titleKey="ordineDezi" icon="calendar" />
 
       <Section background="white">
         <Container>
-          <div className="max-w-3xl mx-auto">
+          <div className="max-w-4xl mx-auto">
             <p className="text-lg text-gray-600 mb-8 text-center">
-              {ts('description')}
+              {labels.description}
             </p>
 
-            <div className="space-y-3">
-              {SESSIONS.map((session) => (
-                <SessionCard key={session.id} session={session} />
-              ))}
-            </div>
+            {/* Zoom Info Card */}
+            <Card className="mb-8 bg-blue-50 border-blue-200">
+              <CardContent className="p-6">
+                <div className="flex flex-wrap items-center justify-between gap-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center">
+                      <Video className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-blue-900">{labels.joinZoom}</p>
+                      <div className="flex flex-wrap items-center gap-4 text-sm text-blue-700 mt-1">
+                        <span className="flex items-center gap-1">
+                          <Clock className="w-3.5 h-3.5" />
+                          {labels.meetingId}: {zoomDetails.meetingId}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Key className="w-3.5 h-3.5" />
+                          {labels.passcode}: {zoomDetails.passcode}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <a
+                    href={zoomDetails.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                    Zoom
+                  </a>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Sessions List */}
+            {sessions.length > 0 ? (
+              <div className="space-y-4">
+                {sessions.map((session) => (
+                  <Card key={session.id} className="hover:shadow-md transition-shadow">
+                    <CardContent className="p-4">
+                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div className="flex items-center gap-4">
+                          <div className="w-12 h-12 rounded-lg bg-primary-100 flex items-center justify-center shrink-0">
+                            <Calendar className="w-6 h-6 text-primary-700" />
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900">
+                              {session.title || formatDate(session.session_date)}
+                            </h3>
+                            <div className="flex flex-wrap items-center gap-3 text-sm text-gray-500 mt-1">
+                              <span className="flex items-center gap-1">
+                                <Calendar className="w-3.5 h-3.5" />
+                                {formatDate(session.session_date)}
+                              </span>
+                              {session.start_time && (
+                                <span className="flex items-center gap-1">
+                                  <Clock className="w-3.5 h-3.5" />
+                                  {formatTime(session.start_time)}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <Link
+                            href={`/consiliul-local/sedinte/${session.slug}`}
+                            className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition-colors"
+                          >
+                            {labels.viewDetails}
+                          </Link>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12 text-gray-500">
+                {labels.noSessions}
+              </div>
+            )}
           </div>
         </Container>
       </Section>

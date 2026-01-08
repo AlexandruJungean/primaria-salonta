@@ -1,14 +1,14 @@
 import { getTranslations } from 'next-intl/server';
-import { useTranslations } from 'next-intl';
 import { Newspaper, FileText, Download, ExternalLink } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { Card, CardContent } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
-import Link from 'next/link';
-import { generatePageMetadata, BreadcrumbJsonLd } from '@/lib/seo';
+import { Link } from '@/components/ui/link';
+import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
+import * as documents from '@/lib/supabase/services/documents';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -19,27 +19,13 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   });
 }
 
-// Buletine informative pentru punctul b)
-const BULETINE = [
-  { date: 'Septembrie 2025', url: '#' },
-  { date: 'Martie 2025', url: '#' },
-  { date: 'Septembrie 2024', url: '#' },
-  { date: 'Martie 2024', url: '#' },
-  { date: 'Septembrie 2023', url: '#' },
-  { date: 'Martie 2023', url: '#' },
-  { date: '30 Septembrie 2022', url: '#' },
-  { date: 'Martie 2022', url: '#' },
-  { date: 'Septembrie 2021', url: '#' },
-  { date: '31 Martie 2021', url: '#' },
-  { date: '30 Septembrie 2020', url: '#' },
-  { date: 'Martie 2020', url: '#' },
-  { date: 'Septembrie 2019', url: '#' },
-  { date: '31.03.2019', url: '#' },
-];
+export default async function BuletinInformativPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'navigation' });
+  const tb = await getTranslations({ locale, namespace: 'buletinPage' });
 
-export default function BuletinInformativPage() {
-  const t = useTranslations('navigation');
-  const tb = useTranslations('buletinPage');
+  // Fetch bulletins from database
+  const buletine = await documents.getDocumentsByCategory('buletin_informativ', 50);
 
   return (
     <>
@@ -91,18 +77,24 @@ export default function BuletinInformativPage() {
                       <p className="text-gray-900 font-medium mb-4">
                         {tb('sectionB')}
                       </p>
-                      <div className="space-y-2">
-                        {BULETINE.map((buletin, idx) => (
-                          <a
-                            key={idx}
-                            href={buletin.url}
-                            className="flex items-center gap-2 text-primary-600 hover:text-primary-800 text-sm py-1 group"
-                          >
-                            <Download className="w-4 h-4 text-gray-400 group-hover:text-primary-600" />
-                            <span>{tb('bulletin')} – {buletin.date}</span>
-                          </a>
-                        ))}
-                      </div>
+                      {buletine.length > 0 ? (
+                        <div className="space-y-2">
+                          {buletine.map((buletin) => (
+                            <a
+                              key={buletin.id}
+                              href={buletin.file_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-2 text-primary-600 hover:text-primary-800 text-sm py-1 group"
+                            >
+                              <Download className="w-4 h-4 text-gray-400 group-hover:text-primary-600" />
+                              <span>{buletin.title}</span>
+                            </a>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-gray-500 text-sm">Nu există buletine disponibile.</p>
+                      )}
                     </div>
                   </div>
                 </CardContent>
@@ -234,13 +226,13 @@ export default function BuletinInformativPage() {
                       <p className="text-gray-900 font-medium mb-3">
                         {tb('sectionH')}
                       </p>
-                      <a
-                        href="#"
+                      <Link
+                        href="/informatii-publice/documente"
                         className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-800 text-sm"
                       >
-                        <Download className="w-4 h-4" />
-                        Anexa A
-                      </a>
+                        {tb('viewPage')}
+                        <ExternalLink className="w-3 h-3" />
+                      </Link>
                     </div>
                   </div>
                 </CardContent>
@@ -257,22 +249,13 @@ export default function BuletinInformativPage() {
                       <p className="text-gray-900 font-medium mb-3">
                         {tb('sectionI')}
                       </p>
-                      <div className="flex flex-wrap gap-3">
-                        <a
-                          href="#"
-                          className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-800 text-sm"
-                        >
-                          <Download className="w-4 h-4" />
-                          Anexa B
-                        </a>
-                        <a
-                          href="#"
-                          className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-800 text-sm"
-                        >
-                          <Download className="w-4 h-4" />
-                          Anexa C
-                        </a>
-                      </div>
+                      <Link
+                        href="/informatii-publice/formulare"
+                        className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-800 text-sm"
+                      >
+                        {tb('viewPage')}
+                        <ExternalLink className="w-3 h-3" />
+                      </Link>
                     </div>
                   </div>
                 </CardContent>

@@ -1,191 +1,197 @@
-'use client';
-
-import { useTranslations } from 'next-intl';
-import { Heart, Download, FileText, Users, ClipboardList, Award, Calendar } from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
+import { Heart, Users, Calendar, Mail, Phone, MapPin } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
-import { WebPageJsonLd } from '@/lib/seo/json-ld';
-import { type LucideIcon } from 'lucide-react';
+import { Link } from '@/components/ui/link';
+import { generatePageMetadata } from '@/lib/seo';
+import type { Locale } from '@/lib/seo/config';
+import { createAnonServerClient } from '@/lib/supabase/server';
 
-// Types for volunteering documents
-interface VolunteerDocument {
+interface VolunteerOpportunity {
   id: string;
   title: string;
-  description?: string;
-  icon: LucideIcon;
-  color: string;
-  url: string;
+  description: string | null;
+  requirements: string | null;
+  location: string | null;
+  start_date: string | null;
+  end_date: string | null;
+  contact_email: string | null;
+  contact_phone: string | null;
+  is_active: boolean;
+  sort_order: number;
 }
 
-// Volunteering documents
-const VOLUNTEER_DOCUMENTS: VolunteerDocument[] = [
-  {
-    id: '1',
-    title: 'Regulament voluntariat',
-    description: 'Regulamentul de organizare a activității de voluntariat',
-    icon: FileText,
-    color: 'blue',
-    url: '#',
-  },
-  {
-    id: '2',
-    title: 'Cerere tip voluntariat',
-    description: 'Anexa 1, 1A - Formular de înscriere',
-    icon: ClipboardList,
-    color: 'green',
-    url: '#',
-  },
-  {
-    id: '3',
-    title: 'Contract de voluntariat pt. adulți',
-    description: 'Anexa 2 - Model contract pentru persoane majore',
-    icon: FileText,
-    color: 'violet',
-    url: '#',
-  },
-  {
-    id: '4',
-    title: 'Fișa de voluntariat',
-    description: 'Anexa A la contract',
-    icon: Users,
-    color: 'orange',
-    url: '#',
-  },
-  {
-    id: '5',
-    title: 'Fișa de prezențe',
-    description: 'Anexa 3 - Evidența participării',
-    icon: Calendar,
-    color: 'cyan',
-    url: '#',
-  },
-  {
-    id: '6',
-    title: 'Fișa de evaluare a voluntarului',
-    description: 'Anexa 4 - Formular de evaluare',
-    icon: ClipboardList,
-    color: 'amber',
-    url: '#',
-  },
-  {
-    id: '7',
-    title: 'Certificat voluntariat',
-    description: 'Anexa 5 - Model certificat de participare',
-    icon: Award,
-    color: 'rose',
-    url: '#',
-  },
-];
+async function getVolunteerOpportunities(): Promise<VolunteerOpportunity[]> {
+  const supabase = createAnonServerClient();
+  
+  const { data, error } = await supabase
+    .from('volunteer_opportunities')
+    .select('*')
+    .eq('is_active', true)
+    .order('sort_order', { ascending: true });
+  
+  if (error) {
+    console.error('Error fetching volunteer opportunities:', error);
+    return [];
+  }
+  
+  return data || [];
+}
 
-// Color utilities
-const getColorClasses = (color: string) => {
-  const colors: Record<string, { bg: string; text: string; hover: string }> = {
-    blue: { bg: 'bg-blue-100', text: 'text-blue-700', hover: 'hover:bg-blue-200' },
-    green: { bg: 'bg-green-100', text: 'text-green-700', hover: 'hover:bg-green-200' },
-    violet: { bg: 'bg-violet-100', text: 'text-violet-700', hover: 'hover:bg-violet-200' },
-    orange: { bg: 'bg-orange-100', text: 'text-orange-700', hover: 'hover:bg-orange-200' },
-    cyan: { bg: 'bg-cyan-100', text: 'text-cyan-700', hover: 'hover:bg-cyan-200' },
-    amber: { bg: 'bg-amber-100', text: 'text-amber-700', hover: 'hover:bg-amber-200' },
-    rose: { bg: 'bg-rose-100', text: 'text-rose-700', hover: 'hover:bg-rose-200' },
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  return generatePageMetadata({
+    pageKey: 'voluntariat',
+    locale: locale as Locale,
+    path: '/voluntariat',
+  });
+}
+
+export default async function VoluntariatPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'navigation' });
+  const tp = await getTranslations({ locale, namespace: 'voluntariatPage' });
+
+  const opportunities = await getVolunteerOpportunities();
+
+  const pageLabels = {
+    ro: {
+      noOpportunities: 'Nu există oportunități de voluntariat disponibile momentan.',
+      contactTitle: 'Vrei să faci voluntariat?',
+      contactText: 'Contactează-ne pentru mai multe informații despre oportunitățile de voluntariat.',
+      contact: 'Contactează-ne',
+      requirements: 'Cerințe',
+      location: 'Locație',
+      period: 'Perioada',
+    },
+    hu: {
+      noOpportunities: 'Jelenleg nincsenek elérhető önkéntes lehetőségek.',
+      contactTitle: 'Szeretnél önkéntes lenni?',
+      contactText: 'Lépj kapcsolatba velünk az önkéntes lehetőségekről szóló további információkért.',
+      contact: 'Kapcsolat',
+      requirements: 'Követelmények',
+      location: 'Helyszín',
+      period: 'Időszak',
+    },
+    en: {
+      noOpportunities: 'No volunteer opportunities available at the moment.',
+      contactTitle: 'Want to volunteer?',
+      contactText: 'Contact us for more information about volunteer opportunities.',
+      contact: 'Contact us',
+      requirements: 'Requirements',
+      location: 'Location',
+      period: 'Period',
+    },
   };
-  return colors[color] || colors.blue;
-};
 
-function DocumentCard({ doc }: { doc: VolunteerDocument }) {
-  const colorClasses = getColorClasses(doc.color);
-  const Icon = doc.icon;
+  const labels = pageLabels[locale as keyof typeof pageLabels] || pageLabels.en;
 
-  return (
-    <a
-      href={doc.url}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="flex items-center gap-4 p-4 rounded-xl border border-gray-100 hover:border-primary-200 hover:shadow-md transition-all group"
-    >
-      <div className={`w-12 h-12 rounded-xl ${colorClasses.bg} ${colorClasses.hover} flex items-center justify-center shrink-0 transition-colors`}>
-        <Icon className={`w-6 h-6 ${colorClasses.text}`} />
-      </div>
-      <div className="flex-1 min-w-0">
-        <h3 className="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">
-          {doc.title}
-        </h3>
-        {doc.description && (
-          <p className="text-sm text-gray-500 mt-0.5">{doc.description}</p>
-        )}
-      </div>
-      <div className="flex items-center gap-2 px-3 py-1.5 bg-primary-600 text-white text-sm font-medium rounded-lg group-hover:bg-primary-700 transition-colors shrink-0">
-        <Download className="w-4 h-4" />
-        Descarcă
-      </div>
-    </a>
-  );
-}
-
-export default function VoluntariatPage() {
-  const t = useTranslations('navigation');
-  const tv = useTranslations('voluntariatPage');
+  const formatDate = (dateStr: string | null) => {
+    if (!dateStr) return null;
+    const date = new Date(dateStr);
+    return date.toLocaleDateString(
+      locale === 'ro' ? 'ro-RO' : locale === 'hu' ? 'hu-HU' : 'en-US',
+      { day: 'numeric', month: 'long', year: 'numeric' }
+    );
+  };
 
   return (
     <>
-      <WebPageJsonLd
-        title="Voluntariat"
-        description="Programul de voluntariat al Primăriei Municipiului Salonta"
-        url="/voluntariat"
-      />
-      <Breadcrumbs items={[
-        { label: t('voluntariat') }
-      ]} />
-      <PageHeader 
-        titleKey="title" 
-        icon="heart" 
-        descriptionKey="description"
-        namespace="voluntariatPage"
-      />
+      <Breadcrumbs items={[{ label: t('voluntariat') }]} />
+      <PageHeader titleKey="voluntariat" icon="heart" />
 
       <Section background="white">
         <Container>
           <div className="max-w-4xl mx-auto">
-            {/* Introduction */}
-            <div className="mb-8 p-6 bg-gradient-to-br from-rose-50 to-pink-50 rounded-2xl border border-rose-100">
-              <div className="flex items-start gap-4">
-                <div className="w-14 h-14 rounded-xl bg-rose-100 flex items-center justify-center shrink-0">
-                  <Heart className="w-7 h-7 text-rose-600" />
-                </div>
-                <div>
-                  <h2 className="text-xl font-bold text-gray-900 mb-2">{tv('introTitle')}</h2>
-                  <p className="text-gray-600 leading-relaxed">
-                    {tv('introText')}
-                  </p>
-                </div>
-              </div>
-            </div>
+            <p className="text-lg text-gray-600 mb-8 text-center">
+              {tp('description')}
+            </p>
 
-            {/* Documents */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <FileText className="w-5 h-5 text-primary-600" />
-                  {tv('documentsTitle')}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-3">
-                  {VOLUNTEER_DOCUMENTS.map((doc) => (
-                    <DocumentCard key={doc.id} doc={doc} />
-                  ))}
-                </div>
+            {opportunities.length > 0 ? (
+              <div className="space-y-6">
+                {opportunities.map((opportunity) => (
+                  <Card key={opportunity.id} className="hover:shadow-md transition-shadow">
+                    <CardHeader>
+                      <div className="flex items-start gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-rose-100 flex items-center justify-center shrink-0">
+                          <Heart className="w-6 h-6 text-rose-600" />
+                        </div>
+                        <div>
+                          <CardTitle className="text-lg">{opportunity.title}</CardTitle>
+                          {opportunity.location && (
+                            <p className="text-sm text-gray-500 flex items-center gap-1.5 mt-1">
+                              <MapPin className="w-4 h-4" />
+                              {opportunity.location}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      {opportunity.description && (
+                        <div 
+                          className="text-gray-600 mb-4 prose prose-sm max-w-none"
+                          dangerouslySetInnerHTML={{ __html: opportunity.description }}
+                        />
+                      )}
+                      
+                      {opportunity.requirements && (
+                        <div className="mb-4">
+                          <h4 className="text-sm font-semibold text-gray-900 mb-2">{labels.requirements}</h4>
+                          <div 
+                            className="text-sm text-gray-600"
+                            dangerouslySetInnerHTML={{ __html: opportunity.requirements }}
+                          />
+                        </div>
+                      )}
+
+                      <div className="flex flex-wrap gap-4 text-sm">
+                        {(opportunity.start_date || opportunity.end_date) && (
+                          <span className="flex items-center gap-1.5 text-gray-500">
+                            <Calendar className="w-4 h-4" />
+                            {formatDate(opportunity.start_date)} - {formatDate(opportunity.end_date) || '...'}
+                          </span>
+                        )}
+                        {opportunity.contact_email && (
+                          <a href={`mailto:${opportunity.contact_email}`} className="flex items-center gap-1.5 text-primary-600 hover:text-primary-800">
+                            <Mail className="w-4 h-4" />
+                            {opportunity.contact_email}
+                          </a>
+                        )}
+                        {opportunity.contact_phone && (
+                          <a href={`tel:${opportunity.contact_phone}`} className="flex items-center gap-1.5 text-primary-600 hover:text-primary-800">
+                            <Phone className="w-4 h-4" />
+                            {opportunity.contact_phone}
+                          </a>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12 text-gray-500">
+                {labels.noOpportunities}
+              </div>
+            )}
+
+            {/* Contact CTA */}
+            <Card className="mt-8 bg-rose-50 border-rose-100">
+              <CardContent className="p-6 text-center">
+                <Heart className="w-12 h-12 text-rose-500 mx-auto mb-4" />
+                <h3 className="font-semibold text-gray-900 mb-2">{labels.contactTitle}</h3>
+                <p className="text-gray-600 mb-4">{labels.contactText}</p>
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center gap-2 px-6 py-2.5 bg-rose-600 text-white font-medium rounded-lg hover:bg-rose-700 transition-colors"
+                >
+                  {labels.contact}
+                </Link>
               </CardContent>
             </Card>
-
-            {/* Contact Info */}
-            <div className="mt-6 p-4 bg-blue-50 border border-blue-100 rounded-xl">
-              <p className="text-sm text-blue-800">
-                {tv('contactInfo')}
-              </p>
-            </div>
           </div>
         </Container>
       </Section>

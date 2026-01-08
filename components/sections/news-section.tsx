@@ -10,52 +10,38 @@ import { Card, CardContent, CardImage } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { formatArticleDate } from '@/lib/utils/format-date';
+import type { News } from '@/lib/types/database';
 
-// Mock news data - will be replaced with Supabase data
-const MOCK_NEWS = [
-  {
-    id: '1',
-    slug: 'despre-violenta-domestica',
-    image: '/images/primaria-salonta-1.webp',
-    date: '2025-11-11',
-    category: 'anunturi',
-    translations: {
-      ro: { title: 'Despre violența domestică', excerpt: 'Informare despre violența domestică și resurse de ajutor disponibile.' },
-      hu: { title: 'A családon belüli erőszakról', excerpt: 'Tájékoztatás a családon belüli erőszakról és az elérhető segítő erőforrásokról.' },
-      en: { title: 'About domestic violence', excerpt: 'Information about domestic violence and available help resources.' },
-    },
-  },
-  {
-    id: '2',
-    slug: 'ajutor-incalzire-locuinta-2025',
-    image: '/images/primaria-salonta-2.webp',
-    date: '2025-10-31',
-    category: 'anunturi',
-    translations: {
-      ro: { title: 'Ajutor pt. încălzirea locuinței – 2025', excerpt: 'Informare privind ajutorul de încălzire pentru sezonul rece 2025-2026.' },
-      hu: { title: 'Lakásfűtési támogatás – 2025', excerpt: 'Tájékoztató a 2025-2026-os fűtési szezonra vonatkozó fűtési támogatásról.' },
-      en: { title: 'Home heating assistance – 2025', excerpt: 'Information regarding heating assistance for the 2025-2026 cold season.' },
-    },
-  },
-  {
-    id: '3',
-    slug: 'subventii-sociale-2026',
-    image: '/images/sedinta-consiliu-salonta-1.webp',
-    date: '2025-10-16',
-    category: 'anunturi',
-    translations: {
-      ro: { title: 'Subvenții sociale pentru anul 2026', excerpt: 'Anunț de participare și regulament pentru subvențiile sociale.' },
-      hu: { title: 'Szociális támogatások 2026-ra', excerpt: 'Részvételi felhívás és szabályzat a szociális támogatásokhoz.' },
-      en: { title: 'Social subsidies for 2026', excerpt: 'Participation announcement and regulations for social subsidies.' },
-    },
-  },
-];
+interface NewsSectionProps {
+  news?: News[];
+}
 
-export function NewsSection() {
+const CATEGORY_LABELS: Record<string, Record<string, string>> = {
+  anunturi: { ro: 'Anunț', hu: 'Hirdetmény', en: 'Announcement' },
+  stiri: { ro: 'Știre', hu: 'Hír', en: 'News' },
+  comunicate: { ro: 'Comunicat', hu: 'Közlemény', en: 'Press Release' },
+  proiecte: { ro: 'Proiect', hu: 'Projekt', en: 'Project' },
+  consiliu: { ro: 'Consiliu Local', hu: 'Helyi Tanács', en: 'Local Council' },
+};
+
+export function NewsSection({ news = [] }: NewsSectionProps) {
   const t = useTranslations('homepage');
-  const tNews = useTranslations('news');
   const tCommon = useTranslations('common');
   const locale = useLocale() as 'ro' | 'hu' | 'en';
+
+  // If no news provided, show empty state
+  if (news.length === 0) {
+    return (
+      <Section background="gray">
+        <Container>
+          <SectionHeader title={t('latestNews')} />
+          <div className="text-center py-12 text-gray-500">
+            <p>Nu există știri recente.</p>
+          </div>
+        </Container>
+      </Section>
+    );
+  }
 
   return (
     <Section background="gray">
@@ -63,12 +49,12 @@ export function NewsSection() {
         <SectionHeader title={t('latestNews')} />
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {MOCK_NEWS.map((news) => (
-            <Card key={news.id} hover className="overflow-hidden">
+          {news.map((item) => (
+            <Card key={item.id} hover className="overflow-hidden">
               <CardImage>
                 <Image
-                  src={news.image}
-                  alt={news.translations[locale].title}
+                  src={item.featured_image || '/images/primaria-salonta-1.webp'}
+                  alt={item.title}
                   fill
                   className="object-cover transition-transform duration-300 group-hover:scale-105"
                   sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
@@ -77,21 +63,21 @@ export function NewsSection() {
               <CardContent className="pt-4">
                 <div className="flex items-center gap-2 mb-3">
                   <Badge variant="default">
-                    {news.category === 'anunturi' ? 'Anunț' : news.category}
+                    {CATEGORY_LABELS[item.category]?.[locale] || item.category}
                   </Badge>
                   <span className="flex items-center gap-1 text-sm text-gray-500">
                     <Calendar className="w-4 h-4" />
-                    {formatArticleDate(news.date, locale)}
+                    {formatArticleDate(item.published_at || item.created_at, locale)}
                   </span>
                 </div>
                 <h3 className="font-semibold text-lg text-gray-900 mb-2 line-clamp-2">
-                  {news.translations[locale].title}
+                  {item.title}
                 </h3>
                 <p className="text-gray-600 text-sm line-clamp-2 mb-4">
-                  {news.translations[locale].excerpt}
+                  {item.excerpt || ''}
                 </p>
                 <Link
-                  href={`/stiri/${news.slug}`}
+                  href={`/stiri/${item.slug}`}
                   className="text-primary-700 font-medium text-sm hover:text-primary-900 inline-flex items-center gap-1 group"
                 >
                   {tCommon('readMore')}
@@ -114,4 +100,3 @@ export function NewsSection() {
     </Section>
   );
 }
-

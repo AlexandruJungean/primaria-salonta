@@ -1,366 +1,147 @@
-'use client';
-
-import { useTranslations } from 'next-intl';
-import { FileCheck, Download, User } from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
+import { FileText, Scale, User, Calendar } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { Card, CardContent } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
+import { getAssetDeclarations } from '@/lib/supabase/services';
+import { generatePageMetadata } from '@/lib/seo';
+import type { Locale } from '@/lib/seo/config';
 
-// Types for declarations
-interface Declaration {
-  name: string;
-  note?: string; // e.g., "pt. încheierea mandatului de consilier local"
-  wealthUrl?: string; // av - declarație de avere
-  interestUrl?: string; // int - declarație de interese
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  return generatePageMetadata({
+    pageKey: 'declaratiiAvere',
+    locale: locale as Locale,
+    path: '/consiliul-local/declaratii-avere',
+  });
 }
 
-interface DeclarationYear {
-  id: string;
-  year: string;
-  title: string;
-  subtitle?: string;
-  declarations: Declaration[];
-}
+export default async function DeclaratiiAverePage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const t = await getTranslations('navigation');
+  const td = await getTranslations('declaratiiPage');
 
-// Mock data - will be replaced with database content
-const DECLARATION_YEARS: DeclarationYear[] = [
-  {
-    id: '2025',
-    year: '2025',
-    title: 'Declarații depuse în 2025',
-    declarations: [
-      { name: 'Blaj Cristian', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Bondár Zsolt', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Galea Marcel', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Cseke Sándor', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Gáll Éva', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Kiri Evelin', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Manciu Valentin', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Nagy Árpád-Ferencz', note: 'pt. încheierea mandatului de consilier local', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Nagy Árpád-Ferencz', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Nan Sajti Daniel', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Pirtea Mihai George', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Sala Răzvan Sergiu', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Szász Dénes Albert', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Szatmari Adrian', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Szőke Sorean Éva', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Tornai Melinda', note: 'pt. începerea mandatului de consilier local', wealthUrl: '#', interestUrl: '#' },
-    ],
-  },
-  {
-    id: '2024-start',
-    year: '2024',
-    title: '2024',
-    subtitle: 'pt. începerea mandatului de consilier local',
-    declarations: [
-      { name: 'Blaj Cristian', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Bondár Zsolt', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Cseke Sándor', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Galea Marcel Ioan', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Gáll Éva', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Kiri Evelin', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Manciu Valentin-Iulian', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Nagy Árpád-Ferencz', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Nan-Sajti Daniel', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Pirtea Mihai George', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Sala Răzvan-Sergiu', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Szabó Sándor', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Szász Dénes-Albert', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Szatmari Adrian', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Szőke Sorean Éva', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Vígh József', wealthUrl: '#', interestUrl: '#' },
-    ],
-  },
-  {
-    id: '2024-end',
-    year: '2024',
-    title: '2024',
-    subtitle: 'pt. încheierea mandatului de consilier local',
-    declarations: [
-      { name: 'Boiț Nicolae', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Buz Ramona Angela', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Cseke Sándor', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Gáll Éva', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Illyés Lajos', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Kiri Evelin', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Kiss Ernő', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Nagy Árpád-Ferencz', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Pirtea Mihai George', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Sala Răzvan-Sergiu', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Szabó Sándor', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Szász Dénes-Albert', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Szijjártó Szilárd', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Tolnai Angela', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Toma Cristian-Radu', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Vígh József', wealthUrl: '#', interestUrl: '#' },
-    ],
-  },
-  {
-    id: '2024',
-    year: '2024',
-    title: 'Declarații depuse în 2024',
-    declarations: [
-      { name: 'Boiț Nicolae', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Buz Ramona Angela', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Cseke Sándor', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Gáll Éva', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Gáll Éva', note: 'declarație rectificativă', wealthUrl: '#' },
-      { name: 'Illyés Lajos', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Kiri Evelin', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Kiss Ernő', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Nagy Árpád-Ferencz', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Pirtea Mihai George', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Sala Răzvan-Sergiu', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Szabó Sándor', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Szász Dénes-Albert', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Szijjártó Szilárd', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Tolnai Angela', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Toma Cristian-Radu', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Vígh József', wealthUrl: '#', interestUrl: '#' },
-    ],
-  },
-  {
-    id: '2023-start',
-    year: '2023',
-    title: '2023',
-    subtitle: 'pt. începerea mandatului de consilier local',
-    declarations: [
-      { name: 'Kiri Evelin', wealthUrl: '#', interestUrl: '#' },
-    ],
-  },
-  {
-    id: '2023',
-    year: '2023',
-    title: 'Declarații depuse în 2023',
-    declarations: [
-      { name: 'Boiț Nicolae', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Buz Ramona', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Cseke Sándor', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Gali Éva', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Gáll Éva', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Illyés Lajos', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Kiri Evelin', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Kiss Ernő', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Nagy Árpád', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Pirtea Mihai-George', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Sala Răzvan', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Szabó Sándor', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Szász Dénes-Albert', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Szijjártó Szilárd', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Toma Cristian-Radu', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Tolnai Angela', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Vigh József', wealthUrl: '#', interestUrl: '#' },
-    ],
-  },
-  {
-    id: '2022-start',
-    year: '2022',
-    title: '2022',
-    subtitle: 'pt. începerea mandatului de consilier local',
-    declarations: [
-      { name: 'Toma Cristian-Radu', wealthUrl: '#', interestUrl: '#' },
-    ],
-  },
-  {
-    id: '2022-end',
-    year: '2022',
-    title: '2022',
-    subtitle: 'pt. încheierea mandatului de consilier local',
-    declarations: [
-      { name: 'Gali Éva', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Szatmari Adrian', wealthUrl: '#', interestUrl: '#' },
-    ],
-  },
-  {
-    id: '2022',
-    year: '2022',
-    title: 'Declarații depuse în 2022',
-    declarations: [
-      { name: 'Boiț Nicolae', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Buz Ramona', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Cseke Sándor', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Gali Éva', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Gali Éva', interestUrl: '#' },
-      { name: 'Gáll Éva', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Illyés Lajos', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Kiss Ernő', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Nagy Árpád-Ferenc', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Pirtea Mihai-George', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Pirtea Mihai-George', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Sala Răzvan', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Szabó Sándor', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Szász Dénes-Albert', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Szíjjártó Szilárd', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Tolnai Angela', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Toma Cristian', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Vigh József', wealthUrl: '#', interestUrl: '#' },
-    ],
-  },
-  {
-    id: '2021',
-    year: '2021',
-    title: 'Declarații depuse în 2021',
-    declarations: [
-      { name: 'Boiț Nicolae', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Buz Ramona', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Cseke Sándor', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Gali Éva', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Gáll Éva', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Illyés Lajos', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Kiss Ernő', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Nagy Árpád-Ferenc', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Pirtea Mihai-George', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Sala Răzvan', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Szabó Sándor', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Szatmari Adrian', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Szász Dénes-Albert', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Szíjjártó Szilárd', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Tolnai Angela', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Vigh József', wealthUrl: '#', interestUrl: '#' },
-    ],
-  },
-  {
-    id: '2020-start',
-    year: '2020',
-    title: '2020',
-    subtitle: 'pt. începerea mandatului 2020-2024',
-    declarations: [
-      { name: 'Boiț Nicolae', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Buz Ramona', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Cseke Sándor', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Gali Éva', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Gáll Éva', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Illyés Lajos', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Kiss Ernő', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Nagy Árpád-Ferenc', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Pirtea Mihai-George', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Sala Răzvan', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Szabó Sándor', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Szatmari Adrian', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Szász Dénes-Albert', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Szíjjártó Szilárd', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Tolnai Angela', wealthUrl: '#', interestUrl: '#' },
-      { name: 'Vigh József', wealthUrl: '#', interestUrl: '#' },
-    ],
-  },
-];
+  // Fetch declarations only for council members (consiliul_local department)
+  const { data: declarations } = await getAssetDeclarations({ 
+    limit: 500,
+    department: 'consiliul_local'
+  });
 
-function DeclarationCard({ declaration }: { declaration: Declaration }) {
-  return (
-    <div className="flex items-center justify-between py-3 px-4 bg-white rounded-lg border border-gray-100 hover:border-primary-200 hover:shadow-sm transition-all">
-      <div className="flex items-center gap-3">
-        <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center shrink-0">
-          <User className="w-4 h-4 text-gray-500" />
-        </div>
-        <div>
-          <span className="font-medium text-gray-800">{declaration.name}</span>
-          {declaration.note && (
-            <span className="text-xs text-amber-700 bg-amber-50 px-2 py-0.5 rounded ml-2">
-              {declaration.note}
-            </span>
-          )}
-        </div>
-      </div>
-      <div className="flex items-center gap-2">
-        {declaration.wealthUrl && (
-          <a
-            href={declaration.wealthUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-primary-600 text-white rounded hover:bg-primary-700 transition-colors"
-            title="Declarație de avere"
-          >
-            <Download className="w-3 h-3" />
-            av
-          </a>
-        )}
-        {declaration.interestUrl && (
-          <a
-            href={declaration.interestUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-emerald-600 text-white rounded hover:bg-emerald-700 transition-colors"
-            title="Declarație de interese"
-          >
-            <Download className="w-3 h-3" />
-            int
-          </a>
-        )}
-      </div>
-    </div>
-  );
-}
+  // Group declarations by year
+  const declarationsByYear = declarations.reduce((acc, decl) => {
+    if (!acc[decl.declaration_year]) {
+      acc[decl.declaration_year] = [];
+    }
+    acc[decl.declaration_year].push(decl);
+    return acc;
+  }, {} as Record<number, typeof declarations>);
 
-function YearSection({ yearData }: { yearData: DeclarationYear }) {
-  return (
-    <Card className="overflow-hidden">
-      <CardContent className="p-0">
-        {/* Header */}
-        <div className="bg-primary-50 px-5 py-4 border-b border-primary-100">
-          <h3 className="font-bold text-primary-900 text-lg">{yearData.title}</h3>
-          {yearData.subtitle && (
-            <p className="text-sm text-primary-700 mt-0.5">{yearData.subtitle}</p>
-          )}
-        </div>
-
-        {/* Declarations List */}
-        <div className="p-4 space-y-2">
-          {yearData.declarations.map((declaration, idx) => (
-            <DeclarationCard key={`${yearData.id}-${idx}`} declaration={declaration} />
-          ))}
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
-
-export default function DeclaratiiAvereConsiliuPage() {
-  const t = useTranslations('navigation');
-  const td = useTranslations('declaratiiConsiliuPage');
+  // Get years sorted descending
+  const years = Object.keys(declarationsByYear)
+    .map(Number)
+    .sort((a, b) => b - a);
 
   return (
     <>
-      <Breadcrumbs
-        items={[
-          { label: t('consiliulLocal'), href: '/consiliul-local' },
-          { label: t('declaratiiAvereConsiliu') },
-        ]}
-      />
-      <PageHeader titleKey="declaratiiAvereConsiliu" icon="fileCheck" />
+      <Breadcrumbs items={[
+        { label: t('consiliulLocal'), href: '/consiliul-local' },
+        { label: t('declaratiiAvere') }
+      ]} />
+      <PageHeader titleKey="declaratiiAvere" icon="fileCheck" />
 
       <Section background="white">
         <Container>
           <div className="max-w-4xl mx-auto">
-            <p className="text-lg text-gray-600 mb-6 text-center">
+            <p className="text-lg text-gray-600 mb-8 text-center">
               {td('description')}
             </p>
 
-            {/* Legend */}
-            <div className="flex flex-wrap items-center justify-center gap-4 mb-8 p-4 bg-gray-50 rounded-xl">
-              <div className="flex items-center gap-2">
-                <span className="px-3 py-1.5 text-xs font-medium bg-primary-600 text-white rounded">av</span>
-                <span className="text-sm text-gray-600">{td('wealthDeclaration')}</span>
+            {years.length === 0 ? (
+              <div className="text-center py-12 text-gray-500">
+                <p>Nu există declarații disponibile momentan.</p>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="px-3 py-1.5 text-xs font-medium bg-emerald-600 text-white rounded">int</span>
-                <span className="text-sm text-gray-600">{td('interestDeclaration')}</span>
+            ) : (
+              <div className="space-y-8">
+                {years.map((year) => {
+                  const yearDeclarations = declarationsByYear[year] || [];
+                  // Sort by person name
+                  yearDeclarations.sort((a, b) => 
+                    a.person_name.localeCompare(b.person_name, 'ro')
+                  );
+                  
+                  return (
+                    <Card key={year}>
+                      <CardContent className="p-6">
+                        <div className="flex items-center gap-3 mb-6">
+                          <div className="w-10 h-10 rounded-lg bg-primary-100 flex items-center justify-center">
+                            <Calendar className="w-5 h-5 text-primary-700" />
+                          </div>
+                          <h2 className="text-xl font-bold text-gray-900">
+                            {td('declarationsYear', { year })}
+                          </h2>
+                          <span className="text-sm text-gray-500">
+                            ({td('persons', { count: yearDeclarations.length })})
+                          </span>
+                        </div>
+
+                        {yearDeclarations.length === 0 ? (
+                          <p className="text-gray-500 text-sm">Nu există declarații pentru acest an.</p>
+                        ) : (
+                          <div className="space-y-2">
+                            {yearDeclarations.map((decl) => (
+                              <div
+                                key={decl.id}
+                                className="flex flex-col sm:flex-row sm:items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors gap-3"
+                              >
+                                <div className="flex items-center gap-3">
+                                  <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center flex-shrink-0">
+                                    <User className="w-4 h-4 text-primary-600" />
+                                  </div>
+                                  <span className="font-medium text-gray-900">{decl.person_name}</span>
+                                </div>
+                                
+                                <div className="flex items-center gap-2 ml-11 sm:ml-0 flex-shrink-0">
+                                  {decl.avere_file_url && (
+                                    <a
+                                      href={decl.avere_file_url}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-700 transition-colors hover:bg-emerald-100 hover:border-emerald-300"
+                                      title={td('wealth')}
+                                    >
+                                      <FileText className="w-3.5 h-3.5" />
+                                      {td('wealth')}
+                                    </a>
+                                  )}
+                                  {decl.interese_file_url && (
+                                    <a
+                                      href={decl.interese_file_url}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-blue-200 bg-blue-50 text-blue-700 transition-colors hover:bg-blue-100 hover:border-blue-300"
+                                      title={td('interests')}
+                                    >
+                                      <Scale className="w-3.5 h-3.5" />
+                                      {td('interests')}
+                                    </a>
+                                  )}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  );
+                })}
               </div>
-            </div>
-
-            {/* Info box */}
-            <div className="mb-8 p-4 bg-blue-50 border border-blue-100 rounded-xl">
-              <p className="text-sm text-blue-800">
-                {td('infoText')}
-              </p>
-            </div>
-
-            <div className="space-y-6">
-              {DECLARATION_YEARS.map((yearData) => (
-                <YearSection key={yearData.id} yearData={yearData} />
-              ))}
-            </div>
+            )}
           </div>
         </Container>
       </Section>

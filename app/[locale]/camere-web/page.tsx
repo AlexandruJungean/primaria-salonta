@@ -1,112 +1,148 @@
-'use client';
-
-import { useTranslations, useLocale } from 'next-intl';
-import { Video, ExternalLink, Play, Info } from 'lucide-react';
-import Image from 'next/image';
+import { getTranslations } from 'next-intl/server';
+import { Video, MapPin, RefreshCw, ExternalLink } from 'lucide-react';
 import { Container } from '@/components/ui/container';
-import { Section, SectionHeader } from '@/components/ui/section';
-import { Card, CardContent } from '@/components/ui/card';
+import { Section } from '@/components/ui/section';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
-import { WEBCAMS } from '@/lib/constants/webcams';
+import { PageHeader } from '@/components/pages/page-header';
+import { generatePageMetadata } from '@/lib/seo';
+import type { Locale } from '@/lib/seo/config';
+import { createAnonServerClient } from '@/lib/supabase/server';
+import Image from 'next/image';
 
-export default function WebcamsPage() {
-  const t = useTranslations('webcams');
-  const locale = useLocale() as 'ro' | 'hu' | 'en';
+interface Webcam {
+  id: string;
+  name: string;
+  location: string | null;
+  description: string | null;
+  stream_url: string | null;
+  image_url: string | null;
+  is_active: boolean;
+  sort_order: number;
+}
+
+async function getWebcams(): Promise<Webcam[]> {
+  const supabase = createAnonServerClient();
+  
+  const { data, error } = await supabase
+    .from('webcams')
+    .select('*')
+    .eq('is_active', true)
+    .order('sort_order', { ascending: true });
+  
+  if (error) {
+    console.error('Error fetching webcams:', error);
+    return [];
+  }
+  
+  return data || [];
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  return generatePageMetadata({
+    pageKey: 'camereWeb',
+    locale: locale as Locale,
+    path: '/camere-web',
+  });
+}
+
+export default async function CamereWebPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'navigation' });
+  const tp = await getTranslations({ locale, namespace: 'camereWebPage' });
+
+  const webcams = await getWebcams();
+
+  const pageLabels = {
+    ro: {
+      noWebcams: 'Nu există camere web disponibile.',
+      liveView: 'Vezi live',
+      location: 'Locație',
+    },
+    hu: {
+      noWebcams: 'Nincsenek elérhető webkamerák.',
+      liveView: 'Élő közvetítés',
+      location: 'Helyszín',
+    },
+    en: {
+      noWebcams: 'No webcams available.',
+      liveView: 'View live',
+      location: 'Location',
+    },
+  };
+
+  const labels = pageLabels[locale as keyof typeof pageLabels] || pageLabels.en;
 
   return (
     <>
-      <Breadcrumbs items={[{ label: t('title') }]} />
+      <Breadcrumbs items={[{ label: t('camereWeb') }]} />
+      <PageHeader titleKey="camereWeb" icon="video" />
 
       <Section background="white">
         <Container>
-          <SectionHeader title={t('title')} subtitle={t('subtitle')} />
-
-          {/* Info Banner */}
-          <div className="max-w-5xl mx-auto mb-8">
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-start gap-3">
-              <Info className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
-              <div className="text-sm text-blue-800">
-                <p className="font-medium mb-1">{t('viewingInfo')}</p>
-                <p>{t('viewingInfoDesc')}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            {WEBCAMS.map((webcam) => (
-              <Card key={webcam.id} className="overflow-hidden">
-                {/* Webcam Thumbnail with Link */}
-                <a
-                  href={webcam.streamUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block aspect-video bg-gray-900 relative group"
-                  aria-label={`${webcam.translations[locale].title} - ${t('watchLive')}`}
-                >
-                  <Image
-                    src={webcam.thumbnailUrl}
-                    alt={webcam.translations[locale].title}
-                    fill
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                  />
-                  <div className="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors flex items-center justify-center">
-                    <div className="w-20 h-20 rounded-full bg-white/90 group-hover:bg-white flex items-center justify-center transition-all group-hover:scale-110">
-                      <Play className="w-10 h-10 text-primary-900 ml-1" />
-                    </div>
-                  </div>
-                  <div className="absolute bottom-4 left-4 flex items-center gap-2 text-white font-medium">
-                    <Video className="w-5 h-5" />
-                    <span>LIVE</span>
-                    <span className="w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse" />
-                  </div>
-                  <div className="absolute top-4 right-4 bg-black/60 text-white text-sm px-3 py-1.5 rounded-lg flex items-center gap-1.5">
-                    <ExternalLink className="w-4 h-4" />
-                    {t('openInNewTab')}
-                  </div>
-                </a>
-
-                <CardContent className="pt-4">
-                  <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center shrink-0">
-                      <Video className="w-5 h-5 text-red-600" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-lg text-gray-900">
-                        {webcam.translations[locale].title}
-                      </h3>
-                      <p className="text-gray-600 text-sm mt-1">
-                        {webcam.translations[locale].description}
-                      </p>
-                      <a
-                        href={webcam.streamUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-primary-700 font-medium text-sm hover:text-primary-900 mt-3"
-                      >
-                        {t('watchLive')}
-                        <ExternalLink className="w-4 h-4" />
-                      </a>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-
-          {/* VLC Note */}
-          <div className="mt-8 text-center text-gray-600">
-            <p>
-              {t('vlcNote')}{' '}
-              <a
-                href="https://www.videolan.org/vlc/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary-700 hover:underline"
-              >
-                {t('vlcLink')}
-              </a>
+          <div className="max-w-6xl mx-auto">
+            <p className="text-lg text-gray-600 mb-8 text-center">
+              {tp('description')}
             </p>
+
+            {webcams.length > 0 ? (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {webcams.map((webcam) => (
+                  <Card key={webcam.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                    {/* Webcam Preview */}
+                    <div className="relative aspect-video bg-gray-900">
+                      {webcam.image_url ? (
+                        <Image
+                          src={webcam.image_url}
+                          alt={webcam.name}
+                          fill
+                          className="object-cover"
+                        />
+                      ) : (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <Video className="w-12 h-12 text-gray-600" />
+                        </div>
+                      )}
+                      <div className="absolute top-3 left-3">
+                        <span className="inline-flex items-center gap-1.5 px-2 py-1 bg-red-600 text-white text-xs font-medium rounded">
+                          <span className="w-2 h-2 bg-white rounded-full animate-pulse" />
+                          LIVE
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <CardContent className="p-4">
+                      <h3 className="font-semibold text-gray-900 mb-2">{webcam.name}</h3>
+                      {webcam.location && (
+                        <p className="text-sm text-gray-500 flex items-center gap-1.5 mb-3">
+                          <MapPin className="w-4 h-4" />
+                          {webcam.location}
+                        </p>
+                      )}
+                      {webcam.description && (
+                        <p className="text-sm text-gray-600 mb-4">{webcam.description}</p>
+                      )}
+                      {webcam.stream_url && (
+                        <a
+                          href={webcam.stream_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 text-sm text-primary-600 hover:text-primary-800 font-medium"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                          {labels.liveView}
+                        </a>
+                      )}
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12 text-gray-500">
+                {labels.noWebcams}
+              </div>
+            )}
           </div>
         </Container>
       </Section>
