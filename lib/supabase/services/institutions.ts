@@ -100,3 +100,41 @@ export async function getAllInstitutionSlugs(): Promise<string[]> {
   
   return (data || []).map(d => d.slug);
 }
+
+// Navigation item type for menu
+export interface InstitutionNavItem {
+  id: string;
+  slug: string;
+  name: string;
+  icon: string;
+  category: string;
+  showInCitizens: boolean;
+  showInTourists: boolean;
+}
+
+// Get institutions for navigation menu
+export async function getInstitutionsForNav(): Promise<InstitutionNavItem[]> {
+  const supabase = createAnonServerClient();
+  
+  const { data, error } = await supabase
+    .from('institutions')
+    .select('id, slug, name, icon, category, show_in_citizens, show_in_tourists')
+    .eq('published', true)
+    .eq('category', 'institutii')
+    .order('display_order', { ascending: true });
+  
+  if (error) {
+    console.error('Error fetching institutions for nav:', error);
+    return [];
+  }
+  
+  return (data || []).map(d => ({
+    id: d.slug,
+    slug: d.slug,
+    name: d.name,
+    icon: d.icon || 'building',
+    category: d.category || 'institutii',
+    showInCitizens: d.show_in_citizens || false,
+    showInTourists: d.show_in_tourists || false,
+  }));
+}

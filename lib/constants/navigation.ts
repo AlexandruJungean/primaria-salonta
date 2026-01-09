@@ -85,6 +85,7 @@ export interface NavItem {
   href: string;
   icon?: LucideIcon;
   children?: NavItem[];
+  label?: string; // Direct label for dynamic items (bypasses translation)
 }
 
 // Group of related items (from same second-root path)
@@ -93,6 +94,8 @@ export interface NavGroup {
   groupHref?: string; // Optional link for the group header itself
   groupIcon?: LucideIcon;
   items: NavItem[];
+  isDynamic?: boolean; // Flag for dynamically loaded items
+  dynamicType?: string; // Type identifier for dynamic loading
 }
 
 // Main navigation section with groups and standalone items
@@ -138,17 +141,6 @@ export const MAIN_NAVIGATION: NavSection[] = [
           { id: 'solicitareInformatii', href: '/informatii-publice/solicitare-informatii', icon: FileQuestion },
         ],
       },
-      // Online Services group
-      {
-        groupId: 'serviciiOnline',
-        groupHref: '/servicii-online',
-        groupIcon: CreditCard,
-        items: [
-          { id: 'platiOnline', href: '/servicii-online/plati', icon: CreditCard },
-          { id: 'petitiiOnline', href: '/servicii-online/petitii', icon: Send },
-          { id: 'problemeSociale', href: '/servicii-online/probleme-sociale', icon: Heart },
-        ],
-      },
       // Transparency group
       {
         groupId: 'transparenta',
@@ -161,16 +153,25 @@ export const MAIN_NAVIGATION: NavSection[] = [
           { id: 'generale', href: '/transparenta/generale', icon: FileText },
         ],
       },
-      // Social Institutions group
+      // Online Services group
+      {
+        groupId: 'serviciiOnline',
+        groupHref: '/servicii-online',
+        groupIcon: CreditCard,
+        items: [
+          { id: 'platiOnline', href: '/servicii-online/plati', icon: CreditCard },
+          { id: 'petitiiOnline', href: '/servicii-online/petitii', icon: Send },
+          { id: 'problemeSociale', href: '/servicii-online/probleme-sociale', icon: Heart },
+        ],
+      },
+      // Social Institutions group - items loaded dynamically
       {
         groupId: 'institutii',
         groupHref: '/institutii',
         groupIcon: Building,
-        items: [
-          { id: 'asistentaMedicala', href: '/institutii/asistenta-medicala', icon: Heart },
-          { id: 'cantinaSociala', href: '/institutii/cantina-sociala', icon: Utensils },
-          { id: 'centrulZi', href: '/institutii/centrul-de-zi', icon: Users },
-        ],
+        items: [], // Populated dynamically from database
+        isDynamic: true, // Flag for dynamic loading
+        dynamicType: 'institutions-social',
       },
       // City Hall services group
       {
@@ -375,18 +376,14 @@ export const MAIN_NAVIGATION: NavSection[] = [
           { id: 'economie', href: '/localitatea/economie', icon: TrendingUp },
         ],
       },
-      // Cultural Institutions group
+      // Cultural Institutions group - items loaded dynamically
       {
         groupId: 'institutii',
         groupHref: '/institutii',
         groupIcon: Building,
-        items: [
-          { id: 'casaCultura', href: '/institutii/casa-cultura', icon: Building },
-          { id: 'biblioteca', href: '/institutii/biblioteca', icon: BookOpen },
-          { id: 'muzeu', href: '/institutii/muzeu', icon: Landmark },
-          { id: 'cuibulDropiei', href: '/institutii/cuibul-dropiei', icon: Bird },
-          { id: 'bazinInot', href: '/institutii/bazin-inot', icon: Waves },
-        ],
+        items: [], // Populated dynamically from database
+        isDynamic: true, // Flag for dynamic loading
+        dynamicType: 'institutions-cultural',
       },
     ],
     standaloneItems: [
@@ -441,3 +438,65 @@ export const QUICK_LINKS = [
   { id: 'carieraConcursuri', href: '/informatii-publice/concursuri', icon: BadgeCheck },
   { id: 'program', href: '/primaria/program', icon: Calendar },
 ];
+
+// Icon mapping for dynamic institutions
+export const INSTITUTION_ICONS: Record<string, LucideIcon> = {
+  building: Building,
+  bookOpen: BookOpen,
+  landmark: Landmark,
+  heart: Heart,
+  utensils: Utensils,
+  users: Users,
+  bird: Bird,
+  leaf: Bird,
+  waves: Waves,
+};
+
+// Interface for dynamic institution nav items
+export interface DynamicInstitution {
+  id: string;
+  slug: string;
+  name: string;
+  icon: string;
+  category: string;
+  showInCitizens: boolean;
+  showInTourists: boolean;
+}
+
+// Helper to get navigation with dynamic institutions merged in
+export function getNavigationWithInstitutions(
+  dynamicInstitutions: DynamicInstitution[]
+): NavSection[] {
+  return MAIN_NAVIGATION.map(section => ({
+    ...section,
+    groups: section.groups?.map(group => {
+      if (!group.isDynamic) return group;
+      
+      // Filter institutions based on the dynamic type (which section they belong to)
+      const filteredInstitutions = dynamicInstitutions.filter(inst => {
+        if (group.dynamicType === 'institutions-social') {
+          // Social institutions for "Pentru Cetățeni" section
+          return inst.showInCitizens;
+        }
+        if (group.dynamicType === 'institutions-cultural') {
+          // Cultural institutions for "Turist în Salonta" section
+          return inst.showInTourists;
+        }
+        return false;
+      });
+      
+      // Map filtered institutions to nav items
+      const dynamicItems: NavItem[] = filteredInstitutions.map(inst => ({
+        id: inst.slug, // Use slug as id for translation fallback
+        href: `/institutii/${inst.slug}`,
+        icon: INSTITUTION_ICONS[inst.icon] || Building,
+        label: inst.name, // Direct label for dynamic items
+      }));
+      
+      return {
+        ...group,
+        items: dynamicItems,
+      };
+    }),
+  }));
+}

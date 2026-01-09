@@ -1,16 +1,24 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/components/ui/link';
 import { ChevronDown, ChevronRight, Newspaper, Video, Phone } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
-import { MAIN_NAVIGATION, SECONDARY_NAVIGATION, type NavSection } from '@/lib/constants/navigation';
+import { MAIN_NAVIGATION, SECONDARY_NAVIGATION, getNavigationWithInstitutions, type NavSection } from '@/lib/constants/navigation';
+import { useNavigationContext } from './navigation-context';
 
 export function MegaMenu() {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const t = useTranslations('navigation');
+  const { dynamicInstitutions } = useNavigationContext();
+  
+  // Merge dynamic institutions into navigation
+  const navigation = useMemo(() => 
+    getNavigationWithInstitutions(dynamicInstitutions),
+    [dynamicInstitutions]
+  );
 
   const handleMouseEnter = (id: string) => {
     if (timeoutRef.current) {
@@ -63,7 +71,7 @@ export function MegaMenu() {
   return (
     <nav className="flex items-center">
       {/* Main Navigation - 4 user-centric categories */}
-      {MAIN_NAVIGATION.map((section) => {
+      {navigation.map((section) => {
         const hasContent =
           (section.groups && section.groups.length > 0) ||
           (section.standaloneItems && section.standaloneItems.length > 0);
@@ -158,6 +166,8 @@ export function MegaMenu() {
                             )}>
                               {group.items.map((item) => {
                                 const ItemIcon = item.icon;
+                                // Use direct label for dynamic items, translation for static items
+                                const itemLabel = item.label || t(item.id);
                                 return (
                                   <Link
                                     key={item.id + item.href}
@@ -168,7 +178,7 @@ export function MegaMenu() {
                                       <ItemIcon className="w-4 h-4 text-gray-400 group-hover:text-primary-600 shrink-0" />
                                     )}
                                     <span className="text-sm text-gray-600 group-hover:text-gray-900">
-                                      {t(item.id)}
+                                      {itemLabel}
                                     </span>
                                   </Link>
                                 );

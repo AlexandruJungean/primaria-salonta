@@ -9,6 +9,8 @@ import '../globals.css';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { AccessibilityToolbar } from '@/components/features/accessibility-toolbar';
+import { NavigationProvider } from '@/components/layout/navigation-context';
+import { getInstitutionsForNav } from '@/lib/supabase/services/institutions';
 import { 
   SEO_CONFIG, 
   OrganizationJsonLd, 
@@ -181,6 +183,9 @@ export default async function LocaleLayout({
 
   // Get messages for the current locale
   const messages = await getMessages();
+  
+  // Fetch dynamic institutions for navigation
+  const institutions = await getInstitutionsForNav();
 
   return (
     <html lang={locale} suppressHydrationWarning>
@@ -189,24 +194,26 @@ export default async function LocaleLayout({
       </head>
       <body className={`${openSans.variable} ${sourceSerif.variable} antialiased min-h-screen flex flex-col`}>
         <NextIntlClientProvider messages={messages}>
-          {/* Skip to Content Link */}
-          <a href="#main-content" className="skip-to-content">
-            Skip to content
-          </a>
+          <NavigationProvider institutions={institutions}>
+            {/* Skip to Content Link */}
+            <a href="#main-content" className="skip-to-content">
+              Skip to content
+            </a>
 
-          {/* Accessibility Toolbar */}
-          <AccessibilityToolbar />
+            {/* Accessibility Toolbar */}
+            <AccessibilityToolbar />
 
-          {/* Header */}
-          <Header />
+            {/* Header */}
+            <Header />
 
-          {/* Main Content */}
-          <main id="main-content" className="flex-1">
-            {children}
-          </main>
+            {/* Main Content */}
+            <main id="main-content" className="flex-1">
+              {children}
+            </main>
 
-          {/* Footer */}
-          <Footer />
+            {/* Footer */}
+            <Footer />
+          </NavigationProvider>
         </NextIntlClientProvider>
       </body>
     </html>

@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/components/ui/link';
 import { Menu, X, ChevronDown, ChevronRight, Newspaper, Video, Phone } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
-import { MAIN_NAVIGATION, SECONDARY_NAVIGATION, type NavSection, type NavGroup, type NavItem } from '@/lib/constants/navigation';
+import { MAIN_NAVIGATION, SECONDARY_NAVIGATION, getNavigationWithInstitutions, type NavSection, type NavGroup, type NavItem } from '@/lib/constants/navigation';
+import { useNavigationContext } from './navigation-context';
 import Image from 'next/image';
 
 export function MobileNav() {
@@ -13,6 +14,13 @@ export function MobileNav() {
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
   const [expandedGroups, setExpandedGroups] = useState<string[]>([]);
   const t = useTranslations('navigation');
+  const { dynamicInstitutions } = useNavigationContext();
+  
+  // Merge dynamic institutions into navigation
+  const navigation = useMemo(() => 
+    getNavigationWithInstitutions(dynamicInstitutions),
+    [dynamicInstitutions]
+  );
 
   // Icon mapping for secondary items
   const secondaryIcons: Record<string, typeof Newspaper> = {
@@ -50,6 +58,8 @@ export function MobileNav() {
   // Render a single nav item (leaf item)
   const renderNavItem = (item: NavItem) => {
     const Icon = item.icon;
+    // Use direct label for dynamic items, translation for static items
+    const itemLabel = item.label || t(item.id);
     return (
       <Link
         key={item.id + item.href}
@@ -58,7 +68,7 @@ export function MobileNav() {
         className="flex items-center gap-3 px-4 py-2.5 text-gray-600 hover:bg-gray-50 transition-colors"
       >
         {Icon && <Icon className="w-4 h-4 text-gray-400" />}
-        <span className="text-sm">{t(item.id)}</span>
+        <span className="text-sm">{itemLabel}</span>
       </Link>
     );
   };
@@ -235,7 +245,7 @@ export function MobileNav() {
         {/* Navigation Items */}
         <nav className="overflow-y-auto h-[calc(100%-80px)] pb-20">
           {/* Main Navigation Sections */}
-          {MAIN_NAVIGATION.map((section) => renderSection(section))}
+          {navigation.map((section) => renderSection(section))}
 
           {/* Divider */}
           <div className="h-2 bg-gray-100" />
