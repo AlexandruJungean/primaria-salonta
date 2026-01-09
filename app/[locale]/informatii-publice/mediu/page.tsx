@@ -1,13 +1,14 @@
 import { getTranslations } from 'next-intl/server';
-import { Leaf, FileText } from 'lucide-react';
+import { Leaf, FileText, Download, TreePine, Trash2, Droplets, ChevronDown } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { Card, CardContent } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
-import { MediuCollapsibleSections } from './collapsible-sections';
-import { generatePageMetadata, BreadcrumbJsonLd } from '@/lib/seo';
+import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
+import * as documentsService from '@/lib/supabase/services/documents';
+import { MediuCollapsibleSections } from './collapsible-sections';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -22,6 +23,14 @@ export default async function MediuPage({ params }: { params: Promise<{ locale: 
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'navigation' });
   const tPage = await getTranslations({ locale, namespace: 'mediuPage' });
+
+  // Fetch all mediu documents from database
+  const allDocs = await documentsService.getDocumentsByCategory('mediu');
+
+  // Group documents by subcategory
+  const salubrizareDocs = allDocs.filter(doc => doc.subcategory === 'salubrizare');
+  const apaCanalDocs = allDocs.filter(doc => doc.subcategory === 'apa_canal');
+  const spatiiVerziDocs = allDocs.filter(doc => doc.subcategory === 'spatii_verzi');
 
   return (
     <>
@@ -50,7 +59,11 @@ export default async function MediuPage({ params }: { params: Promise<{ locale: 
             </Card>
 
             {/* Collapsible Sections */}
-            <MediuCollapsibleSections />
+            <MediuCollapsibleSections 
+              salubrizareDocs={salubrizareDocs}
+              apaCanalDocs={apaCanalDocs}
+              spatiiVerziDocs={spatiiVerziDocs}
+            />
 
             {/* Info Note */}
             <Card className="bg-gray-50 border-gray-200">

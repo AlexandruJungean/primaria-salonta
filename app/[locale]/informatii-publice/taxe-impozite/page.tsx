@@ -2,12 +2,13 @@ import { getTranslations } from 'next-intl/server';
 import { Receipt, Download, CreditCard, FileText, Calendar } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
 import { Link } from '@/components/ui/link';
-import { generatePageMetadata, BreadcrumbJsonLd } from '@/lib/seo';
+import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
+import * as documents from '@/lib/supabase/services/documents';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -18,31 +19,30 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   });
 }
 
-// Types
-interface TaxDocument {
-  id: number;
-  title: string;
-  year: number;
-  pdfUrl: string;
-  extra?: string;
-}
-
-// Mock data - will be replaced with database fetch
-const TAX_DOCUMENTS: TaxDocument[] = [
-  { id: 1, title: 'Impozite si taxele locale pentru anul 2021', year: 2021, pdfUrl: '#' },
-  { id: 2, title: 'Impozite si taxele locale pentru anul 2020', year: 2020, pdfUrl: '#' },
-  { id: 3, title: 'Codurile IBAN pentru impozite si taxe locale', year: 2020, pdfUrl: '#' },
-  { id: 4, title: 'Impozitele și taxele locale pt. anul 2019', year: 2019, pdfUrl: '#' },
-  { id: 5, title: 'Facilitati fiscale', year: 2019, pdfUrl: '#', extra: 'Facilități fiscale' },
-  { id: 6, title: 'Impozitele și taxele locale pt. anul 2018', year: 2018, pdfUrl: '#' },
-  { id: 7, title: 'Impozitele și taxele locale pt. anul 2017', year: 2017, pdfUrl: '#' },
-  { id: 8, title: 'Impozitele și taxele locale pt. anul 2016', year: 2016, pdfUrl: '#' },
-];
-
 export default async function TaxeImpozitePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'navigation' });
   const tPage = await getTranslations({ locale, namespace: 'taxeImpozitePage' });
+
+  // Fetch tax documents from database
+  const taxDocs = await documents.getDocumentsByCategory('taxe_impozite');
+
+  const pageLabels = {
+    ro: {
+      noDocuments: 'Nu există documente disponibile.',
+      download: 'PDF',
+    },
+    hu: {
+      noDocuments: 'Nincsenek elérhető dokumentumok.',
+      download: 'PDF',
+    },
+    en: {
+      noDocuments: 'No documents available.',
+      download: 'PDF',
+    },
+  };
+
+  const labels = pageLabels[locale as keyof typeof pageLabels] || pageLabels.en;
 
   return (
     <>
@@ -98,33 +98,43 @@ export default async function TaxeImpozitePage({ params }: { params: Promise<{ l
                 <h2 className="text-xl font-bold text-gray-900">{tPage('documentsTitle')}</h2>
               </div>
 
-              <div className="space-y-3">
-                {TAX_DOCUMENTS.map((doc) => (
-                  <Card key={doc.id} hover>
-                    <CardContent className="flex items-center justify-between pt-6">
-                      <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center shrink-0">
-                          <FileText className="w-5 h-5 text-amber-600" />
+              {taxDocs.length > 0 ? (
+                <div className="space-y-3">
+                  {taxDocs.map((doc) => (
+                    <Card key={doc.id} hover>
+                      <CardContent className="flex items-center justify-between pt-6">
+                        <div className="flex items-start gap-4">
+                          <div className="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center shrink-0">
+                            <FileText className="w-5 h-5 text-amber-600" />
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900">{doc.title}</h3>
+                            {doc.year && (
+                              <span className="text-sm text-gray-500 flex items-center gap-1 mt-1">
+                                <Calendar className="w-4 h-4" />
+                                {doc.year}
+                              </span>
+                            )}
+                          </div>
                         </div>
-                        <div>
-                          <h3 className="font-medium text-gray-900">{doc.title}</h3>
-                          <span className="text-sm text-gray-500 flex items-center gap-1 mt-1">
-                            <Calendar className="w-4 h-4" />
-                            {doc.year}
-                          </span>
-                        </div>
-                      </div>
-                      <a
-                        href={doc.pdfUrl}
-                        className="flex items-center gap-1 px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-amber-300 transition-colors shrink-0 ml-4"
-                      >
-                        <Download className="w-4 h-4 text-amber-600" />
-                        PDF
-                      </a>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+                        <a
+                          href={doc.file_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-1 px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-amber-300 transition-colors shrink-0 ml-4"
+                        >
+                          <Download className="w-4 h-4 text-amber-600" />
+                          {labels.download}
+                        </a>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8 text-gray-500">
+                  {labels.noDocuments}
+                </div>
+              )}
             </div>
 
             {/* Info Note */}

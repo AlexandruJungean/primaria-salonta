@@ -1,5 +1,4 @@
 import { getTranslations } from 'next-intl/server';
-import { useTranslations } from 'next-intl';
 import { Info, ExternalLink } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
@@ -8,8 +7,9 @@ import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
 import Link from 'next/link';
 import { FormulareCollapsibleCategories } from './collapsible-categories';
-import { generatePageMetadata, BreadcrumbJsonLd } from '@/lib/seo';
+import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
+import { createAnonServerClient } from '@/lib/supabase/server';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -20,9 +20,25 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   });
 }
 
-export default function FormularePage() {
-  const t = useTranslations('navigation');
-  const tf = useTranslations('formularePage');
+async function getMetodologieUrl(): Promise<string | null> {
+  const supabase = createAnonServerClient();
+  const { data } = await supabase
+    .from('documents')
+    .select('file_url')
+    .eq('category', 'formulare')
+    .ilike('title', '%metodologi%')
+    .limit(1)
+    .single();
+  
+  return data?.file_url || null;
+}
+
+export default async function FormularePage() {
+  const t = await getTranslations('navigation');
+  const tf = await getTranslations('formularePage');
+  
+  // Fetch metodologie document URL from database
+  const metodologieUrl = await getMetodologieUrl();
 
   return (
     <>
@@ -43,14 +59,17 @@ export default function FormularePage() {
                   <Info className="w-5 h-5 text-primary-600 shrink-0 mt-0.5" />
                   <div>
                     <p className="text-sm text-gray-700">{tf('intro')}</p>
-                    <Link 
-                      href="#" 
-                      target="_blank"
-                      className="inline-flex items-center gap-1 mt-2 text-sm text-primary-600 hover:text-primary-700 font-medium"
-                    >
-                      <ExternalLink className="w-3 h-3" />
-                      {tf('metodologie')}
-                    </Link>
+                    {metodologieUrl && (
+                      <Link 
+                        href={metodologieUrl} 
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 mt-2 text-sm text-primary-600 hover:text-primary-700 font-medium"
+                      >
+                        <ExternalLink className="w-3 h-3" />
+                        {tf('metodologie')}
+                      </Link>
+                    )}
                   </div>
                 </div>
               </CardContent>

@@ -654,11 +654,10 @@
     "infoNote": "Az ezen az oldalon található dokumentumok az adatbázisból töltődnek be. A '#' jelöléssel ellátott linkek helykitöltők, és később frissülnek a valódi dokumentumokkal."
   },
   "anunturiPage": {
-    "legend": "Hirdetménytípusok jelmagyarázata",
     "announcements": "hirdetmény",
+    "noAnnouncements": "Jelenleg nincsenek elérhető hirdetmények.",
     "archiveNote": "Hirdetmények archívuma",
-    "archiveNoteDesc": "A régebbi hirdetmények a polgármesteri hivatal archívumában érhetők el. A dokumentumok az adatbázisból töltődnek be. A '#' jelölésű linkek helykitöltők.",
-    "viewDetails": "Részletek"
+    "archiveNoteDesc": "A hirdetmények az adatbázisból töltődnek be. Régebbi hirdetményekért kérjük, forduljon a polgármesteri hivatalhoz."
   },
   "dezbateriPage": {
     "introTitle": "Részvétel a nyilvános vitákon",
@@ -777,6 +776,7 @@
     "intro": "Töltse le a Nagyszalonta Polgármesteri Hivatalának benyújtott különböző kérelmekhez szükséges szabványos nyomtatványokat.",
     "metodologie": "Keretmódszertan az űrlap kitöltési idejének kiszámításához",
     "forms": "nyomtatvány",
+    "noForms": "Nincsenek elérhető nyomtatványok az adatbázisban.",
     "categories": {
       "achizitiiPublice": "Közbeszerzések",
       "asistentaSociala": "Szociális segítség",
@@ -917,6 +917,10 @@
     "legendEnvironment": "Környezetvédelem",
     "legendSport": "Sport"
   },
+  "adapostCainiPage": {
+    "description": "Információk a szalontai gazdátlan kutyák menhelyéről és a kapcsolódó kezelési program dokumentumairól.",
+    "noDocuments": "Nincsenek elérhető dokumentumok."
+  },
   "achizitiiPage": {
     "seapNote": "A közbeszerzési hirdetmények megtekintése:",
     "requiredForms": "Szükséges űrlapok",
@@ -938,18 +942,20 @@
   "autorizatiiConstruirePage": {
     "infoTitle": "Építési engedélyek",
     "infoText": "A Nagyszalonta Polgármesteri Hivatala által kiadott építési engedélyek listája. A dokumentumok a hatályos jogszabályoknak megfelelően kerülnek közzétételre.",
-    "currentTitle": "Építési engedélyek",
+    "currentTitle": "Legújabb engedélyek",
     "archiveTitle": "Építési engedélyek archívuma",
     "documents": "dokumentum",
+    "noDocuments": "Nincsenek elérhető építési engedélyek.",
     "noteTitle": "Tájékoztatás",
-    "noteText": "Az ezen az oldalon található dokumentumok az adatbázisból töltődnek be. A '#' jelöléssel ellátott linkek helykitöltők, amelyek később frissülnek a valódi dokumentumokkal."
+    "noteText": "Az ezen az oldalon található dokumentumok a hatályos jogszabályoknak megfelelően kerülnek közzétételre."
   },
   "bugetPage": {
     "infoTitle": "Költségvetés minden bevételi forrásból",
     "infoText": "Nagyszalonta Város helyi költségvetése, negyedéves pénzügyi kimutatások és költségvetési végrehajtási számlák. A dokumentumok a hatályos jogszabályoknak megfelelően kerülnek közzétételre.",
     "sections": "szekció",
+    "noDocuments": "Nincsenek elérhető költségvetési dokumentumok.",
     "noteTitle": "Tájékoztatás",
-    "noteText": "Az ezen az oldalon található dokumentumok az adatbázisból töltődnek be. A '#' jelöléssel ellátott linkek helykitöltők, amelyek később frissülnek a valódi dokumentumokkal."
+    "noteText": "Az ezen az oldalon található dokumentumok a hatályos jogszabályoknak megfelelően kerülnek közzétételre."
   },
   "certificateUrbanismPage": {
     "infoTitle": "Urbanisztikai bizonyítványok",
@@ -958,7 +964,8 @@
     "archiveTitle": "Urbanisztikai bizonyítványok archívuma",
     "documents": "dokumentum",
     "noteTitle": "Tájékoztatás",
-    "noteText": "Az ezen az oldalon található dokumentumok az adatbázisból töltődnek be. A '#' jelöléssel ellátott linkek helykitöltők, amelyek később frissülnek a valódi dokumentumokkal."
+    "noteText": "Az urbanisztikai bizonyítványokkal kapcsolatos további információkért kérjük, forduljon a Polgármesteri Hivatal Urbanisztikai Osztályához.",
+    "noDocuments": "Nincsenek urbanisztikai bizonyítványok az adatbázisban."
   },
   "concursuriPage": {
     "infoTitle": "Versenyek és üres álláshelyek",
@@ -968,15 +975,25 @@
     "dispositionsTitle": "Polgármesteri rendeletek",
     "documents": "dokumentum",
     "noteTitle": "Tájékoztatás",
-    "noteText": "Az ezen az oldalon található dokumentumok az adatbázisból töltődnek be. A '#' jelöléssel ellátott linkek helykitöltők, amelyek később frissülnek a valódi dokumentumokkal."
+    "noteText": "A versenyekkel kapcsolatos további információkért kérjük, forduljon a Polgármesteri Hivatal Humán Erőforrás Osztályához.",
+    "noJobs": "Nincsenek álláshirdetések az adatbázisban."
+  },
+  "dispozitiiPage": {
+    "infoTitle": "Polgármesteri rendeletek",
+    "infoText": "A polgármesteri rendeletek normatív vagy egyéni jellegű közigazgatási aktusok, amelyeket a polgármester törvényes hatáskörében bocsát ki.",
+    "searchPlaceholder": "Keresés szám vagy kulcsszó alapján...",
+    "resultsFound": "találat",
+    "noDocuments": "Nincsenek rendeletek az adatbázisban.",
+    "noteTitle": "Tájékoztatás",
+    "noteText": "Az ezen az oldalon közzétett rendeletek közérdekűek. További információkért kérjük, forduljon Nagyszalonta Polgármesteri Hivatalához."
   },
   "gdprPage": {
     "infoTitle": "Személyes adatok védelme",
     "infoText": "Nagyszalonta Polgármesteri Hivatala az (EU) 2016/679 rendeletnek (GDPR) és a hatályos nemzeti jogszabályoknak megfelelően kezeli a személyes adatokat.",
     "documentsTitle": "GDPR dokumentumok",
     "formsTitle": "Online kérelmek/űrlapok",
-    "noteTitle": "Tájékoztatás",
-    "noteText": "Az ezen az oldalon található dokumentumok az adatbázisból töltődnek be. A '#' jelöléssel ellátott linkek helykitöltők, amelyek később frissülnek a valódi dokumentumokkal."
+    "noteTitle": "Jogok gyakorlása",
+    "noteText": "A GDPR által biztosított jogok gyakorlására vonatkozó kérelmek benyújthatók a Polgármesteri Hivatal székhelyén vagy e-mailben a primaria@salonta.ro címen. A kérelem beérkezésétől számított 30 napon belül választ kap."
   },
   "taxeImpozitePage": {
     "infoTitle": "Helyi adók és illetékek",
@@ -985,15 +1002,15 @@
     "payOnlineDesc": "Helyi adók és illetékek",
     "payOnlineButton": "Online fizetés",
     "documentsTitle": "Adó- és illetékdokumentumok",
-    "noteTitle": "Tájékoztatás",
-    "noteText": "Az ezen az oldalon található dokumentumok az adatbázisból töltődnek be. A '#' jelöléssel ellátott linkek helykitöltők, amelyek később frissülnek a valódi dokumentumokkal."
+    "noteTitle": "IBAN kódok",
+    "noteText": "A helyi adók és illetékek befizetéséhez kérjük, használja a fenti dokumentumokban található IBAN kódokat, vagy látogasson el a Polgármesteri Hivatal pénztárához."
   },
   "licitatiiPage": {
     "infoTitle": "Nyilvános árverések",
     "infoText": "A nyilvános árverések Nagyszalonta Polgármesteri Hivatalának székhelyén zajlanak. A jelentkezéshez kérjük, tanulmányozza az egyes árverésekhez csatolt dokumentumokat.",
     "auctionsTitle": "Árverési hirdetmények",
-    "noteTitle": "Tájékoztatás",
-    "noteText": "Az ezen az oldalon található dokumentumok az adatbázisból töltődnek be. A '#' jelöléssel ellátott linkek helykitöltők, amelyek később frissülnek a valódi dokumentumokkal."
+    "noteTitle": "Részvételi információk",
+    "noteText": "Az árveréseken való részvételhez a szükséges dokumentumokat az egyes hirdetményekben meghatározott határidőig be kell nyújtani a Polgármesteri Hivatal iktatójánál."
   },
   "mediuPage": {
     "infoTitle": "Környezetvédelem",
@@ -1004,37 +1021,37 @@
     "apaCanalDesc": "Ivóvízminőségi elemzési bulletinek",
     "spatiiVerziTitle": "Zöldterületek",
     "spatiiVerziDesc": "Helyi zöldterületi nyilvántartás",
-    "noteTitle": "Tájékoztatás",
-    "noteText": "Az ezen az oldalon található dokumentumok az adatbázisból töltődnek be. A '#' jelöléssel ellátott linkek helykitöltők, amelyek később frissülnek a valódi dokumentumokkal."
+    "noteTitle": "Kapcsolat",
+    "noteText": "A környezetvédelemmel kapcsolatos további információkért vagy bejelentésekért kérjük, forduljon a Polgármesteri Hivatal szakosztályához."
   },
   "oferteTerenPage": {
     "infoTitle": "17/2014-es törvény",
     "infoText": "A külterületen található mezőgazdasági földterületek értékesítése a 17/2014-es törvény szerint a társtulajdonosok, bérlők, szomszédok és a román állam elővásárlási jogának tiszteletben tartásával történik.",
     "registryTitle": "Eladási ajánlatok nyilvántartása",
     "period": "Időszak",
-    "noteTitle": "Tájékoztatás",
-    "noteText": "Az ezen az oldalon található dokumentumok az adatbázisból töltődnek be. A '#' jelöléssel ellátott linkek helykitöltők, amelyek később frissülnek a valódi dokumentumokkal."
+    "noteTitle": "Fontos információk",
+    "noteText": "A mezőgazdasági földterületek eladási ajánlatait 45 munkanapig kifüggesztik a Polgármesteri Hivatalban. További információkért forduljon a Mezőgazdasági Irodához."
   },
   "planuriUrbanisticePage": {
     "infoTitle": "Városrendezési tervek",
     "infoText": "Az Általános Városrendezési Terv (PUG) meghatározza a telekhasználatra, a közlekedési hálózat szervezésére és a település közműfejlesztésére vonatkozó szabályozásokat.",
     "pugDesc": "Általános Városrendezési Terv",
-    "noteTitle": "Tájékoztatás",
-    "noteText": "Az ezen az oldalon található dokumentumok az adatbázisból töltődnek be. A '#' jelöléssel ellátott linkek helykitöltők, amelyek később frissülnek a valódi dokumentumokkal."
+    "noteTitle": "Információ",
+    "noteText": "A jóváhagyás alatt álló zóna városrendezési tervek (PUZ) vagy részletes városrendezési tervek (PUD) megtekintéséhez kérjük, forduljon az Városrendezési Osztályhoz."
   },
   "publicatiiCasatoriePage": {
     "infoTitle": "Házassági hirdetmények",
     "infoText": "A jogszabályoknak megfelelően a házassági hirdetményeket 10 napig kifüggesztik a polgármesteri hivatal székhelyén és az intézmény honlapján.",
     "publications": "hirdetmény",
-    "noteTitle": "Tájékoztatás",
-    "noteText": "Az ezen az oldalon található dokumentumok az adatbázisból töltődnek be. A '#' jelöléssel ellátott linkek helykitöltők, amelyek később frissülnek a valódi dokumentumokkal."
+    "noteTitle": "Információ",
+    "noteText": "Házasságkötés elleni tiltakozásért vagy további információkért kérjük, forduljon a Polgármesteri Hivatal Anyakönyvi Irodájához."
   },
   "publicatiiVanzarePage": {
     "infoTitle": "Eladási hirdetmények",
     "infoText": "Az eladási hirdetményeket a Polgári Eljárásjogi Törvénykönyv rendelkezéseinek és a végrehajtói irodák kérelmeinek megfelelően teszik közzé.",
     "publications": "hirdetmény",
-    "noteTitle": "Tájékoztatás",
-    "noteText": "Az ezen az oldalon található dokumentumok az adatbázisból töltődnek be. A '#' jelöléssel ellátott linkek helykitöltők, amelyek később frissülnek a valódi dokumentumokkal."
+    "noteTitle": "Információ",
+    "noteText": "Az eladási hirdetményekkel kapcsolatos további információkért kérjük, forduljon a Polgármesteri Hivatalhoz vagy az illetékes végrehajtói irodához."
   },
   "receptieLucrariPage": {
     "infoTitle": "Építési munkák átvétele",
@@ -1052,8 +1069,8 @@
     "siteDoc4": "Aktualizált energetikai tanúsítvány",
     "siteDoc5": "Aktualizált helyszínrajz / Elhelyezési terv, ANCPI által felhatalmazott földmérő által készítve",
     "siteDoc6": "\"ÁTVÉTELI JEGYZŐKÖNYV a munkálatok befejezésekor\" típusűrlap (11. szoba, Földszint) - 2 eredeti példány",
-    "noteTitle": "Tájékoztatás",
-    "noteText": "A szükséges űrlapok a Nagyszalonta Polgármesteri Hivatal 11. számú irodájában (Földszint) szerezhetők be."
+    "noteTitle": "Információ",
+    "noteText": "További részletekért vagy a szükséges űrlapok beszerzéséhez kérjük, forduljon a 11. szobához, Földszint, a Salontai Polgármesteri Hivatalban."
   },
   "regulamentePublicePage": {
     "infoTitle": "Szabályzatok",
@@ -1061,12 +1078,14 @@
     "currentTitle": "Hatályos szabályzatok",
     "archiveTitle": "Archív szabályzatok",
     "documents": "dokumentum",
-    "noteTitle": "Tájékoztatás",
-    "noteText": "Az ezen az oldalon található dokumentumok az adatbázisból töltődnek be. A '#' jelöléssel ellátott linkek helykitöltők, amelyek később frissülnek a valódi dokumentumokkal."
+    "noteTitle": "Információ",
+    "noteText": "A hatályos szabályzatokkal kapcsolatos további információkért vagy felvilágosításért kérjük, forduljon a Polgármesteri Hivatal illetékes osztályához."
   },
   "reteleTelecomPage": {
     "infoTitle": "Távközlési hálózatok",
-    "infoText": "Az elektronikus hírközlési hálózatok infrastruktúrájának szabályozásáról szóló 159/2016. törvény értelmében a köz- vagy magántulajdonhoz való hozzáférésre vonatkozó dokumentumok távközlési hálózatok építéséhez."
+    "infoText": "Az elektronikus hírközlési hálózatok infrastruktúrájának szabályozásáról szóló 159/2016. törvény értelmében a köz- vagy magántulajdonhoz való hozzáférésre vonatkozó dokumentumok távközlési hálózatok építéséhez.",
+    "noteTitle": "Információ",
+    "noteText": "A távközlési hálózatok építéséhez szükséges köz- vagy magántulajdonhoz való hozzáféréssel kapcsolatos kérelmekért kérjük, forduljon a Nagyszalontai Polgármesteri Hivatalhoz."
   },
   "seipPage": {
     "title": "Személyi Nyilvántartási Közszolgálat",

@@ -5,8 +5,9 @@ import { Section } from '@/components/ui/section';
 import { Card, CardContent } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
-import { generatePageMetadata, BreadcrumbJsonLd } from '@/lib/seo';
+import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
+import * as documents from '@/lib/supabase/services/documents';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -17,58 +18,30 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   });
 }
 
-// Types
-interface Auction {
-  id: number;
-  title: string;
-  date: string;
-  pdfUrl: string;
-}
-
-// Mock data - will be replaced with database fetch
-const AUCTIONS: Auction[] = [
-  { 
-    id: 1, 
-    title: 'Anunt de atribuire a contractului de concesiune 8033 mp', 
-    date: '02.12.2024', 
-    pdfUrl: '#' 
-  },
-  { 
-    id: 2, 
-    title: 'Anunț licitație publică concesionare teren 8033 mp situat în Mun. Salonta, str. Ghestului (licitația a 2-a)', 
-    date: '22.10.2024', 
-    pdfUrl: '#' 
-  },
-  { 
-    id: 3, 
-    title: 'Anunț licitație publică concesionare teren 8033 mp situat în Mun. Salonta, str. Ghestului', 
-    date: '27.09.2024', 
-    pdfUrl: '#' 
-  },
-  { 
-    id: 4, 
-    title: 'Anunt atribuire contract concesiune teren 47618 mp', 
-    date: '27.08.2024', 
-    pdfUrl: '#' 
-  },
-  { 
-    id: 5, 
-    title: 'Anunt licitatie publica concesionare teren 47618 mp, str. Ghestului 4', 
-    date: '29.07.2024', 
-    pdfUrl: '#' 
-  },
-  { 
-    id: 6, 
-    title: 'Municipiul Salonta organizează licitație publică', 
-    date: '02.07.2024', 
-    pdfUrl: '#' 
-  },
-];
-
 export default async function LicitatiiPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'navigation' });
   const tPage = await getTranslations({ locale, namespace: 'licitatiiPage' });
+
+  // Fetch auction documents from database
+  const auctionDocs = await documents.getDocumentsByCategory('licitatii');
+
+  const pageLabels = {
+    ro: {
+      noDocuments: 'Nu există anunțuri de licitații disponibile.',
+      download: 'PDF',
+    },
+    hu: {
+      noDocuments: 'Nincsenek elérhető árverési hirdetmények.',
+      download: 'PDF',
+    },
+    en: {
+      noDocuments: 'No auction announcements available.',
+      download: 'PDF',
+    },
+  };
+
+  const labels = pageLabels[locale as keyof typeof pageLabels] || pageLabels.en;
 
   return (
     <>
@@ -105,33 +78,43 @@ export default async function LicitatiiPage({ params }: { params: Promise<{ loca
                 <h2 className="text-xl font-bold text-gray-900">{tPage('auctionsTitle')}</h2>
               </div>
 
-              <div className="space-y-3">
-                {AUCTIONS.map((auction) => (
-                  <Card key={auction.id} hover>
-                    <CardContent className="flex items-center justify-between pt-6">
-                      <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center shrink-0">
-                          <Gavel className="w-5 h-5 text-amber-600" />
+              {auctionDocs.length > 0 ? (
+                <div className="space-y-3">
+                  {auctionDocs.map((doc) => (
+                    <Card key={doc.id} hover>
+                      <CardContent className="flex items-center justify-between pt-6">
+                        <div className="flex items-start gap-4">
+                          <div className="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center shrink-0">
+                            <Gavel className="w-5 h-5 text-amber-600" />
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900">{doc.title}</h3>
+                            {doc.document_date && (
+                              <span className="text-sm text-gray-500 flex items-center gap-1 mt-1">
+                                <Calendar className="w-4 h-4" />
+                                {new Date(doc.document_date).toLocaleDateString('ro-RO')}
+                              </span>
+                            )}
+                          </div>
                         </div>
-                        <div>
-                          <h3 className="font-medium text-gray-900">{auction.title}</h3>
-                          <span className="text-sm text-gray-500 flex items-center gap-1 mt-1">
-                            <Calendar className="w-4 h-4" />
-                            {auction.date}
-                          </span>
-                        </div>
-                      </div>
-                      <a
-                        href={auction.pdfUrl}
-                        className="flex items-center gap-1 px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-amber-300 transition-colors shrink-0 ml-4"
-                      >
-                        <Download className="w-4 h-4 text-amber-600" />
-                        PDF
-                      </a>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+                        <a
+                          href={doc.file_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-1 px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-amber-300 transition-colors shrink-0 ml-4"
+                        >
+                          <Download className="w-4 h-4 text-amber-600" />
+                          {labels.download}
+                        </a>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8 text-gray-500">
+                  {labels.noDocuments}
+                </div>
+              )}
             </div>
 
             {/* Info Note */}

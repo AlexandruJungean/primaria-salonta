@@ -254,6 +254,7 @@ export type Database = {
           published: boolean;
           source_url: string | null;
           source_folder: string | null;
+          parent_id: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -275,6 +276,7 @@ export type Database = {
           published?: boolean;
           source_url?: string | null;
           source_folder?: string | null;
+          parent_id?: string | null;
         };
         Update: Partial<Database['public']['Tables']['documents']['Insert']>;
       };

@@ -1,102 +1,38 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { Hammer, Calendar, Download, FileText, Archive, FolderOpen } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
-import { generatePageMetadata, BreadcrumbJsonLd } from '@/lib/seo';
-import type { Locale } from '@/lib/seo/config';
+import { Collapsible, CollapsibleGroup } from '@/components/ui/collapsible';
 
-export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
-  const { locale } = await params;
-  return generatePageMetadata({
-    pageKey: 'autorizatiiConstruire',
-    locale: locale as Locale,
-    path: '/informatii-publice/autorizatii-construire',
-  });
-}
-
-// Types for building permits
-interface PermitPeriod {
-  id: number;
+interface Document {
+  id: string;
   title: string;
-  period: string;
+  file_url: string;
+  file_name: string;
   year: number;
-  pdfUrl: string;
+  document_date: string | null;
 }
 
-// Mock data - will be replaced with database fetch
-const CURRENT_PERMITS: PermitPeriod[] = [
-  { id: 1, title: 'AC martie 2020', period: 'Martie 2020', year: 2020, pdfUrl: '#' },
-  { id: 2, title: 'AC februarie 2020', period: 'Februarie 2020', year: 2020, pdfUrl: '#' },
-  { id: 3, title: 'AC ianuarie 2020', period: 'Ianuarie 2020', year: 2020, pdfUrl: '#' },
-  { id: 4, title: 'AC noiembrie – decembrie 2019', period: 'Noiembrie - Decembrie 2019', year: 2019, pdfUrl: '#' },
-  { id: 5, title: 'AC octombrie 2019', period: 'Octombrie 2019', year: 2019, pdfUrl: '#' },
-  { id: 6, title: 'AC iulie – septembrie 2019', period: 'Iulie - Septembrie 2019', year: 2019, pdfUrl: '#' },
-  { id: 7, title: 'AC iunie 2019', period: 'Iunie 2019', year: 2019, pdfUrl: '#' },
-  { id: 8, title: 'AC mai 2019', period: 'Mai 2019', year: 2019, pdfUrl: '#' },
-  { id: 9, title: 'AC aprilie 2019', period: 'Aprilie 2019', year: 2019, pdfUrl: '#' },
-  { id: 10, title: 'AC martie 2019', period: 'Martie 2019', year: 2019, pdfUrl: '#' },
-  { id: 11, title: 'AC februarie 2019', period: 'Februarie 2019', year: 2019, pdfUrl: '#' },
-  { id: 12, title: 'AC ianuarie 2019', period: 'Ianuarie 2019', year: 2019, pdfUrl: '#' },
-  { id: 13, title: 'AC noiembrie – decembrie 2018', period: 'Noiembrie - Decembrie 2018', year: 2018, pdfUrl: '#' },
-  { id: 14, title: 'AC octombrie 2018', period: 'Octombrie 2018', year: 2018, pdfUrl: '#' },
-  { id: 15, title: 'AC septembrie 2018', period: 'Septembrie 2018', year: 2018, pdfUrl: '#' },
-  { id: 16, title: 'AC luna august 2018', period: 'August 2018', year: 2018, pdfUrl: '#' },
-  { id: 17, title: 'AC luna iulie 2018', period: 'Iulie 2018', year: 2018, pdfUrl: '#' },
-  { id: 18, title: 'AC luna iunie 2018', period: 'Iunie 2018', year: 2018, pdfUrl: '#' },
-  { id: 19, title: 'AC luna mai 2018', period: 'Mai 2018', year: 2018, pdfUrl: '#' },
-  { id: 20, title: 'AC luna aprilie 2018', period: 'Aprilie 2018', year: 2018, pdfUrl: '#' },
-  { id: 21, title: 'Autorizatii de construire eliberate in perioada ianuarie-martie 2018', period: 'Ianuarie - Martie 2018', year: 2018, pdfUrl: '#' },
-];
-
-const ARCHIVE_PERMITS: PermitPeriod[] = [
-  { id: 100, title: 'Autorizatii de construire eliberate in luna decembrie 2017', period: 'Decembrie 2017', year: 2017, pdfUrl: '#' },
-  { id: 101, title: 'Autorizatii de construire eliberate in perioada august-noiembrie 2017', period: 'August - Noiembrie 2017', year: 2017, pdfUrl: '#' },
-  { id: 102, title: 'Autorizatii de construire eliberate in perioada aprilie-iulie 2017', period: 'Aprilie - Iulie 2017', year: 2017, pdfUrl: '#' },
-  { id: 103, title: 'Autorizatii de construire eliberate in perioada ianuarie-martie 2017', period: 'Ianuarie - Martie 2017', year: 2017, pdfUrl: '#' },
-  { id: 104, title: 'Autorizatii de construire eliberate in perioada noiembrie-decembrie 2016', period: 'Noiembrie - Decembrie 2016', year: 2016, pdfUrl: '#' },
-  { id: 105, title: 'Autorizatii de construire eliberate in perioada septembrie-octombrie 2016', period: 'Septembrie - Octombrie 2016', year: 2016, pdfUrl: '#' },
-  { id: 106, title: 'Autorizatii de construire eliberate in perioada iulie-august 2016', period: 'Iulie - August 2016', year: 2016, pdfUrl: '#' },
-  { id: 107, title: 'Autorizatii de construire eliberate in luna iunie 2016', period: 'Iunie 2016', year: 2016, pdfUrl: '#' },
-  { id: 108, title: 'Autorizatii de construire eliberate in luna mai 2016', period: 'Mai 2016', year: 2016, pdfUrl: '#' },
-  { id: 109, title: 'Autorizatii de construire eliberate in perioada februarie-aprilie 2016', period: 'Februarie - Aprilie 2016', year: 2016, pdfUrl: '#' },
-  { id: 110, title: 'Autorizatii de construire eliberate in perioada noiembrie 2015-ianuarie 2016', period: 'Noiembrie 2015 - Ianuarie 2016', year: 2015, pdfUrl: '#' },
-  { id: 111, title: 'Autorizatii de construire eliberate in perioada decembrie 2014-octombrie 2015', period: 'Decembrie 2014 - Octombrie 2015', year: 2015, pdfUrl: '#' },
-  { id: 112, title: 'Autorizatii de construire eliberate in lunile august-noiembrie 2014', period: 'August - Noiembrie 2014', year: 2014, pdfUrl: '#' },
-  { id: 113, title: 'Autorizatii de construire eliberate in lunile martie-iulie 2014', period: 'Martie - Iulie 2014', year: 2014, pdfUrl: '#' },
-  { id: 114, title: 'Autorizatii de construire eliberate in lunile decembrie 2013-februarie 2014', period: 'Decembrie 2013 - Februarie 2014', year: 2014, pdfUrl: '#' },
-  { id: 115, title: 'Autorizatii de construire eliberate in lunile august-noiembrie 2013', period: 'August - Noiembrie 2013', year: 2013, pdfUrl: '#' },
-  { id: 116, title: 'Autorizatii de construire eliberate in lunile aprilie-iulie 2013', period: 'Aprilie - Iulie 2013', year: 2013, pdfUrl: '#' },
-  { id: 117, title: 'Autorizatii de construire eliberate in lunile ianuarie-martie 2013', period: 'Ianuarie - Martie 2013', year: 2013, pdfUrl: '#' },
-  { id: 118, title: 'Autorizatii de construire eliberate in lunile octombrie-decembrie 2012', period: 'Octombrie - Decembrie 2012', year: 2012, pdfUrl: '#' },
-  { id: 119, title: 'Autorizatii de construire eliberate in lunile iulie-septembrie 2012', period: 'Iulie - Septembrie 2012', year: 2012, pdfUrl: '#' },
-  { id: 120, title: 'Autorizatii de construire eliberate in lunile ianuarie-iunie 2012', period: 'Ianuarie - Iunie 2012', year: 2012, pdfUrl: '#' },
-  { id: 121, title: 'Autorizatii de construire eliberate in lunile octombrie-decembrie 2011', period: 'Octombrie - Decembrie 2011', year: 2011, pdfUrl: '#' },
-  { id: 122, title: 'Autorizatii de construire eliberate in lunile mai-septembrie 2011', period: 'Mai - Septembrie 2011', year: 2011, pdfUrl: '#' },
-  { id: 123, title: 'Autorizatii de construire eliberate in luna aprilie 2011', period: 'Aprilie 2011', year: 2011, pdfUrl: '#' },
-  { id: 124, title: 'Autorizatii de construire eliberate in 2011', period: '2011', year: 2011, pdfUrl: '#' },
-];
-
-function PermitCard({ permit }: { permit: PermitPeriod }) {
+function PermitCard({ doc }: { doc: Document }) {
   return (
-    <Card hover>
-      <CardContent className="flex items-center justify-between pt-6">
-        <div className="flex items-start gap-4">
-          <div className="w-10 h-10 rounded-lg bg-primary-100 flex items-center justify-center shrink-0">
-            <FileText className="w-5 h-5 text-primary-700" />
+    <Card hover className="border-0 shadow-sm">
+      <CardContent className="flex items-center justify-between py-3 px-4">
+        <div className="flex items-start gap-3">
+          <div className="w-8 h-8 rounded-lg bg-primary-100 flex items-center justify-center shrink-0">
+            <FileText className="w-4 h-4 text-primary-700" />
           </div>
-          <div>
-            <h3 className="font-medium text-gray-900">{permit.title}</h3>
-            <span className="text-sm text-gray-500 flex items-center gap-1 mt-1">
-              <Calendar className="w-4 h-4" />
-              {permit.period}
-            </span>
-          </div>
+          <h3 className="font-medium text-gray-900 text-sm">{doc.title}</h3>
         </div>
         <a
-          href={permit.pdfUrl}
+          href={doc.file_url}
+          target="_blank"
+          rel="noopener noreferrer"
           className="flex items-center gap-1 px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-primary-300 transition-colors shrink-0"
         >
           <Download className="w-4 h-4 text-primary-600" />
@@ -107,38 +43,43 @@ function PermitCard({ permit }: { permit: PermitPeriod }) {
   );
 }
 
-function PermitsByYear({ permits, year }: { permits: PermitPeriod[]; year: number }) {
-  const yearPermits = permits.filter(p => p.year === year);
-  if (yearPermits.length === 0) return null;
+export default function AutorizatiiConstruirePage() {
+  const t = useTranslations('navigation');
+  const tPage = useTranslations('autorizatiiConstruirePage');
+  const [documents, setDocuments] = useState<Document[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  return (
-    <div className="space-y-3">
-      {yearPermits.map((permit) => (
-        <PermitCard key={permit.id} permit={permit} />
-      ))}
-    </div>
-  );
-}
+  useEffect(() => {
+    async function fetchDocuments() {
+      try {
+        const response = await fetch('/api/documents?category=autorizatii_construire');
+        if (response.ok) {
+          const data = await response.json();
+          setDocuments(data.data || []);
+        }
+      } catch (error) {
+        console.error('Error fetching documents:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchDocuments();
+  }, []);
 
-export default async function AutorizatiiConstruirePage({ params }: { params: Promise<{ locale: string }> }) {
-  const { locale } = await params;
-  const { getTranslations } = await import('next-intl/server');
-  const t = await getTranslations({ locale, namespace: 'navigation' });
-  const tPage = await getTranslations({ locale, namespace: 'autorizatiiConstruirePage' });
+  // Group documents by year
+  const documentsByYear = documents.reduce((acc, doc) => {
+    const year = doc.year || 2020;
+    if (!acc[year]) acc[year] = [];
+    acc[year].push(doc);
+    return acc;
+  }, {} as Record<number, Document[]>);
 
-  // Group current permits by year
-  const currentYears = [...new Set(CURRENT_PERMITS.map(p => p.year))].sort((a, b) => b - a);
-  const archiveYears = [...new Set(ARCHIVE_PERMITS.map(p => p.year))].sort((a, b) => b - a);
+  const years = Object.keys(documentsByYear).map(Number).sort((a, b) => b - a);
+  const recentYears = years.filter(y => y >= 2018);
+  const archiveYears = years.filter(y => y < 2018);
 
   return (
     <>
-      <BreadcrumbJsonLd
-        items={[
-          { name: 'Acasă', url: '/' },
-          { name: t('informatiiPublice'), url: '/informatii-publice' },
-          { name: t('autorizatiiConstruire'), url: '/informatii-publice/autorizatii-construire' },
-        ]}
-      />
       <Breadcrumbs items={[
         { label: t('informatiiPublice'), href: '/informatii-publice' },
         { label: t('autorizatiiConstruire') }
@@ -163,51 +104,91 @@ export default async function AutorizatiiConstruirePage({ params }: { params: Pr
               </CardContent>
             </Card>
 
-            {/* Current Permits Section */}
-            <div className="mb-12">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-lg bg-primary-100 flex items-center justify-center">
-                  <FolderOpen className="w-5 h-5 text-primary-700" />
-                </div>
-                <h2 className="text-xl font-bold text-gray-900">{tPage('currentTitle')}</h2>
+            {loading ? (
+              <div className="text-center py-12">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto"></div>
+                <p className="text-gray-500 mt-4">Se încarcă...</p>
               </div>
-
-              {currentYears.map((year) => (
-                <div key={year} className="mb-8">
-                  <div className="flex items-center gap-2 mb-4">
-                    <Calendar className="w-5 h-5 text-gray-400" />
-                    <h3 className="text-lg font-semibold text-gray-700">{year}</h3>
-                    <span className="text-sm text-gray-500">
-                      ({CURRENT_PERMITS.filter(p => p.year === year).length} {tPage('documents')})
-                    </span>
-                  </div>
-                  <PermitsByYear permits={CURRENT_PERMITS} year={year} />
-                </div>
-              ))}
-            </div>
-
-            {/* Archive Section */}
-            <div>
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center">
-                  <Archive className="w-5 h-5 text-amber-600" />
-                </div>
-                <h2 className="text-xl font-bold text-gray-900">{tPage('archiveTitle')}</h2>
+            ) : documents.length === 0 ? (
+              <div className="text-center py-12">
+                <FileText className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                <p className="text-gray-500">{tPage('noDocuments')}</p>
               </div>
+            ) : (
+              <>
+                {/* Recent Permits Section */}
+                {recentYears.length > 0 && (
+                  <div className="mb-12">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="w-10 h-10 rounded-lg bg-primary-100 flex items-center justify-center">
+                        <FolderOpen className="w-5 h-5 text-primary-700" />
+                      </div>
+                      <h2 className="text-xl font-bold text-gray-900">{tPage('currentTitle')}</h2>
+                    </div>
 
-              {archiveYears.map((year) => (
-                <div key={year} className="mb-8">
-                  <div className="flex items-center gap-2 mb-4">
-                    <Calendar className="w-5 h-5 text-gray-400" />
-                    <h3 className="text-lg font-semibold text-gray-700">{year}</h3>
-                    <span className="text-sm text-gray-500">
-                      ({ARCHIVE_PERMITS.filter(p => p.year === year).length} {tPage('documents')})
-                    </span>
+                    <CollapsibleGroup>
+                      {recentYears.map((year, index) => (
+                        <Collapsible 
+                          key={year} 
+                          title={
+                            <span className="flex items-center gap-2">
+                              <Calendar className="w-4 h-4 text-gray-500" />
+                              {year}
+                              <span className="text-sm text-gray-500 font-normal">
+                                ({documentsByYear[year].length} {tPage('documents')})
+                              </span>
+                            </span>
+                          }
+                          defaultOpen={index === 0}
+                        >
+                          <div className="space-y-2">
+                            {documentsByYear[year].map((doc) => (
+                              <PermitCard key={doc.id} doc={doc} />
+                            ))}
+                          </div>
+                        </Collapsible>
+                      ))}
+                    </CollapsibleGroup>
                   </div>
-                  <PermitsByYear permits={ARCHIVE_PERMITS} year={year} />
-                </div>
-              ))}
-            </div>
+                )}
+
+                {/* Archive Section */}
+                {archiveYears.length > 0 && (
+                  <div>
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center">
+                        <Archive className="w-5 h-5 text-amber-600" />
+                      </div>
+                      <h2 className="text-xl font-bold text-gray-900">{tPage('archiveTitle')}</h2>
+                    </div>
+
+                    <CollapsibleGroup>
+                      {archiveYears.map((year) => (
+                        <Collapsible 
+                          key={year} 
+                          title={
+                            <span className="flex items-center gap-2">
+                              <Calendar className="w-4 h-4 text-gray-500" />
+                              {year}
+                              <span className="text-sm text-gray-500 font-normal">
+                                ({documentsByYear[year].length} {tPage('documents')})
+                              </span>
+                            </span>
+                          }
+                          defaultOpen={false}
+                        >
+                          <div className="space-y-2">
+                            {documentsByYear[year].map((doc) => (
+                              <PermitCard key={doc.id} doc={doc} />
+                            ))}
+                          </div>
+                        </Collapsible>
+                      ))}
+                    </CollapsibleGroup>
+                  </div>
+                )}
+              </>
+            )}
 
             {/* Info Note */}
             <Card className="mt-8 bg-gray-50 border-gray-200">

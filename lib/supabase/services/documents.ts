@@ -1,5 +1,5 @@
 import { createAnonServerClient } from '../server';
-import type { Document, AssetDeclaration, PaginatedResponse, DocumentsFilter } from '@/lib/types/database';
+import type { Document, DocumentWithAnnexes, AssetDeclaration, PaginatedResponse, DocumentsFilter } from '@/lib/types/database';
 
 const DEFAULT_LIMIT = 20;
 
@@ -59,7 +59,7 @@ export async function getDocuments(
  */
 export async function getDocumentsByCategory(
   category: string,
-  limit: number = 50
+  limit: number = 500
 ): Promise<Document[]> {
   const supabase = createAnonServerClient();
 
@@ -68,11 +68,90 @@ export async function getDocumentsByCategory(
     .select('*')
     .eq('published', true)
     .eq('category', category)
+    .order('year', { ascending: false })
     .order('document_date', { ascending: false, nullsFirst: false })
     .limit(limit);
 
   if (error) {
     console.error('Error fetching documents by category:', error);
+    return [];
+  }
+
+  return data || [];
+}
+
+/**
+ * Get documents by category with annexes grouped
+ * Returns parent documents with their annexes nested
+ */
+export async function getDocumentsByCategoryWithAnnexes(
+  category: string,
+  limit: number = 500
+): Promise<DocumentWithAnnexes[]> {
+  const supabase = createAnonServerClient();
+
+  const { data, error } = await supabase
+    .from('documents')
+    .select('*')
+    .eq('published', true)
+    .eq('category', category)
+    .order('year', { ascending: false })
+    .order('document_date', { ascending: false, nullsFirst: false })
+    .limit(limit);
+
+  if (error) {
+    console.error('Error fetching documents by category:', error);
+    return [];
+  }
+
+  const docs = data || [];
+  
+  // Separate parent documents and annexes
+  const parentDocs: DocumentWithAnnexes[] = [];
+  const annexesByParentId = new Map<string, Document[]>();
+
+  docs.forEach(doc => {
+    if (doc.parent_id) {
+      // This is an annex
+      const annexes = annexesByParentId.get(doc.parent_id) || [];
+      annexes.push(doc);
+      annexesByParentId.set(doc.parent_id, annexes);
+    } else {
+      // This is a parent document
+      parentDocs.push({ ...doc, annexes: [] });
+    }
+  });
+
+  // Attach annexes to their parent documents
+  parentDocs.forEach(doc => {
+    const annexes = annexesByParentId.get(doc.id);
+    if (annexes) {
+      doc.annexes = annexes;
+    }
+  });
+
+  return parentDocs;
+}
+
+/**
+ * Get documents by source folder (used for pages that need specific migrated content)
+ */
+export async function getDocumentsBySourceFolder(
+  sourceFolder: string,
+  limit: number = 100
+): Promise<Document[]> {
+  const supabase = createAnonServerClient();
+
+  const { data, error } = await supabase
+    .from('documents')
+    .select('*')
+    .eq('published', true)
+    .eq('source_folder', sourceFolder)
+    .order('title', { ascending: true })
+    .limit(limit);
+
+  if (error) {
+    console.error('Error fetching documents by source folder:', error);
     return [];
   }
 
@@ -327,4 +406,74 @@ export async function getTransparencyYears(category?: string): Promise<number[]>
   });
 
   return Array.from(years).sort((a, b) => b - a);
+}
+
+// ============================================
+// ANNOUNCEMENTS (ANUNTURI)
+// ============================================
+
+export interface Announcement {
+  id: string;
+  date: string;
+  title: string;
+  category: string;
+  attachments: {
+    id: string;
+    title: string;
+    url: string;
+    fileType: string;
+  }[];
+}
+
+/**
+ * Get announcements with grouped attachments
+ * Documents are grouped by description (announcement title) + document_date
+ */
+export async function getAnnouncements(limit: number = 500): Promise<Announcement[]> {
+  const supabase = createAnonServerClient();
+
+  const { data, error } = await supabase
+    .from('documents')
+    .select('*')
+    .eq('published', true)
+    .eq('category', 'anunturi')
+    .order('document_date', { ascending: false, nullsFirst: false })
+    .order('created_at', { ascending: false })
+    .limit(limit);
+
+  if (error) {
+    console.error('Error fetching announcements:', error);
+    return [];
+  }
+
+  const docs = data || [];
+  
+  // Group documents by description + date to form announcements
+  const announcementMap = new Map<string, Announcement>();
+  
+  docs.forEach(doc => {
+    const key = `${doc.description || doc.title}_${doc.document_date || ''}`;
+    
+    if (!announcementMap.has(key)) {
+      announcementMap.set(key, {
+        id: doc.id,
+        date: doc.document_date || doc.created_at.split('T')[0],
+        title: doc.description || doc.title,
+        category: doc.subcategory || 'general',
+        attachments: []
+      });
+    }
+    
+    const announcement = announcementMap.get(key)!;
+    const fileExt = doc.file_name.split('.').pop()?.toLowerCase() || 'pdf';
+    
+    announcement.attachments.push({
+      id: doc.id,
+      title: doc.title,
+      url: doc.file_url,
+      fileType: fileExt === 'docx' || fileExt === 'doc' ? 'DOC' : 'PDF'
+    });
+  });
+
+  return Array.from(announcementMap.values());
 }

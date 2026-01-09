@@ -5,8 +5,9 @@ import { Section } from '@/components/ui/section';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
-import { generatePageMetadata, BreadcrumbJsonLd } from '@/lib/seo';
+import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
+import * as documents from '@/lib/supabase/services/documents';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -17,33 +18,42 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   });
 }
 
-// Documents
-const DOCUMENTS = [
-  { 
-    id: 1, 
-    title: 'Dispoziția nr. 208/2018 privind desemnarea responsabilului cu protecția datelor cu caracter personal în cadrul Primăriei Salonta', 
-    pdfUrl: '#' 
-  },
-  { 
-    id: 2, 
-    title: 'Notificare privind prelucrarea datelor cu caracter personal', 
-    pdfUrl: '#' 
-  },
-];
-
-// Forms for exercising rights
-const GDPR_FORMS = [
-  { id: 1, title: 'Cerere pentru exercitarea dreptului la acces', pdfUrl: '#' },
-  { id: 2, title: 'Cerere pentru exercitarea dreptului la opoziție', pdfUrl: '#' },
-  { id: 3, title: 'Cerere pentru exercitarea dreptului la portabilitate', pdfUrl: '#' },
-  { id: 4, title: 'Cerere pentru exercitarea dreptului la restricționare', pdfUrl: '#' },
-  { id: 5, title: 'Cerere pentru exercitarea dreptului la ștergere', pdfUrl: '#' },
-];
-
 export default async function GdprPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'navigation' });
   const tPage = await getTranslations({ locale, namespace: 'gdprPage' });
+
+  // Fetch GDPR documents from database
+  const gdprDocs = await documents.getDocumentsByCategory('gdpr');
+
+  // Separate documents into official documents and forms based on title
+  // Forms are identified by "cerere" in the title (Romanian for "request")
+  const officialDocuments = gdprDocs.filter(
+    doc => !doc.title.toLowerCase().includes('cerere')
+  );
+  const gdprForms = gdprDocs.filter(
+    doc => doc.title.toLowerCase().includes('cerere')
+  );
+
+  const pageLabels = {
+    ro: {
+      noDocuments: 'Nu există documente disponibile.',
+      noForms: 'Nu există formulare disponibile.',
+      download: 'PDF',
+    },
+    hu: {
+      noDocuments: 'Nincsenek elérhető dokumentumok.',
+      noForms: 'Nincsenek elérhető űrlapok.',
+      download: 'PDF',
+    },
+    en: {
+      noDocuments: 'No documents available.',
+      noForms: 'No forms available.',
+      download: 'PDF',
+    },
+  };
+
+  const labels = pageLabels[locale as keyof typeof pageLabels] || pageLabels.en;
 
   return (
     <>
@@ -80,29 +90,40 @@ export default async function GdprPage({ params }: { params: Promise<{ locale: s
                 <h2 className="text-xl font-bold text-gray-900">{tPage('documentsTitle')}</h2>
               </div>
 
-              <div className="space-y-3">
-                {DOCUMENTS.map((doc) => (
-                  <Card key={doc.id} hover>
-                    <CardContent className="flex items-center justify-between pt-6">
-                      <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center shrink-0">
-                          <FileText className="w-5 h-5 text-emerald-600" />
+              {officialDocuments.length > 0 ? (
+                <div className="space-y-3">
+                  {officialDocuments.map((doc) => (
+                    <Card key={doc.id} hover>
+                      <CardContent className="flex items-center justify-between pt-6">
+                        <div className="flex items-start gap-4">
+                          <div className="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center shrink-0">
+                            <FileText className="w-5 h-5 text-emerald-600" />
+                          </div>
+                          <div>
+                            <h3 className="font-medium text-gray-900">{doc.title}</h3>
+                            {doc.description && (
+                              <p className="text-sm text-gray-500 mt-1">{doc.description}</p>
+                            )}
+                          </div>
                         </div>
-                        <div>
-                          <h3 className="font-medium text-gray-900">{doc.title}</h3>
-                        </div>
-                      </div>
-                      <a
-                        href={doc.pdfUrl}
-                        className="flex items-center gap-1 px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-emerald-300 transition-colors shrink-0 ml-4"
-                      >
-                        <Download className="w-4 h-4 text-emerald-600" />
-                        PDF
-                      </a>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+                        <a
+                          href={doc.file_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-1 px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-emerald-300 transition-colors shrink-0 ml-4"
+                        >
+                          <Download className="w-4 h-4 text-emerald-600" />
+                          {labels.download}
+                        </a>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8 text-gray-500">
+                  {labels.noDocuments}
+                </div>
+              )}
             </div>
 
             {/* Forms Section */}
@@ -114,26 +135,34 @@ export default async function GdprPage({ params }: { params: Promise<{ locale: s
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-2">
-                  {GDPR_FORMS.map((form) => (
-                    <div 
-                      key={form.id}
-                      className="flex items-center justify-between gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-                    >
-                      <div className="flex items-center gap-2 min-w-0">
-                        <FileText className="w-4 h-4 text-gray-400 shrink-0" />
-                        <span className="text-sm text-gray-700">{form.title}</span>
-                      </div>
-                      <a
-                        href={form.pdfUrl}
-                        className="flex items-center gap-1 px-2 py-1 bg-emerald-100 text-emerald-700 hover:bg-emerald-200 rounded text-xs font-medium shrink-0"
+                {gdprForms.length > 0 ? (
+                  <div className="space-y-2">
+                    {gdprForms.map((form) => (
+                      <div 
+                        key={form.id}
+                        className="flex items-center justify-between gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
                       >
-                        <Download className="w-3 h-3" />
-                        PDF
-                      </a>
-                    </div>
-                  ))}
-                </div>
+                        <div className="flex items-center gap-2 min-w-0">
+                          <FileText className="w-4 h-4 text-gray-400 shrink-0" />
+                          <span className="text-sm text-gray-700">{form.title}</span>
+                        </div>
+                        <a
+                          href={form.file_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-1 px-2 py-1 bg-emerald-100 text-emerald-700 hover:bg-emerald-200 rounded text-xs font-medium shrink-0"
+                        >
+                          <Download className="w-3 h-3" />
+                          {labels.download}
+                        </a>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-4 text-gray-500 text-sm">
+                    {labels.noForms}
+                  </div>
+                )}
               </CardContent>
             </Card>
 

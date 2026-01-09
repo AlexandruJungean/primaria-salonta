@@ -1,5 +1,4 @@
 import { getTranslations } from 'next-intl/server';
-import { useTranslations } from 'next-intl';
 import { Info } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
@@ -7,8 +6,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
 import { SomatiiCollapsibleYears } from './collapsible-years';
-import { generatePageMetadata, BreadcrumbJsonLd } from '@/lib/seo';
+import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
+import * as documents from '@/lib/supabase/services/documents';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -19,9 +19,51 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   });
 }
 
-export default function SomatiiPage() {
-  const t = useTranslations('navigation');
-  const tPage = useTranslations('somatiiPage');
+export default async function SomatiiPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'navigation' });
+  const tPage = await getTranslations({ locale, namespace: 'somatiiPage' });
+
+  // Fetch documents from database
+  const allDocs = await documents.getDocumentsByCategory('somatii');
+
+  // Group by year
+  const docsByYear = new Map<number, typeof allDocs>();
+  allDocs.forEach(doc => {
+    const year = doc.year || 2025;
+    if (!docsByYear.has(year)) {
+      docsByYear.set(year, []);
+    }
+    docsByYear.get(year)!.push(doc);
+  });
+
+  // Sort years descending and prepare data for client component
+  const years = Array.from(docsByYear.keys()).sort((a, b) => b - a);
+  const yearSections = years.map(year => ({
+    year: year.toString(),
+    announcements: (docsByYear.get(year) || []).map(doc => ({
+      id: doc.id,
+      title: doc.title,
+      date: doc.document_date 
+        ? new Date(doc.document_date).toLocaleDateString(locale)
+        : '',
+      pdfUrl: doc.file_url,
+    })),
+  }));
+
+  const pageLabels = {
+    ro: {
+      noDocuments: 'Nu există somații sau anunțuri disponibile.',
+    },
+    hu: {
+      noDocuments: 'Nincsenek elérhető felszólítások vagy hirdetmények.',
+    },
+    en: {
+      noDocuments: 'No summons or announcements available.',
+    },
+  };
+
+  const labels = pageLabels[locale as keyof typeof pageLabels] || pageLabels.en;
 
   return (
     <>
@@ -50,7 +92,13 @@ export default function SomatiiPage() {
             </Card>
 
             {/* Collapsible Years */}
-            <SomatiiCollapsibleYears />
+            {yearSections.length > 0 ? (
+              <SomatiiCollapsibleYears yearSections={yearSections} />
+            ) : (
+              <div className="text-center py-8 text-gray-500">
+                {labels.noDocuments}
+              </div>
+            )}
 
             {/* Footer Info */}
             <div className="mt-8 p-4 bg-gray-50 rounded-xl text-center">

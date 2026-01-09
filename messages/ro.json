@@ -654,11 +654,10 @@
     "infoNote": "Documentele din această pagină vor fi încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri și vor fi actualizate ulterior cu documentele reale."
   },
   "anunturiPage": {
-    "legend": "Legendă tipuri anunțuri",
     "announcements": "anunțuri",
+    "noAnnouncements": "Nu există anunțuri disponibile momentan.",
     "archiveNote": "Arhivă anunțuri",
-    "archiveNoteDesc": "Anunțurile mai vechi sunt disponibile în arhiva primăriei. Documentele vor fi încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri.",
-    "viewDetails": "Detalii"
+    "archiveNoteDesc": "Anunțurile sunt încărcate din baza de date. Pentru anunțuri mai vechi, vă rugăm să contactați primăria."
   },
   "dezbateriPage": {
     "introTitle": "Participare la dezbateri publice",
@@ -777,6 +776,7 @@
     "intro": "Descărcați formularele tipizate necesare pentru diverse solicitări către Primăria Municipiului Salonta.",
     "metodologie": "Metodologia-cadru cu privire la calcularea duratei de completare a unui formular",
     "forms": "formulare",
+    "noForms": "Nu există formulare disponibile în baza de date.",
     "categories": {
       "achizitiiPublice": "Achiziții publice",
       "asistentaSociala": "Asistență socială",
@@ -917,6 +917,10 @@
     "legendEnvironment": "Mediu",
     "legendSport": "Sport"
   },
+  "adapostCainiPage": {
+    "description": "Informații despre adăpostul de câini fără stăpân din Municipiul Salonta și documentele aferente programului de gestionare.",
+    "noDocuments": "Nu există documente disponibile."
+  },
   "achizitiiPage": {
     "seapNote": "Consultați anunțurile publice pe:",
     "requiredForms": "Formulare necesare",
@@ -938,18 +942,20 @@
   "autorizatiiConstruirePage": {
     "infoTitle": "Autorizații de construire",
     "infoText": "Lista autorizațiilor de construire eliberate de Primăria Municipiului Salonta. Documentele sunt publicate în conformitate cu prevederile legale în vigoare.",
-    "currentTitle": "Autorizații de construire",
+    "currentTitle": "Autorizații recente",
     "archiveTitle": "Arhivă autorizații de construire",
     "documents": "documente",
+    "noDocuments": "Nu există autorizații de construire disponibile.",
     "noteTitle": "Notă informativă",
-    "noteText": "Documentele de pe această pagină sunt încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri și vor fi actualizate ulterior cu documentele reale."
+    "noteText": "Documentele de pe această pagină sunt publicate în conformitate cu prevederile legale în vigoare."
   },
   "bugetPage": {
     "infoTitle": "Buget din toate sursele de venituri",
     "infoText": "Bugetul local al Municipiului Salonta, situațiile financiare trimestriale și conturile de execuție bugetară. Documentele sunt publicate în conformitate cu prevederile legale în vigoare.",
     "sections": "secțiuni",
+    "noDocuments": "Nu există documente de buget disponibile.",
     "noteTitle": "Notă informativă",
-    "noteText": "Documentele de pe această pagină sunt încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri și vor fi actualizate ulterior cu documentele reale."
+    "noteText": "Documentele de pe această pagină sunt publicate în conformitate cu prevederile legale în vigoare."
   },
   "certificateUrbanismPage": {
     "infoTitle": "Certificate de urbanism",
@@ -958,7 +964,8 @@
     "archiveTitle": "Arhivă certificate de urbanism",
     "documents": "documente",
     "noteTitle": "Notă informativă",
-    "noteText": "Documentele de pe această pagină sunt încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri și vor fi actualizate ulterior cu documentele reale."
+    "noteText": "Pentru informații suplimentare privind certificatele de urbanism, vă rugăm să contactați Serviciul Urbanism al Primăriei.",
+    "noDocuments": "Nu există certificate de urbanism în baza de date."
   },
   "concursuriPage": {
     "infoTitle": "Concursuri și posturi vacante",
@@ -968,15 +975,25 @@
     "dispositionsTitle": "Dispoziții ale primarului",
     "documents": "documente",
     "noteTitle": "Notă informativă",
-    "noteText": "Documentele de pe această pagină sunt încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri și vor fi actualizate ulterior cu documentele reale."
+    "noteText": "Pentru informații suplimentare privind concursurile, vă rugăm să contactați Serviciul Resurse Umane al Primăriei.",
+    "noJobs": "Nu există anunțuri de concursuri în baza de date."
+  },
+  "dispozitiiPage": {
+    "infoTitle": "Dispoziții ale primarului",
+    "infoText": "Dispozițiile primarului sunt acte administrative cu caracter normativ sau individual, emise de primar în exercitarea atribuțiilor sale prevăzute de lege.",
+    "searchPlaceholder": "Căutați după număr sau cuvinte cheie...",
+    "resultsFound": "rezultate găsite",
+    "noDocuments": "Nu există dispoziții în baza de date.",
+    "noteTitle": "Notă informativă",
+    "noteText": "Dispozițiile publicate pe această pagină sunt cele de interes public. Pentru informații suplimentare, vă rugăm să contactați Primăria Municipiului Salonta."
   },
   "gdprPage": {
     "infoTitle": "Protecția datelor cu caracter personal",
     "infoText": "Primăria Municipiului Salonta prelucrează date cu caracter personal în conformitate cu Regulamentul (UE) 2016/679 (GDPR) și legislația națională în vigoare.",
     "documentsTitle": "Documente GDPR",
     "formsTitle": "Cereri/formulare online",
-    "noteTitle": "Notă informativă",
-    "noteText": "Documentele de pe această pagină sunt încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri și vor fi actualizate ulterior cu documentele reale."
+    "noteTitle": "Exercitarea drepturilor",
+    "noteText": "Cererile pentru exercitarea drepturilor prevăzute de GDPR se pot depune la sediul Primăriei sau prin e-mail la adresa: primaria@salonta.ro. Veți primi un răspuns în termen de 30 de zile de la data primirii cererii."
   },
   "taxeImpozitePage": {
     "infoTitle": "Impozite și taxe locale",
@@ -985,15 +1002,15 @@
     "payOnlineDesc": "Taxe și impozite locale",
     "payOnlineButton": "Plăți online",
     "documentsTitle": "Documente impozite și taxe",
-    "noteTitle": "Notă informativă",
-    "noteText": "Documentele de pe această pagină sunt încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri și vor fi actualizate ulterior cu documentele reale."
+    "noteTitle": "Coduri IBAN",
+    "noteText": "Pentru plata impozitelor și taxelor locale, vă rugăm să utilizați codurile IBAN disponibile în documentele de mai sus sau să vă prezentați la ghișeul Primăriei."
   },
   "licitatiiPage": {
     "infoTitle": "Licitații publice",
     "infoText": "Licitațiile publice se desfășoară la sediul Primăriei Municipiului Salonta. Pentru înscriere, vă rugăm să consultați documentele atașate fiecărei licitații.",
     "auctionsTitle": "Anunțuri licitații",
-    "noteTitle": "Notă informativă",
-    "noteText": "Documentele de pe această pagină sunt încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri și vor fi actualizate ulterior cu documentele reale."
+    "noteTitle": "Informații participare",
+    "noteText": "Pentru a participa la licitații, este necesar să depuneți documentele solicitate la registratura Primăriei până la termenul limită specificat în fiecare anunț."
   },
   "mediuPage": {
     "infoTitle": "Protecția mediului",
@@ -1004,37 +1021,37 @@
     "apaCanalDesc": "Buletine de analiză a calității apei potabile",
     "spatiiVerziTitle": "Spații verzi",
     "spatiiVerziDesc": "Registrul local al spațiilor verzi",
-    "noteTitle": "Notă informativă",
-    "noteText": "Documentele de pe această pagină sunt încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri și vor fi actualizate ulterior cu documentele reale."
+    "noteTitle": "Contact",
+    "noteText": "Pentru informații suplimentare privind protecția mediului sau pentru sesizări, vă rugăm să contactați compartimentul de specialitate al Primăriei."
   },
   "oferteTerenPage": {
     "infoTitle": "Legea nr. 17/2014",
     "infoText": "Vânzarea terenurilor agricole situate în extravilan se face cu respectarea dreptului de preempțiune al coproprietarilor, arendașilor, vecinilor și statului român, conform Legii nr. 17/2014.",
     "registryTitle": "Registrul ofertelor de vânzare",
     "period": "Perioada",
-    "noteTitle": "Notă informativă",
-    "noteText": "Documentele de pe această pagină sunt încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri și vor fi actualizate ulterior cu documentele reale."
+    "noteTitle": "Informații importante",
+    "noteText": "Ofertele de vânzare a terenurilor agricole se afișează la sediul Primăriei timp de 45 de zile lucrătoare. Pentru informații suplimentare, contactați Biroul Agricol."
   },
   "planuriUrbanisticePage": {
     "infoTitle": "Planuri urbanistice",
     "infoText": "Planul Urbanistic General (PUG) stabilește reglementările privind modul de utilizare a terenurilor, organizarea rețelei de circulație și dezvoltarea echipării edilitare a localității.",
     "pugDesc": "Planul Urbanistic General",
-    "noteTitle": "Notă informativă",
-    "noteText": "Documentele de pe această pagină sunt încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri și vor fi actualizate ulterior cu documentele reale."
+    "noteTitle": "Informații",
+    "noteText": "Pentru consultarea planurilor urbanistice zonale (PUZ) sau de detaliu (PUD) în curs de aprobare, vă rugăm să contactați Compartimentul Urbanism."
   },
   "publicatiiCasatoriePage": {
     "infoTitle": "Publicații de căsătorie",
     "infoText": "În conformitate cu prevederile legale, publicațiile de căsătorie sunt afișate timp de 10 zile la sediul primăriei și pe site-ul instituției.",
     "publications": "publicații",
-    "noteTitle": "Notă informativă",
-    "noteText": "Documentele de pe această pagină sunt încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri și vor fi actualizate ulterior cu documentele reale."
+    "noteTitle": "Informații",
+    "noteText": "Pentru opoziții la căsătorie sau informații suplimentare, vă rugăm să contactați Serviciul Stare Civilă al Primăriei."
   },
   "publicatiiVanzarePage": {
     "infoTitle": "Publicații de vânzare",
     "infoText": "Publicațiile de vânzare sunt afișate în conformitate cu prevederile Codului de procedură civilă și cu solicitările birourilor executorilor judecătorești.",
     "publications": "publicații",
-    "noteTitle": "Notă informativă",
-    "noteText": "Documentele de pe această pagină sunt încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri și vor fi actualizate ulterior cu documentele reale."
+    "noteTitle": "Informații",
+    "noteText": "Pentru informații suplimentare privind publicațiile de vânzare, vă rugăm să contactați Primăria sau biroul executorului judecătoresc competent."
   },
   "receptieLucrariPage": {
     "infoTitle": "Recepție lucrări de construcții",
@@ -1052,8 +1069,8 @@
     "siteDoc4": "Certificat de performanță energetică actualizat",
     "siteDoc5": "Plan de situație / Plan de amplasament actualizat, întocmit de topograf autorizat ANCPI",
     "siteDoc6": "Formularul-tip \"PROCES-VERBAL DE RECEPȚIE la terminarea lucrărilor\" (cam. 11 Parter) - 2 exemplare originale",
-    "noteTitle": "Notă informativă",
-    "noteText": "Formularele necesare pot fi obținute de la camera 11, Parter, din sediul Primăriei Municipiului Salonta."
+    "noteTitle": "Informații",
+    "noteText": "Pentru detalii suplimentare sau pentru a obține formularele necesare, vă rugăm să vă adresați la camera 11, Parter, în cadrul Primăriei Municipiului Salonta."
   },
   "regulamentePublicePage": {
     "infoTitle": "Regulamente",
@@ -1061,12 +1078,14 @@
     "currentTitle": "Regulamente în vigoare",
     "archiveTitle": "Regulamente arhivă",
     "documents": "documente",
-    "noteTitle": "Notă informativă",
-    "noteText": "Documentele de pe această pagină sunt încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri și vor fi actualizate ulterior cu documentele reale."
+    "noteTitle": "Informații",
+    "noteText": "Pentru informații suplimentare despre regulamentele în vigoare sau pentru clarificări, vă rugăm să contactați compartimentul de specialitate din cadrul Primăriei."
   },
   "reteleTelecomPage": {
     "infoTitle": "Rețele telecomunicații",
-    "infoText": "Conform Legii nr. 159/2016 privind regimul infrastructurii rețelelor de comunicații electronice, documentele referitoare la accesul pe proprietatea publică sau privată pentru construirea de rețele de telecomunicații."
+    "infoText": "Conform Legii nr. 159/2016 privind regimul infrastructurii rețelelor de comunicații electronice, documentele referitoare la accesul pe proprietatea publică sau privată pentru construirea de rețele de telecomunicații.",
+    "noteTitle": "Informații",
+    "noteText": "Pentru solicitări privind accesul pe proprietatea publică sau privată în vederea construirii de rețele de telecomunicații, vă rugăm să contactați Primăria Municipiului Salonta."
   },
   "seipPage": {
     "title": "Serviciul Public Comunitar de Evidență Informatizată a Persoanei",

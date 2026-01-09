@@ -654,11 +654,10 @@
     "infoNote": "Documents on this page will be loaded from the database. Links marked with '#' are placeholders and will be updated later with actual documents."
   },
   "anunturiPage": {
-    "legend": "Announcement types legend",
     "announcements": "announcements",
+    "noAnnouncements": "No announcements available at the moment.",
     "archiveNote": "Announcements archive",
-    "archiveNoteDesc": "Older announcements are available in the city hall archive. Documents will be loaded from the database. Links marked with '#' are placeholders.",
-    "viewDetails": "Details"
+    "archiveNoteDesc": "Announcements are loaded from the database. For older announcements, please contact the city hall."
   },
   "dezbateriPage": {
     "introTitle": "Participation in public debates",
@@ -777,6 +776,7 @@
     "intro": "Download the standardized forms needed for various requests to Salonta City Hall.",
     "metodologie": "Framework methodology for calculating form completion time",
     "forms": "forms",
+    "noForms": "No forms available in the database.",
     "categories": {
       "achizitiiPublice": "Public Procurement",
       "asistentaSociala": "Social Assistance",
@@ -917,6 +917,10 @@
     "legendEnvironment": "Environment",
     "legendSport": "Sport"
   },
+  "adapostCainiPage": {
+    "description": "Information about the stray dog shelter in Salonta Municipality and related management program documents.",
+    "noDocuments": "No documents available."
+  },
   "achizitiiPage": {
     "seapNote": "View public procurement announcements on:",
     "requiredForms": "Required Forms",
@@ -938,18 +942,20 @@
   "autorizatiiConstruirePage": {
     "infoTitle": "Building Permits",
     "infoText": "List of building permits issued by Salonta City Hall. Documents are published in accordance with current legal provisions.",
-    "currentTitle": "Building Permits",
+    "currentTitle": "Recent Permits",
     "archiveTitle": "Building Permits Archive",
     "documents": "documents",
+    "noDocuments": "No building permits available.",
     "noteTitle": "Information Note",
-    "noteText": "Documents on this page are loaded from the database. Links marked with '#' are placeholders and will be updated later with actual documents."
+    "noteText": "Documents on this page are published in accordance with current legal provisions."
   },
   "bugetPage": {
     "infoTitle": "Budget from all revenue sources",
     "infoText": "The local budget of Salonta Municipality, quarterly financial statements and budget execution accounts. Documents are published in accordance with current legal provisions.",
     "sections": "sections",
+    "noDocuments": "No budget documents available.",
     "noteTitle": "Information Note",
-    "noteText": "Documents on this page are loaded from the database. Links marked with '#' are placeholders and will be updated later with actual documents."
+    "noteText": "Documents on this page are published in accordance with current legal provisions."
   },
   "certificateUrbanismPage": {
     "infoTitle": "Urbanism Certificates",
@@ -958,7 +964,8 @@
     "archiveTitle": "Urbanism Certificates Archive",
     "documents": "documents",
     "noteTitle": "Information Note",
-    "noteText": "Documents on this page are loaded from the database. Links marked with '#' are placeholders and will be updated later with actual documents."
+    "noteText": "For additional information about urbanism certificates, please contact the Urbanism Department of City Hall.",
+    "noDocuments": "No urbanism certificates found in the database."
   },
   "concursuriPage": {
     "infoTitle": "Competitions and Vacancies",
@@ -968,15 +975,25 @@
     "dispositionsTitle": "Mayor's Dispositions",
     "documents": "documents",
     "noteTitle": "Information Note",
-    "noteText": "Documents on this page are loaded from the database. Links marked with '#' are placeholders and will be updated later with actual documents."
+    "noteText": "For additional information about competitions, please contact the Human Resources Department of City Hall.",
+    "noJobs": "No job announcements found in the database."
+  },
+  "dispozitiiPage": {
+    "infoTitle": "Mayor's Dispositions",
+    "infoText": "The mayor's dispositions are administrative acts with normative or individual character, issued by the mayor in the exercise of his legal powers.",
+    "searchPlaceholder": "Search by number or keywords...",
+    "resultsFound": "results found",
+    "noDocuments": "No dispositions found in the database.",
+    "noteTitle": "Information Note",
+    "noteText": "The dispositions published on this page are those of public interest. For additional information, please contact Salonta City Hall."
   },
   "gdprPage": {
     "infoTitle": "Personal Data Protection",
     "infoText": "Salonta City Hall processes personal data in accordance with Regulation (EU) 2016/679 (GDPR) and current national legislation.",
     "documentsTitle": "GDPR Documents",
     "formsTitle": "Online Requests/Forms",
-    "noteTitle": "Information Note",
-    "noteText": "Documents on this page are loaded from the database. Links marked with '#' are placeholders and will be updated later with actual documents."
+    "noteTitle": "Exercising Your Rights",
+    "noteText": "Requests for exercising the rights provided by GDPR can be submitted at the City Hall headquarters or by email to: primaria@salonta.ro. You will receive a response within 30 days of receiving the request."
   },
   "taxeImpozitePage": {
     "infoTitle": "Local Taxes and Fees",
@@ -985,15 +1002,15 @@
     "payOnlineDesc": "Local taxes and fees",
     "payOnlineButton": "Online Payments",
     "documentsTitle": "Tax and Fee Documents",
-    "noteTitle": "Information Note",
-    "noteText": "Documents on this page are loaded from the database. Links marked with '#' are placeholders and will be updated later with actual documents."
+    "noteTitle": "IBAN Codes",
+    "noteText": "For payment of local taxes and fees, please use the IBAN codes available in the documents above or visit the City Hall counter."
   },
   "licitatiiPage": {
     "infoTitle": "Public Auctions",
     "infoText": "Public auctions take place at the Salonta City Hall headquarters. For registration, please consult the documents attached to each auction.",
     "auctionsTitle": "Auction Announcements",
-    "noteTitle": "Information Note",
-    "noteText": "Documents on this page are loaded from the database. Links marked with '#' are placeholders and will be updated later with actual documents."
+    "noteTitle": "Participation Information",
+    "noteText": "To participate in auctions, you must submit the required documents at the City Hall registry by the deadline specified in each announcement."
   },
   "mediuPage": {
     "infoTitle": "Environmental Protection",
@@ -1004,37 +1021,37 @@
     "apaCanalDesc": "Drinking water quality analysis bulletins",
     "spatiiVerziTitle": "Green Spaces",
     "spatiiVerziDesc": "Local registry of green spaces",
-    "noteTitle": "Information Note",
-    "noteText": "Documents on this page are loaded from the database. Links marked with '#' are placeholders and will be updated later with actual documents."
+    "noteTitle": "Contact",
+    "noteText": "For additional information regarding environmental protection or to report issues, please contact the specialized department of the City Hall."
   },
   "oferteTerenPage": {
     "infoTitle": "Law no. 17/2014",
     "infoText": "The sale of agricultural land located in extravilan areas is carried out in compliance with the preemption right of co-owners, tenants, neighbors, and the Romanian state, according to Law no. 17/2014.",
     "registryTitle": "Registry of Sale Offers",
     "period": "Period",
-    "noteTitle": "Information Note",
-    "noteText": "Documents on this page are loaded from the database. Links marked with '#' are placeholders and will be updated later with actual documents."
+    "noteTitle": "Important Information",
+    "noteText": "Agricultural land sale offers are displayed at the City Hall headquarters for 45 working days. For additional information, contact the Agricultural Office."
   },
   "planuriUrbanisticePage": {
     "infoTitle": "Urban Plans",
     "infoText": "The General Urban Plan (PUG) establishes regulations regarding land use, traffic network organization, and the development of public utilities in the locality.",
     "pugDesc": "General Urban Plan",
-    "noteTitle": "Information Note",
-    "noteText": "Documents on this page are loaded from the database. Links marked with '#' are placeholders and will be updated later with actual documents."
+    "noteTitle": "Information",
+    "noteText": "To consult zonal urban plans (PUZ) or detail urban plans (PUD) pending approval, please contact the Urbanism Department."
   },
   "publicatiiCasatoriePage": {
     "infoTitle": "Marriage Publications",
     "infoText": "In accordance with legal provisions, marriage publications are displayed for 10 days at the city hall headquarters and on the institution's website.",
     "publications": "publications",
-    "noteTitle": "Information Note",
-    "noteText": "Documents on this page are loaded from the database. Links marked with '#' are placeholders and will be updated later with actual documents."
+    "noteTitle": "Information",
+    "noteText": "For marriage oppositions or additional information, please contact the Civil Status Service of the City Hall."
   },
   "publicatiiVanzarePage": {
     "infoTitle": "Sale Publications",
     "infoText": "Sale publications are displayed in accordance with the provisions of the Civil Procedure Code and requests from bailiff offices.",
     "publications": "publications",
-    "noteTitle": "Information Note",
-    "noteText": "Documents on this page are loaded from the database. Links marked with '#' are placeholders and will be updated later with actual documents."
+    "noteTitle": "Information",
+    "noteText": "For additional information regarding sale publications, please contact the City Hall or the competent bailiff office."
   },
   "receptieLucrariPage": {
     "infoTitle": "Construction Works Reception",
@@ -1052,8 +1069,8 @@
     "siteDoc4": "Updated energy performance certificate",
     "siteDoc5": "Updated site plan / Location plan, prepared by ANCPI authorized surveyor",
     "siteDoc6": "Standard form \"RECEPTION REPORT at completion of works\" (room 11, Ground Floor) - 2 original copies",
-    "noteTitle": "Information Note",
-    "noteText": "The required forms can be obtained from room 11, Ground Floor, at Salonta City Hall headquarters."
+    "noteTitle": "Information",
+    "noteText": "For additional details or to obtain the necessary forms, please contact room 11, Ground Floor, at Salonta City Hall."
   },
   "regulamentePublicePage": {
     "infoTitle": "Regulations",
@@ -1061,12 +1078,14 @@
     "currentTitle": "Current Regulations",
     "archiveTitle": "Archived Regulations",
     "documents": "documents",
-    "noteTitle": "Information Note",
-    "noteText": "Documents on this page are loaded from the database. Links marked with '#' are placeholders and will be updated later with actual documents."
+    "noteTitle": "Information",
+    "noteText": "For additional information about current regulations or clarifications, please contact the relevant department at the City Hall."
   },
   "reteleTelecomPage": {
     "infoTitle": "Telecommunications Networks",
-    "infoText": "According to Law no. 159/2016 on the regime of electronic communications network infrastructure, documents regarding access to public or private property for the construction of telecommunications networks."
+    "infoText": "According to Law no. 159/2016 on the regime of electronic communications network infrastructure, documents regarding access to public or private property for the construction of telecommunications networks.",
+    "noteTitle": "Information",
+    "noteText": "For requests regarding access to public or private property for the construction of telecommunications networks, please contact Salonta City Hall."
   },
   "seipPage": {
     "title": "Public Community Service for Computerized Person Records",

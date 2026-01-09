@@ -5,35 +5,23 @@ import { useTranslations } from 'next-intl';
 import { Trash2, Droplets, TreePine, Download, FileText, ChevronDown } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 
-// Types
 interface Document {
-  id: number;
+  id: string;
   title: string;
-  pdfUrl: string;
+  file_url: string;
+  file_name: string;
+  description?: string | null;
 }
 
-// Mock data - will be replaced with database fetch
-const SALUBRIZARE_DOCS: Document[] = [
-  { id: 1, title: 'Rezultatele colectării selective a deșeurilor în anul 2023', pdfUrl: '#' },
-  { id: 2, title: 'Program ridicare deșeuri 2024 – AVE Bihor SRL', pdfUrl: '#' },
-  { id: 3, title: 'HCLMS nr. 109 din 30.05.2024 – Regulamentul privind gestionarea deșeurilor rezultate din activitatea medicală în Mun. Salonta', pdfUrl: '#' },
-  { id: 4, title: 'Contract de delegare prin concesiune a gestiunii Serviciului de salubrizare din zona 3 Bihor (Lot 3) – nr. 105 din 03.02.2020', pdfUrl: '#' },
-  { id: 5, title: 'HCLMS nr. 99 din 30.04.2024 privind aprobarea actualizării și republicării a Regulamentului de stabilire și aplicare a taxei speciale de salubrizare', pdfUrl: '#' },
-];
+interface DocumentCardProps {
+  doc: Document;
+  downloadLabel: string;
+}
 
-const APA_CANAL_DOCS: Document[] = [
-  { id: 1, title: 'Buletin analiză apă: str. Arany János', pdfUrl: '#' },
-  { id: 2, title: 'Buletin analiză apă: str. Kulin', pdfUrl: '#' },
-  { id: 3, title: 'Buletin analiză apă: str. Petőfi Sándor', pdfUrl: '#' },
-  { id: 4, title: 'Buletin analiză apă: str. Andrei Mureșan', pdfUrl: '#' },
-  { id: 5, title: 'Buletin analiză apă: str. Tincii', pdfUrl: '#' },
-];
-
-const SPATII_VERZI_DOCS: Document[] = [
-  { id: 1, title: 'Registrul local al spațiilor verzi (HCLMS nr. 212/30.10.2025)', pdfUrl: '#' },
-];
-
-function DocumentCard({ doc }: { doc: Document }) {
+function DocumentCard({ doc, downloadLabel }: DocumentCardProps) {
+  // Determine file type from file_name
+  const isExcel = doc.file_name?.toLowerCase().endsWith('.xls') || doc.file_name?.toLowerCase().endsWith('.xlsx');
+  
   return (
     <Card hover>
       <CardContent className="flex items-center justify-between pt-6">
@@ -43,14 +31,19 @@ function DocumentCard({ doc }: { doc: Document }) {
           </div>
           <div>
             <h3 className="font-medium text-gray-900">{doc.title}</h3>
+            {doc.description && (
+              <p className="text-sm text-gray-500 mt-1">{doc.description}</p>
+            )}
           </div>
         </div>
         <a
-          href={doc.pdfUrl}
+          href={doc.file_url}
+          target="_blank"
+          rel="noopener noreferrer"
           className="flex items-center gap-1 px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-green-300 transition-colors shrink-0 ml-4"
         >
           <Download className="w-4 h-4 text-green-600" />
-          PDF
+          {isExcel ? 'XLS' : downloadLabel}
         </a>
       </CardContent>
     </Card>
@@ -63,10 +56,11 @@ interface CollapsibleSectionProps {
   title: string;
   description: string;
   documents: Document[];
+  downloadLabel: string;
   defaultOpen?: boolean;
 }
 
-function CollapsibleSection({ icon, iconBg, title, description, documents, defaultOpen = false }: CollapsibleSectionProps) {
+function CollapsibleSection({ icon, iconBg, title, description, documents, downloadLabel, defaultOpen = false }: CollapsibleSectionProps) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
@@ -98,16 +92,26 @@ function CollapsibleSection({ icon, iconBg, title, description, documents, defau
         }`}
       >
         <div className="space-y-3 p-4">
-          {documents.map((doc) => (
-            <DocumentCard key={doc.id} doc={doc} />
-          ))}
+          {documents.length > 0 ? (
+            documents.map((doc) => (
+              <DocumentCard key={doc.id} doc={doc} downloadLabel={downloadLabel} />
+            ))
+          ) : (
+            <p className="text-center py-4 text-gray-500 text-sm">Nu există documente disponibile.</p>
+          )}
         </div>
       </div>
     </div>
   );
 }
 
-export function MediuCollapsibleSections() {
+interface MediuCollapsibleSectionsProps {
+  salubrizareDocs: Document[];
+  apaCanalDocs: Document[];
+  spatiiVerziDocs: Document[];
+}
+
+export function MediuCollapsibleSections({ salubrizareDocs, apaCanalDocs, spatiiVerziDocs }: MediuCollapsibleSectionsProps) {
   const tPage = useTranslations('mediuPage');
 
   return (
@@ -117,7 +121,8 @@ export function MediuCollapsibleSections() {
         iconBg="bg-amber-100"
         title={tPage('salubrizareTitle')}
         description={tPage('salubrizareDesc')}
-        documents={SALUBRIZARE_DOCS}
+        documents={salubrizareDocs}
+        downloadLabel="PDF"
         defaultOpen={true}
       />
 
@@ -126,7 +131,8 @@ export function MediuCollapsibleSections() {
         iconBg="bg-blue-100"
         title={tPage('apaCanalTitle')}
         description={tPage('apaCanalDesc')}
-        documents={APA_CANAL_DOCS}
+        documents={apaCanalDocs}
+        downloadLabel="PDF"
       />
 
       <CollapsibleSection
@@ -134,9 +140,9 @@ export function MediuCollapsibleSections() {
         iconBg="bg-green-100"
         title={tPage('spatiiVerziTitle')}
         description={tPage('spatiiVerziDesc')}
-        documents={SPATII_VERZI_DOCS}
+        documents={spatiiVerziDocs}
+        downloadLabel="PDF"
       />
     </div>
   );
 }
-

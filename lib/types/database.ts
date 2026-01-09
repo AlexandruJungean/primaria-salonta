@@ -183,8 +183,13 @@ export interface Document {
   month: number | null;
   published: boolean;
   source_url: string | null;
+  parent_id: string | null;
   created_at: string;
   updated_at: string;
+}
+
+export interface DocumentWithAnnexes extends Document {
+  annexes: Document[];
 }
 
 // ============================================
