@@ -161,6 +161,9 @@ export function EventsGrid({ events }: EventsGridProps) {
                           { month: 'short' }
                         )}
                       </div>
+                      <div className="text-xs font-medium text-gray-400">
+                        {startDate.getFullYear()}
+                      </div>
                     </div>
                     {isPast && (
                       <div className="absolute top-4 right-4 bg-gray-800 text-white text-xs px-2 py-1 rounded">
