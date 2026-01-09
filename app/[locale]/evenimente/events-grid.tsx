@@ -52,9 +52,9 @@ export function EventsGrid({ events }: EventsGridProps) {
   const locale = useLocale() as 'ro' | 'hu' | 'en';
   const [selectedCategory, setSelectedCategory] = useState<EventType | 'all'>('all');
 
-  // Sort events by date
+  // Sort events by date (newest first)
   const sortedEvents = [...events].sort(
-    (a, b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime()
+    (a, b) => new Date(b.start_date).getTime() - new Date(a.start_date).getTime()
   );
 
   // Filter events by category

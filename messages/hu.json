@@ -129,7 +129,7 @@
     "stiri": "Hírek",
     "camereWeb": "Webkamerák",
     "contact": "Kapcsolat",
-    "faq": "Gyakran ismételt kérdések (Hamarosan)",
+    "faq": "Gyakran ismételt kérdések",
     "raporteazaProblema": "Probléma bejelentése (Hamarosan)",
     "evenimente": "Események",
     "evenimenteDesc": "Nagyszalonta eseménynaptára",
@@ -921,6 +921,8 @@
     "seapNote": "A közbeszerzési hirdetmények megtekintése:",
     "requiredForms": "Szükséges űrlapok",
     "currentDocuments": "Aktuális dokumentumok",
+    "archiveTitle": "Archívum",
+    "noDocuments": "Nincsenek közbeszerzési dokumentumok.",
     "archive2018": "Archívum 2018",
     "archive2017": "Archívum 2017",
     "archive2016": "Archívum 2016"
@@ -930,7 +932,8 @@
     "urbanismOffice": "Városrendezési Iroda",
     "urbanDevelopmentService": "Városfejlesztési Szolgálat",
     "agriculturalOffice": "Mezőgazdasági Iroda",
-    "issuedDocuments": "Kiállított okmányok"
+    "issuedDocuments": "Kiállított okmányok",
+    "noDocuments": "Nincsenek elérhető dokumentumok."
   },
   "autorizatiiConstruirePage": {
     "infoTitle": "Építési engedélyek",

@@ -129,7 +129,7 @@
     "stiri": "News",
     "camereWeb": "Webcams",
     "contact": "Contact",
-    "faq": "Frequently Asked Questions (Coming Soon)",
+    "faq": "Frequently Asked Questions",
     "raporteazaProblema": "Report a Problem (Coming Soon)",
     "evenimente": "Events",
     "evenimenteDesc": "Salonta event calendar",
@@ -921,6 +921,8 @@
     "seapNote": "View public procurement announcements on:",
     "requiredForms": "Required Forms",
     "currentDocuments": "Current Documents",
+    "archiveTitle": "Archive",
+    "noDocuments": "No public procurement documents available.",
     "archive2018": "Archive 2018",
     "archive2017": "Archive 2017",
     "archive2016": "Archive 2016"
@@ -930,7 +932,8 @@
     "urbanismOffice": "Urbanism Office",
     "urbanDevelopmentService": "Urban Development Service",
     "agriculturalOffice": "Agricultural Office",
-    "issuedDocuments": "Issued Documents"
+    "issuedDocuments": "Issued Documents",
+    "noDocuments": "No documents available."
   },
   "autorizatiiConstruirePage": {
     "infoTitle": "Building Permits",

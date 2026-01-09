@@ -7,5 +7,6 @@ export * from './input';
 export * from './link';
 export * from './section';
 export * from './skeleton';
+export * from './collapsible';
 export * from './textarea';
 

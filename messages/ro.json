@@ -129,7 +129,7 @@
     "stiri": "Știri",
     "camereWeb": "Camere web",
     "contact": "Contact",
-    "faq": "Întrebări frecvente (În curând)",
+    "faq": "Întrebări frecvente",
     "raporteazaProblema": "Raportează o problemă (În curând)",
     "evenimente": "Evenimente",
     "evenimenteDesc": "Calendarul evenimentelor din Salonta",
@@ -921,6 +921,8 @@
     "seapNote": "Consultați anunțurile publice pe:",
     "requiredForms": "Formulare necesare",
     "currentDocuments": "Documente curente",
+    "archiveTitle": "Arhivă",
+    "noDocuments": "Nu există documente de achiziții publice.",
     "archive2018": "Arhivă 2018",
     "archive2017": "Arhivă 2017",
     "archive2016": "Arhivă 2016"
@@ -930,7 +932,8 @@
     "urbanismOffice": "Biroul Urbanism",
     "urbanDevelopmentService": "Serviciul de Dezvoltare Urbană",
     "agriculturalOffice": "Biroul Agricol",
-    "issuedDocuments": "Acte emise"
+    "issuedDocuments": "Acte emise",
+    "noDocuments": "Nu există documente disponibile."
   },
   "autorizatiiConstruirePage": {
     "infoTitle": "Autorizații de construire",
