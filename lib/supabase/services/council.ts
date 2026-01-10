@@ -10,6 +10,9 @@ import type {
 
 const DEFAULT_LIMIT = 12;
 
+// Source types for council sessions
+export type SessionSource = 'sedinte' | 'hotarari';
+
 // ============================================
 // COUNCIL SESSIONS
 // ============================================
@@ -18,10 +21,10 @@ const DEFAULT_LIMIT = 12;
  * Get paginated council sessions
  */
 export async function getCouncilSessions(
-  filter: CouncilSessionsFilter = {}
+  filter: CouncilSessionsFilter & { source?: SessionSource } = {}
 ): Promise<PaginatedResponse<CouncilSession>> {
   const supabase = createAnonServerClient();
-  const { page = 1, limit = DEFAULT_LIMIT, year, status } = filter;
+  const { page = 1, limit = DEFAULT_LIMIT, year, status, source } = filter;
   const offset = (page - 1) * limit;
 
   let query = supabase
@@ -29,6 +32,11 @@ export async function getCouncilSessions(
     .select('*', { count: 'exact' })
     .eq('published', true)
     .order('session_date', { ascending: false });
+
+  // Filter by source (sedinte vs hotarari)
+  if (source) {
+    query = query.eq('source', source);
+  }
 
   if (year) {
     query = query
@@ -56,6 +64,24 @@ export async function getCouncilSessions(
     limit,
     totalPages: Math.ceil(totalCount / limit),
   };
+}
+
+/**
+ * Get session announcements (ordine de zi) - source = 'sedinte'
+ */
+export async function getSessionAnnouncements(
+  filter: { page?: number; limit?: number; year?: number } = {}
+): Promise<PaginatedResponse<CouncilSession>> {
+  return getCouncilSessions({ ...filter, source: 'sedinte' });
+}
+
+/**
+ * Get sessions with decisions (hotarari) - source = 'hotarari'
+ */
+export async function getSessionsForHotarari(
+  filter: { page?: number; limit?: number; year?: number } = {}
+): Promise<PaginatedResponse<CouncilSession>> {
+  return getCouncilSessions({ ...filter, source: 'hotarari' });
 }
 
 /**
@@ -257,6 +283,7 @@ export async function getCouncilDecisionYears(): Promise<number[]> {
 
 /**
  * Get sessions with their decisions count for hotarari page - PAGINATED
+ * Only fetches sessions with source = 'hotarari'
  */
 export async function getSessionsWithDecisionsCount(options: {
   page?: number;
@@ -271,22 +298,24 @@ export async function getSessionsWithDecisionsCount(options: {
   const supabase = createAnonServerClient();
   const offset = (page - 1) * perPage;
 
-  // Get total count first
+  // Get total count first - only hotarari sessions
   const { count: totalCount, error: countError } = await supabase
     .from('council_sessions')
     .select('*', { count: 'exact', head: true })
-    .eq('published', true);
+    .eq('published', true)
+    .eq('source', 'hotarari');
 
   if (countError) {
     console.error('Error fetching total count:', countError);
     return { sessions: [], totalCount: 0, totalPages: 0, currentPage: page };
   }
 
-  // Get paginated sessions
+  // Get paginated sessions - only hotarari sessions
   const { data: sessions, error: sessionsError } = await supabase
     .from('council_sessions')
     .select('*')
     .eq('published', true)
+    .eq('source', 'hotarari')
     .order('session_date', { ascending: false })
     .range(offset, offset + perPage - 1);
 

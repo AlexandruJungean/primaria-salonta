@@ -28,8 +28,11 @@ export {
   getCouncilDecisionBySlug,
   getCouncilDecisionYears,
   getSessionsWithDecisionsCount,
+  getSessionAnnouncements,
+  getSessionsForHotarari,
   getAllSessionSlugs,
   getAllDecisionSlugs,
+  type SessionSource,
 } from './council';
 
 // Document Services

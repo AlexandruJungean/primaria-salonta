@@ -165,7 +165,7 @@ export default async function HotarariPage({
   const th = await getTranslations('hotarariPage');
 
   // Fetch paginated sessions with decisions count from database
-  const { sessions, totalCount, totalPages } = await getSessionsWithDecisionsCount({
+  const { sessions, totalPages } = await getSessionsWithDecisionsCount({
     page: currentPage,
     perPage: ITEMS_PER_PAGE,
   });
@@ -181,13 +181,8 @@ export default async function HotarariPage({
       <Section background="white">
         <Container>
           <div className="max-w-3xl mx-auto">
-            <p className="text-lg text-gray-600 mb-4 text-center">
+            <p className="text-lg text-gray-600 mb-8 text-center">
               {th('description')}
-            </p>
-            
-            {/* Total count info */}
-            <p className="text-sm text-gray-500 mb-8 text-center">
-              Total: {totalCount} ședințe • Pagina {currentPage} din {totalPages}
             </p>
 
             {sessions.length === 0 ? (
