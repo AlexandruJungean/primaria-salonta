@@ -162,7 +162,7 @@ export default async function AchizitiiPage({ params }: { params: Promise<{ loca
               <CardContent>
                 <div className="space-y-2">
                   <a
-                    href="https://pub-c6874596c76543a2ac314657c3d9fff8.r2.dev/documente/2026/achizitii-publice-directe.doc"
+                    href="https://pub-c6874596c76543a2ac314657c3d9fff8.r2.dev/documente/altele/2026/achizitii-publice-directe.doc"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 text-gray-700 hover:text-primary-700 transition-colors"
@@ -171,7 +171,7 @@ export default async function AchizitiiPage({ params }: { params: Promise<{ loca
                     <span>Achiziții publice directe (formulare)</span>
                   </a>
                   <a
-                    href="https://pub-c6874596c76543a2ac314657c3d9fff8.r2.dev/documente/2026/achizitii-publice-cerere-de-oferte.doc"
+                    href="https://pub-c6874596c76543a2ac314657c3d9fff8.r2.dev/documente/altele/2026/achizitii-publice-cerere-de-oferte.doc"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 text-gray-700 hover:text-primary-700 transition-colors"

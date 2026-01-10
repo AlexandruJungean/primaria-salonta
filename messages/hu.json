@@ -657,7 +657,8 @@
     "announcements": "hirdetmény",
     "noAnnouncements": "Jelenleg nincsenek elérhető hirdetmények.",
     "archiveNote": "Hirdetmények archívuma",
-    "archiveNoteDesc": "A hirdetmények az adatbázisból töltődnek be. Régebbi hirdetményekért kérjük, forduljon a polgármesteri hivatalhoz."
+    "archiveNoteDesc": "A hirdetmények az adatbázisból töltődnek be. Régebbi hirdetményekért kérjük, forduljon a polgármesteri hivatalhoz.",
+    "legend": "Hirdetménytípusok magyarázata"
   },
   "dezbateriPage": {
     "introTitle": "Részvétel a nyilvános vitákon",
@@ -670,7 +671,8 @@
   "statutPage": {
     "statut2021": "Nagyszalonta Város Statútuma – 2021",
     "statut2017": "Nagyszalonta Város Statútuma – Újraközölt, 2017",
-    "download": "Letöltés"
+    "download": "Letöltés",
+    "noDocuments": "Jelenleg nincsenek elérhető dokumentumok."
   },
   "financiarePage": {
     "budgetTitle": "Nagyszalonta Város általános költségvetése",
@@ -680,7 +682,8 @@
     "budgetGeneralTitle": "Általános költségvetés",
     "rectificationsTitle": "Költségvetési módosítások",
     "otherDocsTitle": "Egyéb dokumentumok",
-    "rectification": "Módosítás"
+    "rectification": "Módosítás",
+    "noDocuments": "Jelenleg nincsenek elérhető pénzügyi dokumentumok."
   },
   "hotarariMolPage": {
     "mainTitle": "Nagyszalonta Város Helyi Tanácsának határozatai",
@@ -691,13 +694,15 @@
     "projectsTitle": "Határozattervezetek nyilvántartása",
     "projectsSubtitle": "A döntéshozó szerv határozattervezeteinek nyilvántartása",
     "registerYear": "Határozatok nyilvántartása – {year}",
-    "projectYear": "Tervezetek nyilvántartása – {year}"
+    "projectYear": "Tervezetek nyilvántartása – {year}",
+    "noDocuments": "Jelenleg nincsenek elérhető nyilvántartások."
   },
   "dispozitiiMolPage": {
     "mainTitle": "Nagyszalonta Város Polgármesterének rendeletei",
     "registersTitle": "Rendeletek nyilvántartása",
     "registersSubtitle": "A végrehajtó hatóság rendeleteinek éves nyilvántartása",
-    "registerYear": "Rendeletek nyilvántartása – {year}"
+    "registerYear": "Rendeletek nyilvántartása – {year}",
+    "noDocuments": "Jelenleg nincsenek elérhető nyilvántartások."
   },
   "regulamentePage": {
     "mainTitle": "Közigazgatási eljárások szabályzatai",
@@ -705,7 +710,11 @@
     "otherTitle": "Egyéb szabályzatok",
     "otherSubtitle": "Különböző területekre vonatkozó szabályzatok",
     "archiveTitle": "Archív szabályzatok",
-    "archiveSubtitle": "Hatályon kívül helyezett vagy lecserélt szabályzatok"
+    "archiveSubtitle": "Hatályon kívül helyezett vagy lecserélt szabályzatok",
+    "noDocuments": "Jelenleg nincsenek elérhető szabályzatok.",
+    "viewAllTitle": "Az összes szabályzat megtekintése",
+    "viewAllDescription": "Hozzáférés a teljes oldalhoz az összes hatályos és archivált szabályzattal.",
+    "viewAllButton": "Összes megtekintése"
   },
   "buletinPage": {
     "sectionA": "A közintézmény szervezését és működését szabályozó normatív aktusok:",
@@ -740,14 +749,16 @@
     "extraordinary": "rendkívüli",
     "archives": "Archívum",
     "archiveYear": "{year} archívum",
-    "mandateValidationsTitle": "Vagyonnyilatkozatok / Mandátum hitelesítések",
+    "mandateValidationsTitle": "Tanácsos / Polgármester mandátum hitelesítések",
     "careerTitle": "Karrier – hirdetmények / űrlapok",
     "newsAndEvents": "Hírek és események",
     "socialProblemsTitle": "Szociális problémák – űrlapok",
     "covidInfoTitle": "Hasznos koronavírus információk",
     "covidLinkTitle": "Hasznos koronavírus információk (COVID-19)",
     "registersTitle": "Nyilvántartások",
-    "archiveMandateTitle": "Mandátum hitelesítés archívum (2020-2024)"
+    "archiveMandateTitle": "Mandátum hitelesítés archívum (2020-2024)",
+    "noDocuments": "Jelenleg nincsenek elérhető dokumentumok.",
+    "councilActivityReports": "Helyi tanácsosok tevékenységi jelentései"
   },
   "coronavirusPage": {
     "title": "Hasznos koronavírus információk (COVID-19)",

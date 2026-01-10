@@ -291,7 +291,6 @@ export const MAIN_NAVIGATION: NavSection[] = [
         items: [
           { id: 'consilieriLocali', href: '/consiliul-local/consilieri', icon: Users },
           { id: 'comisii', href: '/consiliul-local/comisii', icon: Briefcase },
-          { id: 'sedinte', href: '/consiliul-local/sedinte', icon: Calendar },
           { id: 'ordineZi', href: '/consiliul-local/ordine-de-zi', icon: ListChecks },
           { id: 'hotarari', href: '/consiliul-local/hotarari', icon: Gavel },
           { id: 'hotarariRepublicate', href: '/consiliul-local/hotarari-republicate', icon: FileStack },

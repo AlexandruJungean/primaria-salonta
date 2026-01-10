@@ -657,7 +657,8 @@
     "announcements": "announcements",
     "noAnnouncements": "No announcements available at the moment.",
     "archiveNote": "Announcements archive",
-    "archiveNoteDesc": "Announcements are loaded from the database. For older announcements, please contact the city hall."
+    "archiveNoteDesc": "Announcements are loaded from the database. For older announcements, please contact the city hall.",
+    "legend": "Announcement types legend"
   },
   "dezbateriPage": {
     "introTitle": "Participation in public debates",
@@ -670,7 +671,8 @@
   "statutPage": {
     "statut2021": "Statute of Salonta Municipality – 2021",
     "statut2017": "Statute of Salonta Municipality – Republished, 2017",
-    "download": "Download"
+    "download": "Download",
+    "noDocuments": "No documents available at this time."
   },
   "financiarePage": {
     "budgetTitle": "General Budget of Salonta Municipality",
@@ -680,7 +682,8 @@
     "budgetGeneralTitle": "General Budget",
     "rectificationsTitle": "Budget Rectifications",
     "otherDocsTitle": "Other Documents",
-    "rectification": "Rectification"
+    "rectification": "Rectification",
+    "noDocuments": "No financial documents available at this time."
   },
   "hotarariMolPage": {
     "mainTitle": "Decisions of Salonta Municipal Local Council",
@@ -691,13 +694,15 @@
     "projectsTitle": "Draft Decisions Registers",
     "projectsSubtitle": "Records of draft decisions of the deliberative authority",
     "registerYear": "Decisions register – {year}",
-    "projectYear": "Draft register – {year}"
+    "projectYear": "Draft register – {year}",
+    "noDocuments": "No registers available at this time."
   },
   "dispozitiiMolPage": {
     "mainTitle": "Dispositions of the Mayor of Salonta Municipality",
     "registersTitle": "Dispositions Registers",
     "registersSubtitle": "Annual records of executive authority dispositions",
-    "registerYear": "Dispositions register – {year}"
+    "registerYear": "Dispositions register – {year}",
+    "noDocuments": "No registers available at this time."
   },
   "regulamentePage": {
     "mainTitle": "Administrative Procedure Regulations",
@@ -705,7 +710,11 @@
     "otherTitle": "Other Regulations",
     "otherSubtitle": "Specific regulations for various domains",
     "archiveTitle": "Archived Regulations",
-    "archiveSubtitle": "Repealed or replaced regulations"
+    "archiveSubtitle": "Repealed or replaced regulations",
+    "noDocuments": "No regulations available at this time.",
+    "viewAllTitle": "View all regulations",
+    "viewAllDescription": "Access the complete page with all current and archived regulations.",
+    "viewAllButton": "View all"
   },
   "buletinPage": {
     "sectionA": "Normative acts regulating the organization and functioning of the public institution:",
@@ -740,14 +749,16 @@
     "extraordinary": "extraordinary",
     "archives": "Archive",
     "archiveYear": "Archive {year}",
-    "mandateValidationsTitle": "Wealth Declarations / Mandate Validations",
+    "mandateValidationsTitle": "Councilor / Mayor Mandate Validations",
     "careerTitle": "Career – announcements / forms",
     "newsAndEvents": "News and events",
     "socialProblemsTitle": "Social Problems – forms",
     "covidInfoTitle": "Useful Coronavirus Information",
     "covidLinkTitle": "Useful Coronavirus Information (COVID-19)",
     "registersTitle": "Registers",
-    "archiveMandateTitle": "Mandate Validation Archive (2020-2024)"
+    "archiveMandateTitle": "Mandate Validation Archive (2020-2024)",
+    "noDocuments": "No documents available at the moment.",
+    "councilActivityReports": "Local Councilors Activity Reports"
   },
   "coronavirusPage": {
     "title": "Useful Coronavirus Information (COVID-19)",

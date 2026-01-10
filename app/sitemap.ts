@@ -70,7 +70,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/consiliul-local/hotarari-republicate', priority: 0.55, changeFrequency: 'monthly' as const },
     { path: '/consiliul-local/declaratii-avere', priority: 0.55, changeFrequency: 'yearly' as const },
     { path: '/consiliul-local/rapoarte-activitate', priority: 0.5, changeFrequency: 'yearly' as const },
-    { path: '/consiliul-local/sedinte', priority: 0.7, changeFrequency: 'weekly' as const },
     { path: '/consiliul-local/procese-verbale', priority: 0.65, changeFrequency: 'weekly' as const },
     
     // Transparenta

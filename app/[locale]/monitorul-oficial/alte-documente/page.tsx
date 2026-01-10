@@ -1,9 +1,8 @@
 import { getTranslations } from 'next-intl/server';
-import { useTranslations } from 'next-intl';
 import { 
   FileText, Download, ExternalLink, Users, FileCheck, 
   Calendar, Briefcase, Heart, AlertCircle, ClipboardList,
-  Archive, Link as LinkIcon, ScrollText
+  Archive, Link as LinkIcon, ScrollText, FileWarning
 } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
@@ -11,8 +10,10 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
 import Link from 'next/link';
-import { generatePageMetadata, BreadcrumbJsonLd } from '@/lib/seo';
+import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
+import { getDocumentsBySourceFolder } from '@/lib/supabase/services/documents';
+import type { Document } from '@/lib/types/database';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -27,104 +28,75 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 const QUICK_LINKS = [
   { key: 'ordineZi', href: '/consiliul-local/ordine-de-zi' },
   { key: 'proceseVerbale', href: '/consiliul-local/hotarari' },
-  { key: 'publicatiiCasatorii', href: '/stare-civila' },
+  { key: 'publicatiiCasatorii', href: '/informatii-publice/publicatii-casatorie' },
   { key: 'dezbateriPublice', href: '/transparenta/dezbateri-publice' },
   { key: 'declaratiiAlesiFunctionari', href: '/primaria/declaratii-avere' },
   { key: 'declaratiiConsilieri', href: '/consiliul-local/declaratii-avere' },
 ];
 
-// Transparency announcements - documents from database
-const TRANSPARENCY_ANNOUNCEMENTS = [
-  { doc: 'Informarea în prealabil, din oficiu, asupra problemelor de interes public, care urmează să fie dezbătute', url: '#' },
-  { doc: 'Informarea în prealabil, din oficiu, asupra proiectelor de acte administrative, cu caracter normativ', url: '#' },
-];
-
-// Transparency reports by year - documents from database
-const TRANSPARENCY_REPORTS = [
-  { year: 2024, url: '#' },
-  { year: 2023, url: '#' },
-  { year: 2022, url: '#' },
-  { year: 2021, url: '#' },
-  { year: 2020, url: '#' },
-  { year: 2018, url: '#' },
-];
-
-// Other reports
-type OtherReport = { doc: string; url: string } | { doc: string; href: string };
-const OTHER_REPORTS: OtherReport[] = [
-  { doc: 'Raportul anual de activitate a primarului – august 2020', url: '#' },
-  { doc: 'Rapoarte de activitate ale consilierilor locali', href: '/consiliul-local/rapoarte-activitate' },
-];
-
-// Council session minutes 2025 - documents from database
-const MINUTES_2025 = [
-  { date: '30.12.2025', url: '#' },
-  { date: '15.12.2025', url: '#' },
-  { date: '27.11.2025', url: '#' },
-  { date: '30.10.2025', url: '#' },
-  { date: '25.09.2025', url: '#' },
-  { date: '30.09.2025', url: '#' },
-  { date: '27.08.2025', url: '#' },
-  { date: '31.07.2025', url: '#' },
-  { date: '02.07.2025', url: '#' },
-  { date: '26.06.2025', url: '#' },
-  { date: '17.06.2025', url: '#' },
-  { date: '29.05.2025', url: '#' },
-  { date: '26.05.2025', url: '#' },
-  { date: '22.05.2025', url: '#' },
-  { date: '30.04.2025', url: '#' },
-  { date: '10.04.2025', url: '#' },
-  { date: '31.03.2025', url: '#' },
-  { date: '21.03.2025', url: '#' },
-  { date: '13.03.2025', isExtraordinary: true, url: '#' },
-  { date: '27.02.2025', url: '#' },
-  { date: '13.02.2025', url: '#' },
-  { date: '30.01.2025', url: '#' },
-];
-
-// Minutes archives - documents from database
-const MINUTES_ARCHIVES = [2024, 2023, 2022, 2021, 2020];
-
-// Wealth declarations and mandate validations - documents from database
-const MANDATE_VALIDATIONS = [
-  { doc: 'Hotărârea Civilă nr. 445/23.06.2025 privind validare consilier local supleant', url: '#' },
-  { doc: 'HCLMS nr. 109 din 17.06.2025 – constatare încetare de drept, prin demisie, a mandatului de consilier local al d-lui Pirtea Mihai George', url: '#' },
-  { doc: 'Hotărârea Civilă nr. 220/07.04.2025 privind validare consilier local supleant', url: '#' },
-  { doc: 'HCLMS nr.52 din 31.03.2025 – constatare încetare de drept, prin demisie, a mandatului de consilier local al domnului Nagy Árpád – Ferencz', url: '#' },
-  { doc: 'Ordinul Prefectului nr. 583/25.10.2024 privind constatarea ca legal constituit a Consiliului Local al Municipiului Salonta', url: '#' },
-  { doc: 'Încheiere Civilă nr. 712 din 16.10.2024 privind validare mandat consilieri locali – Consiliul local al Municipiului Salonta', url: '#' },
-  { doc: 'Încheierea Civilă nr.763 din 04 noiembrie 2024 a Judecătoriei Salonta privind validare mandate consilier local supleant', url: '#' },
-  { doc: 'Încheiere Civilă nr. 703 din 14.10.2024 privind validare mandat primar Török László', url: '#' },
-];
-
 // Career links - internal pages
 const CAREER_LINKS = [
   { titleKey: 'concursuri', href: '/informatii-publice/concursuri' },
-  { titleKey: 'anunturi', href: '/transparenta/anunturi' },
-  { titleKey: 'formulare', href: '/servicii-online/formulare' },
+  { titleKey: 'anunturi', href: '/informatii-publice/anunturi' },
+  { titleKey: 'formulare', href: '/informatii-publice/formulare' },
 ];
 
-// Social problems - internal page (single page with both RO/HU forms)
+// Social problems - internal page
 const SOCIAL_LINK = { titleKey: 'problemeSociale', href: '/servicii-online/probleme-sociale' };
 
 // Coronavirus info - internal page link
 const COVID_LINK = { titleKey: 'coronavirus', href: '/informatii-publice/coronavirus' };
 
-// Registers - documents from database
-const REGISTERS = [
-  { doc: 'Registrul privind înregistrarea refuzurilor de a semna, contrasemna, aviza actele administrative, precum obiecțiile cu privire la legalitate, efectuate în scris', url: '#' },
-  { doc: 'Registru consemnare sugestii', url: '#' },
-];
+// Document categorization helpers
+function isTransparencyReport(title: string): boolean {
+  const lower = title.toLowerCase();
+  return lower.includes('transparenta decizionala') || 
+         lower.includes('transparență decizională') ||
+         lower.includes('raport anual privind transparenta');
+}
 
-function DocumentItem({ title, url }: { title: string; url: string }) {
+function isMayorReport(title: string): boolean {
+  return title.toLowerCase().includes('raportul anual de activitate a primarului');
+}
+
+function isMinute(title: string): boolean {
+  return title.toLowerCase().includes('minuta');
+}
+
+function isMandateValidation(title: string): boolean {
+  const lower = title.toLowerCase();
+  return lower.includes('validare') || 
+         lower.includes('încetare') || 
+         lower.includes('incetare') ||
+         lower.includes('ordinul prefectului') ||
+         lower.includes('hotărârea civilă') ||
+         lower.includes('hotararea civila') ||
+         lower.includes('încheiere civilă') ||
+         lower.includes('incheiere civila') ||
+         lower.includes('încheierea civilă') ||
+         lower.includes('incheierea civila');
+}
+
+function isRegister(title: string): boolean {
+  return title.toLowerCase().includes('registru');
+}
+
+function extractYearFromTitle(title: string): number {
+  const match = title.match(/\b(20\d{2})\b/);
+  return match ? parseInt(match[1], 10) : 2025;
+}
+
+function DocumentItem({ doc }: { doc: Document }) {
   return (
     <div className="flex items-center justify-between gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
       <div className="flex items-center gap-2 min-w-0">
         <FileText className="w-4 h-4 text-gray-500 shrink-0" />
-        <span className="text-sm text-gray-700">{title}</span>
+        <span className="text-sm text-gray-700 truncate" title={doc.title}>{doc.title}</span>
       </div>
       <Link
-        href={url}
+        href={doc.file_url}
+        target="_blank"
+        rel="noopener noreferrer"
         className="flex items-center gap-1 px-2 py-1 bg-gray-200 text-gray-700 hover:bg-gray-300 rounded text-xs font-medium shrink-0"
       >
         <Download className="w-3 h-3" />
@@ -175,16 +147,46 @@ function SectionHeader({
   bgColor: string;
 }) {
   return (
-    <div className={`${bgColor} px-6 py-4 flex items-center gap-3 -mx-6 -mt-6 mb-6`}>
+    <div className={`${bgColor} px-6 py-4 flex items-center gap-3 -mx-6 -mt-6 mb-6 rounded-t-lg`}>
       <Icon className="w-6 h-6 text-white" />
       <h2 className="text-lg font-bold text-white">{title}</h2>
     </div>
   );
 }
 
-export default function AlteDocumentePage() {
-  const t = useTranslations('navigation');
-  const ta = useTranslations('alteDocumentePage');
+export default async function AlteDocumentePage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'navigation' });
+  const ta = await getTranslations({ locale, namespace: 'alteDocumentePage' });
+
+  // Fetch documents from database
+  const allDocuments = await getDocumentsBySourceFolder('alte-documente');
+
+  // Categorize documents
+  const transparencyReports = allDocuments.filter(d => isTransparencyReport(d.title));
+  const mayorReports = allDocuments.filter(d => isMayorReport(d.title));
+  const minutes = allDocuments.filter(d => isMinute(d.title));
+  const mandateValidations = allDocuments.filter(d => isMandateValidation(d.title));
+  const registers = allDocuments.filter(d => isRegister(d.title));
+
+  // Group minutes by year
+  const minutesByYear = minutes.reduce((acc, doc) => {
+    const year = extractYearFromTitle(doc.title);
+    if (!acc[year]) acc[year] = [];
+    acc[year].push(doc);
+    return acc;
+  }, {} as Record<number, Document[]>);
+
+  // Sort years descending
+  const sortedYears = Object.keys(minutesByYear)
+    .map(Number)
+    .sort((a, b) => b - a);
+
+  // Sort transparency reports by year descending
+  transparencyReports.sort((a, b) => extractYearFromTitle(b.title) - extractYearFromTitle(a.title));
+
+  // Sort mandate validations by year descending
+  mandateValidations.sort((a, b) => extractYearFromTitle(b.title) - extractYearFromTitle(a.title));
 
   return (
     <>
@@ -216,50 +218,39 @@ export default function AlteDocumentePage() {
               </div>
             </div>
 
-            {/* Transparency Announcements */}
-            <Card className="overflow-hidden">
-              <CardContent className="p-6">
-                <SectionHeader icon={AlertCircle} title={ta('transparencyAnnouncementsTitle')} bgColor="bg-amber-600" />
-                <div className="space-y-2">
-                  {TRANSPARENCY_ANNOUNCEMENTS.map((doc, i) => (
-                    <DocumentItem key={i} title={doc.doc} url={doc.url} />
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
             {/* Transparency Reports */}
             <Card className="overflow-hidden">
               <CardContent className="p-6">
                 <SectionHeader icon={FileCheck} title={ta('transparencyReportsTitle')} bgColor="bg-blue-600" />
-                <div className="space-y-4">
-                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2">
-                    {TRANSPARENCY_REPORTS.map((report, i) => (
-                      <DocumentItem 
-                        key={i} 
-                        title={ta('transparencyReportYear', { year: report.year })} 
-                        url={report.url} 
-                      />
-                    ))}
+                
+                {transparencyReports.length > 0 ? (
+                  <div className="space-y-4">
+                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                      {transparencyReports.map((doc) => (
+                        <DocumentItem key={doc.id} doc={doc} />
+                      ))}
+                    </div>
+                    
+                    {/* Mayor report and link to activity reports */}
+                    <div className="border-t pt-4 space-y-2">
+                      {mayorReports.map((doc) => (
+                        <DocumentItem key={doc.id} doc={doc} />
+                      ))}
+                      <Link
+                        href="/consiliul-local/rapoarte-activitate"
+                        className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
+                      >
+                        <ExternalLink className="w-4 h-4 text-blue-600" />
+                        <span className="text-sm text-gray-700">{ta('councilActivityReports')}</span>
+                      </Link>
+                    </div>
                   </div>
-                  <div className="border-t pt-4 space-y-2">
-                    {OTHER_REPORTS.map((report, i) => {
-                      if ('href' in report) {
-                        return (
-                          <Link
-                            key={i}
-                            href={report.href}
-                            className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
-                          >
-                            <ExternalLink className="w-4 h-4 text-blue-600" />
-                            <span className="text-sm text-gray-700">{report.doc}</span>
-                          </Link>
-                        );
-                      }
-                      return <DocumentItem key={i} title={report.doc} url={report.url} />;
-                    })}
+                ) : (
+                  <div className="text-center py-6 text-gray-500">
+                    <FileWarning className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                    <p>{ta('noDocuments')}</p>
                   </div>
-                </div>
+                )}
               </CardContent>
             </Card>
 
@@ -267,72 +258,52 @@ export default function AlteDocumentePage() {
             <Card className="overflow-hidden">
               <CardContent className="p-6">
                 <SectionHeader icon={ScrollText} title={ta('councilMinutesTitle')} bgColor="bg-green-600" />
-                <div className="space-y-6">
-                  {/* 2025 Minutes */}
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                      <Calendar className="w-5 h-5 text-green-600" />
-                      2025
-                    </h3>
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2">
-                      {MINUTES_2025.map((minute, i) => (
-                        <DocumentItem 
-                          key={i} 
-                          title={`${ta('minuteSession')} ${minute.date}${'isExtraordinary' in minute ? ` (${ta('extraordinary')})` : ''}`} 
-                          url={minute.url} 
-                        />
-                      ))}
-                    </div>
+                
+                {minutes.length > 0 ? (
+                  <div className="space-y-6">
+                    {sortedYears.map((year) => (
+                      <div key={year}>
+                        <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                          <Calendar className="w-5 h-5 text-green-600" />
+                          {year}
+                          <span className="text-sm font-normal text-gray-500">
+                            ({minutesByYear[year].length} {minutesByYear[year].length === 1 ? 'document' : 'documente'})
+                          </span>
+                        </h3>
+                        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                          {minutesByYear[year].map((doc) => (
+                            <DocumentItem key={doc.id} doc={doc} />
+                          ))}
+                        </div>
+                      </div>
+                    ))}
                   </div>
-
-                  {/* Archives */}
-                  <div className="border-t pt-4">
-                    <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                      <Archive className="w-5 h-5 text-gray-500" />
-                      {ta('archives')}
-                    </h3>
-                    <div className="grid sm:grid-cols-3 lg:grid-cols-5 gap-2">
-                      {MINUTES_ARCHIVES.map((year, i) => (
-                        <Link
-                          key={i}
-                          href="#"
-                          className="flex items-center justify-center gap-2 p-3 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors font-medium text-gray-700"
-                        >
-                          <Archive className="w-4 h-4" />
-                          {ta('archiveYear', { year })}
-                        </Link>
-                      ))}
-                    </div>
+                ) : (
+                  <div className="text-center py-6 text-gray-500">
+                    <FileWarning className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                    <p>{ta('noDocuments')}</p>
                   </div>
-                </div>
+                )}
               </CardContent>
             </Card>
 
-            {/* Wealth Declarations and Mandate Validations */}
+            {/* Mandate Validations */}
             <Card className="overflow-hidden">
               <CardContent className="p-6">
                 <SectionHeader icon={Users} title={ta('mandateValidationsTitle')} bgColor="bg-purple-600" />
-                <div className="space-y-2">
-                  {MANDATE_VALIDATIONS.map((doc, i) => (
-                    <DocumentItem key={i} title={doc.doc} url={doc.url} />
-                  ))}
-                </div>
-                {/* Archive section - documents from database */}
-                <div className="mt-4 pt-4 border-t">
-                  <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                    <Archive className="w-5 h-5 text-purple-600" />
-                    {ta('archiveMandateTitle')}
-                  </h3>
+                
+                {mandateValidations.length > 0 ? (
                   <div className="space-y-2">
-                    <DocumentItem title="Sentința civilă nr. 86/2023 privind validarea mandatului consilierului local supleant" url="#" />
-                    <DocumentItem title="HCLMS nr. 3 din 31.01.2023 – constatare încetare mandat Gali Éva" url="#" />
-                    <DocumentItem title="Sentința civilă nr. 45/2022 privind validarea mandatului consilierului local supleant" url="#" />
-                    <DocumentItem title="Încheierea civilă nr. 341/2020 privind validarea mandatului primarului" url="#" />
-                    <DocumentItem title="Încheierea civilă nr. 349/2020 privind validarea mandatelor consilierilor locali" url="#" />
-                    <DocumentItem title="Ordinul Prefectului nr. 588/20.10.2020 privind constatarea ca legal constituit a Consiliului Local al mun. Salonta" url="#" />
-                    <DocumentItem title="Încheierea civilă nr.397/2020 privind validarea mandatului consilierului local supleant" url="#" />
+                    {mandateValidations.map((doc) => (
+                      <DocumentItem key={doc.id} doc={doc} />
+                    ))}
                   </div>
-                </div>
+                ) : (
+                  <div className="text-center py-6 text-gray-500">
+                    <FileWarning className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                    <p>{ta('noDocuments')}</p>
+                  </div>
+                )}
               </CardContent>
             </Card>
 
@@ -382,11 +353,19 @@ export default function AlteDocumentePage() {
             <Card className="overflow-hidden">
               <CardContent className="p-6">
                 <SectionHeader icon={ClipboardList} title={ta('registersTitle')} bgColor="bg-gray-700" />
-                <div className="space-y-2">
-                  {REGISTERS.map((doc, i) => (
-                    <DocumentItem key={i} title={doc.doc} url={doc.url} />
-                  ))}
-                </div>
+                
+                {registers.length > 0 ? (
+                  <div className="space-y-2">
+                    {registers.map((doc) => (
+                      <DocumentItem key={doc.id} doc={doc} />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-6 text-gray-500">
+                    <FileWarning className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                    <p>{ta('noDocuments')}</p>
+                  </div>
+                )}
               </CardContent>
             </Card>
 

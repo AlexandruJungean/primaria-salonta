@@ -1,14 +1,14 @@
 import { getTranslations } from 'next-intl/server';
-import { useTranslations } from 'next-intl';
-import { Gavel, FileText, Download, BookOpen, ClipboardList } from 'lucide-react';
+import { Gavel, FileText, Download, BookOpen, ClipboardList, FileWarning } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { Card, CardContent } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
 import Link from 'next/link';
-import { generatePageMetadata, BreadcrumbJsonLd } from '@/lib/seo';
+import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
+import { getDocumentsBySourceFolder } from '@/lib/supabase/services/documents';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -19,38 +19,53 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   });
 }
 
-// Link-uri principale
+// Link-uri principale către paginile consiliului local
 const MAIN_LINKS = [
   { id: 'hotarari-clms', href: '/consiliul-local/hotarari' },
   { id: 'hotarari-republicate', href: '/consiliul-local/hotarari-republicate' },
 ];
 
-// Registre hotărâri adoptate - doar ani
-const DECISION_REGISTERS = [
-  { year: 2025, url: '#' },
-  { year: 2024, url: '#' },
-  { year: 2023, url: '#' },
-  { year: 2022, url: '#' },
-  { year: 2021, url: '#' },
-  { year: '2020 (2020-2024)', url: '#' },
-  { year: 2020, url: '#' },
-  { year: 2019, url: '#' },
-];
+/**
+ * Extract year from document title
+ * e.g. "Registrul hotărârilor adoptate de Consiliul Local în 2024" => 2024
+ */
+function extractYearFromTitle(title: string): number | null {
+  const match = title.match(/\b(20\d{2})\b/);
+  return match ? parseInt(match[1], 10) : null;
+}
 
-// Registre proiecte de hotărâri - doar ani
-const PROJECT_REGISTERS = [
-  { year: 2025, url: '#' },
-  { year: 2024, url: '#' },
-  { year: 2023, url: '#' },
-  { year: 2022, url: '#' },
-  { year: 2021, url: '#' },
-  { year: 2020, url: '#' },
-  { year: '2020 (2020-2024)', url: '#' },
-];
+/**
+ * Check if document is a project register (proiecte de hotărâri)
+ */
+function isProjectRegister(title: string): boolean {
+  const lowerTitle = title.toLowerCase();
+  return lowerTitle.includes('proiect');
+}
 
-export default function HotarariMolPage() {
-  const t = useTranslations('navigation');
-  const th = useTranslations('hotarariMolPage');
+export default async function HotarariMolPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'navigation' });
+  const th = await getTranslations({ locale, namespace: 'hotarariMolPage' });
+
+  // Fetch all registers from database
+  const allDocuments = await getDocumentsBySourceFolder('hotararile-autoritatii-deliberative');
+  
+  // Separate into decision registers and project registers
+  const decisionRegisters = allDocuments
+    .filter(doc => !isProjectRegister(doc.title))
+    .sort((a, b) => {
+      const yearA = a.year || extractYearFromTitle(a.title) || 0;
+      const yearB = b.year || extractYearFromTitle(b.title) || 0;
+      return yearB - yearA; // Sort descending by year
+    });
+  
+  const projectRegisters = allDocuments
+    .filter(doc => isProjectRegister(doc.title))
+    .sort((a, b) => {
+      const yearA = a.year || extractYearFromTitle(a.title) || 0;
+      const yearB = b.year || extractYearFromTitle(b.title) || 0;
+      return yearB - yearA; // Sort descending by year
+    });
 
   return (
     <>
@@ -95,27 +110,36 @@ export default function HotarariMolPage() {
                 </div>
               </div>
               
-              <div className="grid sm:grid-cols-2 gap-3">
-                {DECISION_REGISTERS.map((reg) => (
-                  <div key={reg.year} className="flex items-center justify-between gap-3 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                    <div className="flex items-center gap-3">
-                      <FileText className="w-5 h-5 text-blue-600" />
-                      <span className="font-medium text-gray-900 text-sm">
-                        {th('registerYear', { year: reg.year })}
-                      </span>
+              {decisionRegisters.length === 0 ? (
+                <Card>
+                  <CardContent className="p-6 text-center">
+                    <FileWarning className="w-10 h-10 mx-auto text-gray-400 mb-3" />
+                    <p className="text-gray-600 text-sm">{th('noDocuments')}</p>
+                  </CardContent>
+                </Card>
+              ) : (
+                <div className="grid sm:grid-cols-2 gap-3">
+                  {decisionRegisters.map((doc) => (
+                    <div key={doc.id} className="flex items-center justify-between gap-3 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                      <div className="flex items-center gap-3 flex-1 min-w-0">
+                        <FileText className="w-5 h-5 text-blue-600 shrink-0" />
+                        <span className="font-medium text-gray-900 text-sm truncate" title={doc.title}>
+                          {doc.title}
+                        </span>
+                      </div>
+                      <Link
+                        href={doc.file_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-xs font-medium shrink-0"
+                      >
+                        <Download className="w-3 h-3" />
+                        PDF
+                      </Link>
                     </div>
-                    <Link
-                      href={reg.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1 px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-xs font-medium"
-                    >
-                      <Download className="w-3 h-3" />
-                      PDF
-                    </Link>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Registre proiecte de hotărâri */}
@@ -130,27 +154,36 @@ export default function HotarariMolPage() {
                 </div>
               </div>
               
-              <div className="grid sm:grid-cols-2 gap-3">
-                {PROJECT_REGISTERS.map((reg) => (
-                  <div key={reg.year} className="flex items-center justify-between gap-3 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                    <div className="flex items-center gap-3">
-                      <FileText className="w-5 h-5 text-amber-600" />
-                      <span className="font-medium text-gray-900 text-sm">
-                        {th('projectYear', { year: reg.year })}
-                      </span>
+              {projectRegisters.length === 0 ? (
+                <Card>
+                  <CardContent className="p-6 text-center">
+                    <FileWarning className="w-10 h-10 mx-auto text-gray-400 mb-3" />
+                    <p className="text-gray-600 text-sm">{th('noDocuments')}</p>
+                  </CardContent>
+                </Card>
+              ) : (
+                <div className="grid sm:grid-cols-2 gap-3">
+                  {projectRegisters.map((doc) => (
+                    <div key={doc.id} className="flex items-center justify-between gap-3 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                      <div className="flex items-center gap-3 flex-1 min-w-0">
+                        <FileText className="w-5 h-5 text-amber-600 shrink-0" />
+                        <span className="font-medium text-gray-900 text-sm truncate" title={doc.title}>
+                          {doc.title}
+                        </span>
+                      </div>
+                      <Link
+                        href={doc.file_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 px-3 py-1.5 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors text-xs font-medium shrink-0"
+                      >
+                        <Download className="w-3 h-3" />
+                        PDF
+                      </Link>
                     </div>
-                    <Link
-                      href={reg.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1 px-3 py-1.5 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors text-xs font-medium"
-                    >
-                      <Download className="w-3 h-3" />
-                      PDF
-                    </Link>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
 
           </div>

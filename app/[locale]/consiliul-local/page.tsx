@@ -1,6 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { useTranslations } from 'next-intl';
-import { Users, Briefcase, ClipboardList, Gavel, ScrollText, FileCheck, BarChart3, Calendar } from 'lucide-react';
+import { Users, Briefcase, ClipboardList, Gavel, ScrollText, FileCheck, BarChart3 } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { Card, CardContent } from '@/components/ui/card';
@@ -22,7 +22,6 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 const COUNCIL_SECTIONS = [
   { id: 'consilieriLocali', href: '/consiliul-local/consilieri', icon: Users },
   { id: 'comisii', href: '/consiliul-local/comisii', icon: Briefcase },
-  { id: 'sedinte', href: '/consiliul-local/sedinte', icon: Calendar },
   { id: 'ordineZi', href: '/consiliul-local/ordine-de-zi', icon: ClipboardList },
   { id: 'hotarari', href: '/consiliul-local/hotarari', icon: Gavel },
   { id: 'hotarariRepublicate', href: '/consiliul-local/hotarari-republicate', icon: ScrollText },

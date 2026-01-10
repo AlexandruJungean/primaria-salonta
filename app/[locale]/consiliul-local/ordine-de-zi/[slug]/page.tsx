@@ -79,14 +79,14 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     return generatePageMetadata({
       pageKey: 'consiliulLocal',
       locale: locale as Locale,
-      path: `/consiliul-local/sedinte/${slug}`,
+      path: `/consiliul-local/ordine-de-zi/${slug}`,
     });
   }
 
   return generatePageMetadata({
     pageKey: 'consiliulLocal',
     locale: locale as Locale,
-    path: `/consiliul-local/sedinte/${slug}`,
+    path: `/consiliul-local/ordine-de-zi/${slug}`,
     customTitle: session.title,
     customDescription: session.description || undefined,
   });
@@ -143,7 +143,7 @@ export default async function SedintaDetailPage({
 
   const pageLabels = {
     ro: {
-      backToList: 'Înapoi la ședințe',
+      backToList: 'Înapoi la ordine de zi',
       date: 'Data',
       time: 'Ora',
       location: 'Locație',
@@ -155,7 +155,7 @@ export default async function SedintaDetailPage({
       decisionNo: 'Hotărârea nr.',
     },
     hu: {
-      backToList: 'Vissza az ülésekhez',
+      backToList: 'Vissza a napirendekhez',
       date: 'Dátum',
       time: 'Időpont',
       location: 'Helyszín',
@@ -167,7 +167,7 @@ export default async function SedintaDetailPage({
       decisionNo: 'Határozat sz.',
     },
     en: {
-      backToList: 'Back to sessions',
+      backToList: 'Back to agendas',
       date: 'Date',
       time: 'Time',
       location: 'Location',
@@ -188,12 +188,12 @@ export default async function SedintaDetailPage({
     <>
       <Breadcrumbs items={[
         { label: t('consiliulLocal'), href: '/consiliul-local' },
-        { label: t('sedinte') || 'Ședințe', href: '/consiliul-local/sedinte' },
+        { label: t('ordineDezi') || 'Ordine de zi', href: '/consiliul-local/ordine-de-zi' },
         { label: formatShortDate(session.session_date) },
       ]} />
 
       <PageHeader 
-        titleKey="sedinte" 
+        titleKey="ordineDezi" 
         icon="users"
         subtitle={session.title || formatDate(session.session_date)}
       />
@@ -203,7 +203,7 @@ export default async function SedintaDetailPage({
           <div className="max-w-4xl mx-auto">
             {/* Back Link */}
             <Link
-              href="/consiliul-local/sedinte"
+              href="/consiliul-local/ordine-de-zi"
               className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-800 font-medium mb-6 group"
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />

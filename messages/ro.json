@@ -657,7 +657,8 @@
     "announcements": "anunțuri",
     "noAnnouncements": "Nu există anunțuri disponibile momentan.",
     "archiveNote": "Arhivă anunțuri",
-    "archiveNoteDesc": "Anunțurile sunt încărcate din baza de date. Pentru anunțuri mai vechi, vă rugăm să contactați primăria."
+    "archiveNoteDesc": "Anunțurile sunt încărcate din baza de date. Pentru anunțuri mai vechi, vă rugăm să contactați primăria.",
+    "legend": "Legendă tipuri anunțuri"
   },
   "dezbateriPage": {
     "introTitle": "Participare la dezbateri publice",
@@ -670,7 +671,8 @@
   "statutPage": {
     "statut2021": "Statutul Municipiului Salonta – 2021",
     "statut2017": "Statutul Municipiului Salonta – Republicat, 2017",
-    "download": "Descarcă"
+    "download": "Descarcă",
+    "noDocuments": "Nu există documente disponibile momentan."
   },
   "financiarePage": {
     "budgetTitle": "Bugetul general al Municipiului Salonta",
@@ -680,7 +682,8 @@
     "budgetGeneralTitle": "Buget general",
     "rectificationsTitle": "Rectificări bugetare",
     "otherDocsTitle": "Alte documente",
-    "rectification": "Rectificarea"
+    "rectification": "Rectificarea",
+    "noDocuments": "Nu există documente financiare disponibile momentan."
   },
   "hotarariMolPage": {
     "mainTitle": "Hotărârile Consiliului Local al Municipiului Salonta",
@@ -691,13 +694,15 @@
     "projectsTitle": "Registre proiecte de hotărâri",
     "projectsSubtitle": "Evidența proiectelor de hotărâri ale autorității deliberative",
     "registerYear": "Registru hotărâri – {year}",
-    "projectYear": "Registru proiecte – {year}"
+    "projectYear": "Registru proiecte – {year}",
+    "noDocuments": "Nu există registre disponibile momentan."
   },
   "dispozitiiMolPage": {
     "mainTitle": "Dispoziții ale Primarului Municipiului Salonta",
     "registersTitle": "Registre dispoziții",
     "registersSubtitle": "Evidența dispozițiilor autorității executive pe ani",
-    "registerYear": "Registru dispoziții – {year}"
+    "registerYear": "Registru dispoziții – {year}",
+    "noDocuments": "Nu există registre disponibile momentan."
   },
   "regulamentePage": {
     "mainTitle": "Regulamente privind procedurile administrative",
@@ -705,7 +710,11 @@
     "otherTitle": "Alte regulamente",
     "otherSubtitle": "Regulamente specifice pentru diverse domenii",
     "archiveTitle": "Regulamente arhivă",
-    "archiveSubtitle": "Regulamente abrogate sau înlocuite"
+    "archiveSubtitle": "Regulamente abrogate sau înlocuite",
+    "noDocuments": "Nu există regulamente disponibile momentan.",
+    "viewAllTitle": "Consultă toate regulamentele",
+    "viewAllDescription": "Accesează pagina completă cu toate regulamentele în vigoare și arhivate.",
+    "viewAllButton": "Vezi toate"
   },
   "buletinPage": {
     "sectionA": "Actele normative care reglementează organizarea și funcționarea instituției publice:",
@@ -740,14 +749,16 @@
     "extraordinary": "extraordinară",
     "archives": "Arhivă",
     "archiveYear": "Arhivă {year}",
-    "mandateValidationsTitle": "Declarații avere și interese / Validare mandate",
+    "mandateValidationsTitle": "Validare mandate consilieri / primar",
     "careerTitle": "Carieră – anunțuri / formulare",
     "newsAndEvents": "Știri și evenimente",
     "socialProblemsTitle": "Probleme sociale – formulare",
     "covidInfoTitle": "Informații utile privind coronavirus",
     "covidLinkTitle": "Informații utile privind coronavirus (COVID-19)",
     "registersTitle": "Registre",
-    "archiveMandateTitle": "Arhivă validare mandate (2020-2024)"
+    "archiveMandateTitle": "Arhivă validare mandate (2020-2024)",
+    "noDocuments": "Nu există documente disponibile momentan.",
+    "councilActivityReports": "Rapoarte de activitate ale consilierilor locali"
   },
   "coronavirusPage": {
     "title": "Informații utile privind coronavirus (COVID-19)",

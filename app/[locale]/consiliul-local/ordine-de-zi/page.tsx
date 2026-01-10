@@ -161,7 +161,7 @@ export default async function OrdineDeZiPage({ params }: { params: Promise<{ loc
                         </div>
                         <div className="flex flex-wrap items-center gap-2">
                           <Link
-                            href={`/consiliul-local/sedinte/${session.slug}`}
+                            href={`/consiliul-local/ordine-de-zi/${session.slug}`}
                             className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition-colors"
                           >
                             {labels.viewDetails}

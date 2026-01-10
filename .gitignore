@@ -41,10 +41,6 @@ yarn-error.log*
 next-env.d.ts
 
 # Migration scripts and downloaded documents (not part of the project)
-/documente_descarcate/
 /scripts/
-/docs/
-/extracted_content/
 /site_content/
 /supabase/
-/url_mapping.json

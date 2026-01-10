@@ -159,6 +159,59 @@ export async function getDocumentsBySourceFolder(
 }
 
 /**
+ * Get documents by source folder with annexes grouped
+ * Returns parent documents with their annexes nested
+ */
+export async function getDocumentsBySourceFolderWithAnnexes(
+  sourceFolder: string,
+  limit: number = 500
+): Promise<DocumentWithAnnexes[]> {
+  const supabase = createAnonServerClient();
+
+  const { data, error } = await supabase
+    .from('documents')
+    .select('*')
+    .eq('published', true)
+    .eq('source_folder', sourceFolder)
+    .order('year', { ascending: false })
+    .order('document_date', { ascending: false, nullsFirst: false })
+    .limit(limit);
+
+  if (error) {
+    console.error('Error fetching documents by source folder:', error);
+    return [];
+  }
+
+  const docs = data || [];
+  
+  // Separate parent documents and annexes
+  const parentDocs: DocumentWithAnnexes[] = [];
+  const annexesByParentId = new Map<string, Document[]>();
+
+  docs.forEach(doc => {
+    if (doc.parent_id) {
+      // This is an annex
+      const annexes = annexesByParentId.get(doc.parent_id) || [];
+      annexes.push(doc);
+      annexesByParentId.set(doc.parent_id, annexes);
+    } else {
+      // This is a parent document
+      parentDocs.push({ ...doc, annexes: [] });
+    }
+  });
+
+  // Attach annexes to their parent documents
+  parentDocs.forEach(doc => {
+    const annexes = annexesByParentId.get(doc.id);
+    if (annexes) {
+      doc.annexes = annexes;
+    }
+  });
+
+  return parentDocs;
+}
+
+/**
  * Get available document categories
  */
 export async function getDocumentCategories(): Promise<string[]> {
@@ -477,3 +530,4 @@ export async function getAnnouncements(limit: number = 500): Promise<Announcemen
 
   return Array.from(announcementMap.values());
 }
+

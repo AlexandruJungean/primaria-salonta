@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return generatePageMetadata({
     pageKey: 'consiliulLocal',
     locale: locale as Locale,
-    path: `/consiliul-local/sedinte/${slug}`,
+    path: `/consiliul-local/ordine-de-zi/${slug}`,
     customTitle,
   });
 }
@@ -26,4 +26,3 @@ export default function SedintaSlugLayout({
 }) {
   return children;
 }
-

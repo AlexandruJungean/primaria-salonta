@@ -1,14 +1,14 @@
 import { getTranslations } from 'next-intl/server';
-import { useTranslations } from 'next-intl';
-import { FileCheck, FileText, Download, BookOpen } from 'lucide-react';
+import { FileCheck, FileText, Download, BookOpen, FileWarning } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { Card, CardContent } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
 import Link from 'next/link';
-import { generatePageMetadata, BreadcrumbJsonLd } from '@/lib/seo';
+import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
+import { getDocumentsBySourceFolder } from '@/lib/supabase/services/documents';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -19,25 +19,28 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   });
 }
 
-// Link principal
-const MAIN_LINK = {
-  href: '/informatii-publice/dispozitii-primar',
-};
+/**
+ * Extract year from document title for sorting
+ */
+function extractYearFromTitle(title: string): number {
+  const match = title.match(/\b(20\d{2})\b/);
+  return match ? parseInt(match[1], 10) : 0;
+}
 
-// Registre dispoziții - doar date, fără traduceri
-const DISPOSITION_REGISTERS = [
-  { year: 2025, url: '#' },
-  { year: 2024, url: '#' },
-  { year: 2023, url: '#' },
-  { year: 2022, url: '#' },
-  { year: 2021, url: '#' },
-  { year: '2020 (2016-2020)', url: '#' },
-  { year: '2020 (2020-2024)', url: '#' },
-];
+export default async function DispozitiiPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'navigation' });
+  const td = await getTranslations({ locale, namespace: 'dispozitiiMolPage' });
 
-export default function DispozitiiPage() {
-  const t = useTranslations('navigation');
-  const td = useTranslations('dispozitiiMolPage');
+  // Fetch disposition registers from database
+  const registers = await getDocumentsBySourceFolder('dispozitiile-autoritatii-executive');
+  
+  // Sort by year descending
+  const sortedRegisters = [...registers].sort((a, b) => {
+    const yearA = a.year || extractYearFromTitle(a.title);
+    const yearB = b.year || extractYearFromTitle(b.title);
+    return yearB - yearA;
+  });
 
   return (
     <>
@@ -54,7 +57,7 @@ export default function DispozitiiPage() {
             {/* Link principal */}
             <div>
               <h2 className="text-xl font-bold text-gray-900 mb-4">{td('mainTitle')}</h2>
-              <Link href={MAIN_LINK.href}>
+              <Link href="/informatii-publice/dispozitii">
                 <Card className="hover:shadow-md transition-shadow border-l-4 border-l-green-600">
                   <CardContent className="p-5 flex items-center gap-4">
                     <div className="w-12 h-12 rounded-lg bg-green-100 flex items-center justify-center shrink-0">
@@ -78,27 +81,36 @@ export default function DispozitiiPage() {
                 </div>
               </div>
               
-              <div className="grid sm:grid-cols-2 gap-3">
-                {DISPOSITION_REGISTERS.map((reg) => (
-                  <div key={reg.year} className="flex items-center justify-between gap-3 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                    <div className="flex items-center gap-3">
-                      <FileText className="w-5 h-5 text-green-600" />
-                      <span className="font-medium text-gray-900 text-sm">
-                        {td('registerYear', { year: reg.year })}
-                      </span>
+              {sortedRegisters.length === 0 ? (
+                <Card>
+                  <CardContent className="p-6 text-center">
+                    <FileWarning className="w-10 h-10 mx-auto text-gray-400 mb-3" />
+                    <p className="text-gray-600 text-sm">{td('noDocuments')}</p>
+                  </CardContent>
+                </Card>
+              ) : (
+                <div className="grid sm:grid-cols-2 gap-3">
+                  {sortedRegisters.map((doc) => (
+                    <div key={doc.id} className="flex items-center justify-between gap-3 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                      <div className="flex items-center gap-3">
+                        <FileText className="w-5 h-5 text-green-600" />
+                        <span className="font-medium text-gray-900 text-sm">
+                          {doc.title}
+                        </span>
+                      </div>
+                      <Link
+                        href={doc.file_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 px-3 py-1.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-xs font-medium shrink-0"
+                      >
+                        <Download className="w-3 h-3" />
+                        PDF
+                      </Link>
                     </div>
-                    <Link
-                      href={reg.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1 px-3 py-1.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-xs font-medium"
-                    >
-                      <Download className="w-3 h-3" />
-                      PDF
-                    </Link>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
 
           </div>
