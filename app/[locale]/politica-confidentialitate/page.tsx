@@ -9,7 +9,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { 
   Shield, 
   FileText, 
-  Users, 
   Clock, 
   Scale, 
   Eye, 
@@ -145,10 +144,10 @@ export default function PoliticaConfidentialitatePage() {
                   <ul className="space-y-1">
                     <li>• Preferințe de limbă (cookie)</li>
                     <li>• Setări de accesibilitate (localStorage)</li>
-                    <li>• Date anonimizate de utilizare (Analytics)</li>
+                    <li>• Consimțământ cookies</li>
                   </ul>
                   <p className="mt-2 text-xs">
-                    Datele tehnice sunt stocate local pe dispozitivul dvs. sau sunt anonimizate.
+                    Datele tehnice sunt stocate exclusiv local pe dispozitivul dvs.
                   </p>
                 </CardContent>
               </Card>
@@ -194,14 +193,14 @@ export default function PoliticaConfidentialitatePage() {
                     <td>Nume, email, locație, descriere</td>
                   </tr>
                   <tr>
-                    <td>Statistici și îmbunătățire site</td>
-                    <td>Art. 6(1)(a) - Consimțământ</td>
-                    <td>Date tehnice (anonimizate)</td>
-                  </tr>
-                  <tr>
                     <td>Salvare preferințe utilizator</td>
                     <td>Art. 6(1)(a) - Consimțământ</td>
-                    <td>Limbă, setări accesibilitate</td>
+                    <td>Limbă, setări accesibilitate, consimțământ</td>
+                  </tr>
+                  <tr>
+                    <td>Protecție formulare (reCAPTCHA)</td>
+                    <td>Art. 6(1)(f) - Interes legitim</td>
+                    <td>Date verificare anti-spam</td>
                   </tr>
                 </tbody>
               </table>
@@ -222,7 +221,7 @@ export default function PoliticaConfidentialitatePage() {
                 <li><strong>Raportări probleme:</strong> 1 an de la soluționare</li>
                 <li><strong>Preferințe limbă (cookie):</strong> 1 an</li>
                 <li><strong>Setări accesibilitate (localStorage):</strong> Până la ștergerea manuală</li>
-                <li><strong>Date Analytics:</strong> Maximum 2 ani (anonimizate)</li>
+                <li><strong>Consimțământ cookies:</strong> 1 an</li>
               </ul>
               <p>
                 După expirarea termenelor, datele sunt șterse automat din sistemele noastre.

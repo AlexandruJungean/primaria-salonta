@@ -9,6 +9,7 @@ import '../globals.css';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { AccessibilityToolbar } from '@/components/features/accessibility-toolbar';
+import { CookieConsent } from '@/components/features/cookie-consent';
 import { NavigationProvider } from '@/components/layout/navigation-context';
 import { getInstitutionsForNav } from '@/lib/supabase/services/institutions';
 import { 
@@ -213,6 +214,9 @@ export default async function LocaleLayout({
 
             {/* Footer */}
             <Footer />
+
+            {/* Cookie Consent Banner */}
+            <CookieConsent />
           </NavigationProvider>
         </NextIntlClientProvider>
       </body>

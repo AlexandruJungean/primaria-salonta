@@ -6,7 +6,7 @@ import { generatePageMetadata } from '@/lib/seo/metadata';
 import { WebPageJsonLd } from '@/lib/seo/json-ld';
 import { type Locale } from '@/i18n/routing';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Cookie, Shield, BarChart3, Settings, Globe, Map, Video, ShieldCheck } from 'lucide-react';
+import { Cookie, Shield, Settings, Globe, Map, Video, ShieldCheck } from 'lucide-react';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -78,34 +78,6 @@ export default function PoliticaCookiesPage() {
                     <li className="flex justify-between">
                       <span className="font-medium">__session</span>
                       <span className="text-muted-foreground">Sesiune utilizator</span>
-                    </li>
-                  </ul>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <BarChart3 className="h-5 w-5 text-blue-600" />
-                    Cookie-uri de Performanță
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Ne ajută să înțelegem cum utilizați site-ul pentru a-l îmbunătăți.
-                  </p>
-                  <ul className="space-y-2 text-sm">
-                    <li className="flex justify-between">
-                      <span className="font-medium">_ga</span>
-                      <span className="text-muted-foreground">Google Analytics</span>
-                    </li>
-                    <li className="flex justify-between">
-                      <span className="font-medium">_ga_*</span>
-                      <span className="text-muted-foreground">Google Analytics ID</span>
-                    </li>
-                    <li className="flex justify-between">
-                      <span className="font-medium">_gid</span>
-                      <span className="text-muted-foreground">Identificare vizitator</span>
                     </li>
                   </ul>
                 </CardContent>
@@ -297,8 +269,8 @@ export default function PoliticaCookiesPage() {
                     <td>1 an</td>
                   </tr>
                   <tr>
-                    <td>Google Analytics</td>
-                    <td>2 ani</td>
+                    <td>Google reCAPTCHA</td>
+                    <td>6 luni</td>
                   </tr>
                 </tbody>
               </table>
@@ -326,4 +298,3 @@ export default function PoliticaCookiesPage() {
     </>
   );
 }
-
