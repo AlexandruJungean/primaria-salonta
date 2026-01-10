@@ -19,28 +19,16 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   });
 }
 
-/**
- * Extract year from document title for sorting
- */
-function extractYearFromTitle(title: string): number {
-  const match = title.match(/\b(20\d{2})\b/);
-  return match ? parseInt(match[1], 10) : 0;
-}
-
 export default async function DispozitiiPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'navigation' });
   const td = await getTranslations({ locale, namespace: 'dispozitiiMolPage' });
 
-  // Fetch disposition registers from database
+  // Fetch disposition REGISTERS from database (not individual dispositions)
   const registers = await getDocumentsBySourceFolder('dispozitiile-autoritatii-executive');
   
-  // Sort by year descending
-  const sortedRegisters = [...registers].sort((a, b) => {
-    const yearA = a.year || extractYearFromTitle(a.title);
-    const yearB = b.year || extractYearFromTitle(b.title);
-    return yearB - yearA;
-  });
+  // Sort by database year only (descending)
+  const sortedRegisters = [...registers].sort((a, b) => (b.year || 0) - (a.year || 0));
 
   return (
     <>
@@ -54,7 +42,7 @@ export default async function DispozitiiPage({ params }: { params: Promise<{ loc
         <Container>
           <div className="max-w-4xl mx-auto space-y-10">
 
-            {/* Link principal */}
+            {/* Link principal către dispozițiile individuale */}
             <div>
               <h2 className="text-xl font-bold text-gray-900 mb-4">{td('mainTitle')}</h2>
               <Link href="/informatii-publice/dispozitii">
@@ -69,7 +57,7 @@ export default async function DispozitiiPage({ params }: { params: Promise<{ loc
               </Link>
             </div>
 
-            {/* Registre dispoziții */}
+            {/* Registre dispoziții - documente anuale */}
             <div>
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-12 h-12 rounded-xl bg-green-600 flex items-center justify-center">
@@ -92,9 +80,9 @@ export default async function DispozitiiPage({ params }: { params: Promise<{ loc
                 <div className="grid sm:grid-cols-2 gap-3">
                   {sortedRegisters.map((doc) => (
                     <div key={doc.id} className="flex items-center justify-between gap-3 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                      <div className="flex items-center gap-3">
-                        <FileText className="w-5 h-5 text-green-600" />
-                        <span className="font-medium text-gray-900 text-sm">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <FileText className="w-5 h-5 text-green-600 shrink-0" />
+                        <span className="font-medium text-gray-900 text-sm truncate" title={doc.title}>
                           {doc.title}
                         </span>
                       </div>

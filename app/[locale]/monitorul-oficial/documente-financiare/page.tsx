@@ -22,29 +22,12 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 }
 
 interface YearData {
-  year: number;
+  year: number | null;
+  yearLabel: string;
   execution: Document[];
   budget: Document[];
   rectifications: Document[];
   other: Document[];
-}
-
-/**
- * Extract year from document title - prioritize title over database year
- * because financial docs should be grouped by the year they reference, not upload year
- */
-function extractYear(doc: Document): number {
-  // First try to extract year from title (e.g., "Buget 2023", "Rectificare buget – august 2021")
-  const titleMatch = doc.title.match(/\b(20\d{2})\b/);
-  if (titleMatch) {
-    return parseInt(titleMatch[1], 10);
-  }
-  
-  // Fallback to database year field
-  if (doc.year) return doc.year;
-  
-  // Default fallback
-  return 2020;
 }
 
 /**
@@ -55,7 +38,7 @@ function getDocumentType(title: string): 'executie' | 'buget' | 'rectificare' | 
   if (lowerTitle.includes('execuț') || lowerTitle.includes('executie') || lowerTitle.includes('execut')) {
     return 'executie';
   }
-  if (lowerTitle.includes('rectifica')) {
+  if (lowerTitle.includes('rectifica')) { 
     return 'rectificare';
   }
   if (lowerTitle.includes('buget') && (lowerTitle.includes('inițial') || lowerTitle.includes('initial') || lowerTitle.includes('aproba'))) {
@@ -65,18 +48,20 @@ function getDocumentType(title: string): 'executie' | 'buget' | 'rectificare' | 
 }
 
 /**
- * Group documents by year and type
+ * Group documents by database year only
  */
 function groupDocumentsByYear(documents: Document[]): YearData[] {
-  const yearMap = new Map<number, YearData>();
+  const yearMap = new Map<number | 'unknown', YearData>();
   
   documents.forEach(doc => {
-    const year = extractYear(doc);
+    const year = doc.year;
+    const mapKey = year || 'unknown';
     const type = doc.subcategory as 'executie' | 'buget' | 'rectificare' | 'altele' || getDocumentType(doc.title);
     
-    if (!yearMap.has(year)) {
-      yearMap.set(year, {
+    if (!yearMap.has(mapKey)) {
+      yearMap.set(mapKey, {
         year,
+        yearLabel: year ? String(year) : 'Necunoscut',
         execution: [],
         budget: [],
         rectifications: [],
@@ -84,7 +69,7 @@ function groupDocumentsByYear(documents: Document[]): YearData[] {
       });
     }
     
-    const yearData = yearMap.get(year)!;
+    const yearData = yearMap.get(mapKey)!;
     
     switch (type) {
       case 'executie':
@@ -101,8 +86,12 @@ function groupDocumentsByYear(documents: Document[]): YearData[] {
     }
   });
   
-  // Sort by year descending
-  return Array.from(yearMap.values()).sort((a, b) => b.year - a.year);
+  // Sort by year descending (unknown at the end)
+  return Array.from(yearMap.values()).sort((a, b) => {
+    if (a.year === null) return 1;
+    if (b.year === null) return -1;
+    return b.year - a.year;
+  });
 }
 
 function DocumentItem({ doc }: { doc: Document }) {
@@ -183,11 +172,11 @@ export default async function DocumenteFinanciarePage({ params }: { params: Prom
                   
                   return (
                     <Collapsible
-                      key={yearData.year}
+                      key={yearData.yearLabel}
                       title={
                         <span className="flex items-center gap-3">
                           <Calendar className="w-5 h-5 text-primary-600" />
-                          <span className="font-bold text-xl">{yearData.year}</span>
+                          <span className="font-bold text-xl">{yearData.yearLabel}</span>
                           <span className="text-sm text-gray-500 font-normal">
                             ({totalDocs} {totalDocs === 1 ? 'document' : 'documente'})
                           </span>

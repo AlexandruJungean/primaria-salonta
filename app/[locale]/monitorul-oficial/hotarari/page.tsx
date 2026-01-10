@@ -26,15 +26,6 @@ const MAIN_LINKS = [
 ];
 
 /**
- * Extract year from document title
- * e.g. "Registrul hotărârilor adoptate de Consiliul Local în 2024" => 2024
- */
-function extractYearFromTitle(title: string): number | null {
-  const match = title.match(/\b(20\d{2})\b/);
-  return match ? parseInt(match[1], 10) : null;
-}
-
-/**
  * Check if document is a project register (proiecte de hotărâri)
  */
 function isProjectRegister(title: string): boolean {
@@ -51,21 +42,14 @@ export default async function HotarariMolPage({ params }: { params: Promise<{ lo
   const allDocuments = await getDocumentsBySourceFolder('hotararile-autoritatii-deliberative');
   
   // Separate into decision registers and project registers
+  // Sort by database year only
   const decisionRegisters = allDocuments
     .filter(doc => !isProjectRegister(doc.title))
-    .sort((a, b) => {
-      const yearA = a.year || extractYearFromTitle(a.title) || 0;
-      const yearB = b.year || extractYearFromTitle(b.title) || 0;
-      return yearB - yearA; // Sort descending by year
-    });
+    .sort((a, b) => (b.year || 0) - (a.year || 0));
   
   const projectRegisters = allDocuments
     .filter(doc => isProjectRegister(doc.title))
-    .sort((a, b) => {
-      const yearA = a.year || extractYearFromTitle(a.title) || 0;
-      const yearB = b.year || extractYearFromTitle(b.title) || 0;
-      return yearB - yearA; // Sort descending by year
-    });
+    .sort((a, b) => (b.year || 0) - (a.year || 0));
 
   return (
     <>

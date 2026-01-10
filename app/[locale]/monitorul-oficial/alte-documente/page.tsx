@@ -1,19 +1,25 @@
 import { getTranslations } from 'next-intl/server';
 import { 
-  FileText, Download, ExternalLink, Users, FileCheck, 
-  Calendar, Briefcase, Heart, AlertCircle, ClipboardList,
-  Archive, Link as LinkIcon, ScrollText, FileWarning
+  FileText, Download, ExternalLink, FileCheck, Users,
+  Calendar, ClipboardList, Link as LinkIcon, ScrollText, FileWarning, Archive
 } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { Card, CardContent } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
+import { Collapsible, CollapsibleGroup } from '@/components/ui/collapsible';
 import Link from 'next/link';
 import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
 import { getDocumentsBySourceFolder } from '@/lib/supabase/services/documents';
 import type { Document } from '@/lib/types/database';
+
+// Source folder for minutes (unified)
+const MINUTE_SOURCE_FOLDER = 'minute-sedinte-consiliu';
+
+// Separate source folder for archive mandate validations
+const ARCHIVE_MANDATE_SOURCE_FOLDER = 'arhiva-validare-mandate-2020-2024';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -34,25 +40,14 @@ const QUICK_LINKS = [
   { key: 'declaratiiConsilieri', href: '/consiliul-local/declaratii-avere' },
 ];
 
-// Career links - internal pages
-const CAREER_LINKS = [
-  { titleKey: 'concursuri', href: '/informatii-publice/concursuri' },
-  { titleKey: 'anunturi', href: '/informatii-publice/anunturi' },
-  { titleKey: 'formulare', href: '/informatii-publice/formulare' },
-];
-
-// Social problems - internal page
-const SOCIAL_LINK = { titleKey: 'problemeSociale', href: '/servicii-online/probleme-sociale' };
-
-// Coronavirus info - internal page link
-const COVID_LINK = { titleKey: 'coronavirus', href: '/informatii-publice/coronavirus' };
 
 // Document categorization helpers
 function isTransparencyReport(title: string): boolean {
   const lower = title.toLowerCase();
   return lower.includes('transparenta decizionala') || 
          lower.includes('transparență decizională') ||
-         lower.includes('raport anual privind transparenta');
+         lower.includes('transparenta') ||
+         lower.includes('transparență');
 }
 
 function isMayorReport(title: string): boolean {
@@ -74,16 +69,13 @@ function isMandateValidation(title: string): boolean {
          lower.includes('încheiere civilă') ||
          lower.includes('incheiere civila') ||
          lower.includes('încheierea civilă') ||
-         lower.includes('incheierea civila');
+         lower.includes('incheierea civila') ||
+         lower.includes('sentința civilă') ||
+         lower.includes('sentinta civila');
 }
 
 function isRegister(title: string): boolean {
   return title.toLowerCase().includes('registru');
-}
-
-function extractYearFromTitle(title: string): number {
-  const match = title.match(/\b(20\d{2})\b/);
-  return match ? parseInt(match[1], 10) : 2025;
 }
 
 function DocumentItem({ doc }: { doc: Document }) {
@@ -159,34 +151,52 @@ export default async function AlteDocumentePage({ params }: { params: Promise<{ 
   const t = await getTranslations({ locale, namespace: 'navigation' });
   const ta = await getTranslations({ locale, namespace: 'alteDocumentePage' });
 
-  // Fetch documents from database
-  const allDocuments = await getDocumentsBySourceFolder('alte-documente');
+  // Fetch documents from database - base documents
+  const baseDocuments = await getDocumentsBySourceFolder('alte-documente');
+  
+  // Fetch minutes from unified source folder
+  const minutesDocuments = await getDocumentsBySourceFolder(MINUTE_SOURCE_FOLDER, 500);
+  
+  // Fetch archive mandate validations (2020-2024)
+  const archiveMandateDocuments = await getDocumentsBySourceFolder(ARCHIVE_MANDATE_SOURCE_FOLDER);
 
-  // Categorize documents
-  const transparencyReports = allDocuments.filter(d => isTransparencyReport(d.title));
-  const mayorReports = allDocuments.filter(d => isMayorReport(d.title));
-  const minutes = allDocuments.filter(d => isMinute(d.title));
-  const mandateValidations = allDocuments.filter(d => isMandateValidation(d.title));
-  const registers = allDocuments.filter(d => isRegister(d.title));
+  // Categorize base documents (transparency reports, mayor reports, registers)
+  const transparencyReports = baseDocuments.filter(d => isTransparencyReport(d.title));
+  const mayorReports = baseDocuments.filter(d => isMayorReport(d.title));
+  const registers = baseDocuments.filter(d => isRegister(d.title));
+  
+  // Minutes from unified folder
+  const minutes = minutesDocuments.filter(d => isMinute(d.title));
+  
+  // Current mandate validations (from alte-documente)
+  const currentMandateValidations = baseDocuments.filter(d => isMandateValidation(d.title));
+  
+  // Archive mandate validations (2020-2024)
+  const archiveMandateValidations = archiveMandateDocuments.filter(d => isMandateValidation(d.title));
 
-  // Group minutes by year
+  // Group minutes by database year
   const minutesByYear = minutes.reduce((acc, doc) => {
-    const year = extractYearFromTitle(doc.title);
-    if (!acc[year]) acc[year] = [];
-    acc[year].push(doc);
+    const year = doc.year || 0;
+    const yearKey = year || 'necunoscut';
+    if (!acc[yearKey]) acc[yearKey] = [];
+    acc[yearKey].push(doc);
     return acc;
-  }, {} as Record<number, Document[]>);
+  }, {} as Record<number | string, Document[]>);
 
-  // Sort years descending
+  // Sort years descending (unknown at the end)
   const sortedYears = Object.keys(minutesByYear)
-    .map(Number)
-    .sort((a, b) => b - a);
+    .sort((a, b) => {
+      if (a === 'necunoscut') return 1;
+      if (b === 'necunoscut') return -1;
+      return Number(b) - Number(a);
+    });
 
-  // Sort transparency reports by year descending
-  transparencyReports.sort((a, b) => extractYearFromTitle(b.title) - extractYearFromTitle(a.title));
+  // Sort transparency reports by database year descending
+  transparencyReports.sort((a, b) => (b.year || 0) - (a.year || 0));
 
-  // Sort mandate validations by year descending
-  mandateValidations.sort((a, b) => extractYearFromTitle(b.title) - extractYearFromTitle(a.title));
+  // Sort mandate validations by database year descending
+  currentMandateValidations.sort((a, b) => (b.year || 0) - (a.year || 0));
+  archiveMandateValidations.sort((a, b) => (b.year || 0) - (a.year || 0));
 
   return (
     <>
@@ -254,30 +264,35 @@ export default async function AlteDocumentePage({ params }: { params: Promise<{ 
               </CardContent>
             </Card>
 
-            {/* Council Session Minutes */}
+            {/* Council Session Minutes - Collapsible by Year */}
             <Card className="overflow-hidden">
               <CardContent className="p-6">
                 <SectionHeader icon={ScrollText} title={ta('councilMinutesTitle')} bgColor="bg-green-600" />
                 
                 {minutes.length > 0 ? (
-                  <div className="space-y-6">
-                    {sortedYears.map((year) => (
-                      <div key={year}>
-                        <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                          <Calendar className="w-5 h-5 text-green-600" />
-                          {year}
-                          <span className="text-sm font-normal text-gray-500">
-                            ({minutesByYear[year].length} {minutesByYear[year].length === 1 ? 'document' : 'documente'})
+                  <CollapsibleGroup>
+                    {sortedYears.map((yearKey, index) => (
+                      <Collapsible
+                        key={yearKey}
+                        title={
+                          <span className="flex items-center gap-3">
+                            <Calendar className="w-5 h-5 text-green-600" />
+                            <span className="font-bold text-lg">{yearKey === 'necunoscut' ? 'Necunoscut' : yearKey}</span>
+                            <span className="text-sm text-gray-500 font-normal">
+                              ({minutesByYear[yearKey].length} {minutesByYear[yearKey].length === 1 ? 'document' : 'documente'})
+                            </span>
                           </span>
-                        </h3>
-                        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2">
-                          {minutesByYear[year].map((doc) => (
+                        }
+                        defaultOpen={index < 2} // Open first two years by default
+                      >
+                        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2 pt-2">
+                          {minutesByYear[yearKey].map((doc) => (
                             <DocumentItem key={doc.id} doc={doc} />
                           ))}
                         </div>
-                      </div>
+                      </Collapsible>
                     ))}
-                  </div>
+                  </CollapsibleGroup>
                 ) : (
                   <div className="text-center py-6 text-gray-500">
                     <FileWarning className="w-8 h-8 mx-auto mb-2 text-gray-400" />
@@ -287,14 +302,14 @@ export default async function AlteDocumentePage({ params }: { params: Promise<{ 
               </CardContent>
             </Card>
 
-            {/* Mandate Validations */}
+            {/* Current Mandate Validations (2024+) */}
             <Card className="overflow-hidden">
               <CardContent className="p-6">
-                <SectionHeader icon={Users} title={ta('mandateValidationsTitle')} bgColor="bg-purple-600" />
+                <SectionHeader icon={Users} title={ta('documentsTitle')} bgColor="bg-purple-600" />
                 
-                {mandateValidations.length > 0 ? (
+                {currentMandateValidations.length > 0 ? (
                   <div className="space-y-2">
-                    {mandateValidations.map((doc) => (
+                    {currentMandateValidations.map((doc) => (
                       <DocumentItem key={doc.id} doc={doc} />
                     ))}
                   </div>
@@ -307,44 +322,37 @@ export default async function AlteDocumentePage({ params }: { params: Promise<{ 
               </CardContent>
             </Card>
 
-            {/* Career Documents & Social Problems - side by side */}
-            <div className="grid md:grid-cols-2 gap-6">
-              {/* Career */}
-              <Card className="overflow-hidden">
-                <CardContent className="p-5">
-                  <SectionHeader icon={Briefcase} title={ta('careerTitle')} bgColor="bg-teal-600" />
+            {/* Archive Mandate Validations (2020-2024) */}
+            <Card className="overflow-hidden">
+              <CardContent className="p-6">
+                <SectionHeader icon={Archive} title={ta('archiveMandateTitle')} bgColor="bg-indigo-600" />
+                
+                {archiveMandateValidations.length > 0 ? (
                   <div className="space-y-2">
-                    {CAREER_LINKS.map((link, i) => (
-                      <InternalLinkItem key={i} title={t(link.titleKey)} href={link.href} />
+                    {archiveMandateValidations.map((doc) => (
+                      <DocumentItem key={doc.id} doc={doc} />
                     ))}
                   </div>
-                  <Link 
-                    href="/stiri" 
-                    className="mt-4 flex items-center gap-2 p-3 bg-teal-50 rounded-lg hover:bg-teal-100 transition-colors text-sm"
-                  >
-                    <ExternalLink className="w-4 h-4 text-teal-600" />
-                    <span className="text-gray-700">{ta('newsAndEvents')}</span>
-                  </Link>
-                </CardContent>
-              </Card>
-
-              {/* Social Problems */}
-              <Card className="overflow-hidden">
-                <CardContent className="p-5">
-                  <SectionHeader icon={Heart} title={ta('socialProblemsTitle')} bgColor="bg-rose-600" />
-                  <div className="space-y-2">
-                    <InternalLinkItem title={t(SOCIAL_LINK.titleKey)} href={SOCIAL_LINK.href} />
+                ) : (
+                  <div className="text-center py-6 text-gray-500">
+                    <FileWarning className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                    <p>{ta('noDocuments')}</p>
                   </div>
-                </CardContent>
-              </Card>
-            </div>
+                )}
+              </CardContent>
+            </Card>
 
-            {/* COVID Info */}
-            <Card className="overflow-hidden border-orange-200 bg-orange-50">
-              <CardContent className="p-5">
-                <SectionHeader icon={AlertCircle} title={ta('covidInfoTitle')} bgColor="bg-orange-500" />
-                <div className="space-y-2">
-                  <InternalLinkItem title={ta('covidLinkTitle')} href={COVID_LINK.href} />
+            {/* Other useful links */}
+            <Card className="overflow-hidden">
+              <CardContent className="p-6">
+                <SectionHeader icon={LinkIcon} title={ta('otherLinksTitle')} bgColor="bg-gray-600" />
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  <InternalLinkItem title={t('concursuri')} href="/informatii-publice/concursuri" />
+                  <InternalLinkItem title={t('anunturi')} href="/informatii-publice/anunturi" />
+                  <InternalLinkItem title={t('formulare')} href="/informatii-publice/formulare" />
+                  <InternalLinkItem title={t('stiri')} href="/stiri" />
+                  <InternalLinkItem title={t('problemeSociale')} href="/servicii-online/probleme-sociale" />
+                  <InternalLinkItem title={ta('covidLinkTitle')} href="/informatii-publice/coronavirus" />
                 </div>
               </CardContent>
             </Card>
