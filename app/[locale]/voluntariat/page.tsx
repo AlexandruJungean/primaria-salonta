@@ -1,45 +1,14 @@
 import { getTranslations } from 'next-intl/server';
-import { Heart, Users, Calendar, Mail, Phone, MapPin } from 'lucide-react';
+import { Heart, Download, FileText, AlertTriangle, ArrowRight } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
 import { Link } from '@/components/ui/link';
 import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
-import { createAnonServerClient } from '@/lib/supabase/server';
-
-interface VolunteerOpportunity {
-  id: string;
-  title: string;
-  description: string | null;
-  requirements: string | null;
-  location: string | null;
-  start_date: string | null;
-  end_date: string | null;
-  contact_email: string | null;
-  contact_phone: string | null;
-  is_active: boolean;
-  sort_order: number;
-}
-
-async function getVolunteerOpportunities(): Promise<VolunteerOpportunity[]> {
-  const supabase = createAnonServerClient();
-  
-  const { data, error } = await supabase
-    .from('volunteer_opportunities')
-    .select('*')
-    .eq('is_active', true)
-    .order('sort_order', { ascending: true });
-  
-  if (error) {
-    console.error('Error fetching volunteer opportunities:', error);
-    return [];
-  }
-  
-  return data || [];
-}
+import * as documents from '@/lib/supabase/services/documents';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -55,48 +24,37 @@ export default async function VoluntariatPage({ params }: { params: Promise<{ lo
   const t = await getTranslations({ locale, namespace: 'navigation' });
   const tp = await getTranslations({ locale, namespace: 'voluntariatPage' });
 
-  const opportunities = await getVolunteerOpportunities();
+  // Fetch volunteer activity documents from database
+  const volunteerDocs = await documents.getDocumentsBySourceFolder('activitate-de-voluntariat', 50);
 
   const pageLabels = {
     ro: {
-      noOpportunities: 'Nu există oportunități de voluntariat disponibile momentan.',
-      contactTitle: 'Vrei să faci voluntariat?',
-      contactText: 'Contactează-ne pentru mai multe informații despre oportunitățile de voluntariat.',
-      contact: 'Contactează-ne',
-      requirements: 'Cerințe',
-      location: 'Locație',
-      period: 'Perioada',
+      noDocuments: 'Nu există documente disponibile.',
+      download: 'Descarcă',
+      svsuTitle: 'Serviciul Voluntar pentru Situații de Urgență',
+      svsuDescription: 'SVSU este o formă de voluntariat dedicată prevenirii și gestionării situațiilor de urgență. Oferă pregătire specializată și posibilitatea de a ajuta comunitatea în momente critice.',
+      svsuLink: 'Află mai multe despre SVSU',
+      otherVolunteering: 'Alte forme de voluntariat',
     },
     hu: {
-      noOpportunities: 'Jelenleg nincsenek elérhető önkéntes lehetőségek.',
-      contactTitle: 'Szeretnél önkéntes lenni?',
-      contactText: 'Lépj kapcsolatba velünk az önkéntes lehetőségekről szóló további információkért.',
-      contact: 'Kapcsolat',
-      requirements: 'Követelmények',
-      location: 'Helyszín',
-      period: 'Időszak',
+      noDocuments: 'Nincsenek elérhető dokumentumok.',
+      download: 'Letöltés',
+      svsuTitle: 'Önkéntes Sürgősségi Szolgálat',
+      svsuDescription: 'Az SVSU egy vészhelyzetek megelőzésére és kezelésére szakosodott önkéntes forma. Szakképzést és lehetőséget kínál a közösség segítésére kritikus pillanatokban.',
+      svsuLink: 'Tudj meg többet az SVSU-ról',
+      otherVolunteering: 'Egyéb önkéntes formák',
     },
     en: {
-      noOpportunities: 'No volunteer opportunities available at the moment.',
-      contactTitle: 'Want to volunteer?',
-      contactText: 'Contact us for more information about volunteer opportunities.',
-      contact: 'Contact us',
-      requirements: 'Requirements',
-      location: 'Location',
-      period: 'Period',
+      noDocuments: 'No documents available.',
+      download: 'Download',
+      svsuTitle: 'Voluntary Emergency Service',
+      svsuDescription: 'SVSU is a form of volunteering dedicated to preventing and managing emergency situations. It offers specialized training and the opportunity to help the community in critical moments.',
+      svsuLink: 'Learn more about SVSU',
+      otherVolunteering: 'Other forms of volunteering',
     },
   };
 
   const labels = pageLabels[locale as keyof typeof pageLabels] || pageLabels.en;
-
-  const formatDate = (dateStr: string | null) => {
-    if (!dateStr) return null;
-    const date = new Date(dateStr);
-    return date.toLocaleDateString(
-      locale === 'ro' ? 'ro-RO' : locale === 'hu' ? 'hu-HU' : 'en-US',
-      { day: 'numeric', month: 'long', year: 'numeric' }
-    );
-  };
 
   return (
     <>
@@ -106,90 +64,100 @@ export default async function VoluntariatPage({ params }: { params: Promise<{ lo
       <Section background="white">
         <Container>
           <div className="max-w-4xl mx-auto">
-            <p className="text-lg text-gray-600 mb-8 text-center">
-              {tp('description')}
-            </p>
+            {/* Introduction */}
+            <div className="text-center mb-10">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                {tp('introTitle')}
+              </h2>
+              <p className="text-lg text-gray-600">
+                {tp('introText')}
+              </p>
+            </div>
 
-            {opportunities.length > 0 ? (
-              <div className="space-y-6">
-                {opportunities.map((opportunity) => (
-                  <Card key={opportunity.id} className="hover:shadow-md transition-shadow">
-                    <CardHeader>
-                      <div className="flex items-start gap-4">
-                        <div className="w-12 h-12 rounded-xl bg-rose-100 flex items-center justify-center shrink-0">
-                          <Heart className="w-6 h-6 text-rose-600" />
-                        </div>
-                        <div>
-                          <CardTitle className="text-lg">{opportunity.title}</CardTitle>
-                          {opportunity.location && (
-                            <p className="text-sm text-gray-500 flex items-center gap-1.5 mt-1">
-                              <MapPin className="w-4 h-4" />
-                              {opportunity.location}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      {opportunity.description && (
-                        <div 
-                          className="text-gray-600 mb-4 prose prose-sm max-w-none"
-                          dangerouslySetInnerHTML={{ __html: opportunity.description }}
-                        />
-                      )}
-                      
-                      {opportunity.requirements && (
-                        <div className="mb-4">
-                          <h4 className="text-sm font-semibold text-gray-900 mb-2">{labels.requirements}</h4>
-                          <div 
-                            className="text-sm text-gray-600"
-                            dangerouslySetInnerHTML={{ __html: opportunity.requirements }}
-                          />
-                        </div>
-                      )}
+            {/* Documents Section */}
+            <div className="mb-12">
+              <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
+                <FileText className="w-5 h-5 text-rose-600" />
+                {tp('documentsTitle')}
+              </h3>
 
-                      <div className="flex flex-wrap gap-4 text-sm">
-                        {(opportunity.start_date || opportunity.end_date) && (
-                          <span className="flex items-center gap-1.5 text-gray-500">
-                            <Calendar className="w-4 h-4" />
-                            {formatDate(opportunity.start_date)} - {formatDate(opportunity.end_date) || '...'}
-                          </span>
-                        )}
-                        {opportunity.contact_email && (
-                          <a href={`mailto:${opportunity.contact_email}`} className="flex items-center gap-1.5 text-primary-600 hover:text-primary-800">
-                            <Mail className="w-4 h-4" />
-                            {opportunity.contact_email}
+              {volunteerDocs.length > 0 ? (
+                <div className="space-y-3">
+                  {volunteerDocs.map((doc) => (
+                    <Card key={doc.id} className="hover:shadow-md transition-shadow">
+                      <CardContent className="p-4">
+                        <div className="flex items-center justify-between gap-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-lg bg-rose-100 flex items-center justify-center shrink-0">
+                              <FileText className="w-5 h-5 text-rose-600" />
+                            </div>
+                            <div>
+                              <h4 className="font-medium text-gray-900">{doc.title}</h4>
+                              {doc.description && (
+                                <p className="text-sm text-gray-500">{doc.description}</p>
+                              )}
+                            </div>
+                          </div>
+                          <a
+                            href={doc.file_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 px-4 py-2 bg-rose-600 text-white text-sm font-medium rounded-lg hover:bg-rose-700 transition-colors shrink-0"
+                          >
+                            <Download className="w-4 h-4" />
+                            {labels.download}
                           </a>
-                        )}
-                        {opportunity.contact_phone && (
-                          <a href={`tel:${opportunity.contact_phone}`} className="flex items-center gap-1.5 text-primary-600 hover:text-primary-800">
-                            <Phone className="w-4 h-4" />
-                            {opportunity.contact_phone}
-                          </a>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-12 text-gray-500">
-                {labels.noOpportunities}
-              </div>
-            )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8 text-gray-500 bg-gray-50 rounded-lg">
+                  {labels.noDocuments}
+                </div>
+              )}
+            </div>
 
-            {/* Contact CTA */}
-            <Card className="mt-8 bg-rose-50 border-rose-100">
+            {/* Other Volunteering Forms - SVSU Link */}
+            <div className="mb-8">
+              <h3 className="text-xl font-semibold text-gray-900 mb-6">
+                {labels.otherVolunteering}
+              </h3>
+
+              <Card className="bg-gradient-to-br from-orange-50 to-red-50 border-orange-200 hover:shadow-lg transition-shadow">
+                <CardContent className="p-6">
+                  <div className="flex items-start gap-4">
+                    <div className="w-14 h-14 rounded-xl bg-orange-100 flex items-center justify-center shrink-0">
+                      <AlertTriangle className="w-7 h-7 text-orange-600" />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="text-lg font-bold text-gray-900 mb-2">
+                        {labels.svsuTitle}
+                      </h4>
+                      <p className="text-gray-600 mb-4">
+                        {labels.svsuDescription}
+                      </p>
+                      <Link
+                        href="/programe/svsu"
+                        className="inline-flex items-center gap-2 text-orange-700 font-medium hover:text-orange-800 transition-colors"
+                      >
+                        {labels.svsuLink}
+                        <ArrowRight className="w-4 h-4" />
+                      </Link>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Contact Info */}
+            <Card className="bg-rose-50 border-rose-100">
               <CardContent className="p-6 text-center">
                 <Heart className="w-12 h-12 text-rose-500 mx-auto mb-4" />
-                <h3 className="font-semibold text-gray-900 mb-2">{labels.contactTitle}</h3>
-                <p className="text-gray-600 mb-4">{labels.contactText}</p>
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center gap-2 px-6 py-2.5 bg-rose-600 text-white font-medium rounded-lg hover:bg-rose-700 transition-colors"
-                >
-                  {labels.contact}
-                </Link>
+                <p className="text-gray-700">
+                  {tp('contactInfo')}
+                </p>
               </CardContent>
             </Card>
           </div>

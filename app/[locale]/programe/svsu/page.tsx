@@ -1,5 +1,5 @@
 import { getTranslations } from 'next-intl/server';
-import { AlertTriangle, Download, FileText, Phone } from 'lucide-react';
+import { AlertTriangle, Download } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { Card, CardContent } from '@/components/ui/card';
@@ -31,25 +31,16 @@ export default async function SvsuPage({ params }: { params: Promise<{ locale: s
       noDocuments: 'Nu există documente disponibile.',
       download: 'Descarcă',
       description: 'Serviciul Voluntar pentru Situații de Urgență (SVSU) - documente și informații despre situațiile de urgență.',
-      emergencyTitle: 'Numere de urgență',
-      emergency112: '112 - Număr unic de urgență',
-      emergency118: '118 - Pompierii',
     },
     hu: {
       noDocuments: 'Nincsenek elérhető dokumentumok.',
       download: 'Letöltés',
       description: 'Önkéntes Sürgősségi Szolgálat (SVSU) - dokumentumok és információk a vészhelyzetekről.',
-      emergencyTitle: 'Vészhelyzeti számok',
-      emergency112: '112 - Egységes segélyhívó szám',
-      emergency118: '118 - Tűzoltók',
     },
     en: {
       noDocuments: 'No documents available.',
       download: 'Download',
       description: 'Voluntary Service for Emergency Situations (SVSU) - documents and information about emergency situations.',
-      emergencyTitle: 'Emergency numbers',
-      emergency112: '112 - Single emergency number',
-      emergency118: '118 - Fire department',
     },
   };
 
@@ -69,26 +60,6 @@ export default async function SvsuPage({ params }: { params: Promise<{ locale: s
             <p className="text-lg text-gray-600 mb-8 text-center">
               {labels.description}
             </p>
-
-            {/* Emergency Numbers Card */}
-            <Card className="mb-8 bg-red-50 border-red-200">
-              <CardContent className="p-6">
-                <h3 className="font-bold text-red-900 mb-4 flex items-center gap-2">
-                  <Phone className="w-5 h-5" />
-                  {labels.emergencyTitle}
-                </h3>
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div className="bg-white p-4 rounded-lg border border-red-100">
-                    <p className="font-bold text-2xl text-red-600">112</p>
-                    <p className="text-sm text-gray-600">{labels.emergency112}</p>
-                  </div>
-                  <div className="bg-white p-4 rounded-lg border border-red-100">
-                    <p className="font-bold text-2xl text-red-600">118</p>
-                    <p className="text-sm text-gray-600">{labels.emergency118}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
 
             {/* Documents List */}
             {svsuDocs.length > 0 ? (
