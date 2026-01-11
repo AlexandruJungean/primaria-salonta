@@ -1262,25 +1262,6 @@ export const PAGE_SEO = {
     },
   },
 
-  // Excursie Virtuală
-  excursieVirtuala: {
-    ro: {
-      title: 'Excursie Virtuală - Salonta',
-      description: 'Excursie virtuală prin municipiul Salonta - tururi 360°, fotografii panoramice.',
-      keywords: 'excursie virtuală, tur virtual, 360, Salonta, panoramic',
-    },
-    hu: {
-      title: 'Virtuális Túra - Nagyszalonta',
-      description: 'Virtuális túra Nagyszalontán - 360°-os túrák, panorámafotók.',
-      keywords: 'virtuális túra, 360, panorámafotók',
-    },
-    en: {
-      title: 'Virtual Tour - Salonta',
-      description: 'Virtual tour of Salonta - 360° tours, panoramic photos.',
-      keywords: 'virtual tour, 360, Salonta, panoramic',
-    },
-  },
-
   // Cetățeni de Onoare
   cetateniDeOnoare: {
     ro: {

@@ -1,7 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import { useTranslations, useLocale } from 'next-intl';
 import Image from 'next/image';
-import { MapPin, Clock, Palette, Map, Image as ImageIcon, Eye, Globe, Award, TrendingUp } from 'lucide-react';
+import { MapPin, Clock, Palette, Map, Image as ImageIcon, Globe, Award, TrendingUp } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { Card, CardContent } from '@/components/ui/card';
@@ -26,7 +26,6 @@ const CITY_SECTIONS = [
   { id: 'cultura', href: '/localitatea/cultura', icon: Palette },
   { id: 'hartaDigitala', href: '/localitatea/harta-digitala', icon: Map },
   { id: 'galerie', href: '/localitatea/galerie', icon: ImageIcon },
-  { id: 'excursieVirtuala', href: '/localitatea/excursie-virtuala', icon: Eye },
   { id: 'oraseInfratite', href: '/localitatea/orase-infratite', icon: Globe },
   { id: 'cetateniOnoare', href: '/localitatea/cetateni-de-onoare', icon: Award },
   { id: 'economie', href: '/localitatea/economie', icon: TrendingUp },

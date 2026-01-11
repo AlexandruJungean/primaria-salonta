@@ -38,7 +38,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/localitatea/cultura', priority: 0.7, changeFrequency: 'monthly' as const },
     { path: '/localitatea/economie', priority: 0.65, changeFrequency: 'monthly' as const },
     { path: '/localitatea/galerie', priority: 0.7, changeFrequency: 'monthly' as const },
-    { path: '/localitatea/excursie-virtuala', priority: 0.6, changeFrequency: 'yearly' as const },
     { path: '/localitatea/harta-digitala', priority: 0.65, changeFrequency: 'yearly' as const },
     { path: '/localitatea/orase-infratite', priority: 0.5, changeFrequency: 'yearly' as const },
     { path: '/localitatea/cetateni-de-onoare', priority: 0.5, changeFrequency: 'yearly' as const },

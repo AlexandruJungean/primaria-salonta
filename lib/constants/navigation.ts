@@ -365,7 +365,6 @@ export const MAIN_NAVIGATION: NavSection[] = [
           { id: 'istoric', href: '/localitatea/istoric', icon: Clock },
           { id: 'cultura', href: '/localitatea/cultura', icon: Palette },
           { id: 'galerie', href: '/localitatea/galerie', icon: Image },
-          { id: 'excursieVirtuala', href: '/localitatea/excursie-virtuala', icon: Eye },
           { id: 'hartaDigitala', href: '/localitatea/harta-digitala', icon: Map },
           { id: 'oraseInfratite', href: '/localitatea/orase-infratite', icon: Globe },
           { id: 'cetateniOnoare', href: '/localitatea/cetateni-de-onoare', icon: Award },

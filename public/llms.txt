@@ -117,7 +117,6 @@ This is the official government website for Salonta City Hall (Primăria Municip
   - History (/localitatea/istoric)
   - Culture (/localitatea/cultura)
   - Photo gallery (/localitatea/galerie)
-  - Virtual tour (/localitatea/excursie-virtuala)
   - Digital map (/localitatea/harta-digitala)
   - Twin cities (/localitatea/orase-infratite)
   - Honorary citizens (/localitatea/cetateni-de-onoare)
