@@ -68,14 +68,14 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       {/* Weather Widget */}
       <WeatherWidgetSection />
 
-      {/* City Statistics */}
-      <CityStatsSection />
-
       {/* Quick Access Links */}
       <QuickLinksSection />
 
       {/* About Section */}
       <AboutSection />
+
+      {/* City Statistics */}
+      <CityStatsSection />
 
       {/* Latest News */}
       <NewsSection news={latestNews} />
