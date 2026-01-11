@@ -4,6 +4,20 @@
     "description": "Nagyszalonta Polgármesteri Hivatalának hivatalos weboldala Bihar megyében - Online szolgáltatások, adók, illetékek, átláthatóság és közösségi események.",
     "keywords": "Nagyszalonta Polgármesteri Hivatal, Nagyszalonta, Bihar, közszolgáltatások, helyi közigazgatás, város, Romania, adók"
   },
+  "search": {
+    "title": "Keresés",
+    "placeholder": "Hírek, események, oldalak keresése...",
+    "searchButton": "Keresés",
+    "resultsFor": "Találatok",
+    "found": "{count} találat",
+    "noResults": "Nincs találat",
+    "noResultsHint": "Próbáljon más kulcsszavakat használni, vagy ellenőrizze a helyesírást.",
+    "startSearch": "Keresés az oldalon",
+    "startSearchHint": "Írjon be egy kifejezést hírek, események és oldalak kereséséhez.",
+    "news": "Hír",
+    "event": "Esemény",
+    "page": "Oldal"
+  },
   "common": {
     "search": "Keresés",
     "searchPlaceholder": "Keresés az oldalon...",

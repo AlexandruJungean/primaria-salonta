@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { useTranslations, useLocale } from 'next-intl';
+import { useRouter } from 'next/navigation';
 import { ChevronLeft, ChevronRight, Search } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { HERO_SLIDES } from '@/lib/constants/hero-slides';
@@ -13,9 +14,18 @@ const AUTO_SLIDE_INTERVAL = 6000; // 6 seconds
 export function HeroCarousel() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
   const t = useTranslations('homepage');
   const tCommon = useTranslations('common');
   const locale = useLocale() as 'ro' | 'hu' | 'en';
+  const router = useRouter();
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/${locale}/cautare?q=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
 
   const nextSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
@@ -89,10 +99,12 @@ export function HeroCarousel() {
           </p>
 
           {/* Search Bar */}
-          <div className="w-full max-w-xl mx-auto mb-8 animate-fade-in">
+          <form onSubmit={handleSearch} className="w-full max-w-xl mx-auto mb-8 animate-fade-in">
             <div className="relative">
               <input
                 type="search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder={tCommon('searchPlaceholder')}
                 className={cn(
                   'w-full px-6 py-4 pr-14 rounded-full bg-white/95 text-gray-900',
@@ -102,6 +114,7 @@ export function HeroCarousel() {
                 )}
               />
               <button
+                type="submit"
                 className={cn(
                   'absolute right-2 top-1/2 -translate-y-1/2 p-3',
                   'bg-primary-900 text-white rounded-full',
@@ -113,7 +126,7 @@ export function HeroCarousel() {
                 <Search className="w-5 h-5" />
               </button>
             </div>
-          </div>
+          </form>
         </Container>
       </div>
 

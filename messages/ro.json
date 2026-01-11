@@ -4,6 +4,20 @@
     "description": "Site-ul oficial al Primăriei Salonta, Bihor - Servicii online pentru cetățeni, taxe și impozite, formulare, transparență și evenimente locale.",
     "keywords": "Primăria Salonta, Salonta, Bihor, servicii publice, administrație locală, primărie, municipiul Salonta, taxe impozite"
   },
+  "search": {
+    "title": "Căutare",
+    "placeholder": "Caută știri, evenimente, pagini...",
+    "searchButton": "Caută",
+    "resultsFor": "Rezultate pentru",
+    "found": "{count} rezultate găsite",
+    "noResults": "Nu s-au găsit rezultate",
+    "noResultsHint": "Încercați să folosiți alte cuvinte cheie sau să verificați ortografia.",
+    "startSearch": "Căutați în site",
+    "startSearchHint": "Introduceți un termen pentru a căuta știri, evenimente și pagini.",
+    "news": "Știre",
+    "event": "Eveniment",
+    "page": "Pagină"
+  },
   "common": {
     "search": "Căutare",
     "searchPlaceholder": "Căutare în site...",

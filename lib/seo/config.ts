@@ -2003,6 +2003,25 @@ export const PAGE_SEO = {
     },
   },
 
+  // Search
+  search: {
+    ro: {
+      title: 'Căutare - Primăria Salonta',
+      description: 'Căutați știri, evenimente și pagini pe site-ul Primăriei Municipiului Salonta.',
+      keywords: 'căutare, știri, evenimente, Salonta',
+    },
+    hu: {
+      title: 'Keresés - Nagyszalonta Polgármesteri Hivatala',
+      description: 'Hírek, események és oldalak keresése Nagyszalonta Polgármesteri Hivatalának weboldalán.',
+      keywords: 'keresés, hírek, események, Nagyszalonta',
+    },
+    en: {
+      title: 'Search - Salonta City Hall',
+      description: 'Search for news, events and pages on the Salonta City Hall website.',
+      keywords: 'search, news, events, Salonta',
+    },
+  },
+
   } as const;
 
 export type PageKey = keyof typeof PAGE_SEO;
