@@ -242,9 +242,6 @@ body {
 }
 
 /* ===== Prose/Typography ===== */
-.prose {
-  max-width: 65ch;
-}
 
 .prose h1,
 .prose h2,

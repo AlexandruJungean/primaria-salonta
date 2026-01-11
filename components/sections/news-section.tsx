@@ -8,21 +8,12 @@ import { Container } from '@/components/ui/container';
 import { Section, SectionHeader } from '@/components/ui/section';
 import { Card, CardContent, CardImage } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { formatArticleDate } from '@/lib/utils/format-date';
 import type { News } from '@/lib/types/database';
 
 interface NewsSectionProps {
   news?: News[];
 }
-
-const CATEGORY_LABELS: Record<string, Record<string, string>> = {
-  anunturi: { ro: 'Anunț', hu: 'Hirdetmény', en: 'Announcement' },
-  stiri: { ro: 'Știre', hu: 'Hír', en: 'News' },
-  comunicate: { ro: 'Comunicat', hu: 'Közlemény', en: 'Press Release' },
-  proiecte: { ro: 'Proiect', hu: 'Projekt', en: 'Project' },
-  consiliu: { ro: 'Consiliu Local', hu: 'Helyi Tanács', en: 'Local Council' },
-};
 
 export function NewsSection({ news = [] }: NewsSectionProps) {
   const t = useTranslations('homepage');
@@ -50,41 +41,37 @@ export function NewsSection({ news = [] }: NewsSectionProps) {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {news.map((item) => (
-            <Card key={item.id} hover className="overflow-hidden">
-              <CardImage>
-                <Image
-                  src={item.featured_image || '/images/primaria-salonta-1.webp'}
-                  alt={item.title}
-                  fill
-                  className="object-cover transition-transform duration-300 group-hover:scale-105"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                />
-              </CardImage>
-              <CardContent className="pt-4">
-                <div className="flex items-center gap-2 mb-3">
-                  <Badge variant="default">
-                    {CATEGORY_LABELS[item.category]?.[locale] || item.category}
-                  </Badge>
-                  <span className="flex items-center gap-1 text-sm text-gray-500">
-                    <Calendar className="w-4 h-4" />
-                    {formatArticleDate(item.published_at || item.created_at, locale)}
-                  </span>
-                </div>
-                <h3 className="font-semibold text-lg text-gray-900 mb-2 line-clamp-2">
-                  {item.title}
-                </h3>
-                <p className="text-gray-600 text-sm line-clamp-2 mb-4">
-                  {item.excerpt || ''}
-                </p>
-                <Link
-                  href={`/stiri/${item.slug}`}
-                  className="text-primary-700 font-medium text-sm hover:text-primary-900 inline-flex items-center gap-1 group"
-                >
-                  {tCommon('readMore')}
-                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                </Link>
-              </CardContent>
-            </Card>
+            <Link key={item.id} href={`/stiri/${item.slug}`} className="block">
+              <Card hover className="overflow-hidden group h-full">
+                {item.featured_image && (
+                  <CardImage>
+                    <Image
+                      src={item.featured_image}
+                      alt={item.title}
+                      fill
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    />
+                  </CardImage>
+                )}
+                <CardContent className={item.featured_image ? 'pt-4' : ''}>
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="flex items-center gap-1 text-sm text-gray-500">
+                      <Calendar className="w-4 h-4" />
+                      {formatArticleDate(item.published_at || item.created_at, locale)}
+                    </span>
+                  </div>
+                  <h3 className="font-semibold text-lg text-gray-900 mb-2 line-clamp-2 group-hover:text-primary-700 transition-colors">
+                    {item.title}
+                  </h3>
+                  {item.excerpt && (
+                    <p className="text-gray-600 text-sm line-clamp-3">
+                      {item.excerpt}
+                    </p>
+                  )}
+                </CardContent>
+              </Card>
+            </Link>
           ))}
         </div>
 

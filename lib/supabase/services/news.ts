@@ -8,7 +8,7 @@ const DEFAULT_LIMIT = 12;
  */
 export async function getNews(filter: NewsFilter = {}): Promise<PaginatedResponse<News>> {
   const supabase = createAnonServerClient();
-  const { page = 1, limit = DEFAULT_LIMIT, category, featured } = filter;
+  const { page = 1, limit = DEFAULT_LIMIT, featured } = filter;
   const offset = (page - 1) * limit;
 
   let query = supabase
@@ -16,10 +16,6 @@ export async function getNews(filter: NewsFilter = {}): Promise<PaginatedRespons
     .select('*', { count: 'exact' })
     .eq('published', true)
     .order('published_at', { ascending: false });
-
-  if (category) {
-    query = query.eq('category', category);
-  }
 
   if (featured !== undefined) {
     query = query.eq('featured', featured);
@@ -133,30 +129,6 @@ export async function getNewsBySlug(slug: string): Promise<NewsWithDocuments | n
   };
 }
 
-/**
- * Get news by category
- */
-export async function getNewsByCategory(
-  category: News['category'],
-  limit: number = 10
-): Promise<News[]> {
-  const supabase = createAnonServerClient();
-
-  const { data, error } = await supabase
-    .from('news')
-    .select('*')
-    .eq('published', true)
-    .eq('category', category)
-    .order('published_at', { ascending: false })
-    .limit(limit);
-
-  if (error) {
-    console.error('Error fetching news by category:', error);
-    return [];
-  }
-
-  return data || [];
-}
 
 /**
  * Get all news slugs for static generation

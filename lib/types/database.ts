@@ -92,7 +92,6 @@ export interface CouncilSessionWithDetails extends CouncilSession {
 export interface News {
   id: string;
   slug: string;
-  category: 'anunturi' | 'stiri' | 'comunicate' | 'proiecte' | 'consiliu';
   title: string;
   excerpt: string | null;
   content: string | null;
@@ -289,7 +288,6 @@ export interface CouncilSessionsFilter extends PaginationParams {
 }
 
 export interface NewsFilter extends PaginationParams {
-  category?: News['category'];
   featured?: boolean;
 }
 

@@ -4,7 +4,6 @@ export {
   getLatestNews,
   getFeaturedNews,
   getNewsBySlug,
-  getNewsByCategory,
   getAllNewsSlugs,
 } from './news';
 

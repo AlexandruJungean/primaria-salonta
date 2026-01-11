@@ -94,7 +94,7 @@ export default async function EventDetailPage({
       <div className="relative">
         <div className="relative h-64 md:h-96">
           <Image
-            src={event.featured_image || event.poster_image || '/images/primaria-salonta-1.webp'}
+            src={event.featured_image || event.poster_image || '/images/placeholder-eveniment.webp'}
             alt={event.title}
             fill
             className="object-cover"

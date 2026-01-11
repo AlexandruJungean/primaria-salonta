@@ -144,7 +144,7 @@ export function EventsGrid({ events }: EventsGridProps) {
                   {/* Event Image */}
                   <div className="relative aspect-video">
                     <Image
-                      src={event.featured_image || event.poster_image || '/images/primaria-salonta-1.webp'}
+                      src={event.featured_image || event.poster_image || '/images/placeholder-eveniment.webp'}
                       alt={event.title}
                       fill
                       className="object-cover transition-transform duration-300 group-hover:scale-105"

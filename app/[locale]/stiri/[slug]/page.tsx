@@ -5,7 +5,6 @@ import { Calendar, User, ArrowLeft, FileText, Download, ImageIcon } from 'lucide
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { formatArticleDate } from '@/lib/utils/format-date';
 import { notFound } from 'next/navigation';
@@ -14,13 +13,6 @@ import type { Locale } from '@/lib/seo/config';
 import { getNewsBySlug, getAllNewsSlugs } from '@/lib/supabase/services';
 import { NewsImageGallery } from './news-image-gallery';
 
-const CATEGORY_LABELS: Record<string, Record<string, string>> = {
-  anunturi: { ro: 'Anunț', hu: 'Hirdetmény', en: 'Announcement' },
-  stiri: { ro: 'Știre', hu: 'Hír', en: 'News' },
-  comunicate: { ro: 'Comunicat', hu: 'Közlemény', en: 'Press Release' },
-  proiecte: { ro: 'Proiecte', hu: 'Projektek', en: 'Projects' },
-  consiliu: { ro: 'Consiliu Local', hu: 'Helyi Tanács', en: 'Local Council' },
-};
 
 export async function generateMetadata({ 
   params 
@@ -95,15 +87,10 @@ export default async function NewsDetailPage({
 
       <Section background="white">
         <Container>
-          <article className={`max-w-3xl mx-auto ${news.featured_image ? '-mt-24 relative z-10' : ''}`}>
+          <article className={`max-w-5xl mx-auto ${news.featured_image ? '-mt-24 relative z-10' : ''}`}>
             {/* Article Header Card */}
             <Card className="mb-8 overflow-visible">
               <CardContent className="p-8">
-                {/* Category Badge */}
-                <Badge variant="default" className="mb-4">
-                  {CATEGORY_LABELS[news.category]?.[locale] || news.category}
-                </Badge>
-
                 {/* Title */}
                 <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
                   {news.title}
