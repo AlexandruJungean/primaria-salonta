@@ -16,19 +16,9 @@ interface DezbateriDocumentsProps {
   };
 }
 
-// Extract date from document title
-function extractDateFromTitle(title: string): string | null {
-  const datePattern = /(\d{2})\.(\d{2})\.(\d{4})/;
-  const match = title.match(datePattern);
-  if (match) {
-    const [, day, month, year] = match;
-    return `${year}-${month}-${day}`;
-  }
-  return null;
-}
-
 function DebateCard({ doc }: { doc: Document }) {
-  const date = extractDateFromTitle(doc.title);
+  // Use document_date from database directly
+  const date = doc.document_date;
   
   return (
     <Card className="hover:shadow-md transition-shadow">

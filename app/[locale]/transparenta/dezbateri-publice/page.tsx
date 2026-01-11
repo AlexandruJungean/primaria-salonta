@@ -19,32 +19,6 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   });
 }
 
-// Extract year from document title or date patterns
-function extractYearFromTitle(title: string): number | null {
-  // Pattern for dates like "15.04.2019" or "09.12.2016"
-  const datePattern = /(\d{2})\.(\d{2})\.(\d{4})/;
-  const dateMatch = title.match(datePattern);
-  if (dateMatch) {
-    return parseInt(dateMatch[3], 10);
-  }
-  
-  // Pattern for "anul 2019" or "anul 2017"
-  const anulPattern = /anul\s+(\d{4})/i;
-  const anulMatch = title.match(anulPattern);
-  if (anulMatch) {
-    return parseInt(anulMatch[1], 10);
-  }
-  
-  // Pattern for standalone year in title
-  const yearPattern = /\b(20\d{2})\b/;
-  const yearMatch = title.match(yearPattern);
-  if (yearMatch) {
-    return parseInt(yearMatch[1], 10);
-  }
-  
-  return null;
-}
-
 export default async function DezbateriPublicePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'navigation' });
@@ -53,13 +27,12 @@ export default async function DezbateriPublicePage({ params }: { params: Promise
   // Fetch documents from database
   const allDocuments = await documentsService.getDocumentsBySourceFolder('dezbateri-publice', 500);
 
-  // Group documents by year
+  // Group documents by year (using doc.year from database directly)
   const documentsByYear: Record<number, Document[]> = {};
   
   allDocuments.forEach(doc => {
-    // Try to get year from title first, then from database year field
-    const yearFromTitle = extractYearFromTitle(doc.title);
-    const year = yearFromTitle || doc.year || new Date().getFullYear();
+    // Use year from database, fallback to current year only if not set
+    const year = doc.year || new Date().getFullYear();
     
     if (!documentsByYear[year]) {
       documentsByYear[year] = [];
