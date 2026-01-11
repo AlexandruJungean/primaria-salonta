@@ -1471,25 +1471,6 @@ export const PAGE_SEO = {
     },
   },
 
-  // Probleme Sociale
-  problemeSociale: {
-    ro: {
-      title: 'Raportare Probleme Sociale - Primăria Salonta',
-      description: 'Raportează probleme sociale și situații vulnerabile în municipiul Salonta.',
-      keywords: 'probleme sociale, asistență socială, raportare, vulnerabil',
-    },
-    hu: {
-      title: 'Szociális Problémák Bejelentése - Nagyszalonta',
-      description: 'Szociális problémák és veszélyeztetett helyzetek bejelentése Nagyszalontán.',
-      keywords: 'szociális problémák, szociális segély, bejelentés',
-    },
-    en: {
-      title: 'Report Social Issues - Salonta City Hall',
-      description: 'Report social issues and vulnerable situations in Salonta.',
-      keywords: 'social issues, social assistance, report, vulnerable',
-    },
-  },
-
   // Programe
   programe: {
     ro: {
@@ -1699,44 +1680,6 @@ export const PAGE_SEO = {
     },
   },
 
-  // Registru Agricol
-  registruAgricol: {
-    ro: {
-      title: 'Registru Agricol - Primăria Salonta',
-      description: 'Informații despre registrul agricol, adeverințe și documente necesare pentru agricultura locală.',
-      keywords: 'registru agricol, adeverințe, agricultură, terenuri',
-    },
-    hu: {
-      title: 'Mezőgazdasági Nyilvántartás - Nagyszalonta',
-      description: 'Információk a mezőgazdasági nyilvántartásról, igazolásokról és szükséges dokumentumokról.',
-      keywords: 'mezőgazdasági nyilvántartás, igazolások, mezőgazdaság',
-    },
-    en: {
-      title: 'Agricultural Registry - Salonta City Hall',
-      description: 'Information about agricultural registry, certificates and required documents.',
-      keywords: 'agricultural registry, certificates, farming, land',
-    },
-  },
-
-  // Sănătate
-  sanatate: {
-    ro: {
-      title: 'Sănătate - Primăria Salonta',
-      description: 'Informații despre spitale, farmacii, cabinete medicale și servicii de urgență din Salonta.',
-      keywords: 'sănătate, spitale, farmacii, medici, urgență, Salonta',
-    },
-    hu: {
-      title: 'Egészségügy - Nagyszalonta',
-      description: 'Információk a kórházakról, gyógyszertárakról, orvosi rendelőkről és sürgősségi szolgáltatásokról.',
-      keywords: 'egészségügy, kórházak, gyógyszertárak, orvosok',
-    },
-    en: {
-      title: 'Health - Salonta City Hall',
-      description: 'Information about hospitals, pharmacies, medical offices and emergency services in Salonta.',
-      keywords: 'health, hospitals, pharmacies, doctors, emergency',
-    },
-  },
-
   // Sport
   sport: {
     ro: {
@@ -1753,25 +1696,6 @@ export const PAGE_SEO = {
       title: 'Sports - Salonta City Hall',
       description: 'Sports facilities, fields, pools and recreation areas in Salonta Municipality.',
       keywords: 'sports, fields, pool, recreation, fitness, Salonta',
-    },
-  },
-
-  // Stare Civilă
-  stareCivila: {
-    ro: {
-      title: 'Stare Civilă - Primăria Salonta',
-      description: 'Servicii de stare civilă - certificate de naștere, căsătorie, deces și alte acte oficiale.',
-      keywords: 'stare civilă, naștere, căsătorie, deces, certificate',
-    },
-    hu: {
-      title: 'Anyakönyvi Hivatal - Nagyszalonta',
-      description: 'Anyakönyvi szolgáltatások - születési, házassági, halálozási anyakönyvi kivonatok.',
-      keywords: 'anyakönyv, születés, házasság, halálozás, okmányok',
-    },
-    en: {
-      title: 'Civil Registry - Salonta City Hall',
-      description: 'Civil registry services - birth, marriage, death certificates and official documents.',
-      keywords: 'civil registry, birth, marriage, death, certificates',
     },
   },
 

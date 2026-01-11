@@ -19,7 +19,6 @@ This is the official government website for Salonta City Hall (Primăria Municip
 - **Online Services** (/servicii-online)
   - Online payments for taxes and fees (/servicii-online/plati)
   - Online petitions and requests (/servicii-online/petitii)
-  - Social problems forms (/servicii-online/probleme-sociale)
 - **Public Information** (/informatii-publice)
   - Online forms - downloadable forms organized by category (/informatii-publice/formulare)
   - Local taxes and fees (/informatii-publice/taxe-impozite)
@@ -35,6 +34,7 @@ This is the official government website for Salonta City Hall (Primăria Municip
   - Public announcements (/transparenta/anunturi)
   - Public debates (/transparenta/dezbateri-publice)
   - Information bulletin (/transparenta/buletin-informativ)
+  - General transparency information (/transparenta/generale)
 - **Institutions** (/institutii)
   - Medical assistance (/institutii/asistenta-medicala)
   - Social canteen (/institutii/cantina-sociala)
@@ -44,11 +44,9 @@ This is the official government website for Salonta City Hall (Primăria Municip
   - Audience schedule (/primaria/audiente)
 - Report a problem (/raporteaza-problema)
 - Events calendar (/evenimente)
-- Civil status (/stare-civila)
-- Agricultural registry (/registru-agricol)
-- Health information (/sanatate)
 - Education (/educatie)
 - Transport (/transport)
+- Sport (/sport)
 - Volunteering (/voluntariat)
 - FAQ (/faq)
 
@@ -59,7 +57,7 @@ This is the official government website for Salonta City Hall (Primăria Municip
   - Urban planning certificates (/informatii-publice/certificate-urbanism)
   - Urban plans (/informatii-publice/planuri-urbanistice)
   - Public auctions (/informatii-publice/licitatii)
-  - Land offers - Law 17/2015 (/informatii-publice/oferte-terenuri)
+  - Land offers - Law 17/2014 (/informatii-publice/oferte-terenuri)
   - Construction works reception (/informatii-publice/receptie-lucrari)
   - Regulations (/informatii-publice/regulamente)
   - Telecommunications networks (/informatii-publice/retele-telecom)
@@ -205,6 +203,11 @@ All pages follow the pattern: /{locale}/{section}/{page}
 - Working Hours: /{locale}/primaria/program
 - Audience Schedule: /{locale}/primaria/audiente
 - FAQ: /{locale}/faq
+
+### Transparency
+- Public Announcements: /{locale}/transparenta/anunturi
+- Public Debates: /{locale}/transparenta/dezbateri-publice
+- Information Bulletin: /{locale}/transparenta/buletin-informativ
 
 ## Last Updated
 

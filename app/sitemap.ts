@@ -121,10 +121,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // Servicii Online
     { path: '/servicii-online/petitii', priority: 0.85, changeFrequency: 'monthly' as const },
     
-    // Rapoarte
-    { path: '/rapoarte', priority: 0.6, changeFrequency: 'yearly' as const },
-    { path: '/rapoarte/audit', priority: 0.55, changeFrequency: 'yearly' as const },
-    { path: '/rapoarte/studii', priority: 0.5, changeFrequency: 'yearly' as const },
+    // Rapoarte și Studii
+    { path: '/rapoarte-studii', priority: 0.6, changeFrequency: 'yearly' as const },
+    { path: '/rapoarte-studii/rapoarte', priority: 0.55, changeFrequency: 'yearly' as const },
+    { path: '/rapoarte-studii/studii', priority: 0.5, changeFrequency: 'yearly' as const },
+    
+    // Alte pagini cetățeni
+    { path: '/sport', priority: 0.65, changeFrequency: 'monthly' as const },
+    { path: '/educatie', priority: 0.6, changeFrequency: 'monthly' as const },
+    { path: '/transport', priority: 0.6, changeFrequency: 'monthly' as const },
+    { path: '/voluntariat', priority: 0.6, changeFrequency: 'monthly' as const },
+    { path: '/raporteaza-problema', priority: 0.7, changeFrequency: 'monthly' as const },
+    { path: '/faq', priority: 0.6, changeFrequency: 'monthly' as const },
+    { path: '/evenimente', priority: 0.7, changeFrequency: 'weekly' as const },
+    { path: '/agenti-economici', priority: 0.5, changeFrequency: 'monthly' as const },
     
     // Legal pages (lower priority but still indexed)
     { path: '/politica-confidentialitate', priority: 0.3, changeFrequency: 'yearly' as const },
