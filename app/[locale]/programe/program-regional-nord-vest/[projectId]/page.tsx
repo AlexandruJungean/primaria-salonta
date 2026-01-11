@@ -1,14 +1,11 @@
 import { getTranslations } from 'next-intl/server';
-import { notFound } from 'next/navigation';
 import { 
   ExternalLink,
   ArrowLeft,
   Download,
   FileText,
-  Calendar,
   Euro,
-  ChevronDown,
-  ChevronUp,
+  Target,
 } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
@@ -17,7 +14,8 @@ import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { Link } from '@/components/ui/link';
 import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
-import * as programs from '@/lib/supabase/services/programs';
+import * as regionalProjects from '@/lib/supabase/services/regional-projects';
+import { ProjectUpdatesAccordion } from './project-updates-accordion';
 import Image from 'next/image';
 
 // ============================================
@@ -26,9 +24,9 @@ import Image from 'next/image';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; projectId: string }> }) {
   const { locale, projectId } = await params;
-  const program = await programs.getProgramBySlug(projectId);
+  const project = await regionalProjects.getProjectBySlug(projectId);
   
-  if (!program) {
+  if (!project) {
     return generatePageMetadata({
       pageKey: 'programRegionalNordVest',
       locale: locale as Locale,
@@ -40,8 +38,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     pageKey: 'programRegionalNordVest',
     locale: locale as Locale,
     path: `/programe/program-regional-nord-vest/${projectId}`,
-    customTitle: program.title,
-    customDescription: program.description?.substring(0, 160) || undefined,
+    customTitle: project.title,
+    customDescription: project.short_description || undefined,
   });
 }
 
@@ -50,22 +48,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 // ============================================
 
 export async function generateStaticParams() {
-  const slugs = await programs.getAllProgramSlugs();
+  const slugs = await regionalProjects.getAllProjectSlugs();
   return slugs.map(slug => ({ projectId: slug }));
-}
-
-// ============================================
-// HELPER FUNCTIONS
-// ============================================
-
-function formatCurrency(value: number | null): string {
-  if (!value) return '-';
-  return new Intl.NumberFormat('ro-RO', {
-    style: 'currency',
-    currency: 'RON',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(value);
 }
 
 // ============================================
@@ -81,9 +65,9 @@ export default async function ProjectDetailPage({
   const t = await getTranslations({ locale, namespace: 'navigation' });
   const tp = await getTranslations({ locale, namespace: 'programRegionalNordVestPage' });
 
-  const program = await programs.getProgramBySlug(projectId);
+  const project = await regionalProjects.getProjectBySlug(projectId);
 
-  if (!program) {
+  if (!project) {
     return (
       <>
         <Breadcrumbs items={[
@@ -96,7 +80,7 @@ export default async function ProjectDetailPage({
             <div className="text-center py-12">
               <p className="text-gray-500">Proiectul nu a fost găsit.</p>
               <Link href="/programe/program-regional-nord-vest" className="text-primary-600 hover:underline mt-4 inline-block">
-                {tp('backToProjects')}
+                Înapoi la proiecte
               </Link>
             </div>
           </Container>
@@ -108,87 +92,69 @@ export default async function ProjectDetailPage({
   const pageLabels = {
     ro: {
       backToProjects: 'Înapoi la proiecte',
-      projectValue: 'Valoare proiect',
-      documents: 'Documente',
+      documents: 'Documente proiect',
       description: 'Descriere',
-      status: 'Status',
-      progress: 'Progres',
-      fundingSource: 'Sursa de finanțare',
-      startDate: 'Data început',
-      endDate: 'Data finalizare',
-      planned: 'Planificat',
-      inProgress: 'În desfășurare',
-      completed: 'Finalizat',
-      cancelled: 'Anulat',
+      projectUpdates: 'Stadiul proiectului',
     },
     hu: {
       backToProjects: 'Vissza a projektekhez',
-      projectValue: 'Projekt értéke',
-      documents: 'Dokumentumok',
+      documents: 'Projekt dokumentumok',
       description: 'Leírás',
-      status: 'Státusz',
-      progress: 'Előrehaladás',
-      fundingSource: 'Finanszírozási forrás',
-      startDate: 'Kezdési dátum',
-      endDate: 'Befejezési dátum',
-      planned: 'Tervezett',
-      inProgress: 'Folyamatban',
-      completed: 'Befejezett',
-      cancelled: 'Törölve',
+      projectUpdates: 'Projekt állapota',
     },
     en: {
       backToProjects: 'Back to projects',
-      projectValue: 'Project value',
-      documents: 'Documents',
+      documents: 'Project documents',
       description: 'Description',
-      status: 'Status',
-      progress: 'Progress',
-      fundingSource: 'Funding source',
-      startDate: 'Start date',
-      endDate: 'End date',
-      planned: 'Planned',
-      inProgress: 'In progress',
-      completed: 'Completed',
-      cancelled: 'Cancelled',
+      projectUpdates: 'Project status',
     },
   };
 
   const labels = pageLabels[locale as keyof typeof pageLabels] || pageLabels.en;
-
-  const statusLabels: Record<string, string> = {
-    planificat: labels.planned,
-    in_desfasurare: labels.inProgress,
-    finalizat: labels.completed,
-    anulat: labels.cancelled,
-  };
-
-  const statusColors: Record<string, string> = {
-    planificat: 'bg-blue-100 text-blue-800',
-    in_desfasurare: 'bg-amber-100 text-amber-800',
-    finalizat: 'bg-green-100 text-green-800',
-    anulat: 'bg-red-100 text-red-800',
-  };
-
-  const formatDate = (dateStr: string | null) => {
-    if (!dateStr) return '-';
-    const date = new Date(dateStr);
-    return date.toLocaleDateString(
-      locale === 'ro' ? 'ro-RO' : locale === 'hu' ? 'hu-HU' : 'en-US',
-      { day: 'numeric', month: 'long', year: 'numeric' }
-    );
-  };
 
   return (
     <>
       <Breadcrumbs items={[
         { label: t('programe'), href: '/programe' },
         { label: t('programRegionalNordVest'), href: '/programe/program-regional-nord-vest' },
-        { label: program.title }
+        { label: project.title }
       ]} />
 
       <Section background="white">
         <Container>
           <div className="max-w-4xl mx-auto">
+            {/* Program Logos */}
+            <div className="flex flex-wrap items-center justify-center gap-4 mb-8">
+              <Image
+                src="https://klvtfdutlbdawsltraee.supabase.co/storage/v1/object/public/photos/programe/program-regional/logo-ue-cofinantat.webp"
+                alt="Cofinanțat de Uniunea Europeană"
+                width={200}
+                height={42}
+                className="h-10 w-auto"
+              />
+              <Image
+                src="https://klvtfdutlbdawsltraee.supabase.co/storage/v1/object/public/photos/programe/program-regional/logo-guvern.webp"
+                alt="Guvernul României"
+                width={64}
+                height={64}
+                className="h-14 w-auto"
+              />
+              <Image
+                src="https://klvtfdutlbdawsltraee.supabase.co/storage/v1/object/public/photos/programe/program-regional/logo-regio-2021-2027.webp"
+                alt="Logo Regio Nord-Vest 2021-2027"
+                width={64}
+                height={64}
+                className="h-14 w-auto"
+              />
+              <Image
+                src="https://klvtfdutlbdawsltraee.supabase.co/storage/v1/object/public/photos/programe/program-regional/logo-pfp.webp"
+                alt="Planul Financiar Plurianual"
+                width={150}
+                height={84}
+                className="h-16 w-auto"
+              />
+            </div>
+
             {/* Back link */}
             <Link 
               href="/programe/program-regional-nord-vest"
@@ -202,109 +168,60 @@ export default async function ProjectDetailPage({
             <Card className="mb-6">
               <CardHeader>
                 <div className="flex items-start gap-4">
-                  {program.featured_image ? (
-                    <div className="relative w-14 h-14 rounded-xl overflow-hidden shrink-0">
-                      <Image
-                        src={program.featured_image}
-                        alt={program.title}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                  ) : (
-                    <div className="w-14 h-14 rounded-xl bg-primary-100 flex items-center justify-center shrink-0">
-                      <Euro className="w-7 h-7 text-primary-700" />
-                    </div>
-                  )}
+                  <div className="w-14 h-14 rounded-xl bg-primary-100 flex items-center justify-center shrink-0">
+                    <Euro className="w-7 h-7 text-primary-700" />
+                  </div>
                   <div>
-                    <span className={`inline-block text-xs font-semibold px-2.5 py-1 rounded ${statusColors[program.status] || statusColors.planificat} mb-2`}>
-                      {statusLabels[program.status] || labels.planned}
-                    </span>
+                    {project.smis_code && (
+                      <span className="text-xs font-mono text-gray-500 mb-2 block">
+                        SMIS {project.smis_code}
+                      </span>
+                    )}
                     <CardTitle className="text-xl font-bold text-gray-900 leading-snug">
-                      {program.title}
+                      {project.title}
                     </CardTitle>
                   </div>
                 </div>
               </CardHeader>
             </Card>
 
-            {/* Project Values */}
-            {program.budget && (
-              <Card className="mb-6">
-                <CardContent className="pt-6">
-                  <div className="flex items-center gap-2 mb-4">
-                    <Euro className="w-5 h-5 text-green-600" />
-                    <h3 className="font-semibold text-gray-900">{labels.projectValue}</h3>
-                  </div>
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    <div className="p-3 bg-gray-50 rounded-lg">
-                      <p className="text-xs text-gray-500 uppercase tracking-wide">{labels.projectValue}</p>
-                      <p className="text-lg font-semibold text-gray-900">{formatCurrency(program.budget)}</p>
-                    </div>
-                    {program.funding_source && (
-                      <div className="p-3 bg-blue-50 rounded-lg">
-                        <p className="text-xs text-blue-600 uppercase tracking-wide">{labels.fundingSource}</p>
-                        <p className="text-lg font-semibold text-blue-900">{program.funding_source}</p>
-                      </div>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Project Info */}
-            {(program.start_date || program.end_date || program.progress_percentage !== null) && (
-              <Card className="mb-6">
-                <CardContent className="pt-6">
-                  <div className="grid sm:grid-cols-3 gap-4">
-                    {program.start_date && (
-                      <div className="p-3 bg-gray-50 rounded-lg">
-                        <p className="text-xs text-gray-500 uppercase tracking-wide">{labels.startDate}</p>
-                        <p className="font-semibold text-gray-900">{formatDate(program.start_date)}</p>
-                      </div>
-                    )}
-                    {program.end_date && (
-                      <div className="p-3 bg-gray-50 rounded-lg">
-                        <p className="text-xs text-gray-500 uppercase tracking-wide">{labels.endDate}</p>
-                        <p className="font-semibold text-gray-900">{formatDate(program.end_date)}</p>
-                      </div>
-                    )}
-                    {program.progress_percentage !== null && (
-                      <div className="p-3 bg-gray-50 rounded-lg">
-                        <p className="text-xs text-gray-500 uppercase tracking-wide">{labels.progress}</p>
-                        <div className="flex items-center gap-2 mt-1">
-                          <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-                            <div 
-                              className="h-full bg-green-500 rounded-full"
-                              style={{ width: `${program.progress_percentage}%` }}
-                            />
-                          </div>
-                          <span className="font-semibold text-gray-900">{program.progress_percentage}%</span>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
             {/* Description */}
-            {(program.description || program.content) && (
+            {project.full_description && (
               <Card className="mb-6">
                 <CardHeader>
-                  <CardTitle>{labels.description}</CardTitle>
+                  <CardTitle className="flex items-center gap-2">
+                    <Target className="w-5 h-5 text-primary-600" />
+                    {labels.description}
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div 
-                    className="prose prose-gray max-w-none"
-                    dangerouslySetInnerHTML={{ __html: program.content || program.description || '' }}
-                  />
+                  <p className="text-gray-700 leading-relaxed">{project.full_description}</p>
+                  
+                  {(project.objective || project.specific_objective) && (
+                    <div className="mt-4 space-y-2">
+                      {project.objective && (
+                        <p className="text-sm text-gray-600">
+                          <strong>Obiectiv:</strong> {project.objective}
+                        </p>
+                      )}
+                      {project.specific_objective && (
+                        <p className="text-sm text-gray-600">
+                          <strong>Obiectiv specific:</strong> {project.specific_objective}
+                        </p>
+                      )}
+                      {project.call_title && (
+                        <p className="text-sm text-gray-600">
+                          <strong>Apel:</strong> {project.call_title}
+                        </p>
+                      )}
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             )}
 
             {/* Documents */}
-            {program.documents && program.documents.length > 0 && (
+            {project.documents && project.documents.length > 0 && (
               <Card className="mb-6">
                 <CardContent className="pt-6">
                   <div className="flex items-center gap-2 mb-4">
@@ -312,7 +229,7 @@ export default async function ProjectDetailPage({
                     <h3 className="font-semibold text-gray-900">{labels.documents}</h3>
                   </div>
                   <div className="space-y-2">
-                    {program.documents.map((doc) => (
+                    {project.documents.map((doc) => (
                       <a
                         key={doc.id}
                         href={doc.file_url}
@@ -320,13 +237,21 @@ export default async function ProjectDetailPage({
                         rel="noopener noreferrer"
                         className="flex items-center gap-3 p-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors"
                       >
-                        <Download className="w-5 h-5 text-gray-500" />
+                        <Download className="w-5 h-5 text-primary-600" />
                         <span className="flex-1 text-gray-700">{doc.title}</span>
                       </a>
                     ))}
                   </div>
                 </CardContent>
               </Card>
+            )}
+
+            {/* Project Updates (Monthly Status) - Collapsible with Images */}
+            {project.updates && project.updates.length > 0 && (
+              <ProjectUpdatesAccordion 
+                updates={project.updates} 
+                title={labels.projectUpdates}
+              />
             )}
 
             {/* Funding Notice */}
