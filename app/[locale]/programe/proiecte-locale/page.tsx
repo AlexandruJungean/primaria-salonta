@@ -1,13 +1,5 @@
 import { getTranslations } from 'next-intl/server';
-import { 
-  Building,
-  Download, 
-  FileText,
-  Palette,
-  TreePine,
-  Trophy,
-  Calendar
-} from 'lucide-react';
+import { Download, Calendar, Palette, TreePine, Trophy, Users, ChevronDown, FileText, Image as ImageIcon } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -16,6 +8,8 @@ import { PageHeader } from '@/components/pages/page-header';
 import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
 import * as documents from '@/lib/supabase/services/documents';
+import * as pageImages from '@/lib/supabase/services/page-images';
+import { LocalProjectsAccordion } from './local-projects-accordion';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -26,80 +20,95 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   });
 }
 
+// Define the year structure with categories
+interface YearData {
+  year: number;
+  results: { culture?: string[]; sport?: string[]; mediu?: string[]; other?: string[] };
+  hasGuide: boolean;
+  extraDocs?: { title: string; docs: string[] }[];
+}
+
 export default async function ProiecteLocalePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'navigation' });
-  const tp = await getTranslations({ locale, namespace: 'proiecteLocalePage' });
 
-  // Fetch local project documents grouped by year
-  const projectDocs = await documents.getDocumentsByCategory('proiecte_locale', 200);
+  // Fetch documents from database (need higher limit due to many duplicates per year)
+  const allDocs = await documents.getDocumentsBySourceFolder('proiecte-locale-castigatoare-in-anul-curent', 800);
   
-  // Group by year
-  const years = await documents.getDocumentYears('proiecte_locale');
-  
+  // Fetch logo image
+  const logoImages = await pageImages.getPageImages('proiecte-locale');
+  const logoUrl = logoImages.length > 0 ? logoImages[0].image_url : null;
+
+  // Group documents by description field (which should contain year_category)
+  const docsByYearCategory = allDocs.reduce((acc, doc) => {
+    const key = doc.description || 'other';
+    if (!acc[key]) {
+      acc[key] = [];
+    }
+    acc[key].push(doc);
+    return acc;
+  }, {} as Record<string, typeof allDocs>);
+
+  // Years structure based on old website
+  const years = [2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016];
+
   const pageLabels = {
     ro: {
       description: 'Ghiduri și formulare pentru proiectele finanțate din bugetul local al Primăriei Municipiului Salonta.',
-      noProjects: 'Nu există proiecte locale disponibile.',
-      download: 'Descarcă',
-      culture: 'Cultură',
-      environment: 'Mediu',
-      sport: 'Sport',
+      noProjects: 'Nu există documente disponibile.',
+      culture: 'CULTURĂ',
+      environment: 'MEDIU',
+      sport: 'SPORT',
+      social: 'SOCIAL',
       results: 'Rezultate',
-      forYear: 'pentru anul',
+      guideTitle: 'Ghidul proiectelor finanțate din bugetul local în',
+      logoCaption: '(LOGO-ul pentru proiecte al Primăriei Mun. Salonta)',
+      download: 'Descarcă',
     },
     hu: {
       description: 'Útmutatók és nyomtatványok a Nagyszalonta Polgármesteri Hivatala helyi költségvetéséből finanszírozott projektekhez.',
-      noProjects: 'Nincsenek elérhető helyi projektek.',
-      download: 'Letöltés',
-      culture: 'Kultúra',
-      environment: 'Környezet',
-      sport: 'Sport',
+      noProjects: 'Nincsenek elérhető dokumentumok.',
+      culture: 'KULTÚRA',
+      environment: 'KÖRNYEZET',
+      sport: 'SPORT',
+      social: 'SZOCIÁLIS',
       results: 'Eredmények',
-      forYear: 'az évre',
+      guideTitle: 'A helyi költségvetésből finanszírozott projektek útmutatója',
+      logoCaption: '(A Nagyszalonta Polgármesteri Hivatal projekt logója)',
+      download: 'Letöltés',
     },
     en: {
       description: 'Guides and forms for projects funded from the local budget of Salonta City Hall.',
-      noProjects: 'No local projects available.',
-      download: 'Download',
-      culture: 'Culture',
-      environment: 'Environment',
-      sport: 'Sport',
+      noProjects: 'No documents available.',
+      culture: 'CULTURE',
+      environment: 'ENVIRONMENT',
+      sport: 'SPORT',
+      social: 'SOCIAL',
       results: 'Results',
-      forYear: 'for year',
+      guideTitle: 'Guide for projects funded from the local budget in',
+      logoCaption: '(Project logo of Salonta City Hall)',
+      download: 'Download',
     },
   };
 
   const labels = pageLabels[locale as keyof typeof pageLabels] || pageLabels.en;
 
-  // Group documents by year and subcategory
-  const groupedDocs = projectDocs.reduce((acc, doc) => {
-    const year = doc.year || 0;
-    const subcategory = doc.subcategory || 'altele';
-    
-    if (!acc[year]) {
-      acc[year] = {};
-    }
-    if (!acc[year][subcategory]) {
-      acc[year][subcategory] = [];
-    }
-    acc[year][subcategory].push(doc);
-    return acc;
-  }, {} as Record<number, Record<string, typeof projectDocs>>);
-
-  const subcategoryLabels: Record<string, string> = {
-    cultura: labels.culture,
-    mediu: labels.environment,
-    sport: labels.sport,
-    rezultate: labels.results,
-  };
-
-  const subcategoryColors: Record<string, { bg: string; icon: typeof Palette }> = {
-    cultura: { bg: 'bg-purple-100 text-purple-700', icon: Palette },
-    mediu: { bg: 'bg-green-100 text-green-700', icon: TreePine },
-    sport: { bg: 'bg-amber-100 text-amber-700', icon: Trophy },
-    rezultate: { bg: 'bg-blue-100 text-blue-700', icon: FileText },
-  };
+  // Prepare data for accordion
+  const yearsData = years.map(year => ({
+    year,
+    results: {
+      culture: docsByYearCategory[`${year}_rezultate_cultura`] || [],
+      sport: docsByYearCategory[`${year}_rezultate_sport`] || [],
+      mediu: docsByYearCategory[`${year}_rezultate_mediu`] || [],
+    },
+    guides: {
+      culture: docsByYearCategory[`${year}_cultura`] || [],
+      mediu: docsByYearCategory[`${year}_mediu`] || [],
+      sport: docsByYearCategory[`${year}_sport`] || [],
+      social: docsByYearCategory[`${year}_social`] || [],
+    },
+    extraDocs: docsByYearCategory[`${year}_extra`] || [],
+  }));
 
   return (
     <>
@@ -111,53 +120,17 @@ export default async function ProiecteLocalePage({ params }: { params: Promise<{
 
       <Section background="white">
         <Container>
-          <div className="max-w-5xl mx-auto">
+          <div className="max-w-4xl mx-auto">
             <p className="text-lg text-gray-600 mb-8 text-center">
               {labels.description}
             </p>
 
-            {years.length > 0 ? (
-              <div className="space-y-8">
-                {years.map((year) => (
-                  <Card key={year}>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <Calendar className="w-5 h-5 text-primary-600" />
-                        {year}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      {groupedDocs[year] && Object.entries(groupedDocs[year]).map(([subcategory, docs]) => {
-                        const config = subcategoryColors[subcategory] || subcategoryColors.rezultate;
-                        const Icon = config.icon;
-                        
-                        return (
-                          <div key={subcategory} className="mb-6 last:mb-0">
-                            <h4 className={`inline-flex items-center gap-2 text-sm font-semibold px-3 py-1 rounded-full mb-3 ${config.bg}`}>
-                              <Icon className="w-4 h-4" />
-                              {subcategoryLabels[subcategory] || subcategory}
-                            </h4>
-                            <div className="space-y-2 pl-4">
-                              {docs.map((doc) => (
-                                <a
-                                  key={doc.id}
-                                  href={doc.file_url}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="flex items-center gap-2 text-sm text-gray-700 hover:text-primary-600 py-1 group"
-                                >
-                                  <Download className="w-4 h-4 text-gray-400 group-hover:text-primary-600 transition-colors" />
-                                  {doc.title}
-                                </a>
-                              ))}
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+            {allDocs.length > 0 ? (
+              <LocalProjectsAccordion 
+                yearsData={yearsData}
+                labels={labels}
+                logoUrl={logoUrl}
+              />
             ) : (
               <div className="text-center py-12 text-gray-500">
                 {labels.noProjects}

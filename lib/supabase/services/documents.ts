@@ -352,7 +352,9 @@ export async function getAssetDeclarationsByDepartment(
     .from('asset_declarations')
     .select('*')
     .eq('published', true)
-    .order('person_name', { ascending: true });
+    .order('declaration_year', { ascending: false })
+    .order('person_name', { ascending: true })
+    .limit(2000); // Increased limit to ensure all declarations are fetched
 
   if (year) {
     query = query.eq('declaration_year', year);

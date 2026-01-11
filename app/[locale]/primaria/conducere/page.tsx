@@ -66,7 +66,8 @@ export default async function LeadershipPage({
 
           {leadership.length === 0 ? (
             <div className="text-center py-12 text-gray-500">
-              <p>Nu există informații despre conducere momentan.</p>
+              <User className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+              <p>{locale === 'hu' ? 'Jelenleg nincsenek információk a vezetőségről.' : locale === 'en' ? 'No leadership information available at the moment.' : 'Nu există informații despre conducere momentan.'}</p>
             </div>
           ) : (
             <div className="space-y-12 max-w-5xl mx-auto">
@@ -132,12 +133,14 @@ export default async function LeadershipPage({
                         )}
                       </div>
 
-                      {/* Bio */}
+                      {/* Bio / Education */}
                       {leader.bio && (
                         <div className="mb-6">
-                          <p className="text-sm text-gray-600 leading-relaxed">
-                            {leader.bio}
-                          </p>
+                          <h3 className="font-semibold text-gray-900 mb-3">{t('education')}</h3>
+                          <div 
+                            className="text-sm text-gray-600 leading-relaxed prose prose-sm max-w-none"
+                            dangerouslySetInnerHTML={{ __html: leader.bio }}
+                          />
                         </div>
                       )}
 
@@ -145,9 +148,10 @@ export default async function LeadershipPage({
                       {leader.responsibilities && (
                         <div>
                           <h3 className="font-semibold text-gray-900 mb-3">{t('mainResponsibilities')}</h3>
-                          <p className="text-sm text-gray-600 leading-relaxed">
-                            {leader.responsibilities}
-                          </p>
+                          <div 
+                            className="text-sm text-gray-600 leading-relaxed prose prose-sm max-w-none [&>ul]:list-disc [&>ul]:pl-5 [&>ul]:space-y-1"
+                            dangerouslySetInnerHTML={{ __html: leader.responsibilities }}
+                          />
                         </div>
                       )}
                     </CardContent>

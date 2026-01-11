@@ -24,7 +24,8 @@ export default async function StrategieDezvoltarePage({ params }: { params: Prom
   const tp = await getTranslations({ locale, namespace: 'strategieDezvoltarePage' });
 
   // Fetch strategy documents from database
-  const strategyDocs = await documents.getDocumentsByCategory('strategie_dezvoltare', 50);
+  // Documents are stored with source_folder from migration
+  const strategyDocs = await documents.getDocumentsBySourceFolder('strategia-de-dezvoltare-a-municipiului-salonta');
 
   const pageLabels = {
     ro: {

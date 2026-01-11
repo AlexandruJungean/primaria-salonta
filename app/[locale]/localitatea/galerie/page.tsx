@@ -1,13 +1,12 @@
 import { getTranslations } from 'next-intl/server';
-import { useTranslations } from 'next-intl';
-import Image from 'next/image';
-import { Image as ImageIcon } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
-import { generatePageMetadata, BreadcrumbJsonLd } from '@/lib/seo';
+import { ImageGallery } from '@/components/ui/image-gallery';
+import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
+import * as pageImages from '@/lib/supabase/services/page-images';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -18,23 +17,29 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   });
 }
 
-const GALLERY_IMAGES = [
-  { src: '/images/primaria-salonta-1.webp', alt: 'Primăria Salonta' },
-  { src: '/images/primaria-salonta-2.webp', alt: 'Primăria Salonta' },
-  { src: '/images/muzeu-salonta.webp', alt: 'Complexul Muzeal Arany János' },
-  { src: '/images/casa-de-cultura-salonta-1.webp', alt: 'Casa de Cultură' },
-  { src: '/images/casa-memoriala-salonta-1.webp', alt: 'Casa Memorială' },
-  { src: '/images/parc-salonta-1.webp', alt: 'Parc Salonta' },
-  { src: '/images/parc-salonta-2.webp', alt: 'Parc Salonta' },
-  { src: '/images/bazin-de-inot-salonta-1.webp', alt: 'Bazin de Înot' },
-  { src: '/images/aquapark-salonta-1.webp', alt: 'Aquapark Salonta' },
-  { src: '/images/biserica-salonta-3.webp', alt: 'Biserica Salonta' },
-  { src: '/images/liceul-arany-janos-salonta-1.webp', alt: 'Liceul Arany János' },
-  { src: '/images/cladire-dropii-salonta-2.webp', alt: 'Cuibul Dropiei' },
-];
+export default async function GaleriePage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'navigation' });
 
-export default function GaleriePage() {
-  const t = useTranslations('navigation');
+  // Fetch gallery images from database
+  const images = await pageImages.getPageImages('galerie');
+
+  const pageLabels = {
+    ro: {
+      noImages: 'Nu există imagini în galerie momentan.',
+      description: 'Galerie foto cu imagini din Municipiul Salonta - clădiri istorice, parcuri, instituții și locuri de interes.',
+    },
+    hu: {
+      noImages: 'Jelenleg nincsenek képek a galériában.',
+      description: 'Fotógaléria Nagyszalonta településről - történelmi épületek, parkok, intézmények és látnivalók.',
+    },
+    en: {
+      noImages: 'No images in the gallery at the moment.',
+      description: 'Photo gallery with images from Salonta Municipality - historic buildings, parks, institutions and places of interest.',
+    },
+  };
+
+  const labels = pageLabels[locale as keyof typeof pageLabels] || pageLabels.en;
 
   return (
     <>
@@ -46,30 +51,21 @@ export default function GaleriePage() {
 
       <Section background="white">
         <Container>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {GALLERY_IMAGES.map((image, index) => (
-              <div 
-                key={index} 
-                className="relative aspect-square rounded-lg overflow-hidden group cursor-pointer"
-              >
-                <Image
-                  src={image.src}
-                  alt={image.alt}
-                  fill
-                  className="object-cover transition-transform duration-300 group-hover:scale-110"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-end">
-                  <span className="text-white text-sm p-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                    {image.alt}
-                  </span>
-                </div>
+          <div className="max-w-6xl mx-auto">
+            <p className="text-lg text-gray-600 mb-8 text-center">
+              {labels.description}
+            </p>
+
+            {images.length > 0 ? (
+              <ImageGallery images={images} columns={4} />
+            ) : (
+              <div className="text-center py-12 text-gray-500">
+                {labels.noImages}
               </div>
-            ))}
+            )}
           </div>
         </Container>
       </Section>
     </>
   );
 }
-

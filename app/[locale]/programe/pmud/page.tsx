@@ -1,5 +1,5 @@
 import { getTranslations } from 'next-intl/server';
-import { Map, Download, FileText } from 'lucide-react';
+import { Map, Download } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { Card, CardContent } from '@/components/ui/card';
@@ -24,7 +24,8 @@ export default async function PmudPage({ params }: { params: Promise<{ locale: s
   const tp = await getTranslations({ locale, namespace: 'pmudPage' });
 
   // Fetch PMUD documents from database
-  const pmudDocs = await documents.getDocumentsByCategory('pmud', 10);
+  // Documents are stored with source_folder from migration (altele/pmud)
+  const pmudDocs = await documents.getDocumentsBySourceFolder('pmud');
 
   const pageLabels = {
     ro: {
