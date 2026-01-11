@@ -23,7 +23,7 @@ export function NewsSection({ news = [] }: NewsSectionProps) {
   // If no news provided, show empty state
   if (news.length === 0) {
     return (
-      <Section background="gray">
+      <Section background="white">
         <Container>
           <SectionHeader title={t('latestNews')} />
           <div className="text-center py-12 text-gray-500">
@@ -35,7 +35,7 @@ export function NewsSection({ news = [] }: NewsSectionProps) {
   }
 
   return (
-    <Section background="gray">
+    <Section background="white">
       <Container>
         <SectionHeader title={t('latestNews')} />
 

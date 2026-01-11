@@ -11,7 +11,7 @@ export function ContactInfoSection() {
   const t = useTranslations('footer');
 
   return (
-    <Section background="gray">
+    <Section background="white">
       <Container>
         <SectionHeader 
           title={t('address')} 

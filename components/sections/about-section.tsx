@@ -15,7 +15,7 @@ export function AboutSection() {
   ];
 
   return (
-    <Section background="white">
+    <Section background="gray">
       <Container>
         {/* Content Grid - 35/65 split on desktop */}
         <div className="grid lg:grid-cols-[300px_1fr] gap-8 lg:gap-12 items-center">

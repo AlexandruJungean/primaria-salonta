@@ -36,11 +36,6 @@ const ContactInfoSection = dynamic(
   { ssr: true }
 );
 
-const ExternalLinksSection = dynamic(
-  () => import('@/components/sections/external-links-section').then(mod => ({ default: mod.ExternalLinksSection })),
-  { ssr: true }
-);
-
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   return generatePageMetadata({
@@ -93,9 +88,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
       {/* Contact Information - Local SEO */}
       <ContactInfoSection />
-
-      {/* External Partner Links */}
-      <ExternalLinksSection />
     </>
   );
 }

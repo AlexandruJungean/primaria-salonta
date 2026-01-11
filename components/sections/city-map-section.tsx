@@ -9,7 +9,7 @@ export function CityMapSection() {
   const t = useTranslations('homepage');
 
   return (
-    <Section background="white">
+    <Section background="gradient">
       <Container>
         {/* Hero Card */}
         <div className="relative rounded-2xl overflow-hidden shadow-2xl">
