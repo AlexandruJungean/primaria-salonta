@@ -1233,6 +1233,19 @@
       "analiza": "Analysis",
       "evaluare": "Evaluation"
     }
+  },
+  "about": {
+    "badge": "About Salonta Municipality",
+    "title": "Welcome to Salonta",
+    "paragraph1": "The Municipality of Salonta, located in western Romania in Bihor County, represents an important urban and cultural center of the Crișana region. With a rich history spanning several centuries, our city has always been a meeting place of cultures and traditions. Here, in this picturesque corner of the country, the Romanian and Hungarian communities live together in harmony, creating a unique atmosphere of diversity and mutual respect. The Salonta City Hall aims to be a modern, transparent, and citizen-oriented administration, providing quality public services.",
+    "paragraph2": "Salonta is renowned for its exceptional cultural heritage, being the birthplace of the great Hungarian poet Arany János, whose literary work profoundly influenced European literature. The memorial museum dedicated to the poet attracts tourists from around the world, keeping his literary legacy alive. The dendrological park offers a green refuge in the heart of the city, being a favorite place for relaxation and nature walks. The city has modern infrastructure, with schools, high schools, hospitals, and sports facilities that meet the needs of the local community.",
+    "paragraph3": "The local administration constantly works for the sustainable development of the municipality, implementing projects funded by European and national funds. We invest in modernizing road infrastructure, improving public services, and creating green spaces for citizens. Salonta City Hall encourages transparency and civic participation, offering digital platforms for citizen interaction and easy access to public interest information. We invite you to explore our website to discover available services, local events, and the opportunities our municipality offers.",
+    "highlights": {
+      "location": "Bihor County, Romania",
+      "population": "Over 17,000 residents",
+      "administration": "Modern administration",
+      "heritage": "UNESCO cultural heritage"
+    }
   }
 }
 

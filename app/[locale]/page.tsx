@@ -2,6 +2,7 @@ import dynamic from 'next/dynamic';
 import { HeroCarousel } from '@/components/sections/hero-carousel';
 import { CityStatsSection } from '@/components/sections/city-stats-section';
 import { QuickLinksSection } from '@/components/sections/quick-links';
+import { AboutSection } from '@/components/sections/about-section';
 import { NewsSection } from '@/components/sections/news-section';
 import { UpcomingEventsSection } from '@/components/sections/upcoming-events-section';
 import { generatePageMetadata } from '@/lib/seo/metadata';
@@ -77,6 +78,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
       {/* Quick Access Links */}
       <QuickLinksSection />
+
+      {/* About Section */}
+      <AboutSection />
 
       {/* Latest News */}
       <NewsSection news={latestNews} />

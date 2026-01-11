@@ -1233,6 +1233,19 @@
       "analiza": "Analiză",
       "evaluare": "Evaluare"
     }
+  },
+  "about": {
+    "badge": "Despre Municipiul Salonta",
+    "title": "Bine ați venit în Salonta",
+    "paragraph1": "Municipiul Salonta, situat în vestul României, în județul Bihor, reprezintă un important centru urban și cultural al zonei Crișana. Cu o istorie bogată care se întinde pe mai multe secole, orașul nostru a fost întotdeauna un loc de întâlnire a culturilor și tradițiilor. Aici, în acest colț pitoresc al țării, comunitatea română și maghiară conviețuiesc în armonie, creând o atmosferă unică de diversitate și respect reciproc. Primăria Municipiului Salonta își propune să fie o administrație modernă, transparentă și orientată către cetățean, punând la dispoziție servicii publice de calitate.",
+    "paragraph2": "Salonta este renumită pentru patrimoniul său cultural deosebit, fiind orașul natal al marelui poet maghiar Arany János, a cărui operă literară a influențat profund literatura europeană. Muzeul memorial dedicat poetului reprezintă un punct de atracție pentru turiști din întreaga lume, păstrând vie moștenirea sa literară. Parcul dendrologic oferă un refugiu verde în inima orașului, fiind un loc preferat pentru relaxare și plimbări în natură. Orașul dispune de o infrastructură modernă, cu școli, licee, spitale și facilități sportive care răspund nevoilor comunității locale.",
+    "paragraph3": "Administrația locală lucrează constant pentru dezvoltarea durabilă a municipiului, implementând proiecte finanțate din fonduri europene și naționale. Investim în modernizarea infrastructurii rutiere, în eficientizarea serviciilor publice și în crearea de spații verzi pentru cetățeni. Primăria Salonta încurajează transparența și participarea civică, oferind platforme digitale pentru interacțiunea cu cetățenii și accesul facil la informații de interes public. Vă invităm să explorați site-ul nostru pentru a descoperi serviciile disponibile, evenimentele locale și oportunitățile pe care municipiul nostru le oferă.",
+    "highlights": {
+      "location": "Județul Bihor, România",
+      "population": "Peste 17.000 locuitori",
+      "administration": "Administrație modernă",
+      "heritage": "Patrimoniu cultural UNESCO"
+    }
   }
 }
 

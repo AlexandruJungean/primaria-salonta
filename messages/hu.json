@@ -1233,6 +1233,19 @@
       "analiza": "Elemzés",
       "evaluare": "Értékelés"
     }
+  },
+  "about": {
+    "badge": "Nagyszalonta Városáról",
+    "title": "Üdvözöljük Nagyszalontán",
+    "paragraph1": "Nagyszalonta városa Románia nyugati részén, Bihar megyében található, és a Körösvidék egyik jelentős városi és kulturális központja. Gazdag, több évszázadra visszanyúló történelmével városunk mindig is a kultúrák és hagyományok találkozóhelye volt. Itt, az ország ezen festői szegletében a román és magyar közösség harmóniában él együtt, egyedülálló sokszínűséget és kölcsönös tiszteletet teremtve. Nagyszalonta Polgármesteri Hivatala modern, átlátható és polgárközpontú közigazgatásra törekszik, minőségi közszolgáltatásokat nyújtva.",
+    "paragraph2": "Nagyszalonta különleges kulturális örökségéről híres, hiszen itt született Arany János, a nagy magyar költő, akinek irodalmi munkássága mélyen befolyásolta az európai irodalmat. A költőnek szentelt emlékmúzeum a világ minden tájáról vonzza a turistákat, élve tartva irodalmi örökségét. A dendrológiai park zöld menedéket kínál a város szívében, kedvelt helye a pihenésnek és a természetben való sétáknak. A város modern infrastruktúrával rendelkezik, iskolákkal, gimnáziumokkal, kórházakkal és sportlétesítményekkel, amelyek a helyi közösség igényeit szolgálják.",
+    "paragraph3": "A helyi önkormányzat folyamatosan dolgozik a város fenntartható fejlesztésén, európai uniós és nemzeti forrásokból finanszírozott projekteket valósít meg. Befektetünk az úthálózat korszerűsítésébe, a közszolgáltatások hatékonyabbá tételébe és zöldterületek kialakításába. Nagyszalonta Polgármesteri Hivatala ösztönzi az átláthatóságot és a polgári részvételt, digitális platformokat biztosítva a polgárokkal való kapcsolattartáshoz és a közérdekű információkhoz való könnyű hozzáféréshez. Fedezze fel weboldalunkat, és ismerje meg az elérhető szolgáltatásokat, helyi eseményeket és lehetőségeket.",
+    "highlights": {
+      "location": "Bihar megye, Románia",
+      "population": "Több mint 17 000 lakos",
+      "administration": "Modern közigazgatás",
+      "heritage": "UNESCO kulturális örökség"
+    }
   }
 }
 
