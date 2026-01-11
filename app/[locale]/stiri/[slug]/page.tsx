@@ -1,7 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import Image from 'next/image';
 import { Link } from '@/components/ui/link';
-import { Calendar, User, ArrowLeft, FileText, Download } from 'lucide-react';
+import { Calendar, User, ArrowLeft, FileText, Download, ImageIcon } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { Card, CardContent } from '@/components/ui/card';
@@ -12,6 +12,7 @@ import { notFound } from 'next/navigation';
 import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
 import { getNewsBySlug, getAllNewsSlugs } from '@/lib/supabase/services';
+import { NewsImageGallery } from './news-image-gallery';
 
 const CATEGORY_LABELS: Record<string, Record<string, string>> = {
   anunturi: { ro: 'Anunț', hu: 'Hirdetmény', en: 'Announcement' },
@@ -138,6 +139,17 @@ export default async function NewsDetailPage({
                   className="prose prose-lg max-w-none text-gray-700"
                   dangerouslySetInnerHTML={{ __html: news.content }}
                 />
+              </div>
+            )}
+
+            {/* Image Gallery */}
+            {news.images && news.images.length > 0 && (
+              <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                  <ImageIcon className="w-5 h-5 text-primary-600" />
+                  Galerie foto
+                </h3>
+                <NewsImageGallery images={news.images} />
               </div>
             )}
 

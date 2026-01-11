@@ -87,7 +87,7 @@ export async function getFeaturedNews(count: number = 3): Promise<News[]> {
 }
 
 /**
- * Get single news by slug with documents
+ * Get single news by slug with documents and images
  */
 export async function getNewsBySlug(slug: string): Promise<NewsWithDocuments | null> {
   const supabase = createAnonServerClient();
@@ -111,6 +111,14 @@ export async function getNewsBySlug(slug: string): Promise<NewsWithDocuments | n
     .eq('news_id', news.id)
     .order('sort_order');
 
+  // Get images for this news
+  const { data: images } = await supabase
+    .from('news_images')
+    .select('*')
+    .eq('news_id', news.id)
+    .eq('published', true)
+    .order('sort_order');
+
   // Increment view count (fire and forget)
   supabase
     .from('news')
@@ -121,6 +129,7 @@ export async function getNewsBySlug(slug: string): Promise<NewsWithDocuments | n
   return {
     ...news,
     documents: documents || [],
+    images: images || [],
   };
 }
 
