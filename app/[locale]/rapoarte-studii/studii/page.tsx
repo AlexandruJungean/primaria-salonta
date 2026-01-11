@@ -22,8 +22,8 @@ export default async function StudiiPage({ params }: { params: Promise<{ locale:
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'navigation' });
 
-  // Fetch studies from database
-  const { data: studies } = await reports.getReports({ reportType: 'studiu', limit: 100 });
+  // Fetch studies from database (studiu_fezabilitate and studiu_impact types)
+  const { data: studies } = await reports.getReports({ reportType: 'studiu_fezabilitate', limit: 100 });
 
   const formatDate = (dateStr: string | null) => {
     if (!dateStr) return '';

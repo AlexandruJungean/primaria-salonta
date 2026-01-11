@@ -130,7 +130,7 @@
     "camereWeb": "Camere web",
     "contact": "Contact",
     "faq": "Întrebări frecvente",
-    "raporteazaProblema": "Raportează o problemă (În curând)",
+    "raporteazaProblema": "Raportează o problemă",
     "evenimente": "Evenimente",
     "evenimenteDesc": "Calendarul evenimentelor din Salonta",
     "stareCivila": "Stare civilă (În curând)",
@@ -138,7 +138,7 @@
     "transport": "Transport public (În curând)",
     "educatie": "Educație (În curând)",
     "sanatate": "Sănătate (În curând)",
-    "sport": "Sport și agrement (În curând)",
+    "sport": "Sport (În curând)",
     "agentiEconomici": "Agenți economici (În curând)",
     "problemeSociale": "Probleme sociale – formulare",
     "coronavirus": "Informații coronavirus",
@@ -656,6 +656,9 @@
   "anunturiPage": {
     "announcements": "anunțuri",
     "noAnnouncements": "Nu există anunțuri disponibile momentan.",
+    "noAnnouncementsYear": "Nu există anunțuri pentru acest an.",
+    "selectYear": "Selectați anul pentru a vizualiza anunțurile:",
+    "backToYears": "Înapoi la lista de ani",
     "archiveNote": "Arhivă anunțuri",
     "archiveNoteDesc": "Anunțurile sunt încărcate din baza de date. Pentru anunțuri mai vechi, vă rugăm să contactați primăria.",
     "legend": "Legendă tipuri anunțuri"
@@ -666,7 +669,8 @@
     "debates": "dezbateri",
     "archive": "Arhivă",
     "archiveTitle": "Arhivă dezbateri publice",
-    "infoNote": "Documentele din această pagină vor fi încărcate din baza de date. Link-urile marcate cu '#' sunt placeholder-uri și vor fi actualizate ulterior cu documentele reale."
+    "infoNote": "Pentru informații suplimentare privind dezbaterile publice sau pentru a vă înscrie la o dezbatere, vă rugăm să contactați Primăria Municipiului Salonta.",
+    "noDebates": "Nu există dezbateri publice disponibile momentan."
   },
   "statutPage": {
     "statut2021": "Statutul Municipiului Salonta – 2021",
@@ -728,7 +732,10 @@
     "sectionI": "Lista cuprinzând categoriile de documente produse și/sau gestionate, potrivit legii:",
     "sectionJ": "Modalitățile de contestare a deciziei autorității sau a instituției publice în situația în care persoana se consideră vătămată în privința dreptului de acces la informațiile de interes public solicitate",
     "viewPage": "Vezi pagina",
-    "bulletin": "Buletin informativ"
+    "viewConducere": "Vezi conducerea instituției",
+    "bulletin": "Buletin informativ",
+    "buletine": "buletine",
+    "noBuletine": "Nu există buletine informative disponibile."
   },
   "alteDocumentePage": {
     "quickLinksTitle": "Acces rapid la pagini conexe",

@@ -1,14 +1,13 @@
 import { getTranslations } from 'next-intl/server';
-import { useTranslations } from 'next-intl';
-import { FileText, Download, ExternalLink, AlertCircle, CreditCard, BookOpen, FileCheck, Scale, Users, Info } from 'lucide-react';
+import { Download, ExternalLink, AlertCircle, CreditCard, BookOpen, Scale, Users, Info } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
-import Link from 'next/link';
-import { generatePageMetadata, BreadcrumbJsonLd } from '@/lib/seo';
+import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
+import { getDocumentsBySourceFolderWithAnnexes } from '@/lib/supabase/services/documents';
+import { GeneraleDocuments } from './generale-documents';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -19,138 +18,48 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   });
 }
 
-// These will be loaded from database later
-const DISPOZITII = [
-  {
-    title: 'Dispoziția nr. 357/24.05.2023',
-    description: 'Privind desemnarea doamnei Alb Ioana Simona, Șef serviciu APL – persoană responsabilă cu aplicarea prevederilor Legii nr. 361/2022, privind protecția avertizorilor în interes public și aprobarea Procedurii de sistem cod PS-20',
-    url: '#',
-  },
-  {
-    title: 'Dispoziția nr. 366/2022',
-    description: 'Privind înlocuirea doamnei Caba Maria Florica cu doamna Alb Ioana Simona, ca responsabil în cadrul Primăriei Municipiului Salonta cu aplicarea prevederilor Legii nr. 52/2003',
-    url: '#',
-  },
-  {
-    title: 'Dispoziția nr. 365/2022',
-    description: 'Privind înlocuirea doamnei Caba Maria Florica cu doamna Alb Ioana Simona, în Comisia de analiză privind încălcarea dreptului de acces la informațiile de interes public conform Legii nr. 544/2001',
-    url: '#',
-  },
-  {
-    title: 'Dispoziția nr. 107/2021',
-    description: 'Privind înlocuirea d-nei Alb Ioana Simona pe perioada suspendării raportului de serviciu cu d-na Caba Maria Florica, ca responsabil cu aplicarea prevederilor Legii nr. 52/2003',
-    url: '#',
-  },
-  {
-    title: 'Dispoziție responsabili Legea 52/2003 și Legea 544/2001',
-    description: 'Privind desemnarea responsabililor din cadrul Primăriei Salonta cu aplicarea prevederilor Legii nr. 52/2003 și a Legii nr. 544/2001',
-    url: '#',
-  },
-];
+export default async function GeneralePage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'navigation' });
+  const tg = await getTranslations({ locale, namespace: 'generalePage' });
 
-const FORMULARE = [
-  { title: 'Anexa 4 (cerere)', description: 'Cerere pentru solicitare informații de interes public', url: '#' },
-  { title: 'Reclamație administrativă', description: 'Conform Legii 544/2001', url: '#' },
-];
+  // Fetch documents from database (with annexes grouped)
+  const allDocs = await getDocumentsBySourceFolderWithAnnexes('generale', 500);
 
-const RAPOARTE = [
-  {
-    year: '2024',
-    items: [
-      { title: 'Raport periodic de activitate pentru anul 2024', url: '#' },
-      { title: 'Anexa 1 – venituri la 31 dec 2024', url: '#' },
-      { title: 'Anexa 2 – cheltuieli la 31 dec 2024', url: '#' },
-      { title: 'Anexa 3 – Contracte achiziții', url: '#' },
-      { title: 'Raport anual privind transparența decizională pentru anul 2024', url: '#' },
-      { title: 'Raport de evaluare a implementării Legii nr. 544/2001 pt. anul 2024', url: '#' },
-    ],
-  },
-  {
-    year: '2023',
-    items: [
-      { title: 'Raport MO 544', url: '#' },
-      { title: 'Anexa 1 – venituri la 31 dec 2023', url: '#' },
-      { title: 'Anexa 2 – cheltuieli la 31 dec 2023', url: '#' },
-      { title: 'Anexa 3 – contracte achiziții 2023', url: '#' },
-      { title: 'Raport anual privind transparența decizională pentru anul 2023', url: '#' },
-      { title: 'Raport de evaluare a implementării Legii nr. 544/2001 pt. anul 2023', url: '#' },
-    ],
-  },
-  {
-    year: '2022',
-    items: [
-      { title: 'Raport de activitate anual privind implementării Legii nr. 544 pt. anul 2022', url: '#' },
-      { title: 'Anexa 1 – venituri 2022', url: '#' },
-      { title: 'Anexa 2 – cheltuieli 2022', url: '#' },
-      { title: 'Anexa 3 – contracte achiziții 2022', url: '#' },
-      { title: 'Raport anual privind transparența decizională pentru anul 2022', url: '#' },
-      { title: 'Raport de evaluare a implementării Legii nr. 544/2001 pt. anul 2022', url: '#' },
-    ],
-  },
-  {
-    year: '2021',
-    items: [
-      { title: 'Raport anual privind transparența decizională pentru anul 2021', url: '#' },
-      { title: 'Raport de evaluare a implementării Legii nr. 544 pt. anul 2021', url: '#' },
-    ],
-  },
-  {
-    year: '2020',
-    items: [
-      { title: 'Raport de evaluare a implementării Legii nr. 544 pt. anul 2020', url: '#' },
-    ],
-  },
-  {
-    year: '2019',
-    items: [
-      { title: 'Raport de evaluare a implementării Legii nr. 544 pt. anul 2019', url: '#' },
-    ],
-  },
-  {
-    year: '2018',
-    items: [
-      { title: 'Raport de evaluare a implementării Legii nr. 544/2001 în anul 2018', url: '#' },
-      { title: 'Raport anual privind transparența decizională pentru anul 2018', url: '#' },
-    ],
-  },
-  {
-    year: '2017',
-    items: [
-      { title: 'Raport de evaluare a implementării Legii nr. 544/2001 în anul 2017', url: '#' },
-      { title: 'Raport privind transparența decizională la nivelul Primăriei Municipiului Salonta pe anul 2017', url: '#' },
-    ],
-  },
-  {
-    year: '2016',
-    items: [
-      { title: 'Raport de evaluare a implementării Legii nr. 544/2001 în anul 2016', url: '#' },
-      { title: 'Fișa de evaluare centralizată a implementării Legii nr. 544/2001 pentru anul 2016', url: '#' },
-      { title: 'Raport privind transparența decizională la nivelul Primăriei Municipiului Salonta pe anul 2016', url: '#' },
-    ],
-  },
-  {
-    year: '2015',
-    items: [
-      { title: 'Raport privind transparența decizională la nivelul Primăriei municipiului Salonta – pentru anul 2015', url: '#' },
-    ],
-  },
-  {
-    year: '2014',
-    items: [
-      { title: 'Raport privind transparența decizională la nivelul Primăriei municipiului Salonta – pentru anul 2014', url: '#' },
-    ],
-  },
-  {
-    year: '2013',
-    items: [
-      { title: 'Raport privind transparența decizională la nivelul Primăriei municipiului Salonta – pentru anul 2013', url: '#' },
-    ],
-  },
-];
+  // Categorize documents based on title patterns
+  const dispozitii = allDocs.filter(doc => 
+    doc.title.toLowerCase().includes('dispozi')
+  );
 
-export default function GeneralePage() {
-  const t = useTranslations('navigation');
-  const tg = useTranslations('generalePage');
+  const formulare = allDocs.filter(doc => 
+    doc.title.toLowerCase().includes('anexa 4') || 
+    doc.title.toLowerCase().includes('reclamatie administrativa') ||
+    doc.title.toLowerCase().includes('reclamație administrativă')
+  );
+
+  const rapoarte = allDocs.filter(doc => 
+    doc.title.toLowerCase().includes('raport') || 
+    doc.title.toLowerCase().includes('anexa 1') || 
+    doc.title.toLowerCase().includes('anexa 2') || 
+    doc.title.toLowerCase().includes('anexa 3') ||
+    doc.title.toLowerCase().includes('fisa de evaluare') ||
+    doc.title.toLowerCase().includes('fișa de evaluare')
+  );
+
+  // Group rapoarte by year
+  const rapoarteByYear = rapoarte.reduce((acc, doc) => {
+    const year = doc.year || 2024;
+    if (!acc[year]) {
+      acc[year] = [];
+    }
+    acc[year].push(doc);
+    return acc;
+  }, {} as Record<number, typeof rapoarte>);
+
+  // Sort years descending
+  const sortedYears = Object.keys(rapoarteByYear)
+    .map(Number)
+    .sort((a, b) => b - a);
 
   return (
     <>
@@ -164,31 +73,17 @@ export default function GeneralePage() {
         <Container>
           <div className="max-w-5xl mx-auto space-y-12">
 
-            {/* Dispoziții Section */}
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                <FileCheck className="w-7 h-7 text-primary-600" />
-                {tg('dispozitiiTitle')}
-              </h2>
-              <div className="space-y-4">
-                {DISPOZITII.map((doc, index) => (
-                  <Card key={index} className="hover:shadow-md transition-shadow">
-                    <CardContent className="pt-4 pb-4">
-                      <a href={doc.url} className="group flex items-start gap-4">
-                        <FileText className="w-5 h-5 text-primary-600 mt-1 shrink-0" />
-                        <div className="flex-1">
-                          <h3 className="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">
-                            {doc.title}
-                          </h3>
-                          <p className="text-sm text-gray-600 mt-1">{doc.description}</p>
-                        </div>
-                        <Download className="w-4 h-4 text-gray-400 group-hover:text-primary-600 transition-colors shrink-0" />
-                      </a>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
+            {/* Dispoziții & Rapoarte - Collapsible Client Component */}
+            <GeneraleDocuments
+              dispozitii={dispozitii}
+              rapoarteByYear={rapoarteByYear}
+              sortedYears={sortedYears}
+              labels={{
+                dispozitiiTitle: tg('dispozitiiTitle'),
+                rapoarteTitle: tg('rapoarteTitle'),
+                rapoarteAnuale: tg('rapoarteAnuale'),
+              }}
+            />
 
             {/* Cont pentru plăți Section */}
             <div className="bg-blue-50 rounded-2xl p-6 border border-blue-100">
@@ -206,69 +101,34 @@ export default function GeneralePage() {
             </div>
 
             {/* Formulare Section */}
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                <BookOpen className="w-7 h-7 text-green-600" />
-                {tg('formulareTitle')}
-              </h2>
-              <div className="grid md:grid-cols-2 gap-4">
-                {FORMULARE.map((form, index) => (
-                  <a
-                    key={index}
-                    href={form.url}
-                    className="group flex items-center gap-4 bg-white rounded-xl border border-gray-200 p-4 hover:shadow-md hover:border-primary-300 transition-all"
-                  >
-                    <div className="w-12 h-12 rounded-lg bg-green-100 flex items-center justify-center shrink-0">
-                      <Download className="w-6 h-6 text-green-600" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">
-                        {form.title}
-                      </h3>
-                      <p className="text-sm text-gray-500">{form.description}</p>
-                    </div>
-                  </a>
-                ))}
+            {formulare.length > 0 && (
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                  <BookOpen className="w-7 h-7 text-green-600" />
+                  {tg('formulareTitle')}
+                </h2>
+                <div className="grid md:grid-cols-2 gap-4">
+                  {formulare.map((doc) => (
+                    <a
+                      key={doc.id}
+                      href={doc.file_url || '#'}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-center gap-4 bg-white rounded-xl border border-gray-200 p-4 hover:shadow-md hover:border-primary-300 transition-all"
+                    >
+                      <div className="w-12 h-12 rounded-lg bg-green-100 flex items-center justify-center shrink-0">
+                        <Download className="w-6 h-6 text-green-600" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">
+                          {doc.title}
+                        </h3>
+                      </div>
+                    </a>
+                  ))}
+                </div>
               </div>
-            </div>
-
-            {/* Rapoarte Section */}
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                <FileText className="w-7 h-7 text-orange-600" />
-                {tg('rapoarteTitle')}
-              </h2>
-              <div className="space-y-6">
-                {RAPOARTE.map((yearGroup) => (
-                  <Card key={yearGroup.year}>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-lg flex items-center gap-2">
-                        <span className="bg-primary-100 text-primary-700 px-3 py-1 rounded-full text-sm font-bold">
-                          {yearGroup.year}
-                        </span>
-                        {tg('rapoarteAnuale')}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <ul className="space-y-2">
-                        {yearGroup.items.map((item, index) => (
-                          <li key={index}>
-                            <a
-                              href={item.url}
-                              className="group flex items-center gap-3 text-gray-700 hover:text-primary-600 transition-colors py-1"
-                            >
-                              <FileText className="w-4 h-4 text-gray-400 group-hover:text-primary-600 shrink-0" />
-                              <span className="text-sm">{item.title}</span>
-                              <Download className="w-3 h-3 text-gray-300 group-hover:text-primary-600 ml-auto shrink-0" />
-                            </a>
-                          </li>
-                        ))}
-                      </ul>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
+            )}
 
             {/* Ghidul Cetățeanului Section */}
             <div className="bg-gradient-to-br from-primary-50 to-primary-100 rounded-2xl p-8">

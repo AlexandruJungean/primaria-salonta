@@ -1,5 +1,5 @@
 import { getTranslations } from 'next-intl/server';
-import { Newspaper, FileText, Download, ExternalLink } from 'lucide-react';
+import { FileText, Download, ExternalLink } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { Card, CardContent } from '@/components/ui/card';
@@ -8,7 +8,7 @@ import { PageHeader } from '@/components/pages/page-header';
 import { Link } from '@/components/ui/link';
 import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
-import * as documents from '@/lib/supabase/services/documents';
+import * as documentsService from '@/lib/supabase/services/documents';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -24,8 +24,16 @@ export default async function BuletinInformativPage({ params }: { params: Promis
   const t = await getTranslations({ locale, namespace: 'navigation' });
   const tb = await getTranslations({ locale, namespace: 'buletinPage' });
 
-  // Fetch bulletins from database
-  const buletine = await documents.getDocumentsByCategory('buletin_informativ', 50);
+  // Fetch documents from database by source folder
+  const allDocuments = await documentsService.getDocumentsBySourceFolder('buletin-informativ', 100);
+
+  // Separate documents by subcategory (section)
+  const sectionA = allDocuments.filter(doc => doc.subcategory === 'a' || doc.title.includes('OUG'));
+  const sectionB = allDocuments.filter(doc => doc.subcategory === 'b' || (doc.title.toLowerCase().includes('buletin') && !doc.title.includes('OUG')));
+  const sectionC = allDocuments.filter(doc => doc.subcategory === 'c');
+  const sectionG = allDocuments.filter(doc => doc.subcategory === 'g');
+  const sectionH = allDocuments.filter(doc => doc.subcategory === 'h');
+  const sectionI = allDocuments.filter(doc => doc.subcategory === 'i');
 
   return (
     <>
@@ -51,16 +59,34 @@ export default async function BuletinInformativPage({ params }: { params: Promis
                       <p className="text-gray-900 font-medium mb-3">
                         {tb('sectionA')}
                       </p>
-                      <a
-                        href="https://legislatie.just.ro/Public/DetaliiDocument/215925"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-800 text-sm"
-                      >
-                        <FileText className="w-4 h-4" />
-                        OUG nr. 57/2019 privind Codul administrativ
-                        <ExternalLink className="w-3 h-3" />
-                      </a>
+                      {sectionA.length > 0 ? (
+                        <div className="space-y-2">
+                          {sectionA.map((doc) => (
+                            <a
+                              key={doc.id}
+                              href={doc.file_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-800 text-sm"
+                            >
+                              <FileText className="w-4 h-4" />
+                              {doc.title}
+                              <ExternalLink className="w-3 h-3" />
+                            </a>
+                          ))}
+                        </div>
+                      ) : (
+                        <a
+                          href="https://legislatie.just.ro/Public/DetaliiDocument/215925"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-800 text-sm"
+                        >
+                          <FileText className="w-4 h-4" />
+                          OUG nr. 57/2019 privind Codul administrativ
+                          <ExternalLink className="w-3 h-3" />
+                        </a>
+                      )}
                     </div>
                   </div>
                 </CardContent>
@@ -77,23 +103,23 @@ export default async function BuletinInformativPage({ params }: { params: Promis
                       <p className="text-gray-900 font-medium mb-4">
                         {tb('sectionB')}
                       </p>
-                      {buletine.length > 0 ? (
+                      {sectionB.length > 0 ? (
                         <div className="space-y-2">
-                          {buletine.map((buletin) => (
+                          {sectionB.map((doc) => (
                             <a
-                              key={buletin.id}
-                              href={buletin.file_url}
+                              key={doc.id}
+                              href={doc.file_url}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="flex items-center gap-2 text-primary-600 hover:text-primary-800 text-sm py-1 group"
                             >
                               <Download className="w-4 h-4 text-gray-400 group-hover:text-primary-600" />
-                              <span>{buletin.title}</span>
+                              <span>{doc.title}</span>
                             </a>
                           ))}
                         </div>
                       ) : (
-                        <p className="text-gray-500 text-sm">Nu există buletine disponibile.</p>
+                        <p className="text-gray-500 text-sm">{tb('noBuletine')}</p>
                       )}
                     </div>
                   </div>
@@ -111,13 +137,27 @@ export default async function BuletinInformativPage({ params }: { params: Promis
                       <p className="text-gray-900 font-medium mb-2">
                         {tb('sectionC')}
                       </p>
-                      <Link
-                        href="/primaria/conducere"
-                        className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-800 text-sm"
-                      >
-                        {tb('viewPage')}
-                        <ExternalLink className="w-3 h-3" />
-                      </Link>
+                      <div className="space-y-2">
+                        <Link
+                          href="/primaria/conducere"
+                          className="flex items-center gap-2 text-primary-600 hover:text-primary-800 text-sm"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                          {tb('viewConducere')}
+                        </Link>
+                        {sectionC.map((doc) => (
+                          <a
+                            key={doc.id}
+                            href={doc.file_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 text-primary-600 hover:text-primary-800 text-sm"
+                          >
+                            <Download className="w-4 h-4 text-gray-400" />
+                            {doc.title}
+                          </a>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </CardContent>
@@ -138,8 +178,8 @@ export default async function BuletinInformativPage({ params }: { params: Promis
                         href="/contact"
                         className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-800 text-sm"
                       >
+                        <ExternalLink className="w-4 h-4" />
                         {tb('viewPage')}
-                        <ExternalLink className="w-3 h-3" />
                       </Link>
                     </div>
                   </div>
@@ -161,8 +201,8 @@ export default async function BuletinInformativPage({ params }: { params: Promis
                         href="/primaria/audiente"
                         className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-800 text-sm"
                       >
+                        <ExternalLink className="w-4 h-4" />
                         {tb('viewPage')}
-                        <ExternalLink className="w-3 h-3" />
                       </Link>
                     </div>
                   </div>
@@ -181,11 +221,11 @@ export default async function BuletinInformativPage({ params }: { params: Promis
                         {tb('sectionF')}
                       </p>
                       <Link
-                        href="/transparenta/buget"
+                        href="/informatii-publice/buget"
                         className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-800 text-sm"
                       >
+                        <ExternalLink className="w-4 h-4" />
                         {tb('viewPage')}
-                        <ExternalLink className="w-3 h-3" />
                       </Link>
                     </div>
                   </div>
@@ -203,13 +243,20 @@ export default async function BuletinInformativPage({ params }: { params: Promis
                       <p className="text-gray-900 font-medium mb-2">
                         {tb('sectionG')}
                       </p>
-                      <Link
-                        href="/programe/strategia-de-dezvoltare"
-                        className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-800 text-sm"
-                      >
-                        {tb('viewPage')}
-                        <ExternalLink className="w-3 h-3" />
-                      </Link>
+                      <div className="space-y-2">
+                        {sectionG.map((doc) => (
+                          <a
+                            key={doc.id}
+                            href={doc.file_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 text-primary-600 hover:text-primary-800 text-sm"
+                          >
+                            <Download className="w-4 h-4 text-gray-400" />
+                            {doc.title}
+                          </a>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </CardContent>
@@ -226,13 +273,20 @@ export default async function BuletinInformativPage({ params }: { params: Promis
                       <p className="text-gray-900 font-medium mb-3">
                         {tb('sectionH')}
                       </p>
-                      <Link
-                        href="/informatii-publice/documente"
-                        className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-800 text-sm"
-                      >
-                        {tb('viewPage')}
-                        <ExternalLink className="w-3 h-3" />
-                      </Link>
+                      <div className="space-y-2">
+                        {sectionH.map((doc) => (
+                          <a
+                            key={doc.id}
+                            href={doc.file_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 text-primary-600 hover:text-primary-800 text-sm"
+                          >
+                            <Download className="w-4 h-4 text-gray-400" />
+                            {doc.title}
+                          </a>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </CardContent>
@@ -249,13 +303,20 @@ export default async function BuletinInformativPage({ params }: { params: Promis
                       <p className="text-gray-900 font-medium mb-3">
                         {tb('sectionI')}
                       </p>
-                      <Link
-                        href="/informatii-publice/formulare"
-                        className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-800 text-sm"
-                      >
-                        {tb('viewPage')}
-                        <ExternalLink className="w-3 h-3" />
-                      </Link>
+                      <div className="space-y-2">
+                        {sectionI.map((doc) => (
+                          <a
+                            key={doc.id}
+                            href={doc.file_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 text-primary-600 hover:text-primary-800 text-sm"
+                          >
+                            <Download className="w-4 h-4 text-gray-400" />
+                            {doc.title}
+                          </a>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </CardContent>
@@ -276,8 +337,8 @@ export default async function BuletinInformativPage({ params }: { params: Promis
                         href="/transparenta/generale"
                         className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-800 text-sm"
                       >
+                        <ExternalLink className="w-4 h-4" />
                         {tb('viewPage')}
-                        <ExternalLink className="w-3 h-3" />
                       </Link>
                     </div>
                   </div>

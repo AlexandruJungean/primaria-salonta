@@ -1,6 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import { AlertTriangle, MapPin, Phone, Mail, Info, Camera } from 'lucide-react';
 import { Container } from '@/components/ui/container';
+import { CONTACT_INFO } from '@/lib/constants/contact';
 import { Section } from '@/components/ui/section';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
@@ -165,23 +166,23 @@ export default async function RaporteazaProblemaPage({ params }: { params: Promi
                 
                 <div className="grid sm:grid-cols-2 gap-4 mb-4">
                   <a
-                    href="tel:0259373862"
+                    href={`tel:${CONTACT_INFO.phone.main.replace(/-/g, '')}`}
                     className="flex items-center gap-2 p-3 bg-white rounded-lg border border-amber-200 text-gray-900 hover:bg-amber-100 transition-colors"
                   >
                     <Phone className="w-5 h-5 text-amber-600" />
                     <div>
                       <p className="text-xs text-gray-500">{labels.phone}</p>
-                      <p className="font-medium">0259 373 862</p>
+                      <p className="font-medium">{CONTACT_INFO.phone.main}</p>
                     </div>
                   </a>
                   <a
-                    href="mailto:registratura@salonta.ro"
+                    href={`mailto:${CONTACT_INFO.email.primary}`}
                     className="flex items-center gap-2 p-3 bg-white rounded-lg border border-amber-200 text-gray-900 hover:bg-amber-100 transition-colors"
                   >
                     <Mail className="w-5 h-5 text-amber-600" />
                     <div>
                       <p className="text-xs text-gray-500">{labels.email}</p>
-                      <p className="font-medium">registratura@salonta.ro</p>
+                      <p className="font-medium">{CONTACT_INFO.email.primary}</p>
                     </div>
                   </a>
                 </div>

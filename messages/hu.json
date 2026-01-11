@@ -130,7 +130,7 @@
     "camereWeb": "Webkamerák",
     "contact": "Kapcsolat",
     "faq": "Gyakran ismételt kérdések",
-    "raporteazaProblema": "Probléma bejelentése (Hamarosan)",
+    "raporteazaProblema": "Probléma bejelentése",
     "evenimente": "Események",
     "evenimenteDesc": "Nagyszalonta eseménynaptára",
     "stareCivila": "Anyakönyvi hivatal (Hamarosan)",
@@ -138,7 +138,7 @@
     "transport": "Tömegközlekedés (Hamarosan)",
     "educatie": "Oktatás (Hamarosan)",
     "sanatate": "Egészségügy (Hamarosan)",
-    "sport": "Sport és szabadidő (Hamarosan)",
+    "sport": "Sport (Hamarosan)",
     "agentiEconomici": "Gazdasági szereplők (Hamarosan)",
     "problemeSociale": "Szociális problémák – nyomtatványok",
     "coronavirus": "Koronavírus információk",
@@ -656,6 +656,9 @@
   "anunturiPage": {
     "announcements": "hirdetmény",
     "noAnnouncements": "Jelenleg nincsenek elérhető hirdetmények.",
+    "noAnnouncementsYear": "Ebben az évben nincsenek hirdetmények.",
+    "selectYear": "Válasszon évet a hirdetmények megtekintéséhez:",
+    "backToYears": "Vissza az évek listájához",
     "archiveNote": "Hirdetmények archívuma",
     "archiveNoteDesc": "A hirdetmények az adatbázisból töltődnek be. Régebbi hirdetményekért kérjük, forduljon a polgármesteri hivatalhoz.",
     "legend": "Hirdetménytípusok magyarázata"
@@ -666,7 +669,8 @@
     "debates": "vita",
     "archive": "Archívum",
     "archiveTitle": "Nyilvános viták archívuma",
-    "infoNote": "Az ezen az oldalon található dokumentumok az adatbázisból töltődnek be. A '#' jelölésű linkek helykitöltők, és később frissülnek a valódi dokumentumokkal."
+    "infoNote": "A nyilvános vitákkal kapcsolatos további információkért vagy a vitára való feliratkozáshoz kérjük, lépjen kapcsolatba Nagyszalonta Polgármesteri Hivatalával.",
+    "noDebates": "Jelenleg nincsenek elérhető nyilvános viták."
   },
   "statutPage": {
     "statut2021": "Nagyszalonta Város Statútuma – 2021",
@@ -728,7 +732,10 @@
     "sectionI": "A törvény szerint készített és/vagy kezelt dokumentumkategóriák listája:",
     "sectionJ": "A hatóság vagy közintézmény döntésének megtámadási módjai, amennyiben a személy úgy ítéli meg, hogy sérült a kért közérdekű információkhoz való hozzáférési joga",
     "viewPage": "Oldal megtekintése",
-    "bulletin": "Tájékoztató"
+    "viewConducere": "Intézményvezetés megtekintése",
+    "bulletin": "Tájékoztató",
+    "buletine": "tájékoztatók",
+    "noBuletine": "Jelenleg nincsenek elérhető tájékoztatók."
   },
   "alteDocumentePage": {
     "quickLinksTitle": "Gyors hozzáférés a kapcsolódó oldalakhoz",

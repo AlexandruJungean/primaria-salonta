@@ -8,6 +8,14 @@ export {
   getAllNewsSlugs,
 } from './news';
 
+// News Images Services
+export {
+  getNewsImages,
+  getNewsFeaturedImage,
+  getNewsImagesForList,
+  type NewsImage,
+} from './news-images';
+
 // Events Services
 export {
   getEvents,

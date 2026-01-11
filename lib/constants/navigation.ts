@@ -141,6 +141,15 @@ export const MAIN_NAVIGATION: NavSection[] = [
           { id: 'solicitareInformatii', href: '/informatii-publice/solicitare-informatii', icon: FileQuestion },
         ],
       },
+      // Social Institutions group - items loaded dynamically
+      {
+        groupId: 'institutii',
+        groupHref: '/institutii',
+        groupIcon: Building,
+        items: [], // Populated dynamically from database
+        isDynamic: true, // Flag for dynamic loading
+        dynamicType: 'institutions-social',
+      },
       // Transparency group
       {
         groupId: 'transparenta',
@@ -161,17 +170,7 @@ export const MAIN_NAVIGATION: NavSection[] = [
         items: [
           { id: 'platiOnline', href: '/servicii-online/plati', icon: CreditCard },
           { id: 'petitiiOnline', href: '/servicii-online/petitii', icon: Send },
-          { id: 'problemeSociale', href: '/servicii-online/probleme-sociale', icon: Heart },
         ],
-      },
-      // Social Institutions group - items loaded dynamically
-      {
-        groupId: 'institutii',
-        groupHref: '/institutii',
-        groupIcon: Building,
-        items: [], // Populated dynamically from database
-        isDynamic: true, // Flag for dynamic loading
-        dynamicType: 'institutions-social',
       },
       // City Hall services group
       {
@@ -187,11 +186,9 @@ export const MAIN_NAVIGATION: NavSection[] = [
     standaloneItems: [
       { id: 'raporteazaProblema', href: '/raporteaza-problema', icon: AlertTriangle },
       { id: 'evenimente', href: '/evenimente', icon: Calendar },
-      { id: 'stareCivila', href: '/stare-civila', icon: FileText },
-      { id: 'registruAgricol', href: '/registru-agricol', icon: Wheat },
-      { id: 'sanatate', href: '/sanatate', icon: Stethoscope },
       { id: 'educatie', href: '/educatie', icon: GraduationCap },
       { id: 'transport', href: '/transport', icon: Bus },
+      { id: 'sport', href: '/sport', icon: Dumbbell },
       { id: 'voluntariat', href: '/voluntariat', icon: Heart },
       { id: 'faq', href: '/faq', icon: HelpCircle },
     ],

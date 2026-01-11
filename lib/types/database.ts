@@ -120,8 +120,22 @@ export interface NewsDocument {
   created_at: string;
 }
 
+export interface NewsImage {
+  id: string;
+  news_id: string;
+  image_url: string;
+  alt_text: string | null;
+  caption: string | null;
+  sort_order: number;
+  is_featured: boolean;
+  published: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface NewsWithDocuments extends News {
   documents: NewsDocument[];
+  images?: NewsImage[];
 }
 
 // ============================================
