@@ -259,3 +259,11 @@ body {
 .prose a:hover {
   color: var(--primary-900);
 }
+
+/* ===== Hide reCAPTCHA Badge ===== */
+.grecaptcha-badge {
+  visibility: hidden !important;
+  opacity: 0 !important;
+  position: absolute !important;
+  left: -9999px !important;
+}

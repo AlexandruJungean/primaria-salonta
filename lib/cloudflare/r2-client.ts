@@ -77,6 +77,7 @@ export type DocumentCategory =
   | 'dispozitii'
   | 'licitatii'
   | 'transparenta'
+  | 'cariera'
   | 'altele';
 
 /**

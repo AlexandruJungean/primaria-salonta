@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { contactFormSchema } from '@/lib/validations/forms';
 import { sendEmail, contactEmailTemplate, contactConfirmationTemplate } from '@/lib/email';
 import { verifyRecaptcha } from '@/lib/recaptcha';
+import { createAnonServerClient } from '@/lib/supabase/server';
 
 export async function POST(request: NextRequest) {
   try {
@@ -35,6 +36,29 @@ export async function POST(request: NextRequest) {
     
     const data = validationResult.data;
     const locale = (body.locale as 'ro' | 'hu' | 'en') || 'ro';
+    
+    // Get IP address
+    const forwardedFor = request.headers.get('x-forwarded-for');
+    const ipAddress = forwardedFor ? forwardedFor.split(',')[0].trim() : null;
+    
+    // Save to database
+    const supabase = createAnonServerClient();
+    const { error: dbError } = await supabase
+      .from('contact_submissions')
+      .insert({
+        name: data.name,
+        email: data.email,
+        phone: data.phone || null,
+        subject: data.subject,
+        message: data.message,
+        status: 'new',
+        ip_address: ipAddress,
+      });
+    
+    if (dbError) {
+      console.error('Failed to save contact submission:', dbError);
+      // Continue anyway - email is more important
+    }
     
     // Send the email to the municipality
     const emailResult = await sendEmail({

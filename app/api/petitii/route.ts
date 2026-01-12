@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { petitionFormSchema } from '@/lib/validations/forms';
 import { sendEmail, petitionEmailTemplate, petitionConfirmationTemplate } from '@/lib/email';
 import { verifyRecaptcha } from '@/lib/recaptcha';
+import { createAnonServerClient } from '@/lib/supabase/server';
 
 export async function POST(request: NextRequest) {
   try {
@@ -38,6 +39,35 @@ export async function POST(request: NextRequest) {
     
     // For now, we don't handle file uploads - just note if there was supposed to be one
     const hasAttachment = false;
+    
+    // Get IP address
+    const forwardedFor = request.headers.get('x-forwarded-for');
+    const ipAddress = forwardedFor ? forwardedFor.split(',')[0].trim() : null;
+    
+    // Build name from form data
+    const petitionerName = data.tipPersoana === 'fizica' 
+      ? `${data.nume || ''} ${data.prenume || ''}`.trim()
+      : data.denumire || '';
+    
+    // Save to database
+    const supabase = createAnonServerClient();
+    const { error: dbError } = await supabase
+      .from('petitions')
+      .insert({
+        name: petitionerName,
+        email: data.email,
+        phone: data.telefon || null,
+        address: `${data.adresa}, ${data.localitate}, ${data.judet}, ${data.tara}`,
+        subject: `Petiție ${data.tipPersoana === 'fizica' ? 'persoană fizică' : 'persoană juridică'}`,
+        content: data.mesaj,
+        status: 'inregistrata',
+        ip_address: ipAddress,
+      });
+    
+    if (dbError) {
+      console.error('Failed to save petition:', dbError);
+      // Continue anyway - email is more important
+    }
     
     // Send the email to the municipality
     const emailResult = await sendEmail({

@@ -17,7 +17,7 @@ import { uploadFile, validateFile, type DocumentCategory } from '@/lib/cloudflar
 const VALID_CATEGORIES: DocumentCategory[] = [
   'hotarari', 'sedinte', 'stiri', 'buget', 'declaratii',
   'programe', 'formulare', 'autorizatii', 'certificate',
-  'dispozitii', 'licitatii', 'transparenta', 'altele'
+  'dispozitii', 'licitatii', 'transparenta', 'cariera', 'altele'
 ];
 
 export async function POST(request: NextRequest) {

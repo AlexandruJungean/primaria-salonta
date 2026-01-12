@@ -175,8 +175,8 @@ export function contactConfirmationTemplate(data: {
           
           <div class="contact-info">
             <p style="margin: 0; font-weight: bold;">Primăria Municipiului Salonta</p>
-            <p style="margin: 5px 0; color: #6b7280;">Piața Libertății nr. 1, Salonta, Bihor</p>
-            <p style="margin: 5px 0; color: #6b7280;">Tel: 0259 373 042</p>
+            <p style="margin: 5px 0; color: #6b7280;">Str. Republicii nr. 1, Salonta, 415500, Jud. Bihor</p>
+            <p style="margin: 5px 0; color: #6b7280;">Tel: 0359-409730 | Email: primsal3@gmail.com</p>
           </div>
         </div>
         <div class="footer">
@@ -278,8 +278,8 @@ export function petitionConfirmationTemplate(data: {
           <div class="contact-info">
             <p style="margin: 0; font-weight: bold;">Primăria Municipiului Salonta</p>
             <p style="margin: 5px 0; color: #6b7280;">${t.publicRelations}</p>
-            <p style="margin: 5px 0; color: #6b7280;">Piața Libertății nr. 1, Salonta, Bihor</p>
-            <p style="margin: 5px 0; color: #6b7280;">Tel: 0259 373 042</p>
+            <p style="margin: 5px 0; color: #6b7280;">Str. Republicii nr. 1, Salonta, 415500, Jud. Bihor</p>
+            <p style="margin: 5px 0; color: #6b7280;">Tel: 0359-409730 | Email: primsal3@gmail.com</p>
           </div>
         </div>
         <div class="footer">
