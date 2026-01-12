@@ -12,6 +12,7 @@ import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
 import { getNewsBySlug, getAllNewsSlugs } from '@/lib/supabase/services';
 import { NewsImageGallery } from './news-image-gallery';
+import { translateContentFields } from '@/lib/google-translate/cache';
 
 
 export async function generateMetadata({ 
@@ -50,13 +51,20 @@ export default async function NewsDetailPage({
   params: Promise<{ locale: string; slug: string }> 
 }) {
   const { locale, slug } = await params;
-  const news = await getNewsBySlug(slug);
+  const newsData = await getNewsBySlug(slug);
   const t = await getTranslations('news');
   const tCommon = await getTranslations('common');
 
-  if (!news) {
+  if (!newsData) {
     notFound();
   }
+
+  // Translate news content based on locale
+  const news = await translateContentFields(
+    newsData,
+    ['title', 'excerpt', 'content'],
+    locale as 'ro' | 'hu' | 'en'
+  );
 
   const backLabel = {
     ro: 'Înapoi la toate știrile',

@@ -8,6 +8,7 @@ import { PageHeader } from '@/components/pages/page-header';
 import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
 import * as documents from '@/lib/supabase/services/documents';
+import { translateContentArray } from '@/lib/google-translate/cache';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -24,7 +25,14 @@ export default async function LicitatiiPage({ params }: { params: Promise<{ loca
   const tPage = await getTranslations({ locale, namespace: 'licitatiiPage' });
 
   // Fetch auction documents from database
-  const auctionDocs = await documents.getDocumentsByCategory('licitatii');
+  const auctionDocsData = await documents.getDocumentsByCategory('licitatii');
+  
+  // Translate document titles based on locale
+  const auctionDocs = await translateContentArray(
+    auctionDocsData,
+    ['title'],
+    locale as 'ro' | 'hu' | 'en'
+  );
 
   const pageLabels = {
     ro: {

@@ -9,6 +9,7 @@ import { Link } from '@/components/ui/link';
 import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
 import * as documentsService from '@/lib/supabase/services/documents';
+import { translateContentArray } from '@/lib/google-translate/cache';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -25,7 +26,14 @@ export default async function BuletinInformativPage({ params }: { params: Promis
   const tb = await getTranslations({ locale, namespace: 'buletinPage' });
 
   // Fetch documents from database by source folder
-  const allDocuments = await documentsService.getDocumentsBySourceFolder('buletin-informativ', 100);
+  const allDocumentsData = await documentsService.getDocumentsBySourceFolder('buletin-informativ', 100);
+  
+  // Translate document titles based on locale
+  const allDocuments = await translateContentArray(
+    allDocumentsData,
+    ['title'],
+    locale as 'ro' | 'hu' | 'en'
+  );
 
   // Separate documents by subcategory (section)
   const sectionA = allDocuments.filter(doc => doc.subcategory === 'a' || doc.title.includes('OUG'));

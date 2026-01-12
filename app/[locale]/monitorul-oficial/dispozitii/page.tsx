@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
 import { getDocumentsBySourceFolder } from '@/lib/supabase/services/documents';
+import { translateContentArray } from '@/lib/google-translate/cache';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -25,7 +26,14 @@ export default async function DispozitiiPage({ params }: { params: Promise<{ loc
   const td = await getTranslations({ locale, namespace: 'dispozitiiMolPage' });
 
   // Fetch disposition REGISTERS from database (not individual dispositions)
-  const registers = await getDocumentsBySourceFolder('dispozitiile-autoritatii-executive');
+  const registersData = await getDocumentsBySourceFolder('dispozitiile-autoritatii-executive');
+  
+  // Translate document titles based on locale
+  const registers = await translateContentArray(
+    registersData,
+    ['title'],
+    locale as 'ro' | 'hu' | 'en'
+  );
   
   // Sort by database year only (descending)
   const sortedRegisters = [...registers].sort((a, b) => (b.year || 0) - (a.year || 0));

@@ -9,6 +9,7 @@ import { Link } from '@/components/ui/link';
 import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
 import * as council from '@/lib/supabase/services/council';
+import { translateContentArray } from '@/lib/google-translate/cache';
 
 const ITEMS_PER_PAGE = 20;
 
@@ -154,8 +155,15 @@ export default async function OrdineDeZiPage({
     page: currentPage, 
     limit: ITEMS_PER_PAGE 
   });
-  const sessions = sessionsResponse.data;
+  const sessionsData = sessionsResponse.data;
   const totalPages = Math.ceil(sessionsResponse.count / ITEMS_PER_PAGE);
+
+  // Translate session titles based on locale
+  const sessions = await translateContentArray(
+    sessionsData,
+    ['title'],
+    locale as 'ro' | 'hu' | 'en'
+  );
 
   const pageLabels = {
     ro: {

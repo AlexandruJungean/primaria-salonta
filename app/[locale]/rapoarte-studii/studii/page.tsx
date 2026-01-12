@@ -8,6 +8,7 @@ import { PageHeader } from '@/components/pages/page-header';
 import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
 import * as reports from '@/lib/supabase/services/reports';
+import { translateContentArray } from '@/lib/google-translate/cache';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -23,7 +24,14 @@ export default async function StudiiPage({ params }: { params: Promise<{ locale:
   const t = await getTranslations({ locale, namespace: 'navigation' });
 
   // Fetch studies from database (studiu_fezabilitate and studiu_impact types)
-  const { data: studies } = await reports.getReports({ reportType: 'studiu_fezabilitate', limit: 100 });
+  const { data: studiesData } = await reports.getReports({ reportType: 'studiu_fezabilitate', limit: 100 });
+  
+  // Translate study titles based on locale
+  const studies = await translateContentArray(
+    studiesData,
+    ['title', 'summary'],
+    locale as 'ro' | 'hu' | 'en'
+  );
 
   const formatDate = (dateStr: string | null) => {
     if (!dateStr) return '';

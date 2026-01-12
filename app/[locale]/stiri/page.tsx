@@ -12,6 +12,7 @@ import { generatePageMetadata } from '@/lib/seo/metadata';
 import { WebPageJsonLd } from '@/lib/seo/json-ld';
 import { type Locale } from '@/i18n/routing';
 import { getNews } from '@/lib/supabase/services';
+import { translateContentArray } from '@/lib/google-translate/cache';
 
 const ITEMS_PER_PAGE = 12;
 
@@ -43,10 +44,17 @@ export default async function NewsPage({
   const currentPage = Math.max(1, parseInt(pageParam || '1', 10) || 1);
   
   // Fetch news from database with pagination
-  const { data: news, count, totalPages } = await getNews({ 
+  const { data: newsData, count, totalPages } = await getNews({ 
     page: currentPage, 
     limit: ITEMS_PER_PAGE,
   });
+
+  // Translate news titles and excerpts based on locale
+  const news = await translateContentArray(
+    newsData,
+    ['title', 'excerpt'],
+    locale as 'ro' | 'hu' | 'en'
+  );
 
   // Build base path for pagination links
   const basePath = '/stiri';

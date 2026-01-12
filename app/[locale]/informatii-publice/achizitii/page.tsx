@@ -11,6 +11,7 @@ import { generatePageMetadata } from '@/lib/seo';
 import { getDocumentsByCategory, getDocumentYears } from '@/lib/supabase/services/documents';
 import type { Locale } from '@/lib/seo/config';
 import type { Document } from '@/lib/types/database';
+import { translateContentArray } from '@/lib/google-translate/cache';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -111,8 +112,15 @@ export default async function AchizitiiPage({ params }: { params: Promise<{ loca
   const tPage = await getTranslations({ locale, namespace: 'achizitiiPage' });
 
   // Fetch documents from database
-  const documents = await getDocumentsByCategory('achizitii', 500);
+  const documentsData = await getDocumentsByCategory('achizitii', 500);
   const years = await getDocumentYears('achizitii');
+  
+  // Translate document titles based on locale
+  const documents = await translateContentArray(
+    documentsData,
+    ['title', 'description'],
+    locale as 'ro' | 'hu' | 'en'
+  );
   
   // Group by year
   const documentsByYear = groupDocumentsByYear(documents);

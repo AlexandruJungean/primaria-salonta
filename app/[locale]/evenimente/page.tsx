@@ -4,10 +4,24 @@ import { Section } from '@/components/ui/section';
 import { PageHeader } from '@/components/pages/page-header';
 import { getEvents } from '@/lib/supabase/services';
 import { EventsGrid } from './events-grid';
+import { translateContentArray } from '@/lib/google-translate/cache';
 
-export default async function EvenimentePage() {
+export default async function EvenimentePage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  
   // Fetch all events from database
-  const { data: events } = await getEvents({ limit: 100 });
+  const { data: eventsData } = await getEvents({ limit: 100 });
+
+  // Translate event titles and descriptions based on locale
+  const events = await translateContentArray(
+    eventsData,
+    ['title', 'description', 'location'],
+    locale as 'ro' | 'hu' | 'en'
+  );
 
   return (
     <>

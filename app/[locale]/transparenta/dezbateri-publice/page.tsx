@@ -9,6 +9,7 @@ import type { Locale } from '@/lib/seo/config';
 import * as documentsService from '@/lib/supabase/services/documents';
 import type { Document } from '@/lib/types/database';
 import { DezbateriDocuments } from './dezbateri-documents';
+import { translateContentArray } from '@/lib/google-translate/cache';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -25,7 +26,14 @@ export default async function DezbateriPublicePage({ params }: { params: Promise
   const td = await getTranslations({ locale, namespace: 'dezbateriPage' });
 
   // Fetch documents from database
-  const allDocuments = await documentsService.getDocumentsBySourceFolder('dezbateri-publice', 500);
+  const allDocumentsData = await documentsService.getDocumentsBySourceFolder('dezbateri-publice', 500);
+  
+  // Translate document titles based on locale
+  const allDocuments = await translateContentArray(
+    allDocumentsData,
+    ['title', 'description'],
+    locale as 'ro' | 'hu' | 'en'
+  );
 
   // Group documents by year (using doc.year from database directly)
   const documentsByYear: Record<number, Document[]> = {};

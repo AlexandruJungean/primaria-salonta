@@ -17,6 +17,7 @@ import type { Locale } from '@/lib/seo/config';
 import * as regionalProjects from '@/lib/supabase/services/regional-projects';
 import { ProjectUpdatesAccordion } from './project-updates-accordion';
 import Image from 'next/image';
+import { translateContentFields, translateContentArray } from '@/lib/google-translate/cache';
 
 // ============================================
 // METADATA
@@ -65,9 +66,9 @@ export default async function ProjectDetailPage({
   const t = await getTranslations({ locale, namespace: 'navigation' });
   const tp = await getTranslations({ locale, namespace: 'programRegionalNordVestPage' });
 
-  const project = await regionalProjects.getProjectBySlug(projectId);
+  const projectData = await regionalProjects.getProjectBySlug(projectId);
 
-  if (!project) {
+  if (!projectData) {
     return (
       <>
         <Breadcrumbs items={[
@@ -111,6 +112,24 @@ export default async function ProjectDetailPage({
   };
 
   const labels = pageLabels[locale as keyof typeof pageLabels] || pageLabels.en;
+
+  // Translate project content based on locale
+  const projectTranslated = await translateContentFields(
+    projectData,
+    ['title', 'short_description', 'full_description', 'objective', 'specific_objective', 'call_title'],
+    locale as 'ro' | 'hu' | 'en'
+  );
+
+  // Translate documents if present
+  const translatedDocuments = projectData.documents 
+    ? await translateContentArray(projectData.documents, ['title'], locale as 'ro' | 'hu' | 'en')
+    : [];
+
+  const project = {
+    ...projectTranslated,
+    documents: translatedDocuments,
+    updates: projectData.updates, // Keep updates as-is for now
+  };
 
   return (
     <>

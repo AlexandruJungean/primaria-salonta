@@ -21,6 +21,7 @@ import {
   ExternalLink,
   Key,
 } from 'lucide-react';
+import { translateContentFields, translateContentArray } from '@/lib/google-translate/cache';
 
 // ============================================
 // TYPES & CONSTANTS
@@ -106,11 +107,28 @@ export default async function SedintaDetailPage({
   const { locale, slug } = await params;
   const t = await getTranslations({ locale, namespace: 'navigation' });
 
-  const session = await council.getCouncilSessionBySlug(slug);
+  const sessionData = await council.getCouncilSessionBySlug(slug);
 
-  if (!session) {
+  if (!sessionData) {
     notFound();
   }
+
+  // Translate session content based on locale
+  const sessionTranslated = await translateContentFields(
+    sessionData,
+    ['title', 'description', 'location'],
+    locale as 'ro' | 'hu' | 'en'
+  );
+
+  // Translate documents
+  const translatedDocuments = sessionData.documents 
+    ? await translateContentArray(sessionData.documents, ['title'], locale as 'ro' | 'hu' | 'en')
+    : [];
+
+  const session = {
+    ...sessionTranslated,
+    documents: translatedDocuments,
+  };
 
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);

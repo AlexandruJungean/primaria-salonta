@@ -10,6 +10,7 @@ import { Link } from '@/components/ui/link';
 import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
 import * as institutionsService from '@/lib/supabase/services/institutions';
+import { translateContentArray } from '@/lib/google-translate/cache';
 
 // Icon mapping
 const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -38,7 +39,14 @@ export default async function InstitutiiPage({ params }: { params: Promise<{ loc
   const t = await getTranslations({ locale, namespace: 'navigation' });
   
   // Fetch institutions from database
-  const institutions = await institutionsService.getAllInstitutions();
+  const institutionsData = await institutionsService.getAllInstitutions();
+  
+  // Translate content based on locale
+  const institutions = await translateContentArray(
+    institutionsData,
+    ['name', 'short_description'],
+    locale as 'ro' | 'hu' | 'en'
+  );
   
   // Get localized intro text
   const introText = locale === 'hu' 

@@ -11,6 +11,7 @@ import type { Locale } from '@/lib/seo/config';
 import * as documentsService from '@/lib/supabase/services/documents';
 import type { Document } from '@/lib/types/database';
 import { notFound } from 'next/navigation';
+import { translateContentArray } from '@/lib/google-translate/cache';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; year: string }> }) {
   const { locale, year } = await params;
@@ -106,8 +107,16 @@ export default async function AnunturiYearPage({ params }: { params: Promise<{ l
   const ta = await getTranslations({ locale, namespace: 'anunturiPage' });
 
   // Fetch announcements for this year
-  const allDocuments = await documentsService.getDocumentsBySourceFolder('anunturi', 2000);
-  const yearDocuments = allDocuments.filter(doc => doc.year === yearNum);
+  const allDocumentsData = await documentsService.getDocumentsBySourceFolder('anunturi', 2000);
+  const yearDocumentsData = allDocumentsData.filter(doc => doc.year === yearNum);
+  
+  // Translate document titles based on locale
+  const yearDocuments = await translateContentArray(
+    yearDocumentsData,
+    ['title', 'description'],
+    locale as 'ro' | 'hu' | 'en'
+  );
+  const allDocuments = allDocumentsData;
 
   // Get all years for navigation
   const yearCounts: Record<number, number> = {};

@@ -8,6 +8,7 @@ import { PageHeader } from '@/components/pages/page-header';
 import { getCouncilMembers, getDocumentsByCategory } from '@/lib/supabase/services';
 import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
+import { translateContentArray } from '@/lib/google-translate/cache';
 
 interface ConsilieriPageMessages {
   consilieriPage: {
@@ -49,10 +50,18 @@ export default async function ConsilieriPage({
   const responsibilities = messages.consilieriPage?.responsibilities || [];
 
   // Fetch council members from database
-  const councilMembers = await getCouncilMembers();
+  const councilMembersData = await getCouncilMembers();
   
   // Fetch documents for this page (consilieri_locali category)
-  const documents = await getDocumentsByCategory('consilieri_locali');
+  const documentsData = await getDocumentsByCategory('consilieri_locali');
+
+  // Translate document content based on locale (NOT person names - they are proper nouns)
+  const councilMembers = councilMembersData;
+  const documents = await translateContentArray(
+    documentsData, 
+    ['title', 'description'], 
+    locale as 'ro' | 'hu' | 'en'
+  );
 
   // Group members by party
   const membersByParty = councilMembers.reduce((acc, member) => {

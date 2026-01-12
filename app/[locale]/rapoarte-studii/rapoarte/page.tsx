@@ -8,6 +8,7 @@ import { PageHeader } from '@/components/pages/page-header';
 import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
 import * as reports from '@/lib/supabase/services/reports';
+import { translateContentArray } from '@/lib/google-translate/cache';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -23,7 +24,14 @@ export default async function RapoartePage({ params }: { params: Promise<{ local
   const t = await getTranslations({ locale, namespace: 'navigation' });
 
   // Fetch audit reports from database
-  const { data: auditReports } = await reports.getReports({ reportType: 'audit', limit: 100 });
+  const { data: auditReportsData } = await reports.getReports({ reportType: 'audit', limit: 100 });
+  
+  // Translate report titles based on locale
+  const auditReports = await translateContentArray(
+    auditReportsData,
+    ['title', 'summary'],
+    locale as 'ro' | 'hu' | 'en'
+  );
 
   const pageLabels = {
     ro: {

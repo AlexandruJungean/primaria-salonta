@@ -12,6 +12,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import * as institutionsService from '@/lib/supabase/services/institutions';
 import type { Locale } from '@/lib/seo/config';
+import { translateContentFields } from '@/lib/google-translate/cache';
 
 // Icon mapping
 const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -62,11 +63,20 @@ export async function generateStaticParams() {
 
 export default async function InstitutionPage({ params }: { params: Promise<{ locale: string; slug: string }> }) {
   const { locale, slug } = await params;
-  const institution = await institutionsService.getInstitutionBySlug(slug);
+  const institutionData = await institutionsService.getInstitutionBySlug(slug);
   
-  if (!institution) {
+  if (!institutionData) {
     notFound();
   }
+  
+  // Translate content based on locale
+  // NOT translated: director_name (person name), address (proper noun - street names)
+  // Translated: working_hours (contains day names like Luni, Marți)
+  const institution = await translateContentFields(
+    institutionData,
+    ['name', 'short_description', 'working_hours', 'director_title'],
+    locale as 'ro' | 'hu' | 'en'
+  );
   
   const t = await getTranslations({ locale, namespace: 'navigation' });
   

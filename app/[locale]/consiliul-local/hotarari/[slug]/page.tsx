@@ -11,6 +11,7 @@ import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
 import { getCouncilSessionBySlug, getAllSessionSlugs } from '@/lib/supabase/services';
 import type { CouncilSessionWithDetails } from '@/lib/types/database';
+import { translateContentFields, translateContentArray } from '@/lib/google-translate/cache';
 
 function formatDate(dateString: string, locale: string): string {
   const date = new Date(dateString);
@@ -59,14 +60,43 @@ export default async function HotarariDetailPage({
   params: Promise<{ locale: string; slug: string }> 
 }) {
   const { locale, slug } = await params;
-  const session = await getCouncilSessionBySlug(slug);
+  const sessionData = await getCouncilSessionBySlug(slug);
 
-  if (!session) {
+  if (!sessionData) {
     notFound();
   }
 
   const t = await getTranslations('navigation');
   const th = await getTranslations('hotarariPage');
+
+  // Translate session documents and decisions
+  const translatedDocuments = await translateContentArray(
+    sessionData.documents,
+    ['title', 'file_name'],
+    locale as 'ro' | 'hu' | 'en'
+  );
+
+  const translatedDecisions = await Promise.all(
+    sessionData.decisions.map(async (decision) => {
+      const translatedDecision = await translateContentFields(
+        decision,
+        ['title'],
+        locale as 'ro' | 'hu' | 'en'
+      );
+      const translatedDecisionDocs = await translateContentArray(
+        decision.documents,
+        ['title', 'file_name'],
+        locale as 'ro' | 'hu' | 'en'
+      );
+      return { ...translatedDecision, documents: translatedDecisionDocs };
+    })
+  );
+
+  const session = {
+    ...sessionData,
+    documents: translatedDocuments,
+    decisions: translatedDecisions,
+  };
 
   const dateFormatted = formatDate(session.session_date, locale);
   const shortDate = formatShortDate(session.session_date);

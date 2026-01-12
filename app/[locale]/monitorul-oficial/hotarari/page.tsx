@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
 import { getDocumentsBySourceFolder } from '@/lib/supabase/services/documents';
+import { translateContentArray } from '@/lib/google-translate/cache';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -39,7 +40,14 @@ export default async function HotarariMolPage({ params }: { params: Promise<{ lo
   const th = await getTranslations({ locale, namespace: 'hotarariMolPage' });
 
   // Fetch all registers from database
-  const allDocuments = await getDocumentsBySourceFolder('hotararile-autoritatii-deliberative');
+  const allDocumentsData = await getDocumentsBySourceFolder('hotararile-autoritatii-deliberative');
+  
+  // Translate document titles
+  const allDocuments = await translateContentArray(
+    allDocumentsData,
+    ['title'],
+    locale as 'ro' | 'hu' | 'en'
+  );
   
   // Separate into decision registers and project registers
   // Sort by database year only

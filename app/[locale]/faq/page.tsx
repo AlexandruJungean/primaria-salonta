@@ -9,6 +9,7 @@ import { Link } from '@/components/ui/link';
 import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
 import { createAnonServerClient } from '@/lib/supabase/server';
+import { translateContentArray } from '@/lib/google-translate/cache';
 
 interface FAQItem {
   id: string;
@@ -50,7 +51,14 @@ export default async function FaqPage({ params }: { params: Promise<{ locale: st
   const t = await getTranslations({ locale, namespace: 'navigation' });
   const tp = await getTranslations({ locale, namespace: 'faqPage' });
 
-  const faqs = await getFAQs();
+  const faqsData = await getFAQs();
+  
+  // Translate FAQ questions and answers based on locale
+  const faqs = await translateContentArray(
+    faqsData,
+    ['question', 'answer'],
+    locale as 'ro' | 'hu' | 'en'
+  );
 
   const pageLabels = {
     ro: {

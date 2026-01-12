@@ -15,6 +15,7 @@ import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
 import * as regionalProjects from '@/lib/supabase/services/regional-projects';
 import Image from 'next/image';
+import { translateContentArray } from '@/lib/google-translate/cache';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -31,7 +32,14 @@ export default async function ProgramRegionalNordVestPage({ params }: { params: 
   const tp = await getTranslations({ locale, namespace: 'programRegionalNordVestPage' });
 
   // Fetch regional projects from database
-  const projectsList = await regionalProjects.getProjects();
+  const projectsData = await regionalProjects.getProjects();
+  
+  // Translate project titles based on locale
+  const projectsList = await translateContentArray(
+    projectsData,
+    ['title', 'short_description'],
+    locale as 'ro' | 'hu' | 'en'
+  );
 
   const pageLabels = {
     ro: {

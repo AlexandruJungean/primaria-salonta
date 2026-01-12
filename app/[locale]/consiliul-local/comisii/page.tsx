@@ -8,6 +8,7 @@ import { PageHeader } from '@/components/pages/page-header';
 import { getCouncilCommissionsWithMembers } from '@/lib/supabase/services';
 import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
+import { translateContentArray } from '@/lib/google-translate/cache';
 
 // Configurație pentru fiecare comisie - icon, culoare border și fundal
 const COMMISSION_CONFIG: { icon: LucideIcon; borderColor: string; bgColor: string; iconColor: string }[] = [
@@ -36,7 +37,14 @@ export default async function ComisiiPage({
   const tc = await getTranslations('comisiiPage');
 
   // Fetch commissions with members from database
-  const commissions = await getCouncilCommissionsWithMembers();
+  const commissionsData = await getCouncilCommissionsWithMembers();
+
+  // Translate commission names and descriptions
+  const commissions = await translateContentArray(
+    commissionsData,
+    ['name', 'description'],
+    locale as 'ro' | 'hu' | 'en'
+  );
 
   return (
     <>

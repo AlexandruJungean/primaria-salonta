@@ -9,6 +9,7 @@ import { PageHeader } from '@/components/pages/page-header';
 import { getLeadership } from '@/lib/supabase/services';
 import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
+import { translateContentArray } from '@/lib/google-translate/cache';
 
 const POSITION_LABELS: Record<string, Record<string, string>> = {
   primar: { ro: 'Primar', hu: 'Polgármester', en: 'Mayor' },
@@ -43,7 +44,14 @@ export default async function LeadershipPage({
   const tNav = await getTranslations('navigation');
 
   // Fetch leadership from database
-  const leadership = await getLeadership();
+  const leadershipData = await getLeadership();
+  
+  // Translate content based on locale (NOT person names - they are proper nouns)
+  const leadership = await translateContentArray(
+    leadershipData,
+    ['bio', 'responsibilities', 'reception_hours'],
+    locale as 'ro' | 'hu' | 'en'
+  );
 
   return (
     <>

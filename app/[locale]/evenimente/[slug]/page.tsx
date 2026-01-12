@@ -10,6 +10,7 @@ import Image from 'next/image';
 import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
 import { getEventBySlug, getAllEventSlugs, EVENT_TYPE_CONFIG } from '@/lib/supabase/services';
+import { translateContentFields } from '@/lib/google-translate/cache';
 
 function formatDate(dateStr: string, locale: string): string {
   const date = new Date(dateStr);
@@ -61,13 +62,20 @@ export default async function EventDetailPage({
   params: Promise<{ locale: string; slug: string }> 
 }) {
   const { locale, slug } = await params;
-  const event = await getEventBySlug(slug);
+  const eventData = await getEventBySlug(slug);
   const t = await getTranslations('events');
   const tCommon = await getTranslations('common');
 
-  if (!event) {
+  if (!eventData) {
     notFound();
   }
+
+  // Translate event content based on locale
+  const event = await translateContentFields(
+    eventData,
+    ['title', 'description', 'location', 'location_address', 'program'],
+    locale as 'ro' | 'hu' | 'en'
+  );
 
   const eventTypeConfig = EVENT_TYPE_CONFIG[event.event_type] || EVENT_TYPE_CONFIG.altele;
   const isPast = isPastEvent(event.start_date);

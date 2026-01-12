@@ -8,6 +8,7 @@ import { PageHeader } from '@/components/pages/page-header';
 import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
 import * as reports from '@/lib/supabase/services/reports';
+import { translateContentArray } from '@/lib/google-translate/cache';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -190,7 +191,21 @@ export default async function RapoarteActivitatePage({
   const t = await getTranslations({ locale, namespace: 'navigation' });
 
   // Fetch activity reports from database
-  const mandateSections = await reports.getActivityReportsGrouped();
+  const mandateSectionsData = await reports.getActivityReportsGrouped();
+
+  // Translate report titles within each mandate section (NOT author names - they are proper nouns)
+  const mandateSections = await Promise.all(
+    mandateSectionsData.map(async (mandate) => ({
+      ...mandate,
+      years: await Promise.all(
+        mandate.years.map(async (year) => ({
+          ...year,
+          committees: await translateContentArray(year.committees, ['title'], locale as 'ro' | 'hu' | 'en'),
+          councilors: await translateContentArray(year.councilors, ['title'], locale as 'ro' | 'hu' | 'en'),
+        }))
+      ),
+    }))
+  );
 
   const pageLabels: Record<string, PageLabels> = {
     ro: {

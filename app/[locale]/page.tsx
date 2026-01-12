@@ -9,6 +9,7 @@ import { generatePageMetadata } from '@/lib/seo/metadata';
 import { WebPageJsonLd } from '@/lib/seo/json-ld';
 import { type Locale } from '@/i18n/routing';
 import { getLatestNews, getUpcomingEvents } from '@/lib/supabase/services';
+import { translateContentArray } from '@/lib/google-translate/cache';
 
 // Dynamic imports for below-the-fold components (reduces initial JS bundle)
 const WeatherWidgetSection = dynamic(
@@ -49,9 +50,15 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const { locale } = await params;
   
   // Fetch data from Supabase
-  const [latestNews, upcomingEvents] = await Promise.all([
+  const [latestNewsData, upcomingEventsData] = await Promise.all([
     getLatestNews(3),
     getUpcomingEvents(4),
+  ]);
+
+  // Translate content based on locale
+  const [latestNews, upcomingEvents] = await Promise.all([
+    translateContentArray(latestNewsData, ['title', 'excerpt'], locale as 'ro' | 'hu' | 'en'),
+    translateContentArray(upcomingEventsData, ['title', 'description', 'location'], locale as 'ro' | 'hu' | 'en'),
   ]);
   
   return (

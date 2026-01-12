@@ -8,6 +8,7 @@ import { PageHeader } from '@/components/pages/page-header';
 import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
 import * as documents from '@/lib/supabase/services/documents';
+import { translateContentArray } from '@/lib/google-translate/cache';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -24,7 +25,14 @@ export default async function RapoarteAnualePage({ params }: { params: Promise<{
   const tr = await getTranslations({ locale, namespace: 'rapoarteAnualePage' });
 
   // Fetch reports from database - documents from altele/rapoarte-anuale-ale-primarului
-  const reports = await documents.getDocumentsBySourceFolder('rapoarte-anuale-ale-primarului');
+  const reportsData = await documents.getDocumentsBySourceFolder('rapoarte-anuale-ale-primarului');
+  
+  // Translate report titles based on locale
+  const reports = await translateContentArray(
+    reportsData,
+    ['title'],
+    locale as 'ro' | 'hu' | 'en'
+  );
 
   // Sort by year descending
   const sortedReports = [...reports].sort((a, b) => (b.year || 0) - (a.year || 0));

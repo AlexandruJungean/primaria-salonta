@@ -28,10 +28,13 @@ export default async function DeclaratiiAverePage({
   const td = await getTranslations('declaratiiPage');
 
   // Fetch declarations only for council members (consiliul_local department)
-  const { data: declarations } = await getAssetDeclarations({ 
+  const { data: declarationsData } = await getAssetDeclarations({ 
     limit: 500,
     department: 'consiliul_local'
   });
+  
+  // Person names are NOT translated - they are proper nouns
+  const declarations = declarationsData;
 
   // Group declarations by year
   const declarationsByYear = declarations.reduce((acc, decl) => {

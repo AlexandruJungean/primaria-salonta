@@ -8,6 +8,7 @@ import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
 import { getDocumentsBySourceFolderWithAnnexes } from '@/lib/supabase/services/documents';
 import { GeneraleDocuments } from './generale-documents';
+import { translateContentArray } from '@/lib/google-translate/cache';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -24,7 +25,14 @@ export default async function GeneralePage({ params }: { params: Promise<{ local
   const tg = await getTranslations({ locale, namespace: 'generalePage' });
 
   // Fetch documents from database (with annexes grouped)
-  const allDocs = await getDocumentsBySourceFolderWithAnnexes('generale', 500);
+  const allDocsData = await getDocumentsBySourceFolderWithAnnexes('generale', 500);
+  
+  // Translate document titles based on locale
+  const allDocs = await translateContentArray(
+    allDocsData,
+    ['title', 'description'],
+    locale as 'ro' | 'hu' | 'en'
+  );
 
   // Categorize documents based on title patterns
   const dispozitii = allDocs.filter(doc => 
