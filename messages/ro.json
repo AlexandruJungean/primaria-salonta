@@ -222,7 +222,12 @@
     "required": "Câmp obligatoriu",
     "invalidEmail": "Adresa de email nu este validă",
     "findUs": "Unde ne găsiți",
-    "officeHours": "Program de lucru"
+    "officeHours": "Program de lucru",
+    "successTitle": "Mesaj trimis cu succes!",
+    "successMessage": "Vă mulțumim pentru mesaj. Veți primi un răspuns în cel mai scurt timp posibil.",
+    "errorTitle": "Eroare la trimitere",
+    "errorMessage": "A apărut o eroare. Vă rugăm să încercați din nou.",
+    "sendAnother": "Trimite alt mesaj"
   },
   "payments": {
     "title": "Plăți online",

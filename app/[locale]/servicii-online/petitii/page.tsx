@@ -1,13 +1,17 @@
 'use client';
 
 import { useState } from 'react';
-import { FileText, Info, Upload, Phone, Mail } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Info, Phone, Mail, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { Card, CardContent } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
+import { Button } from '@/components/ui/button';
 import { CONTACT_INFO } from '@/lib/constants/contact';
+import { petitionFormSchema, type PetitionFormData } from '@/lib/validations/forms';
 
 const pageLabels = {
   ro: {
@@ -32,8 +36,13 @@ const pageLabels = {
     localitate: 'Localitate',
     adresa: 'Adresă',
     mesaj: 'Mesaj',
-    atasareFisier: 'Atașare fișier',
-    trimite: 'Trimite',
+    trimite: 'Trimite petiția',
+    sending: 'Se trimite...',
+    successTitle: 'Petiția a fost trimisă!',
+    successMessage: 'Vă mulțumim pentru mesaj. Veți primi un răspuns în cel mai scurt timp posibil.',
+    errorTitle: 'Eroare la trimitere',
+    errorMessage: 'A apărut o eroare. Vă rugăm să încercați din nou.',
+    sendAnother: 'Trimite altă petiție',
   },
   hu: {
     breadcrumb1: 'Online Szolgáltatások',
@@ -57,8 +66,13 @@ const pageLabels = {
     localitate: 'Helység',
     adresa: 'Cím',
     mesaj: 'Üzenet',
-    atasareFisier: 'Fájl csatolása',
-    trimite: 'Küldés',
+    trimite: 'Beadvány küldése',
+    sending: 'Küldés...',
+    successTitle: 'A beadvány elküldve!',
+    successMessage: 'Köszönjük üzenetét. A lehető legrövidebb időn belül választ kap.',
+    errorTitle: 'Küldési hiba',
+    errorMessage: 'Hiba történt. Kérjük, próbálja újra.',
+    sendAnother: 'Új beadvány küldése',
   },
   en: {
     breadcrumb1: 'Online Services',
@@ -82,20 +96,106 @@ const pageLabels = {
     localitate: 'City',
     adresa: 'Address',
     mesaj: 'Message',
-    atasareFisier: 'Attach file',
-    trimite: 'Submit',
+    trimite: 'Submit petition',
+    sending: 'Sending...',
+    successTitle: 'Petition sent!',
+    successMessage: 'Thank you for your message. You will receive a response as soon as possible.',
+    errorTitle: 'Sending error',
+    errorMessage: 'An error occurred. Please try again.',
+    sendAnother: 'Send another petition',
   },
 };
 
 export default function PetitiiPage() {
-  const [tipPersoana, setTipPersoana] = useState('fizica');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
   
   // For now, default to Romanian - will be updated when we add proper locale handling
   const locale = 'ro';
   const labels = pageLabels[locale as keyof typeof pageLabels] || pageLabels.ro;
 
   const inputClass = "w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-colors";
+  const inputErrorClass = "w-full px-3 py-2 border border-red-500 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-colors";
   const labelClass = "block text-sm font-medium text-gray-700 mb-1";
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm<PetitionFormData>({
+    resolver: zodResolver(petitionFormSchema),
+    defaultValues: {
+      tipPersoana: 'fizica',
+      tara: 'România',
+    },
+  });
+
+  const tipPersoana = watch('tipPersoana');
+
+  const onSubmit = async (data: PetitionFormData) => {
+    setStatus('loading');
+    setErrorMessage('');
+
+    try {
+      const response = await fetch('/api/petitii', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setStatus('success');
+        reset();
+      } else {
+        setStatus('error');
+        setErrorMessage(result.error || labels.errorMessage);
+      }
+    } catch {
+      setStatus('error');
+      setErrorMessage(labels.errorMessage);
+    }
+  };
+
+  if (status === 'success') {
+    return (
+      <>
+        <Breadcrumbs items={[
+          { label: labels.breadcrumb1, href: '/servicii-online' },
+          { label: labels.breadcrumb2 }
+        ]} />
+        <PageHeader titleKey="petitii" icon="fileText" />
+
+        <Section background="white">
+          <Container>
+            <div className="max-w-3xl mx-auto">
+              <Card>
+                <CardContent className="p-8">
+                  <div className="text-center py-8">
+                    <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                      <CheckCircle className="w-10 h-10 text-green-600" />
+                    </div>
+                    <h2 className="text-2xl font-semibold text-gray-900 mb-3">
+                      {labels.successTitle}
+                    </h2>
+                    <p className="text-gray-600 mb-8 max-w-md mx-auto">
+                      {labels.successMessage}
+                    </p>
+                    <Button onClick={() => setStatus('idle')}>
+                      {labels.sendAnother}
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </Container>
+        </Section>
+      </>
+    );
+  }
 
   return (
     <>
@@ -124,13 +224,22 @@ export default function PetitiiPage() {
             {/* Form */}
             <h2 className="text-xl font-semibold text-gray-900 mb-6">{labels.formTitle}</h2>
             
-            <form className="space-y-6">
+            {status === 'error' && (
+              <div className="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-lg mb-6">
+                <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-medium text-red-800">{labels.errorTitle}</p>
+                  <p className="text-sm text-red-600">{errorMessage}</p>
+                </div>
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               {/* Tip persoană */}
               <div>
                 <label className={labelClass}>{labels.tipPersoana}</label>
                 <select 
-                  value={tipPersoana}
-                  onChange={(e) => setTipPersoana(e.target.value)}
+                  {...register('tipPersoana')}
                   className={inputClass}
                 >
                   <option value="fizica">{labels.persoanaFizica}</option>
@@ -142,12 +251,26 @@ export default function PetitiiPage() {
               {tipPersoana === 'fizica' && (
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
-                    <label className={labelClass}>{labels.nume}</label>
-                    <input type="text" className={inputClass} />
+                    <label className={labelClass}>{labels.nume} *</label>
+                    <input 
+                      type="text" 
+                      {...register('nume')}
+                      className={errors.nume ? inputErrorClass : inputClass} 
+                    />
+                    {errors.nume && (
+                      <p className="mt-1 text-sm text-red-600">{errors.nume.message}</p>
+                    )}
                   </div>
                   <div>
-                    <label className={labelClass}>{labels.prenume}</label>
-                    <input type="text" className={inputClass} />
+                    <label className={labelClass}>{labels.prenume} *</label>
+                    <input 
+                      type="text" 
+                      {...register('prenume')}
+                      className={errors.prenume ? inputErrorClass : inputClass} 
+                    />
+                    {errors.prenume && (
+                      <p className="mt-1 text-sm text-red-600">{errors.prenume.message}</p>
+                    )}
                   </div>
                 </div>
               )}
@@ -156,17 +279,35 @@ export default function PetitiiPage() {
               {tipPersoana === 'juridica' && (
                 <div className="space-y-4">
                   <div>
-                    <label className={labelClass}>{labels.denumire}</label>
-                    <input type="text" className={inputClass} />
+                    <label className={labelClass}>{labels.denumire} *</label>
+                    <input 
+                      type="text" 
+                      {...register('denumire')}
+                      className={errors.denumire ? inputErrorClass : inputClass} 
+                    />
+                    {errors.denumire && (
+                      <p className="mt-1 text-sm text-red-600">{errors.denumire.message}</p>
+                    )}
                   </div>
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
-                      <label className={labelClass}>{labels.reprezentant}</label>
-                      <input type="text" className={inputClass} />
+                      <label className={labelClass}>{labels.reprezentant} *</label>
+                      <input 
+                        type="text" 
+                        {...register('reprezentant')}
+                        className={errors.reprezentant ? inputErrorClass : inputClass} 
+                      />
+                      {errors.reprezentant && (
+                        <p className="mt-1 text-sm text-red-600">{errors.reprezentant.message}</p>
+                      )}
                     </div>
                     <div>
                       <label className={labelClass}>{labels.cui}</label>
-                      <input type="text" className={inputClass} />
+                      <input 
+                        type="text" 
+                        {...register('cui')}
+                        className={inputClass} 
+                      />
                     </div>
                   </div>
                 </div>
@@ -175,12 +316,23 @@ export default function PetitiiPage() {
               {/* Email & Telefon */}
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label className={labelClass}>{labels.email}</label>
-                  <input type="email" className={inputClass} />
+                  <label className={labelClass}>{labels.email} *</label>
+                  <input 
+                    type="email" 
+                    {...register('email')}
+                    className={errors.email ? inputErrorClass : inputClass} 
+                  />
+                  {errors.email && (
+                    <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+                  )}
                 </div>
                 <div>
                   <label className={labelClass}>{labels.telefon}</label>
-                  <input type="tel" className={inputClass} />
+                  <input 
+                    type="tel" 
+                    {...register('telefon')}
+                    className={inputClass} 
+                  />
                 </div>
               </div>
 
@@ -189,53 +341,81 @@ export default function PetitiiPage() {
                 <h3 className="text-lg font-medium text-gray-900 mb-4">{labels.adresaTitle}</h3>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
-                    <label className={labelClass}>{labels.tara}</label>
-                    <input type="text" className={inputClass} defaultValue="România" />
+                    <label className={labelClass}>{labels.tara} *</label>
+                    <input 
+                      type="text" 
+                      {...register('tara')}
+                      className={errors.tara ? inputErrorClass : inputClass} 
+                    />
+                    {errors.tara && (
+                      <p className="mt-1 text-sm text-red-600">{errors.tara.message}</p>
+                    )}
                   </div>
                   <div>
-                    <label className={labelClass}>{labels.judet}</label>
-                    <input type="text" className={inputClass} />
+                    <label className={labelClass}>{labels.judet} *</label>
+                    <input 
+                      type="text" 
+                      {...register('judet')}
+                      className={errors.judet ? inputErrorClass : inputClass} 
+                    />
+                    {errors.judet && (
+                      <p className="mt-1 text-sm text-red-600">{errors.judet.message}</p>
+                    )}
                   </div>
                   <div>
-                    <label className={labelClass}>{labels.localitate}</label>
-                    <input type="text" className={inputClass} />
+                    <label className={labelClass}>{labels.localitate} *</label>
+                    <input 
+                      type="text" 
+                      {...register('localitate')}
+                      className={errors.localitate ? inputErrorClass : inputClass} 
+                    />
+                    {errors.localitate && (
+                      <p className="mt-1 text-sm text-red-600">{errors.localitate.message}</p>
+                    )}
                   </div>
                   <div>
-                    <label className={labelClass}>{labels.adresa}</label>
-                    <input type="text" className={inputClass} />
+                    <label className={labelClass}>{labels.adresa} *</label>
+                    <input 
+                      type="text" 
+                      {...register('adresa')}
+                      className={errors.adresa ? inputErrorClass : inputClass} 
+                    />
+                    {errors.adresa && (
+                      <p className="mt-1 text-sm text-red-600">{errors.adresa.message}</p>
+                    )}
                   </div>
                 </div>
               </div>
 
               {/* Mesaj */}
               <div>
-                <label className={labelClass}>{labels.mesaj}</label>
+                <label className={labelClass}>{labels.mesaj} *</label>
                 <textarea 
                   rows={6} 
-                  className={inputClass}
+                  {...register('mesaj')}
+                  className={errors.mesaj ? inputErrorClass : inputClass}
                 />
-              </div>
-
-              {/* Atașare fișier */}
-              <div>
-                <label className={labelClass}>{labels.atasareFisier}</label>
-                <div className="flex items-center gap-3">
-                  <label className="flex items-center gap-2 px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-200 transition-colors">
-                    <Upload className="w-4 h-4 text-gray-600" />
-                    <span className="text-sm text-gray-700">Alege fișier</span>
-                    <input type="file" className="hidden" />
-                  </label>
-                </div>
+                {errors.mesaj && (
+                  <p className="mt-1 text-sm text-red-600">{errors.mesaj.message}</p>
+                )}
               </div>
 
               {/* Submit */}
               <div>
-                <button
+                <Button
                   type="submit"
-                  className="px-6 py-3 bg-primary-600 text-white font-medium rounded-lg hover:bg-primary-700 transition-colors"
+                  disabled={status === 'loading'}
+                  size="lg"
                 >
-                  {labels.trimite}
-                </button>
+                  {status === 'loading' ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      {labels.sending}
+                    </>
+                  ) : (
+                    labels.trimite
+                  )}
+                </Button>
               </div>
             </form>
 

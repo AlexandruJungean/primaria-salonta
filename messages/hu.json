@@ -222,7 +222,12 @@
     "required": "Kötelező mező",
     "invalidEmail": "Érvénytelen e-mail cím",
     "findUs": "Hol talál minket",
-    "officeHours": "Nyitvatartás"
+    "officeHours": "Nyitvatartás",
+    "successTitle": "Üzenet sikeresen elküldve!",
+    "successMessage": "Köszönjük üzenetét. A lehető legrövidebb időn belül válaszolunk.",
+    "errorTitle": "Küldési hiba",
+    "errorMessage": "Hiba történt. Kérjük, próbálja újra.",
+    "sendAnother": "Új üzenet küldése"
   },
   "payments": {
     "title": "Online fizetés",

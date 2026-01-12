@@ -222,7 +222,12 @@
     "required": "Required field",
     "invalidEmail": "Invalid email address",
     "findUs": "Where to find us",
-    "officeHours": "Office hours"
+    "officeHours": "Office hours",
+    "successTitle": "Message sent successfully!",
+    "successMessage": "Thank you for your message. We will respond as soon as possible.",
+    "errorTitle": "Sending error",
+    "errorMessage": "An error occurred. Please try again.",
+    "sendAnother": "Send another message"
   },
   "payments": {
     "title": "Online Payments",
