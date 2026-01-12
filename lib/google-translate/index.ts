@@ -58,7 +58,8 @@ export async function translateText(
     const response = await fetch(`${GOOGLE_TRANSLATE_API_URL}?${params}`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Length': '0',
       },
     });
 
@@ -125,7 +126,8 @@ export async function translateTexts(
     const response = await fetch(`${GOOGLE_TRANSLATE_API_URL}?${params}`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Length': '0',
       },
     });
 

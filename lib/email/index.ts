@@ -105,6 +105,192 @@ export function contactEmailTemplate(data: {
   `;
 }
 
+// Multilingual translations for contact confirmation email
+const contactConfirmationTranslations = {
+  ro: {
+    headerTitle: '✅ Mesajul dumneavoastră a fost primit',
+    greeting: 'Stimate/Stimată',
+    messageConfirm: 'Vă confirmăm că am primit mesajul dumneavoastră cu subiectul:',
+    processingNote: 'Mesajul a fost înregistrat și va fi procesat de către echipa noastră. Vom reveni cu un răspuns în cel mai scurt timp posibil.',
+    thankYou: 'Vă mulțumim pentru că ne-ați contactat!',
+    footer: 'Acesta este un mesaj automat. Vă rugăm să nu răspundeți la acest email.',
+  },
+  hu: {
+    headerTitle: '✅ Üzenetét megkaptuk',
+    greeting: 'Tisztelt',
+    messageConfirm: 'Megerősítjük, hogy megkaptuk üzenetét a következő tárggyal:',
+    processingNote: 'Az üzenetet rögzítettük, és csapatunk feldolgozza. A lehető legrövidebb időn belül válaszolunk.',
+    thankYou: 'Köszönjük, hogy kapcsolatba lépett velünk!',
+    footer: 'Ez egy automatikus üzenet. Kérjük, ne válaszoljon erre az e-mailre.',
+  },
+  en: {
+    headerTitle: '✅ Your message has been received',
+    greeting: 'Dear',
+    messageConfirm: 'We confirm that we have received your message with the subject:',
+    processingNote: 'Your message has been registered and will be processed by our team. We will respond as soon as possible.',
+    thankYou: 'Thank you for contacting us!',
+    footer: 'This is an automated message. Please do not reply to this email.',
+  },
+};
+
+// Confirmation email template for contact form
+export function contactConfirmationTemplate(data: {
+  name: string;
+  subject: string;
+  locale?: 'ro' | 'hu' | 'en';
+}): string {
+  const t = contactConfirmationTranslations[data.locale || 'ro'];
+  
+  return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; }
+        .container { max-width: 600px; margin: 0 auto; }
+        .header { background: #1e40af; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
+        .content { background: #f9fafb; padding: 30px; border: 1px solid #e5e7eb; }
+        .message { background: white; padding: 20px; border-radius: 8px; border: 1px solid #e5e7eb; margin: 20px 0; }
+        .footer { text-align: center; padding: 15px; color: #6b7280; font-size: 12px; background: #f3f4f6; border-radius: 0 0 8px 8px; }
+        .contact-info { margin-top: 20px; padding-top: 20px; border-top: 1px solid #e5e7eb; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <h2 style="margin: 0;">${t.headerTitle}</h2>
+        </div>
+        <div class="content">
+          <p>${t.greeting} <strong>${data.name}</strong>,</p>
+          
+          <div class="message">
+            <p>${t.messageConfirm}</p>
+            <p style="font-weight: bold; color: #1e40af;">"${data.subject}"</p>
+          </div>
+          
+          <p>${t.processingNote}</p>
+          
+          <p>${t.thankYou}</p>
+          
+          <div class="contact-info">
+            <p style="margin: 0; font-weight: bold;">Primăria Municipiului Salonta</p>
+            <p style="margin: 5px 0; color: #6b7280;">Piața Libertății nr. 1, Salonta, Bihor</p>
+            <p style="margin: 5px 0; color: #6b7280;">Tel: 0259 373 042</p>
+          </div>
+        </div>
+        <div class="footer">
+          ${t.footer}
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+}
+
+// Multilingual translations for petition confirmation email
+const petitionConfirmationTranslations = {
+  ro: {
+    headerTitle: '✅ Petiția dumneavoastră a fost înregistrată',
+    greeting: 'Stimate/Stimată',
+    messageConfirm: 'Vă confirmăm că petiția dumneavoastră a fost primită și înregistrată în sistemul nostru.',
+    legalTermTitle: '📋 Termen legal de răspuns:',
+    legalTermText: 'Conform legislației în vigoare (OG nr. 27/2002), veți primi un răspuns în termen de maxim 30 de zile de la data înregistrării.',
+    questionsNote: 'Dacă aveți întrebări suplimentare, nu ezitați să ne contactați.',
+    thankYou: 'Vă mulțumim!',
+    publicRelations: 'Biroul de Relații cu Publicul',
+    footer: 'Acesta este un mesaj automat. Vă rugăm să nu răspundeți la acest email.',
+  },
+  hu: {
+    headerTitle: '✅ Beadványát nyilvántartásba vettük',
+    greeting: 'Tisztelt',
+    messageConfirm: 'Megerősítjük, hogy beadványát megkaptuk és nyilvántartásba vettük rendszerünkben.',
+    legalTermTitle: '📋 Törvényes válaszadási határidő:',
+    legalTermText: 'A hatályos jogszabályok értelmében (27/2002. sz. Kormányrendelet) legfeljebb 30 napon belül választ kap a bejegyzés napjától számítva.',
+    questionsNote: 'Ha további kérdései vannak, ne habozzon kapcsolatba lépni velünk.',
+    thankYou: 'Köszönjük!',
+    publicRelations: 'Ügyfélszolgálat',
+    footer: 'Ez egy automatikus üzenet. Kérjük, ne válaszoljon erre az e-mailre.',
+  },
+  en: {
+    headerTitle: '✅ Your petition has been registered',
+    greeting: 'Dear',
+    messageConfirm: 'We confirm that your petition has been received and registered in our system.',
+    legalTermTitle: '📋 Legal response deadline:',
+    legalTermText: 'According to the legislation in force (Government Ordinance no. 27/2002), you will receive a response within a maximum of 30 days from the registration date.',
+    questionsNote: 'If you have any additional questions, please do not hesitate to contact us.',
+    thankYou: 'Thank you!',
+    publicRelations: 'Public Relations Office',
+    footer: 'This is an automated message. Please do not reply to this email.',
+  },
+};
+
+// Confirmation email template for petition form
+export function petitionConfirmationTemplate(data: {
+  tipPersoana: 'fizica' | 'juridica';
+  nume?: string;
+  prenume?: string;
+  denumire?: string;
+  locale?: 'ro' | 'hu' | 'en';
+}): string {
+  const t = petitionConfirmationTranslations[data.locale || 'ro'];
+  const name = data.tipPersoana === 'fizica' 
+    ? `${data.nume} ${data.prenume}` 
+    : data.denumire;
+    
+  return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; }
+        .container { max-width: 600px; margin: 0 auto; }
+        .header { background: #1e40af; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
+        .content { background: #f9fafb; padding: 30px; border: 1px solid #e5e7eb; }
+        .message { background: white; padding: 20px; border-radius: 8px; border: 1px solid #e5e7eb; margin: 20px 0; }
+        .info-box { background: #dbeafe; padding: 15px; border-radius: 8px; margin: 20px 0; }
+        .footer { text-align: center; padding: 15px; color: #6b7280; font-size: 12px; background: #f3f4f6; border-radius: 0 0 8px 8px; }
+        .contact-info { margin-top: 20px; padding-top: 20px; border-top: 1px solid #e5e7eb; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <h2 style="margin: 0;">${t.headerTitle}</h2>
+        </div>
+        <div class="content">
+          <p>${t.greeting} <strong>${name}</strong>,</p>
+          
+          <div class="message">
+            <p>${t.messageConfirm}</p>
+          </div>
+          
+          <div class="info-box">
+            <p style="margin: 0;"><strong>${t.legalTermTitle}</strong></p>
+            <p style="margin: 10px 0 0 0;">${t.legalTermText}</p>
+          </div>
+          
+          <p>${t.questionsNote}</p>
+          
+          <p>${t.thankYou}</p>
+          
+          <div class="contact-info">
+            <p style="margin: 0; font-weight: bold;">Primăria Municipiului Salonta</p>
+            <p style="margin: 5px 0; color: #6b7280;">${t.publicRelations}</p>
+            <p style="margin: 5px 0; color: #6b7280;">Piața Libertății nr. 1, Salonta, Bihor</p>
+            <p style="margin: 5px 0; color: #6b7280;">Tel: 0259 373 042</p>
+          </div>
+        </div>
+        <div class="footer">
+          ${t.footer}
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+}
+
 export function petitionEmailTemplate(data: {
   tipPersoana: 'fizica' | 'juridica';
   nume?: string;

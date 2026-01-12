@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
+import { useLocale } from 'next-intl';
 import { Send, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -33,6 +34,7 @@ export function ContactForm({ labels }: ContactFormProps) {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
   const { executeRecaptcha } = useGoogleReCaptcha();
+  const locale = useLocale();
 
   const {
     register,
@@ -57,7 +59,7 @@ export function ContactForm({ labels }: ContactFormProps) {
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...data, recaptchaToken }),
+        body: JSON.stringify({ ...data, recaptchaToken, locale }),
       });
 
       const result = await response.json();

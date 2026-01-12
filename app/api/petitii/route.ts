@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { petitionFormSchema } from '@/lib/validations/forms';
-import { sendEmail, petitionEmailTemplate } from '@/lib/email';
+import { sendEmail, petitionEmailTemplate, petitionConfirmationTemplate } from '@/lib/email';
 import { verifyRecaptcha } from '@/lib/recaptcha';
 
 export async function POST(request: NextRequest) {
@@ -34,11 +34,12 @@ export async function POST(request: NextRequest) {
     }
     
     const data = validationResult.data;
+    const locale = (body.locale as 'ro' | 'hu' | 'en') || 'ro';
     
     // For now, we don't handle file uploads - just note if there was supposed to be one
     const hasAttachment = false;
     
-    // Send the email
+    // Send the email to the municipality
     const emailResult = await sendEmail({
       subject: `[Petiție] ${data.tipPersoana === 'fizica' ? `${data.nume} ${data.prenume}` : data.denumire}`,
       html: petitionEmailTemplate({
@@ -55,6 +56,26 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       );
     }
+    
+    // Confirmation email subjects per locale
+    const confirmationSubjects = {
+      ro: 'Confirmare primire petiție - Primăria Salonta',
+      hu: 'Beadvány visszaigazolása - Nagyszalonta Polgármesteri Hivatala',
+      en: 'Petition confirmation - Salonta City Hall',
+    };
+    
+    // Send confirmation email to the sender
+    await sendEmail({
+      to: data.email,
+      subject: confirmationSubjects[locale],
+      html: petitionConfirmationTemplate({
+        tipPersoana: data.tipPersoana,
+        nume: data.nume,
+        prenume: data.prenume,
+        denumire: data.denumire,
+        locale,
+      }),
+    });
     
     return NextResponse.json({ 
       success: true, 

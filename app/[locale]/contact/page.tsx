@@ -1,15 +1,16 @@
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import { MapPin, Phone, Mail, Clock } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section, SectionHeader } from '@/components/ui/section';
 import { Card, CardContent } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { CONTACT_INFO } from '@/lib/constants/contact';
-import { PUBLIC_HOURS } from '@/lib/constants/public-hours';
 import { generatePageMetadata } from '@/lib/seo/metadata';
 import { ContactPageJsonLd } from '@/lib/seo/json-ld';
 import { type Locale } from '@/i18n/routing';
 import { ContactForm } from './contact-form';
+import { getOfficeHours } from '@/lib/supabase/services/office-hours';
+import { translateContentArray } from '@/lib/google-translate/cache';
 
 export async function generateMetadata({
   params,
@@ -24,8 +25,21 @@ export async function generateMetadata({
   });
 }
 
-export default function ContactPage() {
-  const t = useTranslations('contact');
+export default async function ContactPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'contact' });
+  
+  // Fetch office hours from Supabase
+  const officeHoursData = await getOfficeHours();
+  const officeHours = await translateContentArray(
+    officeHoursData,
+    ['name'],
+    locale as 'ro' | 'hu' | 'en'
+  );
 
   const formLabels = {
     formTitle: t('formTitle'),
@@ -124,10 +138,10 @@ export default function ContactPage() {
                     <div>
                       <h4 className="font-medium text-gray-900">{t('officeHours')}</h4>
                       <div className="text-gray-600 space-y-1 mt-2">
-                        {PUBLIC_HOURS.offices.map((office) => (
+                        {officeHours.map((office) => (
                           <div key={office.id} className="text-sm">
                             <span className="font-medium">
-                              {office.translations.ro.name}
+                              {office.name}
                               {office.room && ` (cam. ${office.room})`}:
                             </span>{' '}
                             {office.hours.map((h) => `${h.from} - ${h.to}`).join(', ')}
