@@ -345,7 +345,9 @@
     "publicServantsSubtitle": "Employees of Salonta City Hall",
     "infoTitle": "Information",
     "infoText": "Wealth and interest declarations are published in accordance with the provisions of Law no. 176/2010 regarding integrity in the exercise of public functions and dignities. Documents are also available on the National Integrity Agency website.",
-    "persons": "{count} persons"
+    "persons": "{count} persons",
+    "noDeclarations": "No declarations available at this time.",
+    "noDeclarationsForYear": "No declarations for this year."
   },
   "agentiEconomiciPage": {
     "description": "Useful information and documents for economic agents in Salonta Municipality. Forms, authorizations and services for the local business environment."

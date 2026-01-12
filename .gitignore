@@ -42,5 +42,5 @@ next-env.d.ts
 
 # Migration scripts and downloaded documents (not part of the project)
 /scripts/
-/site_content/
 /supabase/
+/z-migrare/

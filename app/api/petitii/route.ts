@@ -1,13 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { petitionFormSchema } from '@/lib/validations/forms';
 import { sendEmail, petitionEmailTemplate } from '@/lib/email';
+import { verifyRecaptcha } from '@/lib/recaptcha';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     
+    // Verify reCAPTCHA token
+    const { recaptchaToken, ...formData } = body;
+    const recaptchaResult = await verifyRecaptcha(recaptchaToken, 'petition_form');
+    
+    if (!recaptchaResult.success) {
+      console.warn('reCAPTCHA verification failed:', recaptchaResult.error);
+      return NextResponse.json(
+        { success: false, error: 'Verificarea anti-spam a eșuat. Vă rugăm să încercați din nou.' },
+        { status: 400 }
+      );
+    }
+    
     // Validate the form data
-    const validationResult = petitionFormSchema.safeParse(body);
+    const validationResult = petitionFormSchema.safeParse(formData);
     
     if (!validationResult.success) {
       return NextResponse.json(

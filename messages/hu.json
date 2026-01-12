@@ -345,7 +345,9 @@
     "publicServantsSubtitle": "Nagyszalonta Polgármesteri Hivatalának alkalmazottai",
     "infoTitle": "Információk",
     "infoText": "A vagyon- és érdekeltségi nyilatkozatok a 176/2010. számú törvény rendelkezéseinek megfelelően kerülnek közzétételre, amely a közfunkciók és közmegbízatások gyakorlásának integritásáról szól. A dokumentumok a Nemzeti Integritási Ügynökség weboldalán is elérhetők.",
-    "persons": "{count} személy"
+    "persons": "{count} személy",
+    "noDeclarations": "Jelenleg nincsenek elérhető nyilatkozatok.",
+    "noDeclarationsForYear": "Nincs nyilatkozat erre az évre."
   },
   "agentiEconomiciPage": {
     "description": "Hasznos információk és dokumentumok Nagyszalonta gazdasági szereplői számára. Nyomtatványok, engedélyek és szolgáltatások a helyi üzleti környezet számára."

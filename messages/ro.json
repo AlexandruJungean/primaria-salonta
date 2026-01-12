@@ -345,7 +345,9 @@
     "declarations": "declarații",
     "wealth": "Avere",
     "interests": "Interese",
-    "persons": "{count} persoane"
+    "persons": "{count} persoane",
+    "noDeclarations": "Nu există declarații disponibile momentan.",
+    "noDeclarationsForYear": "Nu există declarații pentru acest an."
   },
   "agentiEconomiciPage": {
     "description": "Informații și documente utile pentru agenții economici din Municipiul Salonta. Formulare, autorizații și servicii pentru mediul de afaceri local."

@@ -11,6 +11,7 @@ import { Footer } from '@/components/layout/footer';
 import { AccessibilityToolbar } from '@/components/features/accessibility-toolbar';
 import { CookieConsent } from '@/components/features/cookie-consent';
 import { NavigationProvider } from '@/components/layout/navigation-context';
+import { RecaptchaProvider } from '@/components/features/recaptcha-provider';
 import { getInstitutionsForNav } from '@/lib/supabase/services/institutions';
 import { 
   SEO_CONFIG, 
@@ -195,29 +196,31 @@ export default async function LocaleLayout({
       </head>
       <body className={`${openSans.variable} ${sourceSerif.variable} antialiased min-h-screen flex flex-col`}>
         <NextIntlClientProvider messages={messages}>
-          <NavigationProvider institutions={institutions}>
-            {/* Skip to Content Link */}
-            <a href="#main-content" className="skip-to-content">
-              Skip to content
-            </a>
+          <RecaptchaProvider>
+            <NavigationProvider institutions={institutions}>
+              {/* Skip to Content Link */}
+              <a href="#main-content" className="skip-to-content">
+                Skip to content
+              </a>
 
-            {/* Accessibility Toolbar */}
-            <AccessibilityToolbar />
+              {/* Accessibility Toolbar */}
+              <AccessibilityToolbar />
 
-            {/* Header */}
-            <Header />
+              {/* Header */}
+              <Header />
 
-            {/* Main Content */}
-            <main id="main-content" className="flex-1">
-              {children}
-            </main>
+              {/* Main Content */}
+              <main id="main-content" className="flex-1">
+                {children}
+              </main>
 
-            {/* Footer */}
-            <Footer />
+              {/* Footer */}
+              <Footer />
 
-            {/* Cookie Consent Banner */}
-            <CookieConsent />
-          </NavigationProvider>
+              {/* Cookie Consent Banner */}
+              <CookieConsent />
+            </NavigationProvider>
+          </RecaptchaProvider>
         </NextIntlClientProvider>
       </body>
     </html>

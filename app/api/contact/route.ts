@@ -1,13 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { contactFormSchema } from '@/lib/validations/forms';
 import { sendEmail, contactEmailTemplate } from '@/lib/email';
+import { verifyRecaptcha } from '@/lib/recaptcha';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     
+    // Verify reCAPTCHA token
+    const { recaptchaToken, ...formData } = body;
+    const recaptchaResult = await verifyRecaptcha(recaptchaToken, 'contact_form');
+    
+    if (!recaptchaResult.success) {
+      console.warn('reCAPTCHA verification failed:', recaptchaResult.error);
+      return NextResponse.json(
+        { success: false, error: 'Verificarea anti-spam a eșuat. Vă rugăm să încercați din nou.' },
+        { status: 400 }
+      );
+    }
+    
     // Validate the form data
-    const validationResult = contactFormSchema.safeParse(body);
+    const validationResult = contactFormSchema.safeParse(formData);
     
     if (!validationResult.success) {
       return NextResponse.json(

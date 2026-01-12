@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { Info, Phone, Mail, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
@@ -109,6 +110,7 @@ const pageLabels = {
 export default function PetitiiPage() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  const { executeRecaptcha } = useGoogleReCaptcha();
   
   // For now, default to Romanian - will be updated when we add proper locale handling
   const locale = 'ro';
@@ -139,10 +141,16 @@ export default function PetitiiPage() {
     setErrorMessage('');
 
     try {
+      // Get reCAPTCHA token
+      let recaptchaToken = '';
+      if (executeRecaptcha) {
+        recaptchaToken = await executeRecaptcha('petition_form');
+      }
+
       const response = await fetch('/api/petitii', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, recaptchaToken }),
       });
 
       const result = await response.json();
