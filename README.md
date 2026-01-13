@@ -1,5 +1,5 @@
 # 🏛️ Primăria Salonta - Website Oficial
-
+Testpermissions
 Website-ul oficial al Primăriei Municipiului Salonta, dezvoltat cu Next.js 16, TypeScript și Tailwind CSS.
 
 ## 🚀 Tech Stack
