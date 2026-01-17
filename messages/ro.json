@@ -149,11 +149,7 @@
     "evenimenteDesc": "Calendarul evenimentelor din Salonta",
     "stareCivila": "Stare civilă (În curând)",
     "registruAgricol": "Registrul agricol (În curând)",
-    "transport": "Transport public (În curând)",
-    "educatie": "Educație (În curând)",
     "sanatate": "Sănătate (În curând)",
-    "sport": "Sport (În curând)",
-    "agentiEconomici": "Agenți economici (În curând)",
     "problemeSociale": "Probleme sociale – formulare",
     "coronavirus": "Informații coronavirus",
     "rapoarteStudii": "Rapoarte și studii",
@@ -355,9 +351,6 @@
   "camereWebPage": {
     "description": "Vizualizați în timp real imagini live din diferite zone ale Municipiului Salonta prin camerele web amplasate în locații strategice."
   },
-  "educatiePage": {
-    "description": "Instituțiile de învățământ din Municipiul Salonta - grădinițe, școli și licee."
-  },
   "stareCivilaPage": {
     "description": "Serviciul de Stare Civilă eliberează certificate de naștere, căsătorie și deces, precum și alte documente oficiale.",
     "forms": "Formulare",
@@ -370,17 +363,11 @@
   "sanatatePage": {
     "description": "Instituții de sănătate din Municipiul Salonta - spitale, policlinici, cabinete medicale și farmacii."
   },
-  "sportPage": {
-    "description": "Facilități și activități sportive disponibile în Municipiul Salonta - bazin de înot, săli de sport și cluburi sportive."
-  },
   "petitiiPage": {
     "description": "Depuneți petiții către Primăria Municipiului Salonta online sau prin metodele tradiționale."
   },
   "strategieDezvoltarePage": {
     "description": "Strategia de dezvoltare a Municipiului Salonta cuprinde obiectivele și direcțiile de dezvoltare pe termen lung."
-  },
-  "transportPage": {
-    "description": "Informații despre transportul public și infrastructura rutieră din Municipiul Salonta."
   },
   "registruAgricolPage": {
     "description": "Serviciul Registru Agricol oferă informații și formulare pentru activități agricole.",

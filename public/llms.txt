@@ -44,9 +44,6 @@ This is the official government website for Salonta City Hall (Primăria Municip
   - Audience schedule (/primaria/audiente)
 - Report a problem (/raporteaza-problema)
 - Events calendar (/evenimente)
-- Education (/educatie)
-- Transport (/transport)
-- Sport (/sport)
 - Volunteering (/voluntariat)
 - FAQ (/faq)
 
@@ -65,7 +62,6 @@ This is the official government website for Salonta City Hall (Primăria Municip
   - Environment - waste management, water analysis, green spaces (/informatii-publice/mediu)
   - Online forms (/informatii-publice/formulare)
 - Economy information (/localitatea/economie)
-- Business agents (/agenti-economici)
 
 ### City Hall Administration (Primăria Salonta)
 - **City Hall** (/primaria)
@@ -127,7 +123,6 @@ This is the official government website for Salonta City Hall (Primăria Municip
   - Arany János Museum Complex (/institutii/muzeu)
   - Great Bustard Nest - Nature center (/institutii/cuibul-dropiei)
   - Swimming pool (/institutii/bazin-inot)
-- Sports (/sport)
 - Events (/evenimente)
 - Webcams (/camere-web)
 

@@ -1566,44 +1566,6 @@ export const PAGE_SEO = {
     },
   },
 
-  // Agenți Economici
-  agentiEconomici: {
-    ro: {
-      title: 'Agenți Economici - Primăria Salonta',
-      description: 'Director cu firmele și agenții economici din Municipiul Salonta.',
-      keywords: 'agenți economici, firme, societăți, Salonta',
-    },
-    hu: {
-      title: 'Gazdasági Szereplők - Nagyszalonta',
-      description: 'Nagyszalontai cégek és gazdasági szereplők jegyzéke.',
-      keywords: 'gazdasági szereplők, cégek, vállalkozások',
-    },
-    en: {
-      title: 'Economic Agents - Salonta City Hall',
-      description: 'Directory of companies and economic agents in Salonta Municipality.',
-      keywords: 'economic agents, companies, businesses, Salonta',
-    },
-  },
-
-  // Educație
-  educatie: {
-    ro: {
-      title: 'Educație - Primăria Salonta',
-      description: 'Informații despre școli, grădinițe și instituții de învățământ din Municipiul Salonta.',
-      keywords: 'educație, școli, grădinițe, licee, învățământ, Salonta',
-    },
-    hu: {
-      title: 'Oktatás - Nagyszalonta',
-      description: 'Információk az iskolákról, óvodákról és oktatási intézményekről Nagyszalontán.',
-      keywords: 'oktatás, iskolák, óvodák, líceumok',
-    },
-    en: {
-      title: 'Education - Salonta City Hall',
-      description: 'Information about schools, kindergartens and educational institutions in Salonta.',
-      keywords: 'education, schools, kindergartens, high schools, Salonta',
-    },
-  },
-
   // Evenimente
   evenimente: {
     ro: {
@@ -1658,44 +1620,6 @@ export const PAGE_SEO = {
       title: 'Report a Problem - Salonta City Hall',
       description: 'Report issues like potholes, broken street lighting or other city problems in Salonta.',
       keywords: 'report problems, issues, potholes, street lighting',
-    },
-  },
-
-  // Sport
-  sport: {
-    ro: {
-      title: 'Sport - Primăria Salonta',
-      description: 'Facilități sportive, terenuri de sport, bazine și zone de agrement din Municipiul Salonta.',
-      keywords: 'sport, terenuri, bazin, agrement, fitness, Salonta',
-    },
-    hu: {
-      title: 'Sport - Nagyszalonta',
-      description: 'Sportlétesítmények, sportpályák, uszodák és szabadidős területek Nagyszalontán.',
-      keywords: 'sport, pályák, uszoda, szabadidő, fitness',
-    },
-    en: {
-      title: 'Sports - Salonta City Hall',
-      description: 'Sports facilities, fields, pools and recreation areas in Salonta Municipality.',
-      keywords: 'sports, fields, pool, recreation, fitness, Salonta',
-    },
-  },
-
-  // Transport
-  transport: {
-    ro: {
-      title: 'Transport - Primăria Salonta',
-      description: 'Informații despre transportul public, rute și orare în Municipiul Salonta.',
-      keywords: 'transport, autobuz, rute, orare, transport public',
-    },
-    hu: {
-      title: 'Közlekedés - Nagyszalonta',
-      description: 'Információk a tömegközlekedésről, útvonalakról és menetrendekről Nagyszalontán.',
-      keywords: 'közlekedés, busz, útvonalak, menetrend',
-    },
-    en: {
-      title: 'Transport - Salonta City Hall',
-      description: 'Information about public transport, routes and schedules in Salonta Municipality.',
-      keywords: 'transport, bus, routes, schedules, public transport',
     },
   },
 

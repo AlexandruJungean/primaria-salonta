@@ -9,3 +9,5 @@ export { AdminConfirmDialog } from './admin-confirm-dialog';
 export { AdminToastContainer, toast } from './admin-toast';
 export { AdminPageHeader } from './admin-page-header';
 export { AdminStatusBadge } from './admin-status-badge';
+export { DocumentList } from './document-list';
+export { DocumentEdit } from './document-edit';

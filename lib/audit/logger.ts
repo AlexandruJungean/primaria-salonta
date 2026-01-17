@@ -37,7 +37,8 @@ export type ResourceType =
   | 'council_member'
   | 'user'
   | 'settings'
-  | 'report';
+  | 'report'
+  | 'faq';
 
 export interface AuditLogEntry {
   action: AuditAction;
@@ -133,6 +134,7 @@ export function getResourceTypeLabel(resourceType: ResourceType): string {
     user: 'Utilizator',
     settings: 'Setări',
     report: 'Raport',
+    faq: 'Întrebare frecventă',
   };
   return labels[resourceType] || resourceType;
 }

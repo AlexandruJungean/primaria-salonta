@@ -149,11 +149,7 @@
     "evenimenteDesc": "Salonta event calendar",
     "stareCivila": "Civil Registry (Coming Soon)",
     "registruAgricol": "Agricultural Register (Coming Soon)",
-    "transport": "Public Transport (Coming Soon)",
-    "educatie": "Education (Coming Soon)",
     "sanatate": "Health (Coming Soon)",
-    "sport": "Sports (Coming Soon)",
-    "agentiEconomici": "Business Directory (Coming Soon)",
     "problemeSociale": "Social Problems – forms",
     "coronavirus": "Coronavirus Information",
     "rapoarteStudii": "Reports and Studies",
@@ -355,9 +351,6 @@
   "camereWebPage": {
     "description": "View live images from different areas of Salonta Municipality through webcams placed in strategic locations."
   },
-  "educatiePage": {
-    "description": "Educational institutions in Salonta Municipality - kindergartens, schools and high schools."
-  },
   "stareCivilaPage": {
     "description": "The Civil Status Service issues birth, marriage and death certificates, as well as other official documents.",
     "forms": "Forms",
@@ -370,17 +363,11 @@
   "sanatatePage": {
     "description": "Health institutions in Salonta Municipality - hospitals, clinics, medical offices and pharmacies."
   },
-  "sportPage": {
-    "description": "Sports facilities and activities available in Salonta Municipality - swimming pool, sports halls and sports clubs."
-  },
   "petitiiPage": {
     "description": "Submit petitions to Salonta City Hall online or through traditional methods."
   },
   "strategieDezvoltarePage": {
     "description": "The development strategy of Salonta Municipality includes long-term objectives and development directions."
-  },
-  "transportPage": {
-    "description": "Information about public transport and road infrastructure in Salonta Municipality."
   },
   "registruAgricolPage": {
     "description": "The Agricultural Registry Service provides information and forms for agricultural activities.",

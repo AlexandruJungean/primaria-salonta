@@ -149,11 +149,7 @@
     "evenimenteDesc": "Nagyszalonta eseménynaptára",
     "stareCivila": "Anyakönyvi hivatal (Hamarosan)",
     "registruAgricol": "Mezőgazdasági nyilvántartás (Hamarosan)",
-    "transport": "Tömegközlekedés (Hamarosan)",
-    "educatie": "Oktatás (Hamarosan)",
     "sanatate": "Egészségügy (Hamarosan)",
-    "sport": "Sport (Hamarosan)",
-    "agentiEconomici": "Gazdasági szereplők (Hamarosan)",
     "problemeSociale": "Szociális problémák – nyomtatványok",
     "coronavirus": "Koronavírus információk",
     "rapoarteStudii": "Jelentések és tanulmányok",
@@ -355,9 +351,6 @@
   "camereWebPage": {
     "description": "Tekintse meg élőben a Nagyszalonta különböző területeiről készült képeket a stratégiai helyszíneken elhelyezett webkamerákon keresztül."
   },
-  "educatiePage": {
-    "description": "Nagyszalonta oktatási intézményei - óvodák, iskolák és középiskolák."
-  },
   "stareCivilaPage": {
     "description": "Az Anyakönyvi Szolgálat születési, házassági és halotti anyakönyvi kivonatokat, valamint egyéb hivatalos dokumentumokat állít ki.",
     "forms": "Űrlapok",
@@ -370,17 +363,11 @@
   "sanatatePage": {
     "description": "Nagyszalonta egészségügyi intézményei - kórházak, rendelőintézetek, orvosi rendelők és gyógyszertárak."
   },
-  "sportPage": {
-    "description": "Nagyszalontán elérhető sportlétesítmények és sporttevékenységek - uszoda, sportcsarnokok és sportklubok."
-  },
   "petitiiPage": {
     "description": "Nyújtson be beadványokat Nagyszalonta Polgármesteri Hivatalához online vagy hagyományos módszerekkel."
   },
   "strategieDezvoltarePage": {
     "description": "Nagyszalonta fejlesztési stratégiája tartalmazza a hosszú távú célkitűzéseket és fejlesztési irányokat."
-  },
-  "transportPage": {
-    "description": "Információk a tömegközlekedésről és az úthálózatról Nagyszalontán."
   },
   "registruAgricolPage": {
     "description": "A Mezőgazdasági Nyilvántartási Szolgálat információkat és űrlapokat biztosít a mezőgazdasági tevékenységekhez.",

@@ -186,9 +186,6 @@ export const MAIN_NAVIGATION: NavSection[] = [
     standaloneItems: [
       { id: 'raporteazaProblema', href: '/raporteaza-problema', icon: AlertTriangle },
       { id: 'evenimente', href: '/evenimente', icon: Calendar },
-      { id: 'educatie', href: '/educatie', icon: GraduationCap },
-      { id: 'transport', href: '/transport', icon: Bus },
-      { id: 'sport', href: '/sport', icon: Dumbbell },
       { id: 'voluntariat', href: '/voluntariat', icon: Heart },
       { id: 'faq', href: '/faq', icon: HelpCircle },
     ],
@@ -238,9 +235,7 @@ export const MAIN_NAVIGATION: NavSection[] = [
         ],
       },
     ],
-    standaloneItems: [
-      { id: 'agentiEconomici', href: '/agenti-economici', icon: Store },
-    ],
+    standaloneItems: [],
   },
   // 3. CITY HALL - Administration, Council, Transparency, Documents
   {
@@ -375,7 +370,6 @@ export const MAIN_NAVIGATION: NavSection[] = [
       },
     ],
     standaloneItems: [
-      { id: 'sport', href: '/sport', icon: Dumbbell },
       { id: 'evenimente', href: '/evenimente', icon: Calendar },
       { id: 'voluntariat', href: '/voluntariat', icon: Heart },
     ],

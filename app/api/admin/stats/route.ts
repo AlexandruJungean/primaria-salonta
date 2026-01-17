@@ -29,6 +29,8 @@ export async function GET(request: NextRequest) {
         sessionsCount,
         documentsCount,
         councilMembersCount,
+        unreadPetitionsCount,
+        unreadContactsCount,
       ] = await Promise.all([
         supabase.from('news').select('*', { count: 'exact', head: true }),
         supabase.from('events').select('*', { count: 'exact', head: true }),
@@ -36,6 +38,8 @@ export async function GET(request: NextRequest) {
         supabase.from('council_sessions').select('*', { count: 'exact', head: true }),
         supabase.from('documents').select('*', { count: 'exact', head: true }),
         supabase.from('council_members').select('*', { count: 'exact', head: true }),
+        supabase.from('petitions').select('*', { count: 'exact', head: true }).in('status', ['inregistrata', 'in_lucru']),
+        supabase.from('contact_submissions').select('*', { count: 'exact', head: true }).eq('status', 'new'),
       ]);
 
       return NextResponse.json({
@@ -45,6 +49,8 @@ export async function GET(request: NextRequest) {
         sessions: sessionsCount.count || 0,
         documents: documentsCount.count || 0,
         councilMembers: councilMembersCount.count || 0,
+        unreadPetitions: unreadPetitionsCount.count || 0,
+        unreadContacts: unreadContactsCount.count || 0,
       });
     }
 
