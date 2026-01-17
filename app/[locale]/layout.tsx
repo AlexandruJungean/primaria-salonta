@@ -14,6 +14,7 @@ import { NavigationProvider } from '@/components/layout/navigation-context';
 import { RecaptchaProvider } from '@/components/features/recaptcha-provider';
 import { getInstitutionsForNav } from '@/lib/supabase/services/institutions';
 import { getProgramsForNav } from '@/lib/supabase/services/programs';
+import { translateContentArray } from '@/lib/google-translate/cache';
 import { 
   SEO_CONFIG, 
   OrganizationJsonLd, 
@@ -188,10 +189,17 @@ export default async function LocaleLayout({
   const messages = await getMessages();
   
   // Fetch dynamic data for navigation
-  const [institutions, programs] = await Promise.all([
+  const [institutions, programsRaw] = await Promise.all([
     getInstitutionsForNav(),
     getProgramsForNav(),
   ]);
+
+  // Translate program titles for non-Romanian locales
+  const programs = await translateContentArray(
+    programsRaw,
+    ['title'],
+    locale as 'ro' | 'hu' | 'en'
+  );
 
   return (
     <html lang={locale} suppressHydrationWarning>

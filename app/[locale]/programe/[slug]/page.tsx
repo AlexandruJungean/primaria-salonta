@@ -157,11 +157,16 @@ export default async function ProgramPage({
     ? await translateContentArray(programData.children, ['title', 'short_description'], locale as 'ro' | 'hu' | 'en')
     : [];
 
+  // Translate updates if present
+  const translatedUpdates = programData.updates 
+    ? await translateContentArray(programData.updates, ['title', 'content'], locale as 'ro' | 'hu' | 'en')
+    : [];
+
   const program = {
     ...programTranslated,
     documents: translatedDocuments,
     images: programData.images || [],
-    updates: programData.updates || [],
+    updates: translatedUpdates,
     children: translatedChildren,
   };
 
