@@ -37,6 +37,11 @@ interface ProgramFormData {
   published: boolean;
 }
 
+interface ExternalLink {
+  url: string;
+  label: string;
+}
+
 interface ProgramDocument {
   id: string;
   title: string;
@@ -176,6 +181,7 @@ export default function ProgramEditPage() {
   const [uploadingDoc, setUploadingDoc] = useState(false);
   const [uploadingImg, setUploadingImg] = useState(false);
   const [uploadingSponsor, setUploadingSponsor] = useState(false);
+  const [externalLinks, setExternalLinks] = useState<ExternalLink[]>([]);
 
   // ============================================
   // LOAD DATA
@@ -193,6 +199,23 @@ export default function ProgramEditPage() {
       const data = await response.json();
 
       if (data) {
+        // Parse external links from website_url if it's JSON, otherwise treat as legacy single URL
+        let links: ExternalLink[] = [];
+        if (data.website_url) {
+          try {
+            const parsed = JSON.parse(data.website_url);
+            if (Array.isArray(parsed)) {
+              links = parsed;
+            }
+          } catch {
+            // Legacy: single URL without label
+            if (data.website_url.startsWith('http')) {
+              links = [{ url: data.website_url, label: 'Website' }];
+            }
+          }
+        }
+        setExternalLinks(links);
+
         setFormData({
           title: data.title || '',
           slug: data.slug || '',
@@ -202,7 +225,7 @@ export default function ProgramEditPage() {
           full_description: data.full_description || '',
           smis_code: data.smis_code || '',
           project_code: data.project_code || '',
-          website_url: data.website_url || '',
+          website_url: '', // Managed via externalLinks state now
           program_url: data.program_url || '',
           status: data.status || 'in_desfasurare',
           document_grouping: data.document_grouping || 'none',
@@ -316,6 +339,10 @@ export default function ProgramEditPage() {
 
     setSaving(true);
     try {
+      // Serialize external links to JSON for storage in website_url
+      const validLinks = externalLinks.filter(link => link.url.trim());
+      const websiteUrlValue = validLinks.length > 0 ? JSON.stringify(validLinks) : null;
+
       const programData = {
         title: formData.title.trim(),
         slug: formData.slug.trim(),
@@ -325,7 +352,7 @@ export default function ProgramEditPage() {
         full_description: formData.full_description.trim() || null,
         smis_code: formData.smis_code.trim() || null,
         project_code: formData.project_code.trim() || null,
-        website_url: formData.website_url.trim() || null,
+        website_url: websiteUrlValue,
         program_url: formData.program_url.trim() || null,
         status: formData.status,
         document_grouping: formData.document_grouping,
@@ -826,10 +853,7 @@ export default function ProgramEditPage() {
             <AdminCard title="Informații Generale">
               <div className="space-y-4">
                 <AdminInput label="Titlu" value={formData.title} onChange={(e) => handleTitleChange(e.target.value)} required error={errors.title} />
-                <div className="grid grid-cols-2 gap-4">
-                  <AdminInput label="Slug (URL)" value={formData.slug} onChange={(e) => handleChange('slug', e.target.value)} required error={errors.slug} />
-                  <AdminSelect label="Tip Program" value={formData.program_type} onChange={(e) => handleChange('program_type', e.target.value)} options={PROGRAM_TYPES} />
-                </div>
+                <AdminInput label="Slug (URL)" value={formData.slug} onChange={(e) => handleChange('slug', e.target.value)} required error={errors.slug} />
                 <div className="grid grid-cols-2 gap-4">
                   <AdminSelect
                     label="Program părinte"
@@ -846,10 +870,44 @@ export default function ProgramEditPage() {
               </div>
             </AdminCard>
 
-            <AdminCard title="Link-uri">
-              <div className="space-y-4">
-                <AdminInput label="Website proiect" value={formData.website_url} onChange={(e) => handleChange('website_url', e.target.value)} placeholder="https://..." />
-                <AdminInput label="Link program (sursă)" value={formData.program_url} onChange={(e) => handleChange('program_url', e.target.value)} placeholder="https://..." />
+            <AdminCard title="Link-uri externe">
+              <div className="space-y-3">
+                {externalLinks.map((link, index) => (
+                  <div key={index} className="flex gap-2 items-center">
+                    <div className="flex-1">
+                      <input 
+                        type="text"
+                        value={link.url} 
+                        onChange={(e) => {
+                          const newLinks = [...externalLinks];
+                          newLinks[index].url = e.target.value;
+                          setExternalLinks(newLinks);
+                        }} 
+                        placeholder="https://..."
+                        className="w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const newLinks = externalLinks.filter((_, i) => i !== index);
+                        setExternalLinks(newLinks);
+                      }}
+                      className="p-2 text-slate-400 hover:text-red-600"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={() => setExternalLinks([...externalLinks, { url: '', label: '' }])}
+                  className="inline-flex items-center gap-2 px-3 py-2 text-sm text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg"
+                >
+                  <Plus className="w-4 h-4" />
+                  Adaugă link
+                </button>
+                <p className="text-xs text-slate-500">Link-urile vor fi afișate pe pagina proiectului, separate cu "|"</p>
               </div>
             </AdminCard>
           </div>
@@ -1076,7 +1134,6 @@ export default function ProgramEditPage() {
                 </div>
                 {imgForm.image_url && <div className="mt-2"><img src={imgForm.image_url} alt="Preview" className="h-32 object-cover rounded-lg" /></div>}
               </div>
-              <AdminInput label="URL imagine (sau încarcă mai sus)" value={imgForm.image_url} onChange={(e) => setImgForm(prev => ({ ...prev, image_url: e.target.value }))} />
               <AdminSelect
                 label="Tip imagine"
                 value={imgForm.image_type}
@@ -1114,7 +1171,6 @@ export default function ProgramEditPage() {
                 </div>
                 {sponsorForm.image_url && <div className="mt-2 p-4 bg-white border rounded-lg"><img src={sponsorForm.image_url} alt="Preview" className="h-20 object-contain" /></div>}
               </div>
-              <AdminInput label="URL logo (sau încarcă mai sus)" value={sponsorForm.image_url} onChange={(e) => setSponsorForm(prev => ({ ...prev, image_url: e.target.value }))} />
               <AdminInput label="Nume sponsor (text alternativ)" value={sponsorForm.alt_text} onChange={(e) => setSponsorForm(prev => ({ ...prev, alt_text: e.target.value }))} placeholder="Ex: Uniunea Europeană" />
               <div className="flex gap-3 pt-4">
                 <AdminButton variant="ghost" onClick={() => setSponsorDialogOpen(false)} className="flex-1">Anulează</AdminButton>

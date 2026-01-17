@@ -13,6 +13,7 @@ import { CookieConsent } from '@/components/features/cookie-consent';
 import { NavigationProvider } from '@/components/layout/navigation-context';
 import { RecaptchaProvider } from '@/components/features/recaptcha-provider';
 import { getInstitutionsForNav } from '@/lib/supabase/services/institutions';
+import { getProgramsForNav } from '@/lib/supabase/services/programs';
 import { 
   SEO_CONFIG, 
   OrganizationJsonLd, 
@@ -186,8 +187,11 @@ export default async function LocaleLayout({
   // Get messages for the current locale
   const messages = await getMessages();
   
-  // Fetch dynamic institutions for navigation
-  const institutions = await getInstitutionsForNav();
+  // Fetch dynamic data for navigation
+  const [institutions, programs] = await Promise.all([
+    getInstitutionsForNav(),
+    getProgramsForNav(),
+  ]);
 
   return (
     <html lang={locale} suppressHydrationWarning>
@@ -197,7 +201,7 @@ export default async function LocaleLayout({
       <body className={`${openSans.variable} ${sourceSerif.variable} antialiased min-h-screen flex flex-col`}>
         <NextIntlClientProvider messages={messages}>
           <RecaptchaProvider>
-            <NavigationProvider institutions={institutions}>
+            <NavigationProvider institutions={institutions} programs={programs}>
               {/* Skip to Content Link */}
               <a href="#main-content" className="skip-to-content">
                 Skip to content

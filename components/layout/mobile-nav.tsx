@@ -14,12 +14,12 @@ export function MobileNav() {
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
   const [expandedGroups, setExpandedGroups] = useState<string[]>([]);
   const t = useTranslations('navigation');
-  const { dynamicInstitutions } = useNavigationContext();
+  const { dynamicInstitutions, dynamicPrograms } = useNavigationContext();
   
-  // Merge dynamic institutions into navigation
+  // Merge dynamic institutions and programs into navigation
   const navigation = useMemo(() => 
-    getNavigationWithInstitutions(dynamicInstitutions),
-    [dynamicInstitutions]
+    getNavigationWithInstitutions(dynamicInstitutions, dynamicPrograms),
+    [dynamicInstitutions, dynamicPrograms]
   );
 
   // Icon mapping for secondary items

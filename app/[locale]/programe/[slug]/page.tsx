@@ -167,15 +167,30 @@ export default async function ProgramPage({
 
   // Get images by type
   const galleryImages = program.images?.filter(img => img.image_type === 'gallery') || [];
-  const sponsorLogos = program.images?.filter(img => img.image_type === 'sponsor') || [];
+  const sponsorLogos = program.images?.filter(img => img.image_type === 'sponsor' || img.image_type === 'logo') || [];
   const featuredImage = program.images?.find(img => img.image_type === 'featured');
 
   // Build external links from URL fields
-  const externalLinks: { url: string; label: string }[] = [];
-  if (program.website_url) externalLinks.push({ url: program.website_url, label: 'Website proiect' });
-  if (program.program_url) externalLinks.push({ url: program.program_url, label: 'Pagina programului' });
-  if (program.facebook_url) externalLinks.push({ url: program.facebook_url, label: 'Facebook' });
-  if (program.instagram_url) externalLinks.push({ url: program.instagram_url, label: 'Instagram' });
+  // website_url can be a JSON array of links or a legacy single URL
+  let externalLinks: string[] = [];
+  if (program.website_url) {
+    try {
+      const parsed = JSON.parse(program.website_url);
+      if (Array.isArray(parsed)) {
+        externalLinks = parsed
+          .map((link: { url?: string }) => link.url)
+          .filter((url): url is string => typeof url === 'string' && url.length > 0);
+      }
+    } catch {
+      // Legacy: single URL
+      if (program.website_url.startsWith('http')) {
+        externalLinks.push(program.website_url);
+      }
+    }
+  }
+  if (program.program_url) externalLinks.push(program.program_url);
+  if (program.facebook_url) externalLinks.push(program.facebook_url);
+  if (program.instagram_url) externalLinks.push(program.instagram_url);
 
   // Group documents
   const documentGroups = programs.groupDocuments(program.documents || [], program.document_grouping);
@@ -217,13 +232,11 @@ export default async function ProgramPage({
             {sponsorLogos.length > 0 && (
               <div className="flex flex-wrap items-center justify-center gap-6 mb-8">
                 {sponsorLogos.map((logo) => (
-                  <Image
+                  <img
                     key={logo.id}
                     src={logo.image_url}
                     alt={logo.alt_text || 'Logo'}
-                    width={200}
-                    height={80}
-                    className="h-16 w-auto object-contain"
+                    className="h-16 w-auto object-contain max-w-[200px]"
                   />
                 ))}
               </div>
@@ -349,20 +362,24 @@ export default async function ProgramPage({
               </div>
             )}
 
-            {/* External Links */}
+            {/* External Links - displayed with | separator */}
             {externalLinks.length > 0 && (
-              <div className="flex flex-wrap justify-center gap-4 mt-6">
-                {externalLinks.map((link, index) => (
-                  <a 
-                    key={index}
-                    href={link.url} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-800 text-sm"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                    {link.label}
-                  </a>
+              <div className="flex flex-wrap items-center justify-center gap-2 mt-6">
+                {externalLinks.map((url, index) => (
+                  <span key={index} className="inline-flex items-center">
+                    <a 
+                        href={url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-primary-600 hover:text-primary-800 text-sm font-medium"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      {url.replace(/^https?:\/\//, '').replace(/\/$/, '')}
+                    </a>
+                    {index < externalLinks.length - 1 && (
+                      <span className="mx-3 text-gray-300">|</span>
+                    )}
+                  </span>
                 ))}
               </div>
             )}

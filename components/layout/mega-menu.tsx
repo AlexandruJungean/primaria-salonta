@@ -12,12 +12,12 @@ export function MegaMenu() {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const t = useTranslations('navigation');
-  const { dynamicInstitutions } = useNavigationContext();
+  const { dynamicInstitutions, dynamicPrograms } = useNavigationContext();
   
-  // Merge dynamic institutions into navigation
+  // Merge dynamic institutions and programs into navigation
   const navigation = useMemo(() => 
-    getNavigationWithInstitutions(dynamicInstitutions),
-    [dynamicInstitutions]
+    getNavigationWithInstitutions(dynamicInstitutions, dynamicPrograms),
+    [dynamicInstitutions, dynamicPrograms]
   );
 
   const handleMouseEnter = (id: string) => {

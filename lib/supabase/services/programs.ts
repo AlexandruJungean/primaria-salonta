@@ -525,3 +525,41 @@ export function getCategoryLabel(category: string): string {
 // Helper functions parseSponsorLogos and parseExternalLinks removed
 // Sponsor logos are now stored in program_images with image_type = 'sponsor'
 // External links are stored as separate URL fields (website_url, program_url, facebook_url, instagram_url)
+
+// ============================================
+// NAVIGATION
+// ============================================
+
+/**
+ * Navigation item type for menu
+ */
+export interface ProgramNavItem {
+  id: string;
+  slug: string;
+  title: string;
+}
+
+/**
+ * Get top-level programs for navigation menu
+ */
+export async function getProgramsForNav(): Promise<ProgramNavItem[]> {
+  const supabase = createAnonServerClient();
+
+  const { data, error } = await supabase
+    .from('programs')
+    .select('id, slug, title')
+    .eq('published', true)
+    .is('parent_id', null)
+    .order('sort_order', { ascending: true });
+
+  if (error) {
+    console.error('Error fetching programs for nav:', error);
+    return [];
+  }
+
+  return (data || []).map(p => ({
+    id: p.slug,
+    slug: p.slug,
+    title: p.title,
+  }));
+}

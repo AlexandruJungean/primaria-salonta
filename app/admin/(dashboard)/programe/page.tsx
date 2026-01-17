@@ -27,19 +27,6 @@ interface Program {
 }
 
 // Conform CHECK constraint din DB
-const TYPE_LABELS: Record<string, string> = {
-  pnrr: 'PNRR',
-  pmud: 'PMUD',
-  strategie: 'Strategie',
-  sna: 'SNA',
-  svsu: 'SVSU',
-  proiecte_europene: 'Proiecte Europene',
-  proiecte_locale: 'Proiecte Locale',
-  regional_nord_vest: 'Program Regional Nord-Vest',
-  altele: 'Altele',
-};
-
-// Conform CHECK constraint din DB
 const STATUS_LABELS: Record<string, string> = {
   planificat: 'Planificat',
   in_desfasurare: 'În desfășurare',
@@ -123,7 +110,7 @@ export default function ProgramePage() {
           </div>
           <div>
             <p className="font-semibold text-slate-900">{item.title}</p>
-            <p className="text-sm text-slate-500">{TYPE_LABELS[item.program_type] || item.program_type}</p>
+            <p className="text-sm text-slate-500">{item.slug}</p>
           </div>
         </div>
       ),

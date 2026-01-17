@@ -264,21 +264,14 @@ export const MAIN_NAVIGATION: NavSection[] = [
           { id: 'regulamentPrimarie', href: '/primaria/regulament', icon: ScrollText },
         ],
       },
-      // Programs & Strategies group
+      // Programs & Strategies group - dynamic from database
       {
         groupId: 'programe',
         groupHref: '/programe',
         groupIcon: Target,
-        items: [
-          { id: 'strategieDezvoltare', href: '/programe/strategie-dezvoltare', icon: TrendingUp },
-          { id: 'pmud', href: '/programe/pmud', icon: Bus },
-          { id: 'pnrr', href: '/programe/pnrr', icon: Euro },
-          { id: 'proiecteEuropene', href: '/programe/proiecte-europene', icon: Globe },
-          { id: 'proiecteLocale', href: '/programe/proiecte-locale', icon: MapPin },
-          { id: 'programRegionalNordVest', href: '/programe/program-regional-nord-vest', icon: Building2 },
-          { id: 'svsu', href: '/programe/svsu', icon: Siren },
-          { id: 'sna', href: '/programe/sna', icon: ShieldCheck },
-        ],
+        isDynamic: true,
+        dynamicType: 'programs',
+        items: [], // Will be populated from database
       },
       // Local Council group
       {
@@ -447,6 +440,18 @@ export const INSTITUTION_ICONS: Record<string, LucideIcon> = {
   waves: Waves,
 };
 
+// Icon mapping for dynamic programs (by slug)
+export const PROGRAM_ICONS: Record<string, LucideIcon> = {
+  'strategie-dezvoltare': TrendingUp,
+  'pmud': Bus,
+  'pnrr': Euro,
+  'proiecte-europene': Globe,
+  'proiecte-locale': MapPin,
+  'program-regional-nord-vest': Building2,
+  'svsu': Siren,
+  'sna': ShieldCheck,
+};
+
 // Interface for dynamic institution nav items
 export interface DynamicInstitution {
   id: string;
@@ -458,15 +463,39 @@ export interface DynamicInstitution {
   showInTourists: boolean;
 }
 
-// Helper to get navigation with dynamic institutions merged in
+// Interface for dynamic program nav items
+export interface DynamicProgram {
+  id: string;
+  slug: string;
+  title: string;
+}
+
+// Helper to get navigation with dynamic data merged in
 export function getNavigationWithInstitutions(
-  dynamicInstitutions: DynamicInstitution[]
+  dynamicInstitutions: DynamicInstitution[],
+  dynamicPrograms: DynamicProgram[] = []
 ): NavSection[] {
   return MAIN_NAVIGATION.map(section => ({
     ...section,
     groups: section.groups?.map(group => {
       if (!group.isDynamic) return group;
       
+      // Handle dynamic programs
+      if (group.dynamicType === 'programs') {
+        const programItems: NavItem[] = dynamicPrograms.map(prog => ({
+          id: prog.slug,
+          href: `/programe/${prog.slug}`,
+          icon: PROGRAM_ICONS[prog.slug] || Target, // Use specific icon if defined, otherwise Target
+          label: prog.title,
+        }));
+        
+        return {
+          ...group,
+          items: programItems,
+        };
+      }
+      
+      // Handle dynamic institutions
       // Filter institutions based on the dynamic type (which section they belong to)
       const filteredInstitutions = dynamicInstitutions.filter(inst => {
         if (group.dynamicType === 'institutions-social') {
