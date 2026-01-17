@@ -18,6 +18,7 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get('id');
   const category = searchParams.get('category');
+  const parent_id = searchParams.get('parent_id');
 
   const supabase = createAdminClient();
 
@@ -28,6 +29,18 @@ export async function GET(request: NextRequest) {
         .select('*')
         .eq('id', id)
         .single();
+
+      if (error) throw error;
+      return NextResponse.json(data);
+    }
+
+    // Fetch annexes (documents with specific parent_id)
+    if (parent_id) {
+      const { data, error } = await supabase
+        .from('documents')
+        .select('*')
+        .eq('parent_id', parent_id)
+        .order('created_at', { ascending: true });
 
       if (error) throw error;
       return NextResponse.json(data);

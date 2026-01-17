@@ -117,10 +117,9 @@ export default async function FaqPage({ params }: { params: Promise<{ locale: st
                         <ChevronDown className="w-5 h-5 text-gray-500 transition-transform group-open:rotate-180" />
                       </summary>
                       <CardContent className="pt-0 pb-5 px-5 pl-16">
-                        <div 
-                          className="text-gray-600 prose prose-sm max-w-none"
-                          dangerouslySetInnerHTML={{ __html: faq.answer }}
-                        />
+                        <p className="text-gray-600 whitespace-pre-line">
+                          {faq.answer}
+                        </p>
                       </CardContent>
                     </details>
                   </Card>

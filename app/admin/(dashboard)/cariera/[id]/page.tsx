@@ -277,7 +277,7 @@ export default function CarieraEditPage() {
 
   const handleDeleteDocument = async (doc: JobDocument) => {
     try {
-      const response = await fetch(
+      const response = await adminFetch(
         `/api/admin/job-vacancies/documents?id=${doc.id}&file_url=${encodeURIComponent(doc.file_url)}`,
         { method: 'DELETE' }
       );

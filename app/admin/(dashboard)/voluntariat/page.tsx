@@ -13,6 +13,8 @@ export default function VoluntariatPage() {
         { label: 'Voluntariat' },
       ]}
       basePath="/admin/voluntariat"
+      hideYearColumn
+      hideYearFilter
     />
   );
 }

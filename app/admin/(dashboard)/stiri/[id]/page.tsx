@@ -229,7 +229,7 @@ export default function StiriEditPage() {
 
   const handleDeleteFeaturedImage = async () => {
     try {
-      const response = await fetch(
+      const response = await adminFetch(
         `/api/admin/news/images?isFeatured=true&newsId=${id}&imageUrl=${encodeURIComponent(formData.featured_image)}`,
         { method: 'DELETE' }
       );

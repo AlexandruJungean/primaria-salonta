@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import { useRouter, useParams } from 'next/navigation';
-import { Save, ArrowLeft, Trash2, FileText, Upload, ExternalLink, Users, User } from 'lucide-react';
+import { useRouter, useParams, useSearchParams } from 'next/navigation';
+import { Save, ArrowLeft, Trash2, FileText, Upload, ExternalLink, Users, User, RefreshCw, X } from 'lucide-react';
 import {
   AdminPageHeader,
   AdminButton,
@@ -33,26 +33,55 @@ const CATEGORY_OPTIONS = [
   { value: 'consilier', label: 'Consilier Local' },
 ];
 
+// Get years for a specific mandate
+function getYearsForMandate(mandate: string): number[] {
+  const [start, end] = mandate.split('-').map(Number);
+  const years: number[] = [];
+  for (let y = start; y < end; y++) {
+    years.push(y);
+  }
+  return years.sort((a, b) => b - a);
+}
+
+// Get mandate for a year
+function getMandateForYear(year: number): string {
+  if (year >= 2024) return '2024-2028';
+  if (year >= 2020) return '2020-2024';
+  if (year >= 2016) return '2016-2020';
+  if (year >= 2012) return '2012-2016';
+  return '2008-2012';
+}
+
 export default function RaportActivitateEditPage() {
   const router = useRouter();
   const params = useParams();
+  const searchParams = useSearchParams();
   
   const id = params.id as string;
   const isNew = id === 'nou';
   
+  // Get defaults from query params for new reports
+  const defaultMandate = searchParams.get('mandate') || '2024-2028';
+  const defaultType = searchParams.get('type') || 'consilier';
+  const defaultYear = searchParams.get('year') ? parseInt(searchParams.get('year')!) : null;
+  
   const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 20 }, (_, i) => currentYear - i);
+  
+  // Calculate available years based on mandate
+  const [selectedMandate, setSelectedMandate] = useState(defaultMandate);
+  const availableYears = getYearsForMandate(selectedMandate);
 
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [showUploadArea, setShowUploadArea] = useState(false);
   const [formData, setFormData] = useState<ReportFormData>({
     title: '',
-    category: 'consilier',
+    category: defaultType,
     summary: '',
     file_url: '',
     file_name: '',
     file_size: 0,
-    report_year: currentYear,
+    report_year: defaultYear || availableYears[0] || currentYear,
     report_date: '',
     author: '',
     published: true,
@@ -72,7 +101,7 @@ export default function RaportActivitateEditPage() {
       formDataUpload.append('file', file);
       formDataUpload.append('category', 'rapoarte');
       
-      const response = await fetch('/api/admin/upload', {
+      const response = await adminFetch('/api/admin/upload', {
         method: 'POST',
         body: formDataUpload,
       });
@@ -108,6 +137,8 @@ export default function RaportActivitateEditPage() {
       if (!response.ok) throw new Error('Failed to fetch');
       const data = await response.json();
       if (data) {
+        const reportYear = data.report_year || currentYear;
+        setSelectedMandate(getMandateForYear(reportYear));
         setFormData({
           title: data.title || '',
           category: data.category || 'consilier',
@@ -115,7 +146,7 @@ export default function RaportActivitateEditPage() {
           file_url: data.file_url || '',
           file_name: data.file_name || '',
           file_size: data.file_size || 0,
-          report_year: data.report_year || null,
+          report_year: reportYear,
           report_date: data.report_date || '',
           author: data.author || '',
           published: data.published ?? true,
@@ -128,7 +159,7 @@ export default function RaportActivitateEditPage() {
     } finally {
       setLoading(false);
     }
-  }, [id, isNew, router]);
+  }, [id, isNew, router, currentYear]);
 
   useEffect(() => {
     loadReport();
@@ -137,6 +168,15 @@ export default function RaportActivitateEditPage() {
   const handleChange = (field: keyof ReportFormData, value: string | boolean | number | null) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     setErrors(prev => ({ ...prev, [field]: undefined }));
+  };
+
+  const handleMandateChange = (mandate: string) => {
+    setSelectedMandate(mandate);
+    const yearsInMandate = getYearsForMandate(mandate);
+    // If current year is not in new mandate, pick the first year of new mandate
+    if (!yearsInMandate.includes(formData.report_year || 0)) {
+      setFormData(prev => ({ ...prev, report_year: yearsInMandate[0] || null }));
+    }
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -229,17 +269,19 @@ export default function RaportActivitateEditPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="animate-spin h-8 w-8 border-4 border-blue-500 border-t-transparent rounded-full" />
+        <div className="animate-spin h-8 w-8 border-4 border-purple-500 border-t-transparent rounded-full" />
       </div>
     );
   }
+
+  const isCommittee = formData.category === 'comisie';
 
   return (
     <div>
       <AdminPageHeader
         title={isNew ? 'Adaugă Raport de Activitate' : 'Editează Raport'}
         breadcrumbs={[
-          { label: 'Consiliul Local', href: '/admin/consiliul-local' },
+          { label: 'Consiliul Local' },
           { label: 'Rapoarte Activitate', href: '/admin/consiliul-local/rapoarte-activitate' },
           { label: isNew ? 'Raport Nou' : 'Editare' },
         ]}
@@ -262,52 +304,77 @@ export default function RaportActivitateEditPage() {
           {/* File Upload Section */}
           <AdminCard title="Fișier Raport">
             <div className="space-y-4">
-              <div className="border-2 border-dashed border-slate-300 rounded-xl p-6 text-center hover:border-blue-400 transition-colors">
-                <input
-                  type="file"
-                  accept=".pdf,.doc,.docx"
-                  onChange={handleFileChange}
-                  className="hidden"
-                  id="file-upload"
-                  disabled={uploading}
-                />
-                <label htmlFor="file-upload" className="cursor-pointer">
-                  <Upload className="w-10 h-10 text-slate-400 mx-auto mb-3" />
-                  <p className="text-sm text-slate-600 mb-1">
-                    {uploading ? `Se încarcă... ${progress}%` : 'Click pentru a încărca sau trage fișierul aici'}
-                  </p>
-                  <p className="text-xs text-slate-400">PDF, DOC, DOCX (max 10MB)</p>
-                </label>
-                {uploading && (
-                  <div className="mt-4 w-full bg-slate-200 rounded-full h-2">
-                    <div 
-                      className="bg-blue-500 h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${progress}%` }}
-                    />
+              {formData.file_url && !showUploadArea ? (
+                <div className="space-y-4">
+                  <div className="p-4 bg-slate-50 rounded-lg flex items-center gap-4">
+                    <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${isCommittee ? 'bg-purple-100' : 'bg-emerald-100'}`}>
+                      <FileText className={`w-6 h-6 ${isCommittee ? 'text-purple-600' : 'text-emerald-600'}`} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-slate-900 truncate">{formData.file_name || 'Document'}</p>
+                      <p className="text-sm text-slate-500">
+                        {formData.file_size ? `${(formData.file_size / 1024).toFixed(1)} KB` : ''}
+                      </p>
+                    </div>
+                    <a 
+                      href={formData.file_url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className={`flex items-center gap-1 px-3 py-2 text-sm rounded-lg transition-colors ${isCommittee ? 'text-purple-600 hover:text-purple-800 hover:bg-purple-50' : 'text-emerald-600 hover:text-emerald-800 hover:bg-emerald-50'}`}
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      Deschide
+                    </a>
                   </div>
-                )}
-              </div>
-
-              {formData.file_url && (
-                <div className="p-4 bg-slate-50 rounded-lg flex items-center gap-4">
-                  <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-                    <FileText className="w-6 h-6 text-red-600" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium text-slate-900 truncate">{formData.file_name || 'Document'}</p>
-                    <p className="text-sm text-slate-500">
-                      {formData.file_size ? `${(formData.file_size / 1024).toFixed(1)} KB` : ''}
-                    </p>
-                  </div>
-                  <a 
-                    href={formData.file_url} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-1 px-3 py-2 text-sm text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-colors"
+                  <button
+                    type="button"
+                    onClick={() => setShowUploadArea(true)}
+                    className="flex items-center gap-2 px-4 py-2 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
                   >
-                    <ExternalLink className="w-4 h-4" />
-                    Deschide
-                  </a>
+                    <RefreshCw className="w-4 h-4" />
+                    Schimbă documentul
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <div className={`border-2 border-dashed border-slate-300 rounded-xl p-6 text-center transition-colors ${isCommittee ? 'hover:border-purple-400' : 'hover:border-emerald-400'}`}>
+                    <input
+                      type="file"
+                      accept=".pdf,.doc,.docx"
+                      onChange={(e) => {
+                        handleFileChange(e);
+                        setShowUploadArea(false);
+                      }}
+                      className="hidden"
+                      id="file-upload"
+                      disabled={uploading}
+                    />
+                    <label htmlFor="file-upload" className="cursor-pointer">
+                      <Upload className="w-10 h-10 text-slate-400 mx-auto mb-3" />
+                      <p className="text-sm text-slate-600 mb-1">
+                        {uploading ? `Se încarcă... ${progress}%` : 'Click pentru a încărca sau trage fișierul aici'}
+                      </p>
+                      <p className="text-xs text-slate-400">PDF, DOC, DOCX (max 10MB)</p>
+                    </label>
+                    {uploading && (
+                      <div className="mt-4 w-full bg-slate-200 rounded-full h-2">
+                        <div 
+                          className={`h-2 rounded-full transition-all duration-300 ${isCommittee ? 'bg-purple-500' : 'bg-emerald-500'}`}
+                          style={{ width: `${progress}%` }}
+                        />
+                      </div>
+                    )}
+                  </div>
+                  {showUploadArea && formData.file_url && (
+                    <button
+                      type="button"
+                      onClick={() => setShowUploadArea(false)}
+                      className="flex items-center gap-2 px-4 py-2 text-sm text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
+                    >
+                      <X className="w-4 h-4" />
+                      Anulează
+                    </button>
+                  )}
                 </div>
               )}
 
@@ -326,13 +393,13 @@ export default function RaportActivitateEditPage() {
                 onChange={(e) => handleChange('title', e.target.value)}
                 required
                 error={errors.title}
-                placeholder="Ex: Raport de activitate Comisia economică 2025"
+                placeholder={isCommittee ? 'Ex: Raport de activitate Comisia economică 2025' : 'Ex: Raport activitate consilier 2025'}
               />
               <AdminInput
-                label="Autor / Nume Comisie"
+                label={isCommittee ? 'Denumire Comisie' : 'Nume Consilier'}
                 value={formData.author}
                 onChange={(e) => handleChange('author', e.target.value)}
-                placeholder="Ex: Popescu Ion sau Comisia economică"
+                placeholder={isCommittee ? 'Ex: Comisia economică' : 'Ex: Popescu Ion'}
               />
               <AdminTextarea
                 label="Rezumat (opțional)"
@@ -349,11 +416,23 @@ export default function RaportActivitateEditPage() {
           <AdminCard title="Setări">
             <div className="space-y-4">
               <AdminSelect
-                label="Tip"
+                label="Tip Raport"
                 value={formData.category}
                 onChange={(e) => handleChange('category', e.target.value)}
                 options={CATEGORY_OPTIONS}
                 required
+              />
+              
+              <AdminSelect
+                label="Mandat"
+                value={selectedMandate}
+                onChange={(e) => handleMandateChange(e.target.value)}
+                options={[
+                  { value: '2024-2028', label: 'Mandatul 2024-2028' },
+                  { value: '2020-2024', label: 'Mandatul 2020-2024' },
+                  { value: '2016-2020', label: 'Mandatul 2016-2020' },
+                  { value: '2012-2016', label: 'Mandatul 2012-2016' },
+                ]}
               />
               
               <div className="grid grid-cols-2 gap-3">
@@ -361,7 +440,7 @@ export default function RaportActivitateEditPage() {
                   label="Anul"
                   value={formData.report_year?.toString() || ''}
                   onChange={(e) => handleChange('report_year', e.target.value ? parseInt(e.target.value) : null)}
-                  options={years.map(y => ({ value: y.toString(), label: y.toString() }))}
+                  options={availableYears.map(y => ({ value: y.toString(), label: y.toString() }))}
                   placeholder="Selectează"
                 />
                 <AdminInput
@@ -384,7 +463,7 @@ export default function RaportActivitateEditPage() {
                     onChange={(e) => handleChange('published', e.target.checked)}
                     className="sr-only peer"
                   />
-                  <div className="w-14 h-7 bg-slate-200 peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-blue-600"></div>
+                  <div className={`w-14 h-7 bg-slate-200 peer-focus:ring-4 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all ${isCommittee ? 'peer-focus:ring-purple-300 peer-checked:bg-purple-600' : 'peer-focus:ring-emerald-300 peer-checked:bg-emerald-600'}`}></div>
                 </label>
               </div>
 
@@ -393,24 +472,26 @@ export default function RaportActivitateEditPage() {
                 icon={Save}
                 onClick={handleSave}
                 loading={saving}
-                className="w-full"
+                className={`w-full ${isCommittee ? 'bg-purple-600 hover:bg-purple-700' : 'bg-emerald-600 hover:bg-emerald-700'}`}
               >
                 {isNew ? 'Salvează' : 'Salvează Modificările'}
               </AdminButton>
             </div>
           </AdminCard>
 
-          <AdminCard className="bg-purple-50 border-purple-200">
+          <AdminCard className={isCommittee ? 'bg-purple-50 border-purple-200' : 'bg-emerald-50 border-emerald-200'}>
             <div className="flex items-start gap-3">
-              {formData.category === 'comisie' ? (
+              {isCommittee ? (
                 <Users className="w-5 h-5 text-purple-600 mt-0.5" />
               ) : (
                 <User className="w-5 h-5 text-emerald-600 mt-0.5" />
               )}
               <div>
-                <p className="font-medium text-purple-900">Raport de Activitate</p>
-                <p className="text-sm text-purple-700 mt-1">
-                  {formData.category === 'comisie' ? 'Comisie de Specialitate' : 'Consilier Local'}
+                <p className={`font-medium ${isCommittee ? 'text-purple-900' : 'text-emerald-900'}`}>
+                  Raport de Activitate
+                </p>
+                <p className={`text-sm mt-1 ${isCommittee ? 'text-purple-700' : 'text-emerald-700'}`}>
+                  {isCommittee ? 'Comisie de Specialitate' : 'Consilier Local'}
                 </p>
               </div>
             </div>

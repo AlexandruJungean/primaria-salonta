@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Plus, Clock, FileText, FolderDown, ChevronDown, ChevronUp, Trash2, Upload, ExternalLink } from 'lucide-react';
 import { supabase } from '@/lib/supabase/client';
+import { adminFetch } from '@/lib/api-client';
 import {
   AdminPageHeader,
   AdminButton,
@@ -147,7 +148,7 @@ export default function CarieraPage() {
         formData.append('category', 'cariera');
         formData.append('year', new Date().getFullYear().toString());
 
-        const uploadRes = await fetch('/api/upload', {
+        const uploadRes = await adminFetch('/api/admin/upload', {
           method: 'POST',
           body: formData,
         });

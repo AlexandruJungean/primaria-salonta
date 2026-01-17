@@ -208,12 +208,6 @@ export default function FAQEditPage() {
         <div className="space-y-6">
           <AdminCard title="Setări">
             <div className="space-y-4">
-              <AdminInput
-                label="Categorie (opțional)"
-                value={formData.category}
-                onChange={(e) => handleChange('category', e.target.value)}
-                placeholder="Ex: Taxe, Documente, General"
-              />
               <div className="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
                 <div>
                   <p className="font-medium text-slate-900">Publicat</p>

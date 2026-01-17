@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { Save, ArrowLeft, Trash2, FileText, Upload, ExternalLink, ShieldCheck } from 'lucide-react';
+import { Save, ArrowLeft, Trash2, FileText, Upload, ExternalLink, ShieldCheck, RefreshCw, X } from 'lucide-react';
 import {
   AdminPageHeader,
   AdminButton,
@@ -39,6 +39,7 @@ export default function RaportAuditEditPage() {
 
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [showUploadArea, setShowUploadArea] = useState(false);
   const [formData, setFormData] = useState<ReportFormData>({
     title: '',
     summary: '',
@@ -65,7 +66,7 @@ export default function RaportAuditEditPage() {
       formDataUpload.append('file', file);
       formDataUpload.append('category', 'rapoarte');
       
-      const response = await fetch('/api/admin/upload', {
+      const response = await adminFetch('/api/admin/upload', {
         method: 'POST',
         body: formDataUpload,
       });
@@ -253,52 +254,78 @@ export default function RaportAuditEditPage() {
           {/* File Upload Section */}
           <AdminCard title="Fișier Raport">
             <div className="space-y-4">
-              <div className="border-2 border-dashed border-slate-300 rounded-xl p-6 text-center hover:border-blue-400 transition-colors">
-                <input
-                  type="file"
-                  accept=".pdf,.doc,.docx"
-                  onChange={handleFileChange}
-                  className="hidden"
-                  id="file-upload"
-                  disabled={uploading}
-                />
-                <label htmlFor="file-upload" className="cursor-pointer">
-                  <Upload className="w-10 h-10 text-slate-400 mx-auto mb-3" />
-                  <p className="text-sm text-slate-600 mb-1">
-                    {uploading ? `Se încarcă... ${progress}%` : 'Click pentru a încărca sau trage fișierul aici'}
-                  </p>
-                  <p className="text-xs text-slate-400">PDF, DOC, DOCX (max 10MB)</p>
-                </label>
-                {uploading && (
-                  <div className="mt-4 w-full bg-slate-200 rounded-full h-2">
-                    <div 
-                      className="bg-blue-500 h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${progress}%` }}
-                    />
+              {/* Show file info when file exists and upload area is hidden */}
+              {formData.file_url && !showUploadArea ? (
+                <div className="space-y-4">
+                  <div className="p-4 bg-slate-50 rounded-lg flex items-center gap-4">
+                    <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                      <FileText className="w-6 h-6 text-red-600" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-slate-900 truncate">{formData.file_name || 'Document'}</p>
+                      <p className="text-sm text-slate-500">
+                        {formData.file_size ? `${(formData.file_size / 1024).toFixed(1)} KB` : ''}
+                      </p>
+                    </div>
+                    <a 
+                      href={formData.file_url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1 px-3 py-2 text-sm text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-colors"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      Deschide
+                    </a>
                   </div>
-                )}
-              </div>
-
-              {formData.file_url && (
-                <div className="p-4 bg-slate-50 rounded-lg flex items-center gap-4">
-                  <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-                    <FileText className="w-6 h-6 text-red-600" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium text-slate-900 truncate">{formData.file_name || 'Document'}</p>
-                    <p className="text-sm text-slate-500">
-                      {formData.file_size ? `${(formData.file_size / 1024).toFixed(1)} KB` : ''}
-                    </p>
-                  </div>
-                  <a 
-                    href={formData.file_url} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-1 px-3 py-2 text-sm text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-colors"
+                  <button
+                    type="button"
+                    onClick={() => setShowUploadArea(true)}
+                    className="flex items-center gap-2 px-4 py-2 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
                   >
-                    <ExternalLink className="w-4 h-4" />
-                    Deschide
-                  </a>
+                    <RefreshCw className="w-4 h-4" />
+                    Schimbă documentul
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <div className="border-2 border-dashed border-slate-300 rounded-xl p-6 text-center hover:border-blue-400 transition-colors">
+                    <input
+                      type="file"
+                      accept=".pdf,.doc,.docx"
+                      onChange={(e) => {
+                        handleFileChange(e);
+                        setShowUploadArea(false);
+                      }}
+                      className="hidden"
+                      id="file-upload"
+                      disabled={uploading}
+                    />
+                    <label htmlFor="file-upload" className="cursor-pointer">
+                      <Upload className="w-10 h-10 text-slate-400 mx-auto mb-3" />
+                      <p className="text-sm text-slate-600 mb-1">
+                        {uploading ? `Se încarcă... ${progress}%` : 'Click pentru a încărca sau trage fișierul aici'}
+                      </p>
+                      <p className="text-xs text-slate-400">PDF, DOC, DOCX (max 10MB)</p>
+                    </label>
+                    {uploading && (
+                      <div className="mt-4 w-full bg-slate-200 rounded-full h-2">
+                        <div 
+                          className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                          style={{ width: `${progress}%` }}
+                        />
+                      </div>
+                    )}
+                  </div>
+                  {showUploadArea && formData.file_url && (
+                    <button
+                      type="button"
+                      onClick={() => setShowUploadArea(false)}
+                      className="flex items-center gap-2 px-4 py-2 text-sm text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
+                    >
+                      <X className="w-4 h-4" />
+                      Anulează
+                    </button>
+                  )}
                 </div>
               )}
 

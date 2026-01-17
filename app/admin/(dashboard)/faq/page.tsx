@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { Plus, HelpCircle, Tag } from 'lucide-react';
+import { Plus, HelpCircle } from 'lucide-react';
 import { supabase } from '@/lib/supabase/client';
 import {
   AdminPageHeader,
@@ -108,21 +108,6 @@ export default function FAQPage() {
             {stripHtml(item.answer)}
           </p>
         </div>
-      ),
-    },
-    {
-      key: 'category',
-      label: 'Categorie',
-      className: 'w-40',
-      render: (item: FAQ) => (
-        item.category ? (
-          <div className="flex items-center gap-2 text-sm text-slate-600">
-            <Tag className="w-4 h-4" />
-            <span>{item.category}</span>
-          </div>
-        ) : (
-          <span className="text-slate-400">-</span>
-        )
       ),
     },
     {

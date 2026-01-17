@@ -141,6 +141,9 @@ export function DocumentList({
       baseQuery = baseQuery.eq('source_folder', filterValue);
     }
 
+    // Exclude annexes from filter options
+    baseQuery = baseQuery.is('parent_id', null);
+
     const { data } = await baseQuery;
     
     if (data) {
@@ -165,6 +168,9 @@ export function DocumentList({
       } else if (filterType === 'source_folder') {
         query = query.eq('source_folder', filterValue);
       }
+
+      // Exclude annexes (documents with parent_id) from the main list
+      query = query.is('parent_id', null);
 
       if (searchQuery) {
         query = query.ilike('title', `%${searchQuery}%`);
