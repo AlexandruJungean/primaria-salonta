@@ -180,9 +180,9 @@ export default function StiriEditPage() {
           body: JSON.stringify(newsData),
         });
         if (!response.ok) throw new Error('Failed to create');
-        const newNews = await response.json();
+        await response.json();
         toast.success('Știre creată', 'Știrea a fost creată cu succes!');
-        router.push(`/admin/stiri/${newNews.id}`);
+        router.push('/admin/stiri');
       } else {
         const response = await adminFetch(`/api/admin/news?id=${id}`, {
           method: 'PATCH',
@@ -191,7 +191,7 @@ export default function StiriEditPage() {
         });
         if (!response.ok) throw new Error('Failed to update');
         toast.success('Știre salvată', 'Modificările au fost salvate!');
-        loadNews();
+        router.push('/admin/stiri');
       }
     } catch (error) {
       console.error('Error saving news:', error);

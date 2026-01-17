@@ -10,6 +10,7 @@ import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { Card, CardContent } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
+import { ClickableImage } from '@/components/ui/clickable-image';
 import * as institutionsService from '@/lib/supabase/services/institutions';
 import type { Locale } from '@/lib/seo/config';
 import { translateContentFields } from '@/lib/google-translate/cache';
@@ -213,93 +214,174 @@ export default async function InstitutionPage({ params }: { params: Promise<{ lo
               </div>
             )}
 
-            {/* Main content area */}
-            <div className={`grid ${institution.image_url ? 'lg:grid-cols-2' : ''} gap-12`}>
-              {/* Image */}
-              {institution.image_url && (
-                <div>
-                  <div className="relative aspect-video rounded-xl overflow-hidden mb-6">
-                    <Image
-                      src={institution.image_url}
-                      alt={institution.name}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 1024px) 100vw, 50vw"
-                    />
+            {/* Content sections - rendered in order as defined in admin */}
+            <div className="prose prose-lg max-w-none">
+              {/* If there's a primary image and first section is text/heading, show them side by side */}
+              {institution.image_url && institution.content?.[0] && 
+               (institution.content[0].type === 'text' || institution.content[0].type === 'heading') && (
+                <div className="grid lg:grid-cols-2 gap-8 mb-10 not-prose">
+                  {/* Primary Image */}
+                  <ClickableImage
+                    src={institution.image_url}
+                    alt={institution.name}
+                    aspectRatio="4/3"
+                    className="rounded-xl"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                  />
+                  
+                  {/* First content section */}
+                  <div>
+                    {institution.content[0].type === 'heading' && institution.content[0].title && (
+                      <h2 className="text-2xl font-bold text-primary-800 mb-4">{institution.content[0].title}</h2>
+                    )}
+                    {institution.content[0].type === 'text' && (
+                      <>
+                        {institution.content[0].title && (
+                          <h2 className="text-xl font-semibold text-primary-800 mb-4">{institution.content[0].title}</h2>
+                        )}
+                        {institution.content[0].content && (
+                          <p className="text-gray-700 whitespace-pre-line leading-relaxed">
+                            {institution.content[0].content}
+                          </p>
+                        )}
+                      </>
+                    )}
                   </div>
                 </div>
               )}
 
-              {/* Content sections */}
-              <div className="prose prose-lg max-w-none">
-                {institution.content?.map((section, index) => (
+              {/* If there's a primary image but no content, show image full width */}
+              {institution.image_url && (!institution.content || institution.content.length === 0) && (
+                <div className="mb-10 not-prose">
+                  <ClickableImage
+                    src={institution.image_url}
+                    alt={institution.name}
+                    aspectRatio="video"
+                    className="rounded-xl"
+                    sizes="100vw"
+                  />
+                </div>
+              )}
+
+              {/* If there's a primary image but first section is image/list, show primary image first then content */}
+              {institution.image_url && institution.content?.[0] && 
+               (institution.content[0].type === 'image' || institution.content[0].type === 'list') && (
+                <div className="mb-10 not-prose">
+                  <ClickableImage
+                    src={institution.image_url}
+                    alt={institution.name}
+                    aspectRatio="video"
+                    className="rounded-xl"
+                    sizes="100vw"
+                  />
+                </div>
+              )}
+
+              {/* Remaining content sections (skip first if it was shown in the grid above) */}
+              {institution.content?.map((section, index) => {
+                // Skip first section if it was already shown in the 2-column layout
+                const skipFirst = institution.image_url && 
+                  (institution.content?.[0]?.type === 'text' || institution.content?.[0]?.type === 'heading');
+                if (index === 0 && skipFirst) return null;
+
+                return (
                   <div key={section.id || index} className="mb-8">
-                    {section.title && <h2 className="text-xl font-semibold mb-4">{section.title}</h2>}
-                    
-                    {section.type === 'text' && section.content && (
-                      <div className="whitespace-pre-line text-gray-700">{section.content}</div>
+                    {/* Heading type - just a title */}
+                    {section.type === 'heading' && section.title && (
+                      <h2 className="text-2xl font-bold text-primary-800 mb-4">{section.title}</h2>
+                    )}
+
+                    {/* Text type - title + content */}
+                    {section.type === 'text' && (
+                      <>
+                        {section.title && <h2 className="text-xl font-semibold text-primary-800 mb-4">{section.title}</h2>}
+                        {section.content && (
+                          <p className="whitespace-pre-line text-gray-700 leading-relaxed">{section.content}</p>
+                        )}
+                      </>
+                    )}
+
+                    {/* Image type - image with optional title and caption */}
+                    {section.type === 'image' && section.image_url && (
+                      <figure className="my-8 not-prose">
+                        {section.title && (
+                          <h3 className="text-lg font-semibold text-primary-800 mb-3">{section.title}</h3>
+                        )}
+                        <ClickableImage
+                          src={section.image_url}
+                          alt={section.title || section.caption || 'Imagine'}
+                          aspectRatio="video"
+                          className="rounded-xl"
+                          sizes="100vw"
+                          caption={section.caption}
+                        />
+                      </figure>
                     )}
                     
+                    {/* List type */}
                     {section.type === 'list' && section.items && (
-                      <ul className="list-disc list-inside space-y-2">
-                        {section.items.map((item, itemIndex) => (
-                          item.text ? <li key={itemIndex}>{item.text}</li> : null
-                        ))}
-                      </ul>
+                      <>
+                        {section.title && <h3 className="text-lg font-semibold text-primary-800 mb-3">{section.title}</h3>}
+                        <ul className="list-disc list-inside space-y-2 text-gray-700">
+                          {section.items.map((item, itemIndex) => (
+                            item.text ? <li key={itemIndex}>{item.text}</li> : null
+                          ))}
+                        </ul>
+                      </>
                     )}
                   </div>
-                ))}
+                );
+              })}
 
-                {/* Director info */}
-                {institution.director_name && (
-                  <div className="mb-8">
-                    <h3 className="text-lg font-semibold mb-2">{l.director}</h3>
-                    <p className="flex items-center gap-2">
-                      <User className="w-4 h-4 text-primary-600" />
-                      <span>{institution.director_name}</span>
-                      {institution.director_title && (
-                        <span className="text-gray-500">- {institution.director_title}</span>
-                      )}
-                    </p>
-                  </div>
-                )}
+              {/* Director info */}
+              {institution.director_name && (
+                <div className="mb-8 not-prose">
+                  <h3 className="text-lg font-semibold text-primary-800 mb-2">{l.director}</h3>
+                  <p className="flex items-center gap-2 text-gray-700">
+                    <User className="w-4 h-4 text-primary-600" />
+                    <span>{institution.director_name}</span>
+                    {institution.director_title && (
+                      <span className="text-gray-500">- {institution.director_title}</span>
+                    )}
+                  </p>
+                </div>
+              )}
 
-                {/* Additional contacts */}
-                {institution.contacts?.length > 0 && (
-                  <div className="mb-8">
-                    <h3 className="text-lg font-semibold mb-4">{l.contact}</h3>
-                    <ul className="space-y-3">
-                      {institution.contacts.map((contact, index) => (
-                        <li key={index} className="border-l-2 border-primary-200 pl-4">
-                          <p className="font-medium">{contact.name}</p>
-                          {contact.role && <p className="text-sm text-gray-500">{contact.role}</p>}
-                          {contact.phone && (
-                            <p className="text-sm flex items-center gap-2 mt-1">
-                              <Phone className="w-3 h-3 text-primary-600" />
-                              <a href={`tel:${contact.phone}`} className="hover:text-primary-600">{contact.phone}</a>
-                            </p>
-                          )}
-                          {contact.email && (
-                            <p className="text-sm flex items-center gap-2">
-                              <Mail className="w-3 h-3 text-primary-600" />
-                              <a href={`mailto:${contact.email}`} className="hover:text-primary-600">{contact.email}</a>
-                            </p>
-                          )}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+              {/* Additional contacts */}
+              {institution.contacts?.length > 0 && (
+                <div className="mb-8 not-prose">
+                  <h3 className="text-lg font-semibold text-primary-800 mb-4">{l.contact}</h3>
+                  <ul className="space-y-3">
+                    {institution.contacts.map((contact, index) => (
+                      <li key={index} className="border-l-2 border-primary-200 pl-4">
+                        <p className="font-medium text-gray-900">{contact.name}</p>
+                        {contact.role && <p className="text-sm text-gray-500">{contact.role}</p>}
+                        {contact.phone && (
+                          <p className="text-sm flex items-center gap-2 mt-1">
+                            <Phone className="w-3 h-3 text-primary-600" />
+                            <a href={`tel:${contact.phone}`} className="text-gray-700 hover:text-primary-600">{contact.phone}</a>
+                          </p>
+                        )}
+                        {contact.email && (
+                          <p className="text-sm flex items-center gap-2">
+                            <Mail className="w-3 h-3 text-primary-600" />
+                            <a href={`mailto:${contact.email}`} className="text-gray-700 hover:text-primary-600">{contact.email}</a>
+                          </p>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
-                {/* Fiscal code if present */}
-                {institution.fiscal_code && (
-                  <div className="mb-8">
-                    <p className="text-sm text-gray-500">
-                      {l.fiscalCode}: {institution.fiscal_code}
-                    </p>
-                  </div>
-                )}
-              </div>
+              {/* Fiscal code if present */}
+              {institution.fiscal_code && (
+                <div className="mb-8 not-prose">
+                  <p className="text-sm text-gray-500">
+                    {l.fiscalCode}: {institution.fiscal_code}
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </Container>

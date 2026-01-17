@@ -190,7 +190,7 @@ export default function CarieraEditPage() {
       };
 
       if (isNew) {
-        const { data, error } = await supabase
+        const { error } = await supabase
           .from('job_vacancies')
           .insert([jobData])
           .select()
@@ -198,7 +198,6 @@ export default function CarieraEditPage() {
         
         if (error) throw error;
         toast.success('Concurs adăugat', 'Datele au fost salvate!');
-        router.push(`/admin/cariera/${data.id}`);
       } else {
         const { error } = await supabase
           .from('job_vacancies')
@@ -208,6 +207,9 @@ export default function CarieraEditPage() {
         if (error) throw error;
         toast.success('Date salvate', 'Modificările au fost salvate!');
       }
+      
+      // Redirect to list page after save
+      router.push('/admin/cariera');
     } catch (error) {
       console.error('Error saving job:', error);
       toast.error('Eroare la salvare', 'Nu s-au putut salva datele.');

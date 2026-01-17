@@ -366,9 +366,9 @@ export default function ProgramEditPage() {
           body: JSON.stringify(programData),
         });
         if (!response.ok) throw new Error('Failed to create');
-        const created = await response.json();
+        await response.json();
         toast.success('Program adăugat', 'Datele au fost salvate!');
-        router.push(`/admin/programe/${created.id}`);
+        router.push('/admin/programe');
       } else {
         const response = await adminFetch(`/api/admin/programs?id=${id}`, {
           method: 'PATCH',
@@ -376,6 +376,7 @@ export default function ProgramEditPage() {
         });
         if (!response.ok) throw new Error('Failed to update');
         toast.success('Date salvate', 'Modificările au fost salvate!');
+        router.push('/admin/programe');
       }
     } catch (error) {
       console.error('Error saving program:', error);

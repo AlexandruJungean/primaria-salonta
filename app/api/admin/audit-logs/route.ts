@@ -96,7 +96,7 @@ export async function POST(request: NextRequest) {
     if (body.action === 'getAdmins') {
       const { data, error } = await supabaseAdmin
         .from('admin_profiles')
-        .select('id, full_name, email')
+        .select('id, full_name')
         .eq('is_active', true)
         .order('full_name');
 

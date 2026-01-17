@@ -79,6 +79,7 @@ export type DocumentCategory =
   | 'transparenta'
   | 'cariera'
   | 'galerie'
+  | 'institutii'
   | 'altele';
 
 /**

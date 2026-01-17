@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
-import { History, Filter, User, Calendar, FileText, RefreshCw, AlertTriangle } from 'lucide-react';
+import { History, Filter, Calendar, FileText, RefreshCw, AlertTriangle } from 'lucide-react';
 import {
   AdminPageHeader,
   AdminButton,
@@ -31,7 +31,6 @@ interface AuditLog {
 interface Admin {
   id: string;
   full_name: string;
-  email: string;
 }
 
 const ITEMS_PER_PAGE = 50;
@@ -210,7 +209,7 @@ export default function AuditLogsPage() {
 
   const adminOptions = [
     { value: '', label: 'Toți utilizatorii' },
-    ...admins.map(a => ({ value: a.id, label: a.full_name || a.email })),
+    ...admins.map(a => ({ value: a.id, label: a.full_name || 'Utilizator' })),
   ];
 
   return (
@@ -319,10 +318,13 @@ export default function AuditLogsPage() {
 
                 {/* Content */}
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 text-sm">
+                  <div className="flex items-center gap-2 text-sm flex-wrap">
                     <span className="font-medium text-slate-900">
                       {log.user_name || log.user_email || 'Utilizator necunoscut'}
                     </span>
+                    {log.user_email && log.user_name && (
+                      <span className="text-slate-400 text-xs">({log.user_email})</span>
+                    )}
                     <span className="text-slate-500">a {log.action === 'create' ? 'creat' : log.action === 'update' ? 'modificat' : log.action === 'delete' ? 'șters' : 'acționat asupra'}</span>
                     <span className="font-medium text-slate-700">
                       {getResourceLabel(log.resource_type)}
@@ -345,11 +347,6 @@ export default function AuditLogsPage() {
                       <span>IP: {log.ip_address}</span>
                     )}
                   </div>
-                </div>
-
-                {/* User Avatar */}
-                <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center shrink-0">
-                  <User className="w-4 h-4 text-slate-500" />
                 </div>
               </div>
             ))}

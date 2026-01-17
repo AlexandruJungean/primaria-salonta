@@ -1,5 +1,5 @@
 export { AdminButton } from './admin-button';
-export { AdminCard, AdminCardGrid } from './admin-card';
+export { AdminCard, AdminCardGrid, type AdminCardProps } from './admin-card';
 export { AdminInput } from './admin-input';
 export { AdminDateInput } from './admin-date-input';
 export { AdminTextarea } from './admin-textarea';

@@ -4,8 +4,10 @@ export interface ContentSection {
   id: string;
   title?: string;
   content?: string;
-  type: 'text' | 'list' | 'cards';
+  type: 'text' | 'list' | 'cards' | 'heading' | 'image';
   items?: Array<{ text?: string }>;
+  image_url?: string;
+  caption?: string;
 }
 
 export interface ContactPerson {

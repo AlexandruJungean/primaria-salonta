@@ -93,6 +93,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const authResult = await requireAdmin(request);
   if (authResult instanceof NextResponse) return authResult;
+  const adminUser = authResult;
 
   try {
     const supabaseAdmin = createAdminClient();
@@ -131,6 +132,9 @@ export async function POST(request: NextRequest) {
       resourceId: commission.id,
       resourceTitle: commission.name,
       details: { type: 'commission', member_count: member_ids?.length || 0 },
+      userId: adminUser.id,
+      userEmail: adminUser.email,
+      userName: adminUser.fullName,
       ipAddress,
       userAgent,
     });
@@ -149,6 +153,7 @@ export async function POST(request: NextRequest) {
 export async function PATCH(request: NextRequest) {
   const authResult = await requireAdmin(request);
   if (authResult instanceof NextResponse) return authResult;
+  const adminUser = authResult;
 
   try {
     const supabaseAdmin = createAdminClient();
@@ -213,6 +218,9 @@ export async function PATCH(request: NextRequest) {
       resourceId: id,
       resourceTitle: commissionData.name || existingCommission?.name,
       details: { type: 'commission', updatedFields: Object.keys(commissionData) },
+      userId: adminUser.id,
+      userEmail: adminUser.email,
+      userName: adminUser.fullName,
       ipAddress,
       userAgent,
     });
@@ -231,6 +239,7 @@ export async function PATCH(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   const authResult = await requireAdmin(request);
   if (authResult instanceof NextResponse) return authResult;
+  const adminUser = authResult;
 
   try {
     const supabaseAdmin = createAdminClient();
@@ -264,6 +273,9 @@ export async function DELETE(request: NextRequest) {
       resourceId: id,
       resourceTitle: commission?.name,
       details: { type: 'commission' },
+      userId: adminUser.id,
+      userEmail: adminUser.email,
+      userName: adminUser.fullName,
       ipAddress,
       userAgent,
     });

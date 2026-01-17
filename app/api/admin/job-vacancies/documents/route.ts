@@ -19,6 +19,7 @@ const createAdminClient = () => {
 export async function POST(request: NextRequest) {
   const authResult = await requireAdmin(request);
   if (authResult instanceof NextResponse) return authResult;
+  const adminUser = authResult;
 
   try {
     const supabaseAdmin = createAdminClient();
@@ -97,6 +98,9 @@ export async function POST(request: NextRequest) {
       resourceId: vacancyId,
       resourceTitle: title || file.name,
       details: { document_type: documentType },
+      userId: adminUser.id,
+      userEmail: adminUser.email,
+      userName: adminUser.fullName,
       ipAddress,
       userAgent,
     });
@@ -115,6 +119,7 @@ export async function POST(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   const authResult = await requireAdmin(request);
   if (authResult instanceof NextResponse) return authResult;
+  const adminUser = authResult;
 
   try {
     const supabaseAdmin = createAdminClient();
@@ -172,6 +177,9 @@ export async function DELETE(request: NextRequest) {
       resourceId: document?.vacancy_id || id,
       resourceTitle: document?.title || 'Document concurs',
       details: { deleted_document_id: id },
+      userId: adminUser.id,
+      userEmail: adminUser.email,
+      userName: adminUser.fullName,
       ipAddress,
       userAgent,
     });

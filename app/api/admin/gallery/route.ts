@@ -53,6 +53,7 @@ export async function POST(request: NextRequest) {
   // Verifică autentificarea
   const authResult = await requireAdmin(request);
   if (authResult instanceof NextResponse) return authResult;
+  const adminUser = authResult;
 
   try {
     // Rate limiting: 30 fișiere / minut
@@ -158,6 +159,9 @@ export async function POST(request: NextRequest) {
       resourceType: 'gallery',
       resourceId: data.id,
       resourceTitle: alt_text || 'Imagine galerie',
+      userId: adminUser.id,
+      userEmail: adminUser.email,
+      userName: adminUser.fullName,
       ipAddress,
       userAgent,
     });
@@ -182,6 +186,7 @@ export async function DELETE(request: NextRequest) {
   // Verifică autentificarea
   const authResult = await requireAdmin(request);
   if (authResult instanceof NextResponse) return authResult;
+  const adminUser = authResult;
 
   try {
     const supabaseAdmin = getSupabaseAdmin();
@@ -234,6 +239,9 @@ export async function DELETE(request: NextRequest) {
       resourceType: 'gallery',
       resourceId: id,
       resourceTitle: image?.alt_text || 'Imagine galerie',
+      userId: adminUser.id,
+      userEmail: adminUser.email,
+      userName: adminUser.fullName,
       ipAddress,
       userAgent,
     });

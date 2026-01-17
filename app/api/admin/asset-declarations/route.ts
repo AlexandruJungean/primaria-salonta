@@ -88,6 +88,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const authResult = await requireAdmin(request);
   if (authResult instanceof NextResponse) return authResult;
+  const adminUser = authResult;
 
   try {
     const supabaseAdmin = createAdminClient();
@@ -109,6 +110,9 @@ export async function POST(request: NextRequest) {
       resourceId: data.id,
       resourceTitle: `${data.person_name} - ${data.declaration_year}`,
       details: { department: data.department, position: data.position },
+      userId: adminUser.id,
+      userEmail: adminUser.email,
+      userName: adminUser.fullName,
       ipAddress,
       userAgent,
     });
@@ -127,6 +131,7 @@ export async function POST(request: NextRequest) {
 export async function PATCH(request: NextRequest) {
   const authResult = await requireAdmin(request);
   if (authResult instanceof NextResponse) return authResult;
+  const adminUser = authResult;
 
   try {
     const supabaseAdmin = createAdminClient();
@@ -161,6 +166,9 @@ export async function PATCH(request: NextRequest) {
       resourceId: id,
       resourceTitle: `${body.person_name || existingDecl?.person_name} - ${body.declaration_year || existingDecl?.declaration_year}`,
       details: { updatedFields: Object.keys(body) },
+      userId: adminUser.id,
+      userEmail: adminUser.email,
+      userName: adminUser.fullName,
       ipAddress,
       userAgent,
     });
@@ -179,6 +187,7 @@ export async function PATCH(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   const authResult = await requireAdmin(request);
   if (authResult instanceof NextResponse) return authResult;
+  const adminUser = authResult;
 
   try {
     const supabaseAdmin = createAdminClient();
@@ -211,6 +220,9 @@ export async function DELETE(request: NextRequest) {
       resourceId: id,
       resourceTitle: `${declaration?.person_name} - ${declaration?.declaration_year}`,
       details: { department: declaration?.department },
+      userId: adminUser.id,
+      userEmail: adminUser.email,
+      userName: adminUser.fullName,
       ipAddress,
       userAgent,
     });

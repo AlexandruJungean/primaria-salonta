@@ -93,6 +93,7 @@ export async function POST(request: NextRequest) {
   // Verifică autentificarea
   const authResult = await requireAdmin(request);
   if (authResult instanceof NextResponse) return authResult;
+  const adminUser = authResult;
 
   const { ipAddress, userAgent } = getRequestInfo(request);
   let requestBody: Record<string, unknown> | undefined;
@@ -117,6 +118,9 @@ export async function POST(request: NextRequest) {
       resourceId: data.id,
       resourceTitle: data.title,
       details: { slug: data.slug },
+      userId: adminUser.id,
+      userEmail: adminUser.email,
+      userName: adminUser.fullName,
       ipAddress,
       userAgent,
     });
@@ -147,6 +151,7 @@ export async function PATCH(request: NextRequest) {
   // Verifică autentificarea
   const authResult = await requireAdmin(request);
   if (authResult instanceof NextResponse) return authResult;
+  const adminUser = authResult;
 
   const { ipAddress, userAgent } = getRequestInfo(request);
   let requestBody: Record<string, unknown> | undefined;
@@ -184,6 +189,9 @@ export async function PATCH(request: NextRequest) {
       resourceId: id,
       resourceTitle: body.title || existingNews?.title,
       details: { updatedFields: Object.keys(body) },
+      userId: adminUser.id,
+      userEmail: adminUser.email,
+      userName: adminUser.fullName,
       ipAddress,
       userAgent,
     });
@@ -214,6 +222,7 @@ export async function DELETE(request: NextRequest) {
   // Verifică autentificarea
   const authResult = await requireAdmin(request);
   if (authResult instanceof NextResponse) return authResult;
+  const adminUser = authResult;
 
   const { ipAddress, userAgent } = getRequestInfo(request);
   
@@ -246,6 +255,9 @@ export async function DELETE(request: NextRequest) {
       resourceType: 'news',
       resourceId: id,
       resourceTitle: news?.title,
+      userId: adminUser.id,
+      userEmail: adminUser.email,
+      userName: adminUser.fullName,
       ipAddress,
       userAgent,
     });

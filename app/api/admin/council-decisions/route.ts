@@ -70,6 +70,7 @@ export async function POST(request: NextRequest) {
   // Verifică autentificarea
   const authResult = await requireAdmin(request);
   if (authResult instanceof NextResponse) return authResult;
+  const adminUser = authResult;
 
   try {
     const supabaseAdmin = createAdminClient();
@@ -101,6 +102,9 @@ export async function POST(request: NextRequest) {
       resourceId: data.id,
       resourceTitle: data.title,
       details: { decision_number: data.decision_number },
+      userId: adminUser.id,
+      userEmail: adminUser.email,
+      userName: adminUser.fullName,
       ipAddress,
       userAgent,
     });
@@ -120,6 +124,7 @@ export async function PATCH(request: NextRequest) {
   // Verifică autentificarea
   const authResult = await requireAdmin(request);
   if (authResult instanceof NextResponse) return authResult;
+  const adminUser = authResult;
 
   try {
     const supabaseAdmin = createAdminClient();
@@ -156,6 +161,9 @@ export async function PATCH(request: NextRequest) {
       resourceId: id,
       resourceTitle: body.title || existingDecision?.title,
       details: { updatedFields: Object.keys(body) },
+      userId: adminUser.id,
+      userEmail: adminUser.email,
+      userName: adminUser.fullName,
       ipAddress,
       userAgent,
     });
@@ -175,6 +183,7 @@ export async function DELETE(request: NextRequest) {
   // Verifică autentificarea
   const authResult = await requireAdmin(request);
   if (authResult instanceof NextResponse) return authResult;
+  const adminUser = authResult;
 
   try {
     const supabaseAdmin = createAdminClient();
@@ -207,6 +216,9 @@ export async function DELETE(request: NextRequest) {
       resourceId: id,
       resourceTitle: decision?.title,
       details: { decision_number: decision?.decision_number },
+      userId: adminUser.id,
+      userEmail: adminUser.email,
+      userName: adminUser.fullName,
       ipAddress,
       userAgent,
     });
