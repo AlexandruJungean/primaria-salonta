@@ -124,3 +124,12 @@ export {
   type Page,
   type FAQ,
 } from './pages';
+
+// Site Settings Services
+export {
+  getSiteSettings,
+  getNotificationEmails,
+  getContactInfo,
+  invalidateSettingsCache,
+  type SiteSettings,
+} from './settings';

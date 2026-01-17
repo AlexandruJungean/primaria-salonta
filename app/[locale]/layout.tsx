@@ -11,9 +11,11 @@ import { Footer } from '@/components/layout/footer';
 import { AccessibilityToolbar } from '@/components/features/accessibility-toolbar';
 import { CookieConsent } from '@/components/features/cookie-consent';
 import { NavigationProvider } from '@/components/layout/navigation-context';
+import { SiteSettingsProvider } from '@/components/layout/site-settings-context';
 import { RecaptchaProvider } from '@/components/features/recaptcha-provider';
 import { getInstitutionsForNav } from '@/lib/supabase/services/institutions';
 import { getProgramsForNav } from '@/lib/supabase/services/programs';
+import { getContactInfo } from '@/lib/supabase/services/settings';
 import { translateContentArray } from '@/lib/google-translate/cache';
 import { 
   SEO_CONFIG, 
@@ -188,10 +190,11 @@ export default async function LocaleLayout({
   // Get messages for the current locale
   const messages = await getMessages();
   
-  // Fetch dynamic data for navigation
-  const [institutions, programsRaw] = await Promise.all([
+  // Fetch dynamic data for navigation and site settings
+  const [institutions, programsRaw, contactInfo] = await Promise.all([
     getInstitutionsForNav(),
     getProgramsForNav(),
+    getContactInfo(),
   ]);
 
   // Translate program titles for non-Romanian locales
@@ -209,29 +212,31 @@ export default async function LocaleLayout({
       <body className={`${openSans.variable} ${sourceSerif.variable} antialiased min-h-screen flex flex-col`}>
         <NextIntlClientProvider messages={messages}>
           <RecaptchaProvider>
-            <NavigationProvider institutions={institutions} programs={programs}>
-              {/* Skip to Content Link */}
-              <a href="#main-content" className="skip-to-content">
-                Skip to content
-              </a>
+            <SiteSettingsProvider contactInfo={contactInfo}>
+              <NavigationProvider institutions={institutions} programs={programs}>
+                {/* Skip to Content Link */}
+                <a href="#main-content" className="skip-to-content">
+                  Skip to content
+                </a>
 
-              {/* Accessibility Toolbar */}
-              <AccessibilityToolbar />
+                {/* Accessibility Toolbar */}
+                <AccessibilityToolbar />
 
-              {/* Header */}
-              <Header />
+                {/* Header */}
+                <Header />
 
-              {/* Main Content */}
-              <main id="main-content" className="flex-1">
-                {children}
-              </main>
+                {/* Main Content */}
+                <main id="main-content" className="flex-1">
+                  {children}
+                </main>
 
-              {/* Footer */}
-              <Footer />
+                {/* Footer */}
+                <Footer />
 
-              {/* Cookie Consent Banner */}
-              <CookieConsent />
-            </NavigationProvider>
+                {/* Cookie Consent Banner */}
+                <CookieConsent />
+              </NavigationProvider>
+            </SiteSettingsProvider>
           </RecaptchaProvider>
         </NextIntlClientProvider>
       </body>

@@ -4,11 +4,12 @@ import { useTranslations } from 'next-intl';
 import { Container } from '@/components/ui/container';
 import { Section, SectionHeader } from '@/components/ui/section';
 import { MapPin, Phone, Mail, Clock, ExternalLink } from 'lucide-react';
-import { CONTACT_INFO } from '@/lib/constants/contact';
+import { useSiteSettings } from '@/components/layout/site-settings-context';
 import { Link } from '@/components/ui/link';
 
 export function ContactInfoSection() {
   const t = useTranslations('footer');
+  const settings = useSiteSettings();
 
   return (
     <Section background="white">
@@ -42,10 +43,10 @@ export function ContactInfoSection() {
               <div>
                 <h3 className="font-semibold text-gray-900 mb-2">{t('address')}</h3>
                 <address className="not-italic text-gray-600 text-sm leading-relaxed">
-                  <span itemProp="streetAddress">{CONTACT_INFO.address.street}</span><br />
-                  <span itemProp="addressLocality">{CONTACT_INFO.address.city}</span>, 
-                  <span itemProp="addressRegion"> {CONTACT_INFO.address.county}</span><br />
-                  <span itemProp="postalCode">{CONTACT_INFO.address.postalCode}</span>, 
+                  <span itemProp="streetAddress">Str. Republicii nr. 1</span><br />
+                  <span itemProp="addressLocality">Salonta</span>, 
+                  <span itemProp="addressRegion"> Bihor</span><br />
+                  <span itemProp="postalCode">415500</span>, 
                   <span itemProp="addressCountry"> România</span>
                 </address>
               </div>
@@ -61,7 +62,7 @@ export function ContactInfoSection() {
               <div>
                 <h3 className="font-semibold text-gray-900 mb-2">{t('phone')}</h3>
                 <div className="text-gray-600 text-sm space-y-1">
-                  {CONTACT_INFO.phone.landline.map((phone, index) => (
+                  {settings.phone.landline.map((phone, index) => (
                     <a 
                       key={index}
                       href={`tel:${phone.replace(/-/g, '')}`}
@@ -71,9 +72,11 @@ export function ContactInfoSection() {
                       {phone}
                     </a>
                   ))}
-                  <div className="text-xs text-gray-500 mt-1">
-                    FAX: {CONTACT_INFO.phone.fax}
-                  </div>
+                  {settings.phone.fax && (
+                    <div className="text-xs text-gray-500 mt-1">
+                      FAX: {settings.phone.fax}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -88,20 +91,16 @@ export function ContactInfoSection() {
               <div>
                 <h3 className="font-semibold text-gray-900 mb-2">{t('email')}</h3>
                 <div className="text-gray-600 text-sm space-y-1">
-                  <a 
-                    href={`mailto:${CONTACT_INFO.email.primary}`}
-                    className="block hover:text-primary-600 transition-colors break-all"
-                    itemProp="email"
-                  >
-                    {CONTACT_INFO.email.primary}
-                  </a>
-                  <a 
-                    href={`mailto:${CONTACT_INFO.email.secondary}`}
-                    className="block hover:text-primary-600 transition-colors break-all"
-                    itemProp="email"
-                  >
-                    {CONTACT_INFO.email.secondary}
-                  </a>
+                  {settings.email.all.map((email) => (
+                    <a 
+                      key={email}
+                      href={`mailto:${email}`}
+                      className="block hover:text-primary-600 transition-colors break-all"
+                      itemProp="email"
+                    >
+                      {email}
+                    </a>
+                  ))}
                 </div>
               </div>
             </div>
@@ -125,10 +124,7 @@ export function ContactInfoSection() {
               <div>
                 <h3 className="font-semibold text-gray-900 mb-2">{t('program')}</h3>
                 <div className="text-gray-600 text-sm space-y-1">
-                  <div>
-                    <span className="font-medium">Luni - Vineri:</span><br />
-                    08:00 - 16:00
-                  </div>
+                  <div>{settings.workingHours}</div>
                   <div className="text-xs text-gray-500 mt-2">
                     Sâmbătă - Duminică: Închis
                   </div>

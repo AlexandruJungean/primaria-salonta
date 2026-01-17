@@ -4,7 +4,7 @@ import { Container } from '@/components/ui/container';
 import { Section, SectionHeader } from '@/components/ui/section';
 import { Card, CardContent } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
-import { CONTACT_INFO } from '@/lib/constants/contact';
+import { getContactInfo } from '@/lib/supabase/services/settings';
 import { generatePageMetadata } from '@/lib/seo/metadata';
 import { ContactPageJsonLd } from '@/lib/seo/json-ld';
 import { type Locale } from '@/i18n/routing';
@@ -33,8 +33,11 @@ export default async function ContactPage({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'contact' });
   
-  // Fetch office hours from Supabase
-  const officeHoursData = await getOfficeHours();
+  // Fetch contact info and office hours from Supabase
+  const [contactInfo, officeHoursData] = await Promise.all([
+    getContactInfo(),
+    getOfficeHours(),
+  ]);
   const officeHours = await translateContentArray(
     officeHoursData,
     ['name'],
@@ -82,7 +85,7 @@ export default async function ContactPage({
                     </div>
                     <div>
                       <h4 className="font-medium text-gray-900">Adresă</h4>
-                      <p className="text-gray-600">{CONTACT_INFO.address.full}</p>
+                      <p className="text-gray-600">Str. Republicii nr.1, Salonta, Jud.Bihor</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -95,10 +98,12 @@ export default async function ContactPage({
                     </div>
                     <div>
                       <h4 className="font-medium text-gray-900">Telefon</h4>
-                      <p className="text-gray-600">{CONTACT_INFO.phone.display}</p>
-                      <p className="text-sm text-gray-500 mt-2">
-                        FAX: {CONTACT_INFO.phone.fax}
-                      </p>
+                      <p className="text-gray-600">{contactInfo.phone.display}</p>
+                      {contactInfo.phone.fax && (
+                        <p className="text-sm text-gray-500 mt-2">
+                          FAX: {contactInfo.phone.fax}
+                        </p>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
@@ -112,18 +117,15 @@ export default async function ContactPage({
                     <div>
                       <h4 className="font-medium text-gray-900">Email</h4>
                       <div className="space-y-1">
-                        <a
-                          href={`mailto:${CONTACT_INFO.email.primary}`}
-                          className="block text-primary-700 hover:text-primary-900"
-                        >
-                          {CONTACT_INFO.email.primary}
-                        </a>
-                        <a
-                          href={`mailto:${CONTACT_INFO.email.secondary}`}
-                          className="block text-primary-700 hover:text-primary-900"
-                        >
-                          {CONTACT_INFO.email.secondary}
-                        </a>
+                        {contactInfo.email.all.map((email) => (
+                          <a
+                            key={email}
+                            href={`mailto:${email}`}
+                            className="block text-primary-700 hover:text-primary-900"
+                          >
+                            {email}
+                          </a>
+                        ))}
                       </div>
                     </div>
                   </CardContent>

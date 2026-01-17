@@ -6,11 +6,13 @@ import { Container } from '@/components/ui/container';
 import { MegaMenu } from './mega-menu';
 import { MobileNav } from './mobile-nav';
 import { LanguageSwitcher } from './language-switcher';
+import { useSiteSettings } from './site-settings-context';
 import { cn } from '@/lib/utils/cn';
 import { useState, useEffect } from 'react';
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const settings = useSiteSettings();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -36,37 +38,43 @@ export function Header() {
           <div className="flex items-center justify-between text-sm">
             <div className="flex items-center gap-6">
               <span>📍 Str. Republicii nr.1, Salonta, Jud.Bihor</span>
-              <span>📞 0359-409730, 0359-409731</span>
-              <span>✉️ primsal3@gmail.com</span>
+              <span>📞 {settings.phone.landline.slice(0, 2).join(', ')}</span>
+              <span>✉️ {settings.email.primary}</span>
             </div>
             <div className="flex items-center gap-4 overflow-visible">
-              <a
-                href="https://www.facebook.com/PrimariaSalontaNagyszalontaPolgarmesteriHivatala"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-secondary-300 transition-colors"
-                aria-label="Facebook"
-              >
-                Facebook
-              </a>
-              <a
-                href="https://www.instagram.com/primaria.municipiuluisalonta/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-secondary-300 transition-colors"
-                aria-label="Instagram"
-              >
-                Instagram
-              </a>
-              <a
-                href="https://www.tiktok.com/@primariasalonta_"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-secondary-300 transition-colors"
-                aria-label="TikTok"
-              >
-                TikTok
-              </a>
+              {settings.socialMedia.facebook && (
+                <a
+                  href={settings.socialMedia.facebook}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-secondary-300 transition-colors"
+                  aria-label="Facebook"
+                >
+                  Facebook
+                </a>
+              )}
+              {settings.socialMedia.instagram && (
+                <a
+                  href={settings.socialMedia.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-secondary-300 transition-colors"
+                  aria-label="Instagram"
+                >
+                  Instagram
+                </a>
+              )}
+              {settings.socialMedia.tiktok && (
+                <a
+                  href={settings.socialMedia.tiktok}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-secondary-300 transition-colors"
+                  aria-label="TikTok"
+                >
+                  TikTok
+                </a>
+              )}
               <div className="border-l border-white/30 pl-4 overflow-visible">
                 <LanguageSwitcher variant="topbar" />
               </div>

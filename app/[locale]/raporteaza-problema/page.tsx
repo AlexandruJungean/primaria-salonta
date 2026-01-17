@@ -1,7 +1,7 @@
 import { getTranslations } from 'next-intl/server';
-import { AlertTriangle, MapPin, Phone, Mail, Info, Camera } from 'lucide-react';
+import { AlertTriangle, Phone, Mail } from 'lucide-react';
 import { Container } from '@/components/ui/container';
-import { CONTACT_INFO } from '@/lib/constants/contact';
+import { getContactInfo } from '@/lib/supabase/services/settings';
 import { Section } from '@/components/ui/section';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
@@ -21,8 +21,11 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
 export default async function RaporteazaProblemaPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'navigation' });
-  const tp = await getTranslations({ locale, namespace: 'raporteazaProblemaPage' });
+  const [t, tp, contactInfo] = await Promise.all([
+    getTranslations({ locale, namespace: 'navigation' }),
+    getTranslations({ locale, namespace: 'raporteazaProblemaPage' }),
+    getContactInfo(),
+  ]);
 
   const pageLabels = {
     ro: {
@@ -166,23 +169,23 @@ export default async function RaporteazaProblemaPage({ params }: { params: Promi
                 
                 <div className="grid sm:grid-cols-2 gap-4 mb-4">
                   <a
-                    href={`tel:${CONTACT_INFO.phone.main.replace(/-/g, '')}`}
+                    href={`tel:${contactInfo.phone.main.replace(/-/g, '')}`}
                     className="flex items-center gap-2 p-3 bg-white rounded-lg border border-amber-200 text-gray-900 hover:bg-amber-100 transition-colors"
                   >
                     <Phone className="w-5 h-5 text-amber-600" />
                     <div>
                       <p className="text-xs text-gray-500">{labels.phone}</p>
-                      <p className="font-medium">{CONTACT_INFO.phone.main}</p>
+                      <p className="font-medium">{contactInfo.phone.main}</p>
                     </div>
                   </a>
                   <a
-                    href={`mailto:${CONTACT_INFO.email.primary}`}
+                    href={`mailto:${contactInfo.email.primary}`}
                     className="flex items-center gap-2 p-3 bg-white rounded-lg border border-amber-200 text-gray-900 hover:bg-amber-100 transition-colors"
                   >
                     <Mail className="w-5 h-5 text-amber-600" />
                     <div>
                       <p className="text-xs text-gray-500">{labels.email}</p>
-                      <p className="font-medium">{CONTACT_INFO.email.primary}</p>
+                      <p className="font-medium">{contactInfo.email.primary}</p>
                     </div>
                   </a>
                 </div>

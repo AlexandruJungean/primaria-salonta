@@ -115,7 +115,6 @@ export default function InstitutiiPage() {
           </div>
           <div>
             <p className="font-semibold text-slate-900">{item.name}</p>
-            <p className="text-sm text-slate-500">{CATEGORY_LABELS[item.category] || item.category}</p>
           </div>
         </div>
       ),

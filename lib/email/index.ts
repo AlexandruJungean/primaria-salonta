@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import { getNotificationEmails } from '@/lib/supabase/services/settings';
 
 // Email configuration
 const transporter = nodemailer.createTransport({
@@ -11,8 +12,8 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Default recipient for all form submissions
-const DEFAULT_RECIPIENT = 'alex.jungean@gmail.com';
+// Fallback recipient if database is unavailable
+const FALLBACK_RECIPIENT = 'alex.jungean@gmail.com';
 
 export interface EmailOptions {
   to?: string | string[];
@@ -23,9 +24,20 @@ export interface EmailOptions {
 
 export async function sendEmail(options: EmailOptions): Promise<{ success: boolean; error?: string }> {
   try {
+    // If no recipient specified, get notification emails from database
+    let recipients = options.to;
+    if (!recipients) {
+      try {
+        const notificationEmails = await getNotificationEmails();
+        recipients = notificationEmails.length > 0 ? notificationEmails : FALLBACK_RECIPIENT;
+      } catch {
+        recipients = FALLBACK_RECIPIENT;
+      }
+    }
+
     await transporter.sendMail({
       from: `"Primăria Salonta" <${process.env.SMTP_USER}>`,
-      to: options.to || DEFAULT_RECIPIENT,
+      to: recipients,
       subject: options.subject,
       html: options.html,
       replyTo: options.replyTo,

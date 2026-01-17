@@ -11,9 +11,12 @@ import {
   Facebook,
   Instagram,
   ExternalLink,
+  Linkedin,
+  Youtube,
 } from 'lucide-react';
 import { Container } from '@/components/ui/container';
-import { CONTACT_INFO, EXTERNAL_LINKS } from '@/lib/constants/contact';
+import { EXTERNAL_LINKS } from '@/lib/constants/contact';
+import { useSiteSettings } from './site-settings-context';
 import { useLocale } from 'next-intl';
 
 // TikTok icon (not in Lucide)
@@ -30,6 +33,7 @@ export function Footer() {
   const tNav = useTranslations('navigation');
   const locale = useLocale() as 'ro' | 'hu' | 'en';
   const currentYear = new Date().getFullYear();
+  const settings = useSiteSettings();
 
   const quickLinks = [
     { id: 'anunturi', href: '/transparenta/anunturi' },
@@ -71,33 +75,61 @@ export function Footer() {
 
               {/* Social Media */}
               <div className="flex items-center gap-3">
-                <a
-                  href={CONTACT_INFO.socialMedia.facebook}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
-                  aria-label="Facebook"
-                >
-                  <Facebook className="w-5 h-5" />
-                </a>
-                <a
-                  href={CONTACT_INFO.socialMedia.instagram}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
-                  aria-label="Instagram"
-                >
-                  <Instagram className="w-5 h-5" />
-                </a>
-                <a
-                  href={CONTACT_INFO.socialMedia.tiktok}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
-                  aria-label="TikTok"
-                >
-                  <TikTokIcon className="w-5 h-5" />
-                </a>
+                {settings.socialMedia.facebook && (
+                  <a
+                    href={settings.socialMedia.facebook}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
+                    aria-label="Facebook"
+                  >
+                    <Facebook className="w-5 h-5" />
+                  </a>
+                )}
+                {settings.socialMedia.instagram && (
+                  <a
+                    href={settings.socialMedia.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
+                    aria-label="Instagram"
+                  >
+                    <Instagram className="w-5 h-5" />
+                  </a>
+                )}
+                {settings.socialMedia.tiktok && (
+                  <a
+                    href={settings.socialMedia.tiktok}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
+                    aria-label="TikTok"
+                  >
+                    <TikTokIcon className="w-5 h-5" />
+                  </a>
+                )}
+                {settings.socialMedia.youtube && (
+                  <a
+                    href={settings.socialMedia.youtube}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
+                    aria-label="YouTube"
+                  >
+                    <Youtube className="w-5 h-5" />
+                  </a>
+                )}
+                {settings.socialMedia.linkedin && (
+                  <a
+                    href={settings.socialMedia.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
+                    aria-label="LinkedIn"
+                  >
+                    <Linkedin className="w-5 h-5" />
+                  </a>
+                )}
               </div>
             </div>
 
@@ -107,36 +139,35 @@ export function Footer() {
               <ul className="space-y-3 text-primary-200">
                 <li className="flex items-start gap-3">
                   <MapPin className="w-5 h-5 shrink-0 mt-0.5" />
-                  <span>{CONTACT_INFO.address.full}</span>
+                  <span>Str. Republicii nr.1, Salonta, Jud.Bihor</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Phone className="w-5 h-5 shrink-0 mt-0.5" />
                   <div>
-                    <div>{CONTACT_INFO.phone.display}</div>
-                    <div className="text-sm mt-1">FAX: {CONTACT_INFO.phone.fax}</div>
+                    <div>{settings.phone.display}</div>
+                    {settings.phone.fax && (
+                      <div className="text-sm mt-1">FAX: {settings.phone.fax}</div>
+                    )}
                   </div>
                 </li>
                 <li className="flex items-start gap-3">
                   <Mail className="w-5 h-5 shrink-0 mt-0.5" />
                   <div>
-                    <a
-                      href={`mailto:${CONTACT_INFO.email.primary}`}
-                      className="hover:text-white transition-colors block"
-                    >
-                      {CONTACT_INFO.email.primary}
-                    </a>
-                    <a
-                      href={`mailto:${CONTACT_INFO.email.secondary}`}
-                      className="hover:text-white transition-colors block"
-                    >
-                      {CONTACT_INFO.email.secondary}
-                    </a>
+                    {settings.email.all.map((email) => (
+                      <a
+                        key={email}
+                        href={`mailto:${email}`}
+                        className="hover:text-white transition-colors block"
+                      >
+                        {email}
+                      </a>
+                    ))}
                   </div>
                 </li>
                 <li className="flex items-start gap-3">
                   <Clock className="w-5 h-5 shrink-0 mt-0.5" />
                   <div>
-                    <div>Luni - Vineri: 8:00 - 16:00</div>
+                    <div>{settings.workingHours}</div>
                   </div>
                 </li>
               </ul>

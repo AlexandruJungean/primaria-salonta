@@ -12,7 +12,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
 import { Button } from '@/components/ui/button';
-import { CONTACT_INFO } from '@/lib/constants/contact';
+import { useSiteSettings } from '@/components/layout/site-settings-context';
 import { petitionFormSchema, type PetitionFormData } from '@/lib/validations/forms';
 
 const pageLabels = {
@@ -114,6 +114,7 @@ export default function PetitiiPage() {
   const { executeRecaptcha } = useGoogleReCaptcha();
   const locale = useLocale() as 'ro' | 'hu' | 'en';
   const labels = pageLabels[locale] || pageLabels.ro;
+  const settings = useSiteSettings();
 
   const inputClass = "w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-colors";
   const inputErrorClass = "w-full px-3 py-2 border border-red-500 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-colors";
@@ -431,23 +432,23 @@ export default function PetitiiPage() {
               <CardContent className="p-6">
                 <div className="grid sm:grid-cols-2 gap-4">
                   <a
-                    href={`tel:${CONTACT_INFO.phone.main.replace(/-/g, '')}`}
+                    href={`tel:${settings.phone.main.replace(/-/g, '')}`}
                     className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors"
                   >
                     <Phone className="w-5 h-5 text-primary-600" />
                     <div>
                       <p className="text-xs text-gray-500">Telefon</p>
-                      <p className="font-medium text-gray-900">{CONTACT_INFO.phone.main}</p>
+                      <p className="font-medium text-gray-900">{settings.phone.main}</p>
                     </div>
                   </a>
                   <a
-                    href={`mailto:${CONTACT_INFO.email.primary}`}
+                    href={`mailto:${settings.email.primary}`}
                     className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors"
                   >
                     <Mail className="w-5 h-5 text-primary-600" />
                     <div>
                       <p className="text-xs text-gray-500">E-mail</p>
-                      <p className="font-medium text-gray-900">{CONTACT_INFO.email.primary}</p>
+                      <p className="font-medium text-gray-900">{settings.email.primary}</p>
                     </div>
                   </a>
                 </div>
