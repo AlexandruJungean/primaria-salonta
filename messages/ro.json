@@ -315,7 +315,8 @@
     "administrativeCode": "OUG 57/2019 privind Codul Administrativ",
     "administrativeCodeDescription": "Codul administrativ reglementează cadrul general pentru organizarea și funcționarea autorităților și instituțiilor administrației publice.",
     "viewDocument": "Vezi documentul",
-    "otherLegislation": "Alte acte normative relevante"
+    "otherLegislation": "Alte acte normative relevante",
+    "noLegislation": "Nu există link-uri de legislație disponibile."
   },
   "regulamentPage": {
     "title": "Regulament de organizare și funcționare",

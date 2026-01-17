@@ -1,13 +1,14 @@
 import { getTranslations } from 'next-intl/server';
-import { useTranslations } from 'next-intl';
-import { Scale, ExternalLink } from 'lucide-react';
+import { Scale, ExternalLink, FileText, Download } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { Card, CardContent } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
-import { generatePageMetadata, BreadcrumbJsonLd } from '@/lib/seo';
+import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
+import { getPrimaryLegislationLinks, getSecondaryLegislationLinks, type LegislationLink } from '@/lib/supabase/services';
+import { translateContentArray } from '@/lib/google-translate/cache';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -18,9 +19,39 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   });
 }
 
-export default function LegislatiePage() {
-  const t = useTranslations('navigation');
-  const tl = useTranslations('legislatiePage');
+// Helper to get the link URL (external_url has priority over file_url)
+function getLinkUrl(link: LegislationLink): string | null {
+  return link.external_url || link.file_url || null;
+}
+
+// Helper to check if the link is external or a file
+function isExternalLink(link: LegislationLink): boolean {
+  return !!link.external_url;
+}
+
+export default async function LegislatiePage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'navigation' });
+  const tl = await getTranslations({ locale, namespace: 'legislatiePage' });
+
+  // Fetch all legislation links
+  const [primaryLinksRaw, secondaryLinksRaw] = await Promise.all([
+    getPrimaryLegislationLinks(),
+    getSecondaryLegislationLinks(),
+  ]);
+
+  // Translate content
+  const primaryLinks = await translateContentArray(
+    primaryLinksRaw, 
+    ['title', 'description'], 
+    locale as 'ro' | 'hu' | 'en'
+  );
+  
+  const secondaryLinks = await translateContentArray(
+    secondaryLinksRaw, 
+    ['title', 'description'], 
+    locale as 'ro' | 'hu' | 'en'
+  );
 
   return (
     <>
@@ -33,58 +64,101 @@ export default function LegislatiePage() {
       <Section background="white">
         <Container>
           <div className="max-w-3xl mx-auto">
-            {/* Main legislation reference */}
-            <Card className="bg-primary-50 border-primary-200">
-              <CardContent className="p-6">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-primary-600 flex items-center justify-center shrink-0">
-                    <Scale className="w-6 h-6 text-white" />
-                  </div>
-                  <div>
-                    <h2 className="text-xl font-bold text-gray-900 mb-2">
-                      {tl('administrativeCode')}
-                    </h2>
-                    <p className="text-gray-600 mb-4">
-                      {tl('administrativeCodeDescription')}
-                    </p>
-                    <a
-                      href="https://legislatie.just.ro/Public/DetaliiDocument/215925"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-primary-900 text-white rounded-lg hover:bg-primary-800 transition-colors text-sm font-medium"
-                    >
-                      {tl('viewDocument')}
-                      <ExternalLink className="w-4 h-4" />
-                    </a>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Additional useful links */}
-            <div className="mt-8">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">{tl('otherLegislation')}</h3>
-              <div className="space-y-3">
-                {[
-                  { title: 'Constituția României', url: 'https://www.cdep.ro/pls/dic/site.page?id=339' },
-                  { title: 'Legea 52/2003 - Transparență decizională', url: 'https://legislatie.just.ro/Public/DetaliiDocument/41571' },
-                  { title: 'Legea 544/2001 - Acces la informații publice', url: 'https://legislatie.just.ro/Public/DetaliiDocument/31438' },
-                ].map((law, idx) => (
-                  <a
-                    key={idx}
-                    href={law.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-between gap-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors group"
-                  >
-                    <span className="text-gray-700 group-hover:text-primary-700">
-                      {law.title}
-                    </span>
-                    <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-primary-600 shrink-0" />
-                  </a>
+            {/* Primary/Featured legislation links */}
+            {primaryLinks.length > 0 && (
+              <div className="space-y-4">
+                {primaryLinks.map((link) => (
+                  <Card key={link.id} className="bg-primary-50 border-primary-200">
+                    <CardContent className="p-6">
+                      <div className="flex items-start gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-primary-600 flex items-center justify-center shrink-0">
+                          <Scale className="w-6 h-6 text-white" />
+                        </div>
+                        <div>
+                          <h2 className="text-xl font-bold text-gray-900 mb-2">
+                            {link.title}
+                          </h2>
+                          {link.description && (
+                            <p className="text-gray-600 mb-4">
+                              {link.description}
+                            </p>
+                          )}
+                          {getLinkUrl(link) && (
+                            <a
+                              href={getLinkUrl(link)!}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-2 px-4 py-2 bg-primary-900 text-white rounded-lg hover:bg-primary-800 transition-colors text-sm font-medium"
+                            >
+                              {tl('viewDocument')}
+                              {isExternalLink(link) ? (
+                                <ExternalLink className="w-4 h-4" />
+                              ) : (
+                                <Download className="w-4 h-4" />
+                              )}
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
                 ))}
               </div>
-            </div>
+            )}
+
+            {/* Secondary legislation links */}
+            {secondaryLinks.length > 0 && (
+              <div className="mt-8">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">{tl('otherLegislation')}</h3>
+                <div className="space-y-3">
+                  {secondaryLinks.map((link) => {
+                    const url = getLinkUrl(link);
+                    if (!url) return null;
+                    
+                    return (
+                      <a
+                        key={link.id}
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-between gap-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors group"
+                      >
+                        <div className="flex items-center gap-3 min-w-0">
+                          {isExternalLink(link) ? (
+                            <ExternalLink className="w-5 h-5 text-gray-400 group-hover:text-primary-600 shrink-0" />
+                          ) : (
+                            <FileText className="w-5 h-5 text-gray-400 group-hover:text-primary-600 shrink-0" />
+                          )}
+                          <div className="min-w-0">
+                            <span className="text-gray-700 group-hover:text-primary-700 font-medium">
+                              {link.title}
+                            </span>
+                            {link.description && (
+                              <p className="text-sm text-gray-500 truncate mt-0.5">
+                                {link.description}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                        {isExternalLink(link) ? (
+                          <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-primary-600 shrink-0" />
+                        ) : (
+                          <Download className="w-4 h-4 text-gray-400 group-hover:text-primary-600 shrink-0" />
+                        )}
+                      </a>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Empty state */}
+            {primaryLinks.length === 0 && secondaryLinks.length === 0 && (
+              <div className="text-center py-12 text-gray-500">
+                <Scale className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+                <p>{tl('noLegislation')}</p>
+              </div>
+            )}
           </div>
         </Container>
       </Section>

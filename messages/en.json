@@ -315,7 +315,8 @@
     "administrativeCode": "GEO 57/2019 on the Administrative Code",
     "administrativeCodeDescription": "The administrative code regulates the general framework for the organization and functioning of public administration authorities and institutions.",
     "viewDocument": "View document",
-    "otherLegislation": "Other relevant legislation"
+    "otherLegislation": "Other relevant legislation",
+    "noLegislation": "No legislation links available."
   },
   "regulamentPage": {
     "title": "Rules of Organization and Operation",

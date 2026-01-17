@@ -315,7 +315,8 @@
     "administrativeCode": "57/2019 sürgősségi kormányrendelet a Közigazgatási Kódexről",
     "administrativeCodeDescription": "A közigazgatási kódex szabályozza a közigazgatási hatóságok és intézmények szervezésének és működésének általános kereteit.",
     "viewDocument": "Dokumentum megtekintése",
-    "otherLegislation": "Egyéb vonatkozó jogszabályok"
+    "otherLegislation": "Egyéb vonatkozó jogszabályok",
+    "noLegislation": "Nincsenek elérhető jogszabályi hivatkozások."
   },
   "regulamentPage": {
     "title": "Szervezési és működési szabályzat",

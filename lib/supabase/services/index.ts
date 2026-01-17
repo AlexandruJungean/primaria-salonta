@@ -133,3 +133,17 @@ export {
   invalidateSettingsCache,
   type SiteSettings,
 } from './settings';
+
+// Legislation Services
+export {
+  getPublishedLegislationLinks,
+  getPrimaryLegislationLinks,
+  getSecondaryLegislationLinks,
+  getAllLegislationLinks,
+  getLegislationLinkById,
+  createLegislationLink,
+  updateLegislationLink,
+  deleteLegislationLink,
+  type LegislationLink,
+  type LegislationLinkInput,
+} from './legislation';

@@ -1,101 +1,276 @@
 'use client';
 
-import { ExternalLink, Scale, Info } from 'lucide-react';
+import { useEffect, useState, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
+import { 
+  Plus, 
+  Scale, 
+  ExternalLink, 
+  FileText,
+  Star,
+  GripVertical,
+} from 'lucide-react';
+import { supabase } from '@/lib/supabase/client';
 import {
   AdminPageHeader,
+  AdminButton,
   AdminCard,
+  AdminTable,
+  AdminConfirmDialog,
+  toast,
 } from '@/components/admin';
 
-// Current hardcoded legislation links from frontend
-const LEGISLATION_LINKS = [
-  { 
-    title: 'Ordonanța de Urgență nr. 57/2019 - Codul Administrativ', 
-    url: 'https://legislatie.just.ro/Public/DetaliiDocument/215925',
-    description: 'Codul administrativ al României',
-    isPrimary: true,
-  },
-  { 
-    title: 'Constituția României', 
-    url: 'https://www.cdep.ro/pls/dic/site.page?id=339',
-    description: 'Legea fundamentală a statului român',
-  },
-  { 
-    title: 'Legea 52/2003 - Transparență decizională', 
-    url: 'https://legislatie.just.ro/Public/DetaliiDocument/41571',
-    description: 'Privind transparența decizională în administrația publică',
-  },
-  { 
-    title: 'Legea 544/2001 - Acces la informații publice', 
-    url: 'https://legislatie.just.ro/Public/DetaliiDocument/31438',
-    description: 'Privind liberul acces la informațiile de interes public',
-  },
-];
+interface LegislationLink {
+  id: string;
+  title: string;
+  description: string | null;
+  external_url: string | null;
+  file_url: string | null;
+  file_name: string | null;
+  file_size: number | null;
+  is_primary: boolean;
+  sort_order: number;
+  published: boolean;
+  created_at: string;
+}
 
 export default function LegislatiePage() {
+  const router = useRouter();
+  const [links, setLinks] = useState<LegislationLink[]>([]);
+  const [loading, setLoading] = useState(true);
+  
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<LegislationLink | null>(null);
+  const [deleting, setDeleting] = useState(false);
+
+  const loadLinks = useCallback(async () => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('legislation_links')
+        .select('*')
+        .order('is_primary', { ascending: false })
+        .order('sort_order', { ascending: true });
+
+      if (error) throw error;
+      setLinks(data || []);
+    } catch (error) {
+      console.error('Error loading legislation links:', error);
+      toast.error('Eroare', 'Nu s-au putut încărca link-urile.');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadLinks();
+  }, [loadLinks]);
+
+  const handleEdit = (item: LegislationLink) => {
+    router.push(`/admin/primaria/legislatie/${item.id}`);
+  };
+
+  const confirmDelete = (item: LegislationLink) => {
+    setItemToDelete(item);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDelete = async () => {
+    if (!itemToDelete) return;
+    
+    setDeleting(true);
+    try {
+      const { error } = await supabase
+        .from('legislation_links')
+        .delete()
+        .eq('id', itemToDelete.id);
+
+      if (error) throw error;
+
+      toast.success('Șters cu succes', `Link-ul "${itemToDelete.title}" a fost șters.`);
+      setDeleteDialogOpen(false);
+      setItemToDelete(null);
+      loadLinks();
+    } catch (error) {
+      console.error('Error deleting link:', error);
+      toast.error('Eroare la ștergere', 'Nu s-a putut șterge link-ul.');
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const getLinkUrl = (item: LegislationLink): string | null => {
+    return item.external_url || item.file_url || null;
+  };
+
+  const getLinkType = (item: LegislationLink): 'external' | 'file' | 'none' => {
+    if (item.external_url) return 'external';
+    if (item.file_url) return 'file';
+    return 'none';
+  };
+
+  const columns = [
+    {
+      key: 'title',
+      label: 'Titlu',
+      render: (item: LegislationLink) => (
+        <div className="flex items-center gap-3">
+          <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+            item.is_primary ? 'bg-amber-100' : 'bg-slate-100'
+          }`}>
+            {item.is_primary ? (
+              <Star className="w-5 h-5 text-amber-600 fill-amber-600" />
+            ) : (
+              <Scale className="w-5 h-5 text-slate-600" />
+            )}
+          </div>
+          <div className="min-w-0">
+            <p className="font-medium text-slate-900 flex items-center gap-2">
+              {item.title}
+              {item.is_primary && (
+                <span className="px-2 py-0.5 bg-amber-100 text-amber-700 text-xs font-medium rounded">
+                  Principal
+                </span>
+              )}
+            </p>
+            {item.description && (
+              <p className="text-sm text-slate-500 truncate max-w-md">
+                {item.description}
+              </p>
+            )}
+          </div>
+        </div>
+      ),
+    },
+    {
+      key: 'type',
+      label: 'Tip Link',
+      className: 'w-32',
+      render: (item: LegislationLink) => {
+        const type = getLinkType(item);
+        return (
+          <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded text-xs font-medium ${
+            type === 'external' 
+              ? 'bg-blue-100 text-blue-700' 
+              : type === 'file'
+                ? 'bg-purple-100 text-purple-700'
+                : 'bg-gray-100 text-gray-500'
+          }`}>
+            {type === 'external' ? (
+              <>
+                <ExternalLink className="w-3 h-3" />
+                Extern
+              </>
+            ) : type === 'file' ? (
+              <>
+                <FileText className="w-3 h-3" />
+                Fișier
+              </>
+            ) : (
+              'Niciun link'
+            )}
+          </span>
+        );
+      },
+    },
+    {
+      key: 'sort_order',
+      label: 'Ordine',
+      className: 'w-20',
+      render: (item: LegislationLink) => (
+        <div className="flex items-center gap-2 text-slate-500">
+          <GripVertical className="w-4 h-4" />
+          <span>{item.sort_order}</span>
+        </div>
+      ),
+    },
+    {
+      key: 'published',
+      label: 'Status',
+      className: 'w-24',
+      render: (item: LegislationLink) => (
+        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+          item.published 
+            ? 'bg-green-100 text-green-700' 
+            : 'bg-yellow-100 text-yellow-700'
+        }`}>
+          {item.published ? 'Publicat' : 'Draft'}
+        </span>
+      ),
+    },
+    {
+      key: 'link',
+      label: '',
+      className: 'w-24',
+      render: (item: LegislationLink) => {
+        const url = getLinkUrl(item);
+        if (!url) return null;
+        return (
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 px-3 py-1.5 text-sm text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-colors"
+          >
+            <ExternalLink className="w-4 h-4" />
+            Deschide
+          </a>
+        );
+      },
+    },
+  ];
+
   return (
     <div>
       <AdminPageHeader
         title="Legislație"
-        description="Link-uri către actele normative relevante pentru administrația publică locală"
+        description={`Gestionează link-urile către actele normative (${loading ? '...' : links.length} link-uri)`}
         breadcrumbs={[
           { label: 'Primăria', href: '/admin/primaria' },
           { label: 'Legislație' },
         ]}
+        actions={
+          <AdminButton 
+            icon={Plus} 
+            onClick={() => router.push('/admin/primaria/legislatie/nou')}
+          >
+            Adaugă Link Nou
+          </AdminButton>
+        }
       />
 
-      <AdminCard className="mb-6 bg-amber-50 border-amber-200">
-        <div className="flex items-start gap-4">
-          <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center flex-shrink-0">
-            <Info className="w-6 h-6 text-amber-600" />
-          </div>
+      <AdminCard className="mb-6 bg-blue-50 border-blue-200">
+        <div className="flex items-start gap-3">
+          <Scale className="w-5 h-5 text-blue-600 mt-0.5" />
           <div>
-            <h3 className="text-lg font-semibold text-amber-900">Informații</h3>
-            <p className="text-amber-800 mt-1">
-              Pagina de legislație afișează link-uri către actele normative externe (legislatie.just.ro, cdep.ro). 
-              Aceste link-uri sunt configurate în codul sursă al website-ului. Pentru modificări, 
-              contactați echipa de dezvoltare.
+            <p className="font-medium text-blue-900">Despre Legislație</p>
+            <p className="text-sm text-blue-700 mt-1">
+              Link-urile pot fi externe (către legislatie.just.ro, cdep.ro) sau documente încărcate. 
+              Link-ul marcat ca <strong>Principal</strong> va fi afișat evidențiat în partea de sus a paginii.
             </p>
           </div>
         </div>
       </AdminCard>
 
-      <div className="space-y-4">
-        <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
-          <Scale className="w-5 h-5" />
-          Link-uri Afișate pe Website
-        </h2>
-        
-        {LEGISLATION_LINKS.map((link, index) => (
-          <AdminCard 
-            key={index} 
-            className={link.isPrimary ? 'bg-blue-50 border-blue-200' : ''}
-          >
-            <div className="flex items-start gap-4">
-              <div className={`w-12 h-12 ${link.isPrimary ? 'bg-blue-600' : 'bg-slate-200'} rounded-lg flex items-center justify-center flex-shrink-0`}>
-                <Scale className={`w-6 h-6 ${link.isPrimary ? 'text-white' : 'text-slate-600'}`} />
-              </div>
-              <div className="flex-1">
-                <h3 className="font-semibold text-slate-900">{link.title}</h3>
-                <p className="text-sm text-slate-600 mt-1">{link.description}</p>
-                <a
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 mt-2 text-blue-600 hover:text-blue-800 text-sm"
-                >
-                  <ExternalLink className="w-4 h-4" />
-                  Deschide link-ul
-                </a>
-              </div>
-              {link.isPrimary && (
-                <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded">
-                  Principal
-                </span>
-              )}
-            </div>
-          </AdminCard>
-        ))}
-      </div>
+      <AdminTable
+        data={links}
+        columns={columns}
+        loading={loading}
+        onEdit={handleEdit}
+        onDelete={confirmDelete}
+        emptyMessage="Nu există link-uri de legislație. Apasă 'Adaugă Link Nou' pentru a adăuga primul link."
+      />
+
+      <AdminConfirmDialog
+        isOpen={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        onConfirm={handleDelete}
+        title="Șterge Link-ul?"
+        message={`Ești sigur că vrei să ștergi link-ul "${itemToDelete?.title}"? Această acțiune nu poate fi anulată.`}
+        confirmLabel="Da, șterge"
+        cancelLabel="Nu, anulează"
+        loading={deleting}
+      />
     </div>
   );
 }
