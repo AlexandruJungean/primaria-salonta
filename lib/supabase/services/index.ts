@@ -96,8 +96,19 @@ export {
   getProgramsByType,
   getFeaturedPrograms,
   getAllProgramSlugs,
+  getTopLevelPrograms,
+  getChildProgramsByParentSlug,
+  getProgramWithGroupedDocuments,
+  getProgramsByStatus,
+  getProgramImagesByType,
+  getProgramDocuments,
+  groupDocuments,
+  getCategoryLabel,
   type Program,
   type ProgramDocument,
+  type ProgramImage,
+  type ProgramUpdate,
+  type ProgramUpdateImage,
 } from './programs';
 
 // Pages & FAQ Services

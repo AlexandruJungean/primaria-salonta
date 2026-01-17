@@ -3,8 +3,8 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Gavel, ListChecks, Users, Briefcase, FileCheck } from 'lucide-react';
-import { supabase } from '@/lib/supabase/client';
 import { AdminPageHeader, AdminCard, AdminCardGrid } from '@/components/admin';
+import { adminFetch } from '@/lib/api-client';
 
 interface Stats {
   decisions: number;
@@ -23,18 +23,15 @@ export default function ConsiliulLocalPage() {
 
   const loadStats = async () => {
     try {
-      const [decisions, sessions, members, commissions] = await Promise.all([
-        supabase.from('council_decisions').select('*', { count: 'exact', head: true }),
-        supabase.from('council_sessions').select('*', { count: 'exact', head: true }),
-        supabase.from('council_members').select('*', { count: 'exact', head: true }).eq('is_active', true),
-        supabase.from('council_commissions').select('*', { count: 'exact', head: true }).eq('is_active', true),
-      ]);
+      const response = await adminFetch('/api/admin/stats?type=consiliul-local');
+      if (!response.ok) throw new Error('Failed to fetch');
+      const data = await response.json();
 
       setStats({
-        decisions: decisions.count || 0,
-        sessions: sessions.count || 0,
-        members: members.count || 0,
-        commissions: commissions.count || 0,
+        decisions: data.decisions || 0,
+        sessions: data.sessions || 0,
+        members: data.members || 0,
+        commissions: data.commissions || 0,
       });
     } catch (error) {
       console.error('Error loading stats:', error);

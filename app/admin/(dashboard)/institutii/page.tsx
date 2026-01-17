@@ -3,7 +3,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Plus, MapPin, Building } from 'lucide-react';
-import { supabase } from '@/lib/supabase/client';
 import {
   AdminPageHeader,
   AdminButton,
@@ -13,6 +12,7 @@ import {
   AdminStatusBadge,
   toast,
 } from '@/components/admin';
+import { adminFetch } from '@/lib/api-client';
 
 interface Institution {
   id: string;
@@ -46,14 +46,17 @@ export default function InstitutiiPage() {
   const loadInstitutions = useCallback(async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from('institutions')
-        .select('*')
-        .order('category', { ascending: true })
-        .order('sort_order', { ascending: true });
-
-      if (error) throw error;
-      setInstitutions(data || []);
+      const response = await adminFetch('/api/admin/institutions');
+      if (!response.ok) throw new Error('Failed to load');
+      const data = await response.json();
+      
+      // Sort by category then by sort_order
+      const sorted = (data || []).sort((a: Institution, b: Institution) => {
+        if (a.category !== b.category) return a.category.localeCompare(b.category);
+        return a.sort_order - b.sort_order;
+      });
+      
+      setInstitutions(sorted);
     } catch (error) {
       console.error('Error loading institutions:', error);
       toast.error('Eroare', 'Nu s-au putut încărca datele.');
@@ -80,16 +83,22 @@ export default function InstitutiiPage() {
     
     setDeleting(true);
     try {
-      const { error } = await supabase.from('institutions').delete().eq('id', itemToDelete.id);
-      if (error) throw error;
+      const response = await adminFetch(`/api/admin/institutions?id=${itemToDelete.id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to delete');
+      }
 
       toast.success('Șters', 'Instituția a fost ștearsă.');
       setDeleteDialogOpen(false);
       setItemToDelete(null);
       loadInstitutions();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error deleting:', error);
-      toast.error('Eroare', 'Nu s-a putut șterge.');
+      toast.error('Eroare', error.message || 'Nu s-a putut șterge.');
     } finally {
       setDeleting(false);
     }
@@ -128,7 +137,7 @@ export default function InstitutiiPage() {
       label: 'Status',
       className: 'w-28',
       render: (item: Institution) => (
-        <AdminStatusBadge status={item.is_active ? 'active' : 'inactive'} />
+        <AdminStatusBadge status={item.is_active ? 'enabled' : 'disabled'} />
       ),
     },
   ];

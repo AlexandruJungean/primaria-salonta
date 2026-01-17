@@ -3,7 +3,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Plus, Users } from 'lucide-react';
-import { supabase } from '@/lib/supabase/client';
 import {
   AdminPageHeader,
   AdminButton,
@@ -13,6 +12,7 @@ import {
   AdminStatusBadge,
   toast,
 } from '@/components/admin';
+import { adminFetch } from '@/lib/api-client';
 
 interface Commission {
   id: string;
@@ -22,6 +22,7 @@ interface Commission {
   is_active: boolean;
   sort_order: number;
   created_at: string;
+  member_count?: number;
 }
 
 export default function ComisiiPage() {
@@ -36,12 +37,9 @@ export default function ComisiiPage() {
   const loadCommissions = useCallback(async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from('council_commissions')
-        .select('*')
-        .order('commission_number', { ascending: true });
-
-      if (error) throw error;
+      const response = await adminFetch('/api/admin/commissions');
+      if (!response.ok) throw new Error('Failed to fetch');
+      const data = await response.json();
       setCommissions(data || []);
     } catch (error) {
       console.error('Error loading commissions:', error);
@@ -69,8 +67,10 @@ export default function ComisiiPage() {
     
     setDeleting(true);
     try {
-      const { error } = await supabase.from('council_commissions').delete().eq('id', itemToDelete.id);
-      if (error) throw error;
+      const response = await adminFetch(`/api/admin/commissions?id=${itemToDelete.id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed to delete');
 
       toast.success('Șters', 'Comisia a fost ștearsă.');
       setDeleteDialogOpen(false);
@@ -86,14 +86,6 @@ export default function ComisiiPage() {
 
   const columns = [
     {
-      key: 'commission_number',
-      label: 'Nr.',
-      className: 'w-16',
-      render: (item: Commission) => (
-        <span className="font-bold text-slate-900">{item.commission_number || '-'}</span>
-      ),
-    },
-    {
       key: 'name',
       label: 'Denumire Comisie',
       render: (item: Commission) => (
@@ -104,11 +96,22 @@ export default function ComisiiPage() {
       ),
     },
     {
+      key: 'members',
+      label: 'Membri',
+      className: 'w-24 text-center',
+      render: (item: Commission) => (
+        <div className="flex items-center justify-center gap-1.5">
+          <Users className="w-4 h-4 text-slate-400" />
+          <span className="font-medium text-slate-700">{item.member_count || 0}</span>
+        </div>
+      ),
+    },
+    {
       key: 'status',
       label: 'Status',
       className: 'w-28',
       render: (item: Commission) => (
-        <AdminStatusBadge status={item.is_active ? 'active' : 'inactive'} />
+        <AdminStatusBadge status={item.is_active ? 'enabled' : 'disabled'} />
       ),
     },
   ];

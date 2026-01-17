@@ -21,6 +21,9 @@ export interface CouncilSession {
   source_url: string | null;
   status: 'scheduled' | 'in_progress' | 'completed' | 'cancelled';
   published: boolean;
+  meeting_url: string | null;
+  meeting_id: string | null;
+  meeting_passcode: string | null;
   created_at: string;
   updated_at: string;
 }

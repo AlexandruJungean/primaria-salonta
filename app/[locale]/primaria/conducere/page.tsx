@@ -21,6 +21,17 @@ const POSITION_LABELS: Record<string, Record<string, string>> = {
   altele: { ro: 'Funcționar', hu: 'Tisztviselő', en: 'Official' },
 };
 
+// Convert newlines to <br> tags for proper HTML rendering
+function formatTextToHtml(text: string | null): string {
+  if (!text) return '';
+  // First escape any HTML, then convert newlines to <br>
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/\n/g, '<br>');
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -146,8 +157,8 @@ export default async function LeadershipPage({
                         <div className="mb-6">
                           <h3 className="font-semibold text-gray-900 mb-3">{t('education')}</h3>
                           <div 
-                            className="text-sm text-gray-600 leading-relaxed prose prose-sm max-w-none"
-                            dangerouslySetInnerHTML={{ __html: leader.bio }}
+                            className="text-sm text-gray-600 leading-relaxed"
+                            dangerouslySetInnerHTML={{ __html: formatTextToHtml(leader.bio) }}
                           />
                         </div>
                       )}
@@ -157,8 +168,8 @@ export default async function LeadershipPage({
                         <div>
                           <h3 className="font-semibold text-gray-900 mb-3">{t('mainResponsibilities')}</h3>
                           <div 
-                            className="text-sm text-gray-600 leading-relaxed prose prose-sm max-w-none [&>ul]:list-disc [&>ul]:pl-5 [&>ul]:space-y-1"
-                            dangerouslySetInnerHTML={{ __html: leader.responsibilities }}
+                            className="text-sm text-gray-600 leading-relaxed"
+                            dangerouslySetInnerHTML={{ __html: formatTextToHtml(leader.responsibilities) }}
                           />
                         </div>
                       )}

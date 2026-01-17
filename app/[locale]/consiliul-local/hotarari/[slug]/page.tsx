@@ -69,6 +69,13 @@ export default async function HotarariDetailPage({
   const t = await getTranslations('navigation');
   const th = await getTranslations('hotarariPage');
 
+  // Translate session data
+  const translatedSession = await translateContentFields(
+    sessionData,
+    ['title', 'description'],
+    locale as 'ro' | 'hu' | 'en'
+  );
+
   // Translate session documents and decisions
   const translatedDocuments = await translateContentArray(
     sessionData.documents,
@@ -93,7 +100,7 @@ export default async function HotarariDetailPage({
   );
 
   const session = {
-    ...sessionData,
+    ...translatedSession,
     documents: translatedDocuments,
     decisions: translatedDecisions,
   };
@@ -132,16 +139,23 @@ export default async function HotarariDetailPage({
 
             <div className="space-y-6">
               {/* Session Header */}
-              <div className="flex items-center gap-4 p-4 bg-primary-50 rounded-xl border border-primary-100">
-                <div className="w-14 h-14 rounded-xl bg-primary-100 flex items-center justify-center shrink-0">
-                  <Calendar className="w-7 h-7 text-primary-700" />
+              <div className="p-4 bg-primary-50 rounded-xl border border-primary-100">
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 rounded-xl bg-primary-100 flex items-center justify-center shrink-0">
+                    <Calendar className="w-7 h-7 text-primary-700" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold text-primary-900">{dateFormatted}</h2>
+                    <p className="text-sm text-primary-700 mt-0.5">
+                      {th('sessionDecisions')}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h2 className="text-xl font-bold text-primary-900">{dateFormatted}</h2>
-                  <p className="text-sm text-primary-700 mt-0.5">
-                    {th('sessionDecisions')}
+                {session.description && (
+                  <p className="text-primary-800 mt-3 pt-3 border-t border-primary-200">
+                    {session.description}
                   </p>
-                </div>
+                )}
               </div>
 
               {/* Proces Verbal */}

@@ -49,7 +49,7 @@ export default function StiriListPage() {
       let query = supabase
         .from('news')
         .select('*', { count: 'exact' })
-        .order('created_at', { ascending: false });
+        .order('published_at', { ascending: false, nullsFirst: false });
 
       if (searchQuery) {
         query = query.ilike('title', `%${searchQuery}%`);

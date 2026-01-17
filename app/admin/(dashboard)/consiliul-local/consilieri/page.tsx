@@ -2,8 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { Plus, Mail, Phone, Users } from 'lucide-react';
-import { supabase } from '@/lib/supabase/client';
+import { Plus } from 'lucide-react';
 import {
   AdminPageHeader,
   AdminButton,
@@ -13,16 +12,13 @@ import {
   AdminStatusBadge,
   toast,
 } from '@/components/admin';
+import { adminFetch } from '@/lib/api-client';
 
 interface CouncilMember {
   id: string;
   name: string;
   party: string | null;
-  photo_url: string | null;
-  email: string | null;
-  phone: string | null;
   is_active: boolean;
-  sort_order: number;
   created_at: string;
 }
 
@@ -38,12 +34,9 @@ export default function ConsilieriPage() {
   const loadMembers = useCallback(async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from('council_members')
-        .select('*')
-        .order('sort_order', { ascending: true });
-
-      if (error) throw error;
+      const response = await adminFetch('/api/admin/council-members');
+      if (!response.ok) throw new Error('Failed to fetch');
+      const data = await response.json();
       setMembers(data || []);
     } catch (error) {
       console.error('Error loading members:', error);
@@ -71,8 +64,10 @@ export default function ConsilieriPage() {
     
     setDeleting(true);
     try {
-      const { error } = await supabase.from('council_members').delete().eq('id', itemToDelete.id);
-      if (error) throw error;
+      const response = await adminFetch(`/api/admin/council-members?id=${itemToDelete.id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed to delete');
 
       toast.success('Șters', `Consilierul ${itemToDelete.name} a fost șters.`);
       setDeleteDialogOpen(false);
@@ -88,22 +83,6 @@ export default function ConsilieriPage() {
 
   const columns = [
     {
-      key: 'photo',
-      label: '',
-      className: 'w-16',
-      render: (item: CouncilMember) => (
-        <div className="w-12 h-12 rounded-full bg-slate-200 overflow-hidden">
-          {item.photo_url ? (
-            <img src={item.photo_url} alt={item.name} className="w-full h-full object-cover" />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-slate-400 font-bold text-lg">
-              {item.name.charAt(0)}
-            </div>
-          )}
-        </div>
-      ),
-    },
-    {
       key: 'name',
       label: 'Consilier',
       render: (item: CouncilMember) => (
@@ -114,39 +93,12 @@ export default function ConsilieriPage() {
       ),
     },
     {
-      key: 'contact',
-      label: 'Contact',
-      render: (item: CouncilMember) => (
-        <div className="space-y-1">
-          {item.email && (
-            <div className="flex items-center gap-2 text-sm text-slate-600">
-              <Mail className="w-4 h-4" />
-              <span>{item.email}</span>
-            </div>
-          )}
-          {item.phone && (
-            <div className="flex items-center gap-2 text-sm text-slate-600">
-              <Phone className="w-4 h-4" />
-              <span>{item.phone}</span>
-            </div>
-          )}
-          {!item.email && !item.phone && <span className="text-slate-400">-</span>}
-        </div>
-      ),
-    },
-    {
       key: 'status',
       label: 'Status',
       className: 'w-28',
       render: (item: CouncilMember) => (
-        <AdminStatusBadge status={item.is_active ? 'active' : 'inactive'} />
+        <AdminStatusBadge status={item.is_active ? 'enabled' : 'disabled'} />
       ),
-    },
-    {
-      key: 'sort_order',
-      label: 'Ordine',
-      className: 'w-20',
-      render: (item: CouncilMember) => <span className="text-slate-500">{item.sort_order}</span>,
     },
   ];
 

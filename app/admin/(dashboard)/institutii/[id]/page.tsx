@@ -3,7 +3,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { Save, ArrowLeft, Trash2 } from 'lucide-react';
-import { supabase } from '@/lib/supabase/client';
 import {
   AdminPageHeader,
   AdminButton,
@@ -14,6 +13,7 @@ import {
   AdminConfirmDialog,
   toast,
 } from '@/components/admin';
+import { adminFetch } from '@/lib/api-client';
 
 interface InstitutionFormData {
   name: string;
@@ -83,8 +83,12 @@ export default function InstitutieEditPage() {
     if (isNew) return;
 
     try {
-      const { data, error } = await supabase.from('institutions').select('*').eq('id', id).single();
-      if (error) throw error;
+      const response = await adminFetch(`/api/admin/institutions?id=${id}`);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to load');
+      }
+      const data = await response.json();
 
       if (data) {
         setFormData({
@@ -104,9 +108,9 @@ export default function InstitutieEditPage() {
           sort_order: data.sort_order || 0,
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error loading institution:', error);
-      toast.error('Eroare', 'Nu s-au putut încărca datele.');
+      toast.error('Eroare', error.message || 'Nu s-au putut încărca datele.');
       router.push('/admin/institutii');
     } finally {
       setLoading(false);
@@ -163,20 +167,31 @@ export default function InstitutieEditPage() {
         sort_order: formData.sort_order,
       };
 
+      let response: Response;
       if (isNew) {
-        const { error } = await supabase.from('institutions').insert([institutionData]);
-        if (error) throw error;
-        toast.success('Instituție adăugată', 'Datele au fost salvate!');
+        response = await adminFetch('/api/admin/institutions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(institutionData),
+        });
       } else {
-        const { error } = await supabase.from('institutions').update(institutionData).eq('id', id);
-        if (error) throw error;
-        toast.success('Date salvate', 'Modificările au fost salvate!');
+        response = await adminFetch(`/api/admin/institutions?id=${id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(institutionData),
+        });
       }
 
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to save');
+      }
+
+      toast.success(isNew ? 'Instituție adăugată' : 'Date salvate', 'Datele au fost salvate!');
       router.push('/admin/institutii');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error saving institution:', error);
-      toast.error('Eroare la salvare', 'Nu s-au putut salva datele.');
+      toast.error('Eroare la salvare', error.message || 'Nu s-au putut salva datele.');
     } finally {
       setSaving(false);
     }
@@ -186,13 +201,20 @@ export default function InstitutieEditPage() {
     if (isNew) return;
     setDeleting(true);
     try {
-      const { error } = await supabase.from('institutions').delete().eq('id', id);
-      if (error) throw error;
+      const response = await adminFetch(`/api/admin/institutions?id=${id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to delete');
+      }
+
       toast.success('Șters', 'Instituția a fost ștearsă.');
       router.push('/admin/institutii');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error deleting:', error);
-      toast.error('Eroare', 'Nu s-a putut șterge.');
+      toast.error('Eroare', error.message || 'Nu s-a putut șterge.');
     } finally {
       setDeleting(false);
       setDeleteDialogOpen(false);

@@ -16,8 +16,8 @@ import {
   Users,
   FileText,
 } from 'lucide-react';
-import { supabase } from '@/lib/supabase/client';
 import { AdminCard, AdminCardGrid, AdminButton, AdminPageHeader } from '@/components/admin';
+import { adminFetch } from '@/lib/api-client';
 
 interface Stats {
   news: number;
@@ -49,29 +49,17 @@ export default function AdminDashboardPage() {
 
   const loadStats = async () => {
     try {
-      const [
-        newsCount,
-        eventsCount,
-        decisionsCount,
-        sessionsCount,
-        documentsCount,
-        councilMembersCount,
-      ] = await Promise.all([
-        supabase.from('news').select('*', { count: 'exact', head: true }),
-        supabase.from('events').select('*', { count: 'exact', head: true }),
-        supabase.from('council_decisions').select('*', { count: 'exact', head: true }),
-        supabase.from('council_sessions').select('*', { count: 'exact', head: true }),
-        supabase.from('documents').select('*', { count: 'exact', head: true }),
-        supabase.from('council_members').select('*', { count: 'exact', head: true }),
-      ]);
+      const response = await adminFetch('/api/admin/stats?type=main');
+      if (!response.ok) throw new Error('Failed to fetch');
+      const data = await response.json();
 
       setStats({
-        news: newsCount.count || 0,
-        events: eventsCount.count || 0,
-        decisions: decisionsCount.count || 0,
-        sessions: sessionsCount.count || 0,
-        documents: documentsCount.count || 0,
-        councilMembers: councilMembersCount.count || 0,
+        news: data.news || 0,
+        events: data.events || 0,
+        decisions: data.decisions || 0,
+        sessions: data.sessions || 0,
+        documents: data.documents || 0,
+        councilMembers: data.councilMembers || 0,
         petitions: 0,
         contacts: 0,
       });

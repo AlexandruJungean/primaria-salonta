@@ -1,9 +1,8 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { Save, ArrowLeft, Trash2, FileText } from 'lucide-react';
-import { supabase } from '@/lib/supabase/client';
+import { Save, ArrowLeft, Trash2, FileText, Upload, X } from 'lucide-react';
 import {
   AdminPageHeader,
   AdminButton,
@@ -14,6 +13,7 @@ import {
   toast,
   canDeleteItem,
 } from '@/components/admin';
+import { adminFetch } from '@/lib/api-client';
 
 interface DeclarationFormData {
   person_name: string;
@@ -33,14 +33,12 @@ const POSITIONS = [
   { value: 'Primar', label: 'Primar' },
   { value: 'Viceprimar', label: 'Viceprimar' },
   { value: 'Secretar General', label: 'Secretar General' },
-  { value: 'Administrator Public', label: 'Administrator Public' },
-  { value: 'Director', label: 'Director' },
-  { value: 'Șef Serviciu', label: 'Șef Serviciu' },
+  { value: 'Funcționar public', label: 'Funcționar public' },
 ];
 
 const initialFormData: DeclarationFormData = {
   person_name: '',
-  position: 'Primar',
+  position: 'Funcționar public',
   declaration_year: currentYear,
   avere_file_url: '',
   avere_file_name: '',
@@ -57,10 +55,15 @@ export default function DeclaratiePrimarieEditPage() {
   const id = params.id as string;
   const isNew = id === 'nou';
 
+  const avereFileRef = useRef<HTMLInputElement>(null);
+  const intereseFileRef = useRef<HTMLInputElement>(null);
+
   const [formData, setFormData] = useState<DeclarationFormData>(initialFormData);
   const [createdAt, setCreatedAt] = useState<string | null>(null);
   const [loading, setLoading] = useState(!isNew);
   const [saving, setSaving] = useState(false);
+  const [uploadingAvere, setUploadingAvere] = useState(false);
+  const [uploadingInterese, setUploadingInterese] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [errors, setErrors] = useState<Partial<Record<keyof DeclarationFormData, string>>>({});
@@ -69,13 +72,15 @@ export default function DeclaratiePrimarieEditPage() {
     if (isNew) return;
 
     try {
-      const { data, error } = await supabase.from('asset_declarations').select('*').eq('id', id).single();
-      if (error) throw error;
+      const response = await adminFetch(`/api/admin/asset-declarations?id=${id}`);
+      if (!response.ok) throw new Error('Failed to fetch');
+      
+      const data = await response.json();
 
       if (data) {
         setFormData({
           person_name: data.person_name || '',
-          position: data.position || 'Primar',
+          position: data.position || 'Funcționar public',
           declaration_year: data.declaration_year || currentYear,
           avere_file_url: data.avere_file_url || '',
           avere_file_name: data.avere_file_name || '',
@@ -110,6 +115,50 @@ export default function DeclaratiePrimarieEditPage() {
     return Object.keys(newErrors).length === 0;
   };
 
+  const handleUploadFile = async (file: File, type: 'avere' | 'interese') => {
+    if (type === 'avere') setUploadingAvere(true);
+    else setUploadingInterese(true);
+    
+    try {
+      const uploadFormData = new FormData();
+      uploadFormData.append('file', file);
+      uploadFormData.append('category', 'declaratii');
+      uploadFormData.append('subcategory', type === 'avere' ? 'avere' : 'interese');
+      uploadFormData.append('year', formData.declaration_year.toString());
+
+      const response = await adminFetch('/api/admin/upload', {
+        method: 'POST',
+        body: uploadFormData,
+      });
+
+      if (!response.ok) throw new Error('Upload failed');
+      
+      const result = await response.json();
+      
+      if (type === 'avere') {
+        setFormData(prev => ({
+          ...prev,
+          avere_file_url: result.url,
+          avere_file_name: file.name,
+        }));
+      } else {
+        setFormData(prev => ({
+          ...prev,
+          interese_file_url: result.url,
+          interese_file_name: file.name,
+        }));
+      }
+      
+      toast.success('Fișier încărcat', `Declarația de ${type} a fost încărcată.`);
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      toast.error('Eroare', 'Nu s-a putut încărca fișierul.');
+    } finally {
+      if (type === 'avere') setUploadingAvere(false);
+      else setUploadingInterese(false);
+    }
+  };
+
   const handleSave = async () => {
     if (!validate()) {
       toast.error('Verifică formularul', 'Completează câmpurile obligatorii.');
@@ -131,12 +180,20 @@ export default function DeclaratiePrimarieEditPage() {
       };
 
       if (isNew) {
-        const { error } = await supabase.from('asset_declarations').insert([declarationData]);
-        if (error) throw error;
+        const response = await adminFetch('/api/admin/asset-declarations', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(declarationData),
+        });
+        if (!response.ok) throw new Error('Failed to create');
         toast.success('Declarație adăugată', 'Datele au fost salvate!');
       } else {
-        const { error } = await supabase.from('asset_declarations').update(declarationData).eq('id', id);
-        if (error) throw error;
+        const response = await adminFetch(`/api/admin/asset-declarations?id=${id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(declarationData),
+        });
+        if (!response.ok) throw new Error('Failed to update');
         toast.success('Date salvate', 'Modificările au fost salvate!');
       }
 
@@ -155,8 +212,10 @@ export default function DeclaratiePrimarieEditPage() {
     if (isNew) return;
     setDeleting(true);
     try {
-      const { error } = await supabase.from('asset_declarations').delete().eq('id', id);
-      if (error) throw error;
+      const response = await adminFetch(`/api/admin/asset-declarations?id=${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed to delete');
       toast.success('Șters', 'Declarația a fost ștearsă.');
       router.push('/admin/primaria/declaratii');
     } catch (error) {
@@ -202,29 +261,109 @@ export default function DeclaratiePrimarieEditPage() {
           </AdminCard>
 
           <AdminCard title="Declarație de Avere">
-            <div className="space-y-4">
-              <AdminInput label="URL Fișier Avere (PDF)" value={formData.avere_file_url} onChange={(e) => handleChange('avere_file_url', e.target.value)} placeholder="https://..." />
-              <AdminInput label="Nume Fișier" value={formData.avere_file_name} onChange={(e) => handleChange('avere_file_name', e.target.value)} placeholder="declaratie-avere.pdf" />
-              {formData.avere_file_url && (
-                <div className="p-4 bg-green-50 rounded-lg flex items-center gap-4">
-                  <FileText className="w-8 h-8 text-green-600" />
-                  <a href={formData.avere_file_url} target="_blank" rel="noopener noreferrer" className="text-sm text-green-700 hover:underline">Deschide fișierul →</a>
+            {formData.avere_file_url ? (
+              <div className="p-4 bg-green-50 rounded-lg flex items-center gap-4">
+                <FileText className="w-10 h-10 text-green-600" />
+                <div className="flex-1">
+                  <p className="font-medium text-green-900">Declarație Avere încărcată</p>
+                  <p className="text-sm text-green-700">{formData.avere_file_name || 'Document PDF'}</p>
                 </div>
-              )}
-            </div>
+                <div className="flex items-center gap-2">
+                  <a
+                    href={formData.avere_file_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3 py-2 text-sm font-medium text-green-700 bg-green-100 hover:bg-green-200 rounded-lg transition-colors"
+                  >
+                    Deschide
+                  </a>
+                  {canDelete() && (
+                    <button
+                      onClick={() => setFormData(prev => ({ ...prev, avere_file_url: '', avere_file_name: '' }))}
+                      className="p-2 text-red-500 hover:bg-red-100 rounded-lg transition-colors"
+                      title="Șterge fișierul"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <div className="p-6 border-2 border-dashed border-slate-300 rounded-lg text-center">
+                <input
+                  ref={avereFileRef}
+                  type="file"
+                  accept=".pdf"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) handleUploadFile(file, 'avere');
+                  }}
+                  className="hidden"
+                />
+                <FileText className="w-12 h-12 text-slate-400 mx-auto mb-3" />
+                <p className="text-slate-600 mb-3">Încarcă declarația de avere (PDF)</p>
+                <AdminButton
+                  icon={Upload}
+                  onClick={() => avereFileRef.current?.click()}
+                  loading={uploadingAvere}
+                >
+                  Selectează Fișier
+                </AdminButton>
+              </div>
+            )}
           </AdminCard>
 
           <AdminCard title="Declarație de Interese">
-            <div className="space-y-4">
-              <AdminInput label="URL Fișier Interese (PDF)" value={formData.interese_file_url} onChange={(e) => handleChange('interese_file_url', e.target.value)} placeholder="https://..." />
-              <AdminInput label="Nume Fișier" value={formData.interese_file_name} onChange={(e) => handleChange('interese_file_name', e.target.value)} placeholder="declaratie-interese.pdf" />
-              {formData.interese_file_url && (
-                <div className="p-4 bg-blue-50 rounded-lg flex items-center gap-4">
-                  <FileText className="w-8 h-8 text-blue-600" />
-                  <a href={formData.interese_file_url} target="_blank" rel="noopener noreferrer" className="text-sm text-blue-700 hover:underline">Deschide fișierul →</a>
+            {formData.interese_file_url ? (
+              <div className="p-4 bg-blue-50 rounded-lg flex items-center gap-4">
+                <FileText className="w-10 h-10 text-blue-600" />
+                <div className="flex-1">
+                  <p className="font-medium text-blue-900">Declarație Interese încărcată</p>
+                  <p className="text-sm text-blue-700">{formData.interese_file_name || 'Document PDF'}</p>
                 </div>
-              )}
-            </div>
+                <div className="flex items-center gap-2">
+                  <a
+                    href={formData.interese_file_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3 py-2 text-sm font-medium text-blue-700 bg-blue-100 hover:bg-blue-200 rounded-lg transition-colors"
+                  >
+                    Deschide
+                  </a>
+                  {canDelete() && (
+                    <button
+                      onClick={() => setFormData(prev => ({ ...prev, interese_file_url: '', interese_file_name: '' }))}
+                      className="p-2 text-red-500 hover:bg-red-100 rounded-lg transition-colors"
+                      title="Șterge fișierul"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <div className="p-6 border-2 border-dashed border-slate-300 rounded-lg text-center">
+                <input
+                  ref={intereseFileRef}
+                  type="file"
+                  accept=".pdf"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) handleUploadFile(file, 'interese');
+                  }}
+                  className="hidden"
+                />
+                <FileText className="w-12 h-12 text-slate-400 mx-auto mb-3" />
+                <p className="text-slate-600 mb-3">Încarcă declarația de interese (PDF)</p>
+                <AdminButton
+                  icon={Upload}
+                  onClick={() => intereseFileRef.current?.click()}
+                  loading={uploadingInterese}
+                >
+                  Selectează Fișier
+                </AdminButton>
+              </div>
+            )}
           </AdminCard>
         </div>
 

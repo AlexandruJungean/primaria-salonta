@@ -1,105 +1,104 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { Save, ArrowLeft, Trash2 } from 'lucide-react';
-import { supabase } from '@/lib/supabase/client';
+import { Save, ArrowLeft, Trash2, Upload, FileText, Plus } from 'lucide-react';
 import {
   AdminPageHeader,
   AdminButton,
   AdminCard,
   AdminInput,
+  AdminDateInput,
   AdminTextarea,
-  AdminSelect,
   AdminConfirmDialog,
   toast,
   canDeleteItem,
 } from '@/components/admin';
+import { adminFetch } from '@/lib/api-client';
 
-interface DecisionFormData {
+interface SessionFormData {
   slug: string;
-  decision_number: number;
-  decision_date: string;
-  year: number;
   title: string;
-  summary: string;
-  category: string;
-  status: string;
+  session_date: string;
+  description: string;
   published: boolean;
 }
 
-const currentYear = new Date().getFullYear();
+interface DecisionDocument {
+  id: string;
+  decision_id: string;
+  document_type: string;
+  file_url: string;
+  file_name: string;
+  file_size: number | null;
+  title: string;
+  sort_order: number;
+}
 
-const initialFormData: DecisionFormData = {
+interface Decision {
+  id: string;
+  session_id: string;
+  decision_number: number;
+  decision_date: string;
+  title: string;
+  published: boolean;
+  council_decision_documents: DecisionDocument[];
+}
+
+const initialFormData: SessionFormData = {
   slug: '',
-  decision_number: 1,
-  decision_date: '',
-  year: currentYear,
   title: '',
-  summary: '',
-  category: 'administrativ',
-  status: 'in_vigoare',
+  session_date: new Date().toISOString().split('T')[0],
+  description: '',
   published: true,
 };
 
-const CATEGORIES = [
-  { value: 'buget', label: 'Buget' },
-  { value: 'urbanism', label: 'Urbanism' },
-  { value: 'patrimoniu', label: 'Patrimoniu' },
-  { value: 'taxe', label: 'Taxe' },
-  { value: 'servicii_publice', label: 'Servicii Publice' },
-  { value: 'administrativ', label: 'Administrativ' },
-  { value: 'social', label: 'Social' },
-  { value: 'cultura', label: 'Cultură' },
-  { value: 'mediu', label: 'Mediu' },
-  { value: 'altele', label: 'Altele' },
-];
-
-const STATUSES = [
-  { value: 'in_vigoare', label: 'În vigoare' },
-  { value: 'modificata', label: 'Modificată' },
-  { value: 'abrogata', label: 'Abrogată' },
-];
 
 const DELETE_LIMIT_HOURS = 24;
 
-export default function HotarareEditPage() {
+export default function HotarariEditPage() {
   const router = useRouter();
   const params = useParams();
   const id = params.id as string;
   const isNew = id === 'nou';
 
-  const [formData, setFormData] = useState<DecisionFormData>(initialFormData);
+  const [formData, setFormData] = useState<SessionFormData>(initialFormData);
+  const [decisions, setDecisions] = useState<Decision[]>([]);
   const [createdAt, setCreatedAt] = useState<string | null>(null);
   const [loading, setLoading] = useState(!isNew);
   const [saving, setSaving] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
-  const [errors, setErrors] = useState<Partial<Record<keyof DecisionFormData, string>>>({});
+  const [errors, setErrors] = useState<Partial<Record<keyof SessionFormData, string>>>({});
 
-  const loadDecision = useCallback(async () => {
+  // New decision form state
+  const [showNewDecisionForm, setShowNewDecisionForm] = useState(false);
+  const [newDecisionTitle, setNewDecisionTitle] = useState('');
+  const [newDecisionFile, setNewDecisionFile] = useState<File | null>(null);
+  const [creatingDecision, setCreatingDecision] = useState(false);
+  const newDecisionFileRef = useRef<HTMLInputElement>(null);
+
+  const loadSession = useCallback(async () => {
     if (isNew) return;
 
     try {
-      const { data, error } = await supabase.from('council_decisions').select('*').eq('id', id).single();
-      if (error) throw error;
+      const response = await adminFetch(`/api/admin/council-sessions?id=${id}`);
+      if (!response.ok) throw new Error('Failed to fetch');
+      const data = await response.json();
 
       if (data) {
         setFormData({
           slug: data.slug || '',
-          decision_number: data.decision_number || 1,
-          decision_date: data.decision_date || '',
-          year: data.year || currentYear,
           title: data.title || '',
-          summary: data.summary || '',
-          category: data.category || 'administrativ',
-          status: data.status || 'in_vigoare',
+          session_date: data.session_date || '',
+          description: data.description || '',
           published: data.published ?? true,
         });
         setCreatedAt(data.created_at);
+        setDecisions(data.decisions || []);
       }
     } catch (error) {
-      console.error('Error loading decision:', error);
+      console.error('Error loading session:', error);
       toast.error('Eroare', 'Nu s-au putut încărca datele.');
       router.push('/admin/consiliul-local/hotarari');
     } finally {
@@ -108,40 +107,44 @@ export default function HotarareEditPage() {
   }, [id, isNew, router]);
 
   useEffect(() => {
-    loadDecision();
-  }, [loadDecision]);
+    loadSession();
+  }, [loadSession]);
 
-  const generateSlug = (number: number, year: number) => {
-    return `hotarare-${number}-${year}`;
+  const generateSlug = (date: string) => {
+    if (!date) return '';
+    const dateObj = new Date(date);
+    const day = String(dateObj.getDate()).padStart(2, '0');
+    const month = dateObj.toLocaleDateString('ro-RO', { month: 'long' });
+    const year = dateObj.getFullYear();
+    return `${day}-${month}-${year}`.toLowerCase().replace(/\s+/g, '-');
   };
 
-  const handleNumberChange = (value: number) => {
+  const generateTitle = (date: string) => {
+    if (!date) return '';
+    const dateObj = new Date(date);
+    return `Ședința din ${dateObj.toLocaleDateString('ro-RO', { day: '2-digit', month: '2-digit', year: 'numeric' })}`;
+  };
+
+  const handleDateChange = (value: string) => {
     setFormData(prev => ({
       ...prev,
-      decision_number: value,
-      slug: isNew ? generateSlug(value, prev.year) : prev.slug,
+      session_date: value,
+      slug: generateSlug(value), // Always auto-generate slug
+      title: isNew ? generateTitle(value) : prev.title,
     }));
+    setErrors(prev => ({ ...prev, session_date: undefined }));
   };
 
-  const handleYearChange = (value: number) => {
-    setFormData(prev => ({
-      ...prev,
-      year: value,
-      slug: isNew ? generateSlug(prev.decision_number, value) : prev.slug,
-    }));
-  };
-
-  const handleChange = (field: keyof DecisionFormData, value: string | boolean | number) => {
+  const handleChange = (field: keyof SessionFormData, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     setErrors(prev => ({ ...prev, [field]: undefined }));
   };
 
   const validate = (): boolean => {
-    const newErrors: Partial<Record<keyof DecisionFormData, string>> = {};
+    const newErrors: Partial<Record<keyof SessionFormData, string>> = {};
     if (!formData.title.trim()) newErrors.title = 'Titlul este obligatoriu';
     if (!formData.slug.trim()) newErrors.slug = 'Slug-ul este obligatoriu';
-    if (!formData.decision_date) newErrors.decision_date = 'Data este obligatorie';
-    if (!formData.decision_number) newErrors.decision_number = 'Numărul este obligatoriu';
+    if (!formData.session_date) newErrors.session_date = 'Data este obligatorie';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -154,36 +157,110 @@ export default function HotarareEditPage() {
 
     setSaving(true);
     try {
-      const decisionData = {
+      const sessionData = {
         slug: formData.slug.trim(),
-        decision_number: formData.decision_number,
-        decision_date: formData.decision_date,
-        year: formData.year,
         title: formData.title.trim(),
-        summary: formData.summary.trim() || null,
-        category: formData.category,
-        status: formData.status,
+        session_date: formData.session_date,
+        description: formData.description.trim() || null,
         published: formData.published,
+        source: 'hotarari',
       };
 
       if (isNew) {
-        const { error } = await supabase.from('council_decisions').insert([decisionData]);
-        if (error) throw error;
-        toast.success('Hotărâre adăugată', 'Datele au fost salvate!');
+        const response = await adminFetch('/api/admin/council-sessions', {
+          method: 'POST',
+          body: JSON.stringify(sessionData),
+        });
+        if (!response.ok) throw new Error('Failed to create');
+        toast.success('Ședință creată', 'Datele au fost salvate!');
+        router.push('/admin/consiliul-local/hotarari');
       } else {
-        const { error } = await supabase.from('council_decisions').update(decisionData).eq('id', id);
-        if (error) throw error;
+        const response = await adminFetch(`/api/admin/council-sessions?id=${id}`, {
+          method: 'PATCH',
+          body: JSON.stringify(sessionData),
+        });
+        if (!response.ok) throw new Error('Failed to update');
         toast.success('Date salvate', 'Modificările au fost salvate!');
+        router.push('/admin/consiliul-local/hotarari');
       }
-
-      router.push('/admin/consiliul-local/hotarari');
     } catch (error) {
-      console.error('Error saving decision:', error);
+      console.error('Error saving session:', error);
       toast.error('Eroare la salvare', 'Nu s-au putut salva datele.');
     } finally {
       setSaving(false);
     }
   };
+
+  // Decision management
+  const handleCreateDecision = async () => {
+    if (!newDecisionTitle || !newDecisionFile) {
+      toast.error('Completează câmpurile', 'Titlul și documentul sunt obligatorii.');
+      return;
+    }
+
+    setCreatingDecision(true);
+    try {
+      // Step 1: Create the decision
+      const decisionData = {
+        session_id: id,
+        decision_number: decisions.length + 1, // Auto-increment
+        decision_date: formData.session_date,
+        title: newDecisionTitle.trim(),
+        published: true,
+      };
+
+      const response = await adminFetch('/api/admin/council-decisions', {
+        method: 'POST',
+        body: JSON.stringify(decisionData),
+      });
+
+      if (!response.ok) throw new Error('Failed to create decision');
+      const newDecision = await response.json();
+
+      // Step 2: Upload the document
+      const year = new Date(formData.session_date).getFullYear();
+      const uploadFormData = new FormData();
+      uploadFormData.append('file', newDecisionFile);
+      uploadFormData.append('decision_id', newDecision.id);
+      uploadFormData.append('document_type', 'hotarare');
+      uploadFormData.append('title', newDecisionTitle.trim());
+      uploadFormData.append('year', year.toString());
+
+      const uploadResponse = await adminFetch('/api/admin/council-decisions/documents', {
+        method: 'POST',
+        body: uploadFormData,
+      });
+
+      if (!uploadResponse.ok) throw new Error('Failed to upload document');
+
+      toast.success('Hotărâre adăugată', 'Hotărârea și documentul au fost salvate!');
+      setNewDecisionTitle('');
+      setNewDecisionFile(null);
+      if (newDecisionFileRef.current) newDecisionFileRef.current.value = '';
+      setShowNewDecisionForm(false);
+      loadSession();
+    } catch (error) {
+      console.error('Error creating decision:', error);
+      toast.error('Eroare', 'Nu s-a putut crea hotărârea.');
+    } finally {
+      setCreatingDecision(false);
+    }
+  };
+
+  const handleDeleteDecision = async (decision: Decision) => {
+    try {
+      const response = await adminFetch(`/api/admin/council-decisions?id=${decision.id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed to delete');
+      toast.success('Șters', 'Hotărârea a fost ștearsă.');
+      loadSession();
+    } catch (error) {
+      console.error('Error deleting:', error);
+      toast.error('Eroare', 'Nu s-a putut șterge.');
+    }
+  };
+
 
   const canDelete = (): boolean => canDeleteItem(createdAt, DELETE_LIMIT_HOURS);
 
@@ -191,9 +268,9 @@ export default function HotarareEditPage() {
     if (isNew) return;
     setDeleting(true);
     try {
-      const { error } = await supabase.from('council_decisions').delete().eq('id', id);
-      if (error) throw error;
-      toast.success('Șters', 'Hotărârea a fost ștearsă.');
+      const response = await adminFetch(`/api/admin/council-sessions?id=${id}`, { method: 'DELETE' });
+      if (!response.ok) throw new Error('Failed to delete');
+      toast.success('Șters', 'Ședința a fost ștearsă.');
       router.push('/admin/consiliul-local/hotarari');
     } catch (error) {
       console.error('Error deleting:', error);
@@ -204,20 +281,33 @@ export default function HotarareEditPage() {
     }
   };
 
+  const formatFileSize = (bytes: number | null) => {
+    if (!bytes) return '';
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('ro-RO', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+  };
+
   if (loading) {
     return <div className="flex items-center justify-center py-12"><div className="animate-spin h-8 w-8 border-4 border-blue-500 border-t-transparent rounded-full" /></div>;
   }
 
-  const years = Array.from({ length: 10 }, (_, i) => currentYear - i);
-
   return (
     <div>
       <AdminPageHeader
-        title={isNew ? 'Adaugă Hotărâre Nouă' : 'Editează Hotărârea'}
+        title={isNew ? 'Adaugă Ședință Nouă' : `Hotărâri - ${formatDate(formData.session_date)}`}
         breadcrumbs={[
           { label: 'Consiliul Local', href: '/admin/consiliul-local' },
           { label: 'Hotărâri', href: '/admin/consiliul-local/hotarari' },
-          { label: isNew ? 'Hotărâre Nouă' : 'Editare' },
+          { label: isNew ? 'Ședință Nouă' : formatDate(formData.session_date) },
         ]}
         actions={
           <div className="flex gap-3">
@@ -227,52 +317,125 @@ export default function HotarareEditPage() {
         }
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-6">
-          <AdminCard title="Informații Hotărâre">
+      <div className="space-y-6">
+        {/* Session Info */}
+        <AdminCard title="Informații Ședință">
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <AdminDateInput label="Data Ședință" value={formData.session_date} onChange={handleDateChange} required error={errors.session_date} />
+              <AdminInput label="Titlu" value={formData.title} onChange={(e) => handleChange('title', e.target.value)} required error={errors.title} />
+            </div>
+            <p className="text-sm text-slate-500">Slug generat automat: <code className="bg-slate-100 px-2 py-1 rounded">{formData.slug}</code></p>
+            <AdminTextarea label="Descriere (opțional)" value={formData.description} onChange={(e) => handleChange('description', e.target.value)} rows={3} placeholder="Descriere opțională a ședinței..." />
+          </div>
+          <div className="flex items-center justify-between mt-4 pt-4 border-t">
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-slate-600">Publicată:</span>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" checked={formData.published} onChange={(e) => handleChange('published', e.target.checked)} className="sr-only peer" />
+                <div className="w-11 h-6 bg-slate-200 peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+              </label>
+            </div>
+            <AdminButton icon={Save} onClick={handleSave} loading={saving}>Salvează</AdminButton>
+          </div>
+        </AdminCard>
+
+        {/* Decisions List */}
+        {!isNew && (
+          <AdminCard title={`Hotărâri Adoptate (${decisions.length})`}>
             <div className="space-y-4">
-              <div className="grid grid-cols-3 gap-4">
-                <AdminInput label="Număr Hotărâre" type="number" value={formData.decision_number.toString()} onChange={(e) => handleNumberChange(parseInt(e.target.value) || 1)} required error={errors.decision_number} />
-                <AdminInput label="Data" type="date" value={formData.decision_date} onChange={(e) => handleChange('decision_date', e.target.value)} required error={errors.decision_date} />
-                <AdminSelect label="Anul" value={formData.year.toString()} onChange={(e) => handleYearChange(parseInt(e.target.value))} options={years.map(y => ({ value: y.toString(), label: y.toString() }))} />
-              </div>
-              <AdminInput label="Slug (URL)" value={formData.slug} onChange={(e) => handleChange('slug', e.target.value)} required error={errors.slug} />
-              <AdminInput label="Titlu Hotărâre" value={formData.title} onChange={(e) => handleChange('title', e.target.value)} required error={errors.title} placeholder="Ex: privind aprobarea bugetului local..." />
-              <AdminTextarea label="Rezumat (opțional)" value={formData.summary} onChange={(e) => handleChange('summary', e.target.value)} rows={4} placeholder="Rezumatul hotărârii..." />
+              {/* Add new decision button */}
+              {!showNewDecisionForm ? (
+                <AdminButton icon={Plus} variant="secondary" onClick={() => setShowNewDecisionForm(true)}>
+                  Adaugă Hotărâre Nouă
+                </AdminButton>
+              ) : (
+                <div className="p-4 bg-blue-50 rounded-lg space-y-3 border border-blue-200">
+                  <p className="font-medium text-blue-900">Adaugă Hotărâre Nouă</p>
+                  <AdminInput 
+                    label="Titlu Hotărâre" 
+                    value={newDecisionTitle} 
+                    onChange={(e) => setNewDecisionTitle(e.target.value)} 
+                    placeholder="Ex: Privind aprobarea bugetului local" 
+                  />
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Document (PDF)</label>
+                    <input 
+                      ref={newDecisionFileRef}
+                      type="file" 
+                      accept=".pdf,.doc,.docx" 
+                      onChange={(e) => setNewDecisionFile(e.target.files?.[0] || null)}
+                      className="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-white file:text-blue-700 hover:file:bg-blue-50"
+                    />
+                  </div>
+                  <div className="flex gap-2 pt-2">
+                    <AdminButton icon={Plus} onClick={handleCreateDecision} loading={creatingDecision} disabled={!newDecisionTitle || !newDecisionFile}>
+                      Adaugă Hotărârea
+                    </AdminButton>
+                    <AdminButton variant="ghost" onClick={() => { 
+                      setShowNewDecisionForm(false); 
+                      setNewDecisionTitle(''); 
+                      setNewDecisionFile(null);
+                      if (newDecisionFileRef.current) newDecisionFileRef.current.value = '';
+                    }}>
+                      Anulează
+                    </AdminButton>
+                  </div>
+                </div>
+              )}
+
+              {/* Decisions list */}
+              {decisions.length === 0 ? (
+                <p className="text-center py-8 text-slate-500">Nu există hotărâri pentru această ședință.</p>
+              ) : (
+                <div className="space-y-2">
+                  {decisions.map((decision) => {
+                    const doc = decision.council_decision_documents?.[0];
+                    return (
+                      <div key={decision.id} className="flex items-center justify-between p-3 bg-white border rounded-lg">
+                        <div className="flex items-center gap-3">
+                          <FileText className="w-5 h-5 text-blue-600" />
+                          <span className="font-medium">{decision.title}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {doc && (
+                            <a 
+                              href={doc.file_url} 
+                              target="_blank" 
+                              rel="noopener noreferrer" 
+                              className="px-3 py-1.5 text-sm text-blue-600 hover:bg-blue-50 rounded-lg flex items-center gap-1"
+                            >
+                              <FileText className="w-4 h-4" />
+                              Descarcă
+                            </a>
+                          )}
+                          <button
+                            onClick={() => handleDeleteDecision(decision)}
+                            className="p-1.5 text-red-500 hover:bg-red-50 rounded"
+                            title="Șterge"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </AdminCard>
-        </div>
+        )}
 
-        <div className="space-y-6">
-          <AdminCard title="Clasificare">
-            <div className="space-y-4">
-              <AdminSelect label="Categorie" value={formData.category} onChange={(e) => handleChange('category', e.target.value)} options={CATEGORIES} />
-              <AdminSelect label="Status" value={formData.status} onChange={(e) => handleChange('status', e.target.value)} options={STATUSES} />
-            </div>
+        {isNew && (
+          <AdminCard className="bg-blue-50 border-blue-200">
+            <p className="text-blue-800">
+              <strong>Notă:</strong> Salvează ședința pentru a putea adăuga documente și hotărâri.
+            </p>
           </AdminCard>
-
-          <AdminCard title="Publicare">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
-                <div><p className="font-medium text-slate-900">Publicată</p><p className="text-sm text-slate-500">Vizibilă pe website</p></div>
-                <label className="relative inline-flex items-center cursor-pointer">
-                  <input type="checkbox" checked={formData.published} onChange={(e) => handleChange('published', e.target.checked)} className="sr-only peer" />
-                  <div className="w-14 h-7 bg-slate-200 peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-blue-600"></div>
-                </label>
-              </div>
-              <AdminButton size="lg" icon={Save} onClick={handleSave} loading={saving} className="w-full">{isNew ? 'Salvează' : 'Salvează Modificările'}</AdminButton>
-            </div>
-          </AdminCard>
-
-          {!isNew && !canDelete() && (
-            <AdminCard className="bg-amber-50 border-amber-200">
-              <p className="text-amber-800 text-sm"><strong>Notă:</strong> Această hotărâre nu mai poate fi ștearsă (au trecut 24h).</p>
-            </AdminCard>
-          )}
-        </div>
+        )}
       </div>
 
-      <AdminConfirmDialog isOpen={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)} onConfirm={handleDelete} title="Șterge Hotărârea?" message={`Ștergi hotărârea nr. ${formData.decision_number}?`} confirmLabel="Da, șterge" cancelLabel="Anulează" loading={deleting} />
+      <AdminConfirmDialog isOpen={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)} onConfirm={handleDelete} title="Șterge Ședința?" message={`Ștergi ședința din ${formatDate(formData.session_date)} cu toate hotărârile?`} confirmLabel="Da, șterge" cancelLabel="Anulează" loading={deleting} />
     </div>
   );
 }

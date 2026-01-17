@@ -3,16 +3,15 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Plus, Clock, MapPin } from 'lucide-react';
-import { supabase } from '@/lib/supabase/client';
 import {
   AdminPageHeader,
   AdminButton,
-  AdminCard,
   AdminTable,
   AdminConfirmDialog,
   AdminStatusBadge,
   toast,
 } from '@/components/admin';
+import { adminFetch } from '@/lib/api-client';
 
 interface OfficeHour {
   id: string;
@@ -38,12 +37,9 @@ export default function ProgramPage() {
   const loadOfficeHours = useCallback(async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from('office_hours')
-        .select('*')
-        .order('sort_order', { ascending: true });
-
-      if (error) throw error;
+      const response = await adminFetch('/api/admin/office-hours');
+      if (!response.ok) throw new Error('Failed to fetch');
+      const data = await response.json();
       setOfficeHours(data || []);
     } catch (error) {
       console.error('Error loading office hours:', error);
@@ -71,12 +67,10 @@ export default function ProgramPage() {
     
     setDeleting(true);
     try {
-      const { error } = await supabase
-        .from('office_hours')
-        .delete()
-        .eq('id', itemToDelete.id);
-
-      if (error) throw error;
+      const response = await adminFetch(`/api/admin/office-hours?id=${itemToDelete.id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed to delete');
 
       toast.success('Șters cu succes', `Programul pentru "${itemToDelete.name}" a fost șters.`);
       setDeleteDialogOpen(false);
@@ -130,7 +124,7 @@ export default function ProgramPage() {
       label: 'Status',
       className: 'w-28',
       render: (item: OfficeHour) => (
-        <AdminStatusBadge status={item.is_active ? 'active' : 'inactive'} />
+        <AdminStatusBadge status={item.is_active ? 'enabled' : 'disabled'} />
       ),
     },
     {

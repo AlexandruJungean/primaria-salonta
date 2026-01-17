@@ -152,9 +152,9 @@ export default function PetitiiPage() {
       label: 'Status',
       className: 'w-32',
       render: (item: Petition) => {
-        const statusMap: Record<string, 'pending' | 'active' | 'completed' | 'cancelled'> = {
+        const statusMap: Record<string, 'pending' | 'in_progress' | 'completed' | 'cancelled'> = {
           inregistrata: 'pending',
-          in_lucru: 'active',
+          in_lucru: 'in_progress',
           solutionata: 'completed',
           respinsa: 'cancelled',
         };

@@ -3,8 +3,8 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { UserCircle, Clock, FileCheck, Building2 } from 'lucide-react';
-import { supabase } from '@/lib/supabase/client';
 import { AdminPageHeader, AdminCard, AdminCardGrid } from '@/components/admin';
+import { adminFetch } from '@/lib/api-client';
 
 interface Stats {
   staff: number;
@@ -21,14 +21,13 @@ export default function PrimariaPage() {
 
   const loadStats = async () => {
     try {
-      const [staff, officeHours] = await Promise.all([
-        supabase.from('staff_members').select('*', { count: 'exact', head: true }).eq('is_active', true),
-        supabase.from('office_hours').select('*', { count: 'exact', head: true }).eq('is_active', true),
-      ]);
+      const response = await adminFetch('/api/admin/stats?type=primaria');
+      if (!response.ok) throw new Error('Failed to fetch');
+      const data = await response.json();
 
       setStats({
-        staff: staff.count || 0,
-        officeHours: officeHours.count || 0,
+        staff: data.staff || 0,
+        officeHours: data.officeHours || 0,
       });
     } catch (error) {
       console.error('Error loading stats:', error);

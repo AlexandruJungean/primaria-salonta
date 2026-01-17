@@ -26,6 +26,7 @@ export {
   PlaceJsonLd,
   PersonJsonLd,
   ContactPageJsonLd,
+  ProgramJsonLd,
 } from './json-ld';
 
 // Metadata Utilities

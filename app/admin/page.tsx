@@ -126,6 +126,24 @@ export default function AdminDashboardPage() {
   };
 
   const handleLogout = async () => {
+    // Log the logout action
+    try {
+      if (user) {
+        await fetch('/api/admin/auth/log', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'logout',
+            userId: user.id,
+            userEmail: user.email,
+            userName: user.fullName,
+          }),
+        });
+      }
+    } catch (logError) {
+      console.warn('Failed to log logout action:', logError);
+    }
+    
     await supabase.auth.signOut();
     router.push('/admin/login');
   };

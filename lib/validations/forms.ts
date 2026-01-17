@@ -1,12 +1,12 @@
 import { z } from 'zod';
+import { emailSchema } from './email';
 
 // Contact form schema
 export const contactFormSchema = z.object({
   name: z.string()
     .min(2, 'Numele trebuie să aibă cel puțin 2 caractere')
     .max(100, 'Numele nu poate depăși 100 de caractere'),
-  email: z.string()
-    .email('Adresa de email nu este validă'),
+  email: emailSchema,
   phone: z.string()
     .optional()
     .refine((val) => !val || /^[0-9+\-\s()]+$/.test(val), {
@@ -33,7 +33,7 @@ export const petitionFormSchema = z.object({
   reprezentant: z.string().optional(),
   cui: z.string().optional(),
   // Common fields
-  email: z.string().email('Adresa de email nu este validă'),
+  email: emailSchema,
   telefon: z.string().optional(),
   // Address
   tara: z.string().min(2, 'Țara este obligatorie'),

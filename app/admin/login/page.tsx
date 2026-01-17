@@ -51,6 +51,22 @@ export default function AdminLoginPage() {
           .update({ last_login: new Date().toISOString() } as Partial<AdminProfile>)
           .eq('id', data.user.id);
 
+        // Log the login action
+        try {
+          await fetch('/api/admin/auth/log', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              action: 'login',
+              userId: data.user.id,
+              userEmail: data.user.email,
+              userName: profile.full_name,
+            }),
+          });
+        } catch (logError) {
+          console.warn('Failed to log login action:', logError);
+        }
+
         // Redirect to admin panel
         router.push('/admin');
       }

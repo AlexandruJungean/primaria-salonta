@@ -73,6 +73,11 @@ export default async function ConsilieriPage({
     return acc;
   }, {} as Record<string, typeof councilMembers>);
 
+  // Sort members alphabetically within each party
+  Object.values(membersByParty).forEach(members => {
+    members.sort((a, b) => a.name.localeCompare(b.name, 'ro'));
+  });
+
   // Sort parties by number of members (descending)
   const sortedParties = Object.entries(membersByParty)
     .sort((a, b) => b[1].length - a[1].length);

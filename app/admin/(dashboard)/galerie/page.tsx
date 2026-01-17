@@ -8,6 +8,7 @@ import {
   AdminConfirmDialog,
   toast,
 } from '@/components/admin';
+import { adminFetch } from '@/lib/api-client';
 
 interface PageImage {
   id: string;
@@ -32,7 +33,7 @@ export default function GaleriePage() {
   const loadImages = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/admin/gallery');
+      const response = await adminFetch('/api/admin/gallery');
       const result = await response.json();
       
       if (!response.ok) throw new Error(result.error);
@@ -70,7 +71,7 @@ export default function GaleriePage() {
         formData.append('file', file);
         formData.append('sort_order', String(maxSortOrder + i + 1));
 
-        const response = await fetch('/api/admin/gallery/upload', {
+        const response = await adminFetch('/api/admin/gallery/upload', {
           method: 'POST',
           body: formData,
         });
@@ -109,7 +110,7 @@ export default function GaleriePage() {
         image_url: imageToDelete.image_url,
       });
       
-      const response = await fetch(`/api/admin/gallery?${params}`, {
+      const response = await adminFetch(`/api/admin/gallery?${params}`, {
         method: 'DELETE',
       });
 

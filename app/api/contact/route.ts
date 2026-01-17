@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { contactFormSchema } from '@/lib/validations/forms';
+import { validateEmailWithDNS } from '@/lib/validations/email';
 import { sendEmail, contactEmailTemplate, contactConfirmationTemplate } from '@/lib/email';
 import { verifyRecaptcha } from '@/lib/recaptcha';
 import { createAnonServerClient } from '@/lib/supabase/server';
@@ -36,6 +37,15 @@ export async function POST(request: NextRequest) {
     
     const data = validationResult.data;
     const locale = (body.locale as 'ro' | 'hu' | 'en') || 'ro';
+    
+    // Verificare DNS pentru domeniul email-ului
+    const emailDNSCheck = await validateEmailWithDNS(data.email);
+    if (!emailDNSCheck.valid) {
+      return NextResponse.json(
+        { success: false, error: emailDNSCheck.error },
+        { status: 400 }
+      );
+    }
     
     // Get IP address
     const forwardedFor = request.headers.get('x-forwarded-for');

@@ -3,7 +3,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { Save, ArrowLeft, Trash2, FileText, Upload } from 'lucide-react';
-import { supabase } from '@/lib/supabase/client';
 import {
   AdminPageHeader,
   AdminButton,
@@ -15,6 +14,7 @@ import {
   toast,
   canDeleteItem,
 } from '@/components/admin';
+import { adminFetch } from '@/lib/api-client';
 
 interface DocumentFormData {
   title: string;
@@ -71,9 +71,9 @@ export default function DocumentEditPage() {
     if (isNew) return;
 
     try {
-      const { data, error } = await supabase.from('documents').select('*').eq('id', id).single();
-      if (error) throw error;
-
+      const response = await adminFetch(`/api/admin/documents?id=${id}`);
+      if (!response.ok) throw new Error('Failed to fetch');
+      const data = await response.json();
       if (data) {
         setFormData({
           title: data.title || '',
@@ -132,12 +132,18 @@ export default function DocumentEditPage() {
       };
 
       if (isNew) {
-        const { error } = await supabase.from('documents').insert([documentData]);
-        if (error) throw error;
+        const response = await adminFetch('/api/admin/documents', {
+          method: 'POST',
+          body: JSON.stringify(documentData),
+        });
+        if (!response.ok) throw new Error('Failed to create');
         toast.success('Document adăugat', 'Documentul a fost salvat!');
       } else {
-        const { error } = await supabase.from('documents').update(documentData).eq('id', id);
-        if (error) throw error;
+        const response = await adminFetch(`/api/admin/documents?id=${id}`, {
+          method: 'PATCH',
+          body: JSON.stringify(documentData),
+        });
+        if (!response.ok) throw new Error('Failed to update');
         toast.success('Document salvat', 'Modificările au fost salvate!');
       }
 
@@ -159,8 +165,10 @@ export default function DocumentEditPage() {
     if (isNew) return;
     setDeleting(true);
     try {
-      const { error } = await supabase.from('documents').delete().eq('id', id);
-      if (error) throw error;
+      const response = await adminFetch(`/api/admin/documents?id=${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed to delete');
       toast.success('Șters', 'Documentul a fost șters.');
       router.push(`/admin/documente/${category}`);
     } catch (error) {

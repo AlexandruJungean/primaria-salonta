@@ -3,7 +3,6 @@ import { notFound } from 'next/navigation';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
 import { Link } from '@/components/ui/link';
@@ -24,39 +23,8 @@ import {
 import { translateContentFields, translateContentArray } from '@/lib/google-translate/cache';
 
 // ============================================
-// TYPES & CONSTANTS
+// CONSTANTS
 // ============================================
-
-type SessionType = 'ordinara' | 'extraordinara' | 'de_indata';
-type SessionStatus = 'scheduled' | 'in_progress' | 'completed' | 'cancelled';
-
-const SESSION_TYPE_LABELS: Record<SessionType, { ro: string; hu: string; en: string; color: string }> = {
-  ordinara: { 
-    ro: 'Ședință Ordinară', 
-    hu: 'Rendes ülés', 
-    en: 'Regular Session',
-    color: 'bg-blue-100 text-blue-800',
-  },
-  extraordinara: { 
-    ro: 'Ședință Extraordinară', 
-    hu: 'Rendkívüli ülés', 
-    en: 'Extraordinary Session',
-    color: 'bg-amber-100 text-amber-800',
-  },
-  de_indata: { 
-    ro: 'Ședință de Îndată', 
-    hu: 'Sürgősségi ülés', 
-    en: 'Emergency Session',
-    color: 'bg-red-100 text-red-800',
-  },
-};
-
-const STATUS_LABELS: Record<SessionStatus, { ro: string; hu: string; en: string }> = {
-  scheduled: { ro: 'Programată', hu: 'Ütemezett', en: 'Scheduled' },
-  in_progress: { ro: 'În desfășurare', hu: 'Folyamatban', en: 'In Progress' },
-  completed: { ro: 'Finalizată', hu: 'Befejezett', en: 'Completed' },
-  cancelled: { ro: 'Anulată', hu: 'Törölve', en: 'Cancelled' },
-};
 
 // Document types relevant for ordine de zi (convocation/agenda only)
 const CONVOCATION_TYPES = ['dispozitie_convocare', 'ordine_zi', 'proiect_hotarare', 'materiale', 'altele'];
@@ -192,19 +160,17 @@ export default async function SedintaDetailPage({
   };
 
   const labels = pageLabels[locale as keyof typeof pageLabels] || pageLabels.en;
-  const sessionTypeLabel = SESSION_TYPE_LABELS[session.session_type as SessionType] || SESSION_TYPE_LABELS.ordinara;
-  const statusLabel = STATUS_LABELS[session.status as SessionStatus] || STATUS_LABELS.scheduled;
 
   // Filter only convocation/agenda documents (not proces verbal or hotarari)
   const convocationDocs = session.documents?.filter(doc => 
     CONVOCATION_TYPES.includes(doc.document_type)
   ) || [];
 
-  // Zoom meeting details (static)
+  // Zoom meeting details (from database or fallback to default)
   const zoomDetails = {
-    url: 'https://us06web.zoom.us/j/9317513142?pwd=YWNTZHlsRndMMzhpaTFuNzNyb25sQT09',
-    meetingId: '931 751 3142',
-    passcode: 'r0mb8r',
+    url: session.meeting_url || 'https://us06web.zoom.us/j/9317513142?pwd=YWNTZHlsRndMMzhpaTFuNzNyb25sQT09',
+    meetingId: session.meeting_id || '931 751 3142',
+    passcode: session.meeting_passcode || 'r0mb8r',
   };
 
   return (
@@ -235,25 +201,9 @@ export default async function SedintaDetailPage({
 
             {/* Header Card */}
             <Card className="mb-6 overflow-hidden">
-              <div className="bg-gradient-to-r from-primary-600 to-primary-700 px-6 py-4">
-                <div className="flex flex-wrap items-center gap-3">
-                  <Badge className={sessionTypeLabel.color}>
-                    {sessionTypeLabel[locale as keyof typeof sessionTypeLabel] || sessionTypeLabel.ro}
-                  </Badge>
-                  <Badge 
-                    variant="outline" 
-                    className={`bg-white/20 border-white/30 ${
-                      session.status === 'completed' ? 'text-green-200' : 
-                      session.status === 'cancelled' ? 'text-red-200' : 'text-white'
-                    }`}
-                  >
-                    {statusLabel[locale as keyof typeof statusLabel] || statusLabel.ro}
-                  </Badge>
-                </div>
-              </div>
               <CardContent className="pt-6">
                 <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-                  {session.title || `${sessionTypeLabel[locale as keyof typeof sessionTypeLabel] || sessionTypeLabel.ro} - ${formatDate(session.session_date)}`}
+                  {session.title || formatDate(session.session_date)}
                 </h1>
 
                 {session.description && (

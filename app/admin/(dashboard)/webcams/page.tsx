@@ -145,7 +145,7 @@ export default function WebcamsPage() {
       label: 'Status',
       className: 'w-28',
       render: (item: Webcam) => (
-        <AdminStatusBadge status={item.is_active ? 'active' : 'inactive'} />
+        <AdminStatusBadge status={item.is_active ? 'enabled' : 'disabled'} />
       ),
     },
     {

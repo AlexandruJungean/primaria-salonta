@@ -3,7 +3,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { Save, ArrowLeft, Trash2, Image as ImageIcon, Video } from 'lucide-react';
-import { supabase } from '@/lib/supabase/client';
 import {
   AdminPageHeader,
   AdminButton,
@@ -13,6 +12,7 @@ import {
   AdminConfirmDialog,
   toast,
 } from '@/components/admin';
+import { adminFetch } from '@/lib/api-client';
 
 interface WebcamFormData {
   name: string;
@@ -51,13 +51,9 @@ export default function WebcamEditPage() {
     if (isNew) return;
 
     try {
-      const { data, error } = await supabase
-        .from('webcams')
-        .select('*')
-        .eq('id', id)
-        .single();
-
-      if (error) throw error;
+      const response = await adminFetch(`/api/admin/webcams?id=${id}`);
+      if (!response.ok) throw new Error('Failed to fetch');
+      const data = await response.json();
 
       if (data) {
         setFormData({
@@ -114,12 +110,18 @@ export default function WebcamEditPage() {
       };
 
       if (isNew) {
-        const { error } = await supabase.from('webcams').insert([webcamData]);
-        if (error) throw error;
+        const response = await adminFetch('/api/admin/webcams', {
+          method: 'POST',
+          body: JSON.stringify(webcamData),
+        });
+        if (!response.ok) throw new Error('Failed to create');
         toast.success('Cameră adăugată', 'Camera a fost adăugată cu succes!');
       } else {
-        const { error } = await supabase.from('webcams').update(webcamData).eq('id', id);
-        if (error) throw error;
+        const response = await adminFetch(`/api/admin/webcams?id=${id}`, {
+          method: 'PATCH',
+          body: JSON.stringify(webcamData),
+        });
+        if (!response.ok) throw new Error('Failed to update');
         toast.success('Cameră salvată', 'Modificările au fost salvate!');
       }
 
@@ -137,8 +139,10 @@ export default function WebcamEditPage() {
 
     setDeleting(true);
     try {
-      const { error } = await supabase.from('webcams').delete().eq('id', id);
-      if (error) throw error;
+      const response = await adminFetch(`/api/admin/webcams?id=${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed to delete');
 
       toast.success('Șters', 'Camera a fost ștearsă.');
       router.push('/admin/webcams');

@@ -1,5 +1,6 @@
 /**
  * Generate a slug from a string
+ * @deprecated Use generateSlug from lib/validations/slug.ts instead
  */
 export function slugify(text: string): string {
   return text
@@ -8,7 +9,9 @@ export function slugify(text: string): string {
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
     .replace(/[^a-z0-9]+/g, '-') // Replace non-alphanumeric with hyphens
-    .replace(/(^-|-$)+/g, ''); // Remove leading/trailing hyphens
+    .replace(/(^-|-$)+/g, '') // Remove leading/trailing hyphens
+    .replace(/-+/g, '-') // Remove duplicate hyphens
+    .substring(0, 100); // Max 100 characters
 }
 
 /**

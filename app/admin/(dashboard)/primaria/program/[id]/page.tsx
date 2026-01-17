@@ -3,7 +3,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { Save, ArrowLeft, Trash2, Plus, X } from 'lucide-react';
-import { supabase } from '@/lib/supabase/client';
 import {
   AdminPageHeader,
   AdminButton,
@@ -12,6 +11,7 @@ import {
   AdminConfirmDialog,
   toast,
 } from '@/components/admin';
+import { adminFetch } from '@/lib/api-client';
 
 interface HourEntry {
   days: string;
@@ -56,13 +56,10 @@ export default function ProgramEditPage() {
     if (isNew) return;
 
     try {
-      const { data, error } = await supabase
-        .from('office_hours')
-        .select('*')
-        .eq('id', id)
-        .single();
-
-      if (error) throw error;
+      const response = await adminFetch(`/api/admin/office-hours?id=${id}`);
+      if (!response.ok) throw new Error('Failed to fetch');
+      
+      const data = await response.json();
 
       if (data) {
         setFormData({
@@ -154,12 +151,20 @@ export default function ProgramEditPage() {
       };
 
       if (isNew) {
-        const { error } = await supabase.from('office_hours').insert([programData]);
-        if (error) throw error;
+        const response = await adminFetch('/api/admin/office-hours', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(programData),
+        });
+        if (!response.ok) throw new Error('Failed to create');
         toast.success('Program adăugat', 'Datele au fost salvate cu succes!');
       } else {
-        const { error } = await supabase.from('office_hours').update(programData).eq('id', id);
-        if (error) throw error;
+        const response = await adminFetch(`/api/admin/office-hours?id=${id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(programData),
+        });
+        if (!response.ok) throw new Error('Failed to update');
         toast.success('Program salvat', 'Modificările au fost salvate!');
       }
 
@@ -177,8 +182,10 @@ export default function ProgramEditPage() {
 
     setDeleting(true);
     try {
-      const { error } = await supabase.from('office_hours').delete().eq('id', id);
-      if (error) throw error;
+      const response = await adminFetch(`/api/admin/office-hours?id=${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed to delete');
 
       toast.success('Șters', 'Programul a fost șters.');
       router.push('/admin/primaria/program');

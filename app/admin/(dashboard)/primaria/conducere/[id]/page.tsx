@@ -3,7 +3,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { Save, ArrowLeft, Trash2, Image as ImageIcon } from 'lucide-react';
-import { supabase } from '@/lib/supabase/client';
 import {
   AdminPageHeader,
   AdminButton,
@@ -14,6 +13,7 @@ import {
   AdminConfirmDialog,
   toast,
 } from '@/components/admin';
+import { adminFetch } from '@/lib/api-client';
 
 interface StaffFormData {
   name: string;
@@ -70,13 +70,9 @@ export default function ConducereEditPage() {
     if (isNew) return;
 
     try {
-      const { data, error } = await supabase
-        .from('staff_members')
-        .select('*')
-        .eq('id', id)
-        .single();
-
-      if (error) throw error;
+      const response = await adminFetch(`/api/admin/staff?id=${id}`);
+      if (!response.ok) throw new Error('Failed to fetch');
+      const data = await response.json();
 
       if (data) {
         setFormData({
@@ -141,12 +137,18 @@ export default function ConducereEditPage() {
       };
 
       if (isNew) {
-        const { error } = await supabase.from('staff_members').insert([staffData]);
-        if (error) throw error;
+        const response = await adminFetch('/api/admin/staff', {
+          method: 'POST',
+          body: JSON.stringify(staffData),
+        });
+        if (!response.ok) throw new Error('Failed to create');
         toast.success('Persoană adăugată', 'Datele au fost salvate cu succes!');
       } else {
-        const { error } = await supabase.from('staff_members').update(staffData).eq('id', id);
-        if (error) throw error;
+        const response = await adminFetch(`/api/admin/staff?id=${id}`, {
+          method: 'PATCH',
+          body: JSON.stringify(staffData),
+        });
+        if (!response.ok) throw new Error('Failed to update');
         toast.success('Date salvate', 'Modificările au fost salvate!');
       }
 
@@ -164,8 +166,10 @@ export default function ConducereEditPage() {
 
     setDeleting(true);
     try {
-      const { error } = await supabase.from('staff_members').delete().eq('id', id);
-      if (error) throw error;
+      const response = await adminFetch(`/api/admin/staff?id=${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed to delete');
 
       toast.success('Șters', 'Persoana a fost ștearsă din conducere.');
       router.push('/admin/primaria/conducere');

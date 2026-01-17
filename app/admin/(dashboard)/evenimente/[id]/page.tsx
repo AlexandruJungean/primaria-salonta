@@ -3,17 +3,18 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { Save, ArrowLeft, Eye, Trash2, Image as ImageIcon } from 'lucide-react';
-import { supabase } from '@/lib/supabase/client';
 import {
   AdminPageHeader,
   AdminButton,
   AdminCard,
   AdminInput,
+  AdminDateInput,
   AdminTextarea,
   AdminSelect,
   AdminConfirmDialog,
   toast,
 } from '@/components/admin';
+import { adminFetch } from '@/lib/api-client';
 
 interface EventFormData {
   title: string;
@@ -59,6 +60,7 @@ const EVENT_TYPES = [
   { value: 'altele', label: 'Altele' },
 ];
 
+
 export default function EvenimenteEditPage() {
   const router = useRouter();
   const params = useParams();
@@ -76,13 +78,9 @@ export default function EvenimenteEditPage() {
     if (isNew) return;
 
     try {
-      const { data, error } = await supabase
-        .from('events')
-        .select('*')
-        .eq('id', id)
-        .single();
-
-      if (error) throw error;
+      const response = await adminFetch(`/api/admin/events?id=${id}`);
+      if (!response.ok) throw new Error('Failed to fetch');
+      const data = await response.json();
 
       if (data) {
         setFormData({
@@ -177,12 +175,18 @@ export default function EvenimenteEditPage() {
       };
 
       if (isNew) {
-        const { error } = await supabase.from('events').insert([eventData]);
-        if (error) throw error;
+        const response = await adminFetch('/api/admin/events', {
+          method: 'POST',
+          body: JSON.stringify(eventData),
+        });
+        if (!response.ok) throw new Error('Failed to create');
         toast.success('Eveniment creat', 'Evenimentul a fost creat cu succes!');
       } else {
-        const { error } = await supabase.from('events').update(eventData).eq('id', id);
-        if (error) throw error;
+        const response = await adminFetch(`/api/admin/events?id=${id}`, {
+          method: 'PATCH',
+          body: JSON.stringify(eventData),
+        });
+        if (!response.ok) throw new Error('Failed to update');
         toast.success('Eveniment salvat', 'Modificările au fost salvate!');
       }
 
@@ -203,8 +207,10 @@ export default function EvenimenteEditPage() {
 
     setDeleting(true);
     try {
-      const { error } = await supabase.from('events').delete().eq('id', id);
-      if (error) throw error;
+      const response = await adminFetch(`/api/admin/events?id=${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed to delete');
 
       toast.success('Eveniment șters', 'Evenimentul a fost șters cu succes!');
       router.push('/admin/evenimente');
@@ -280,19 +286,17 @@ export default function EvenimenteEditPage() {
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <AdminInput
+                <AdminDateInput
                   label="Data Început"
-                  type="date"
                   value={formData.start_date}
-                  onChange={(e) => handleChange('start_date', e.target.value)}
+                  onChange={(v) => handleChange('start_date', v)}
                   required
                   error={errors.start_date}
                 />
-                <AdminInput
+                <AdminDateInput
                   label="Data Sfârșit (opțional)"
-                  type="date"
                   value={formData.end_date}
-                  onChange={(e) => handleChange('end_date', e.target.value)}
+                  onChange={(v) => handleChange('end_date', v)}
                 />
               </div>
 

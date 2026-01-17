@@ -25,6 +25,7 @@ import {
   UserCircle,
   Clock,
   FileCheck,
+  History,
 } from 'lucide-react';
 
 interface NavItem {
@@ -59,7 +60,7 @@ const navigationItems: NavItem[] = [
     label: 'Consiliul Local',
     icon: Users,
     children: [
-      { id: 'sedinte', label: 'Ședințe', href: '/admin/consiliul-local/sedinte', icon: ListChecks },
+      { id: 'ordine-de-zi', label: 'Ordine de Zi', href: '/admin/consiliul-local/ordine-de-zi', icon: ListChecks },
       { id: 'hotarari', label: 'Hotărâri', href: '/admin/consiliul-local/hotarari', icon: Gavel },
       { id: 'consilieri', label: 'Consilieri Locali', href: '/admin/consiliul-local/consilieri', icon: Users },
       { id: 'comisii', label: 'Comisii', href: '/admin/consiliul-local/comisii', icon: Briefcase },
@@ -120,6 +121,12 @@ const navigationItems: NavItem[] = [
     label: 'Camere Web',
     href: '/admin/webcams',
     icon: Video,
+  },
+  {
+    id: 'logs',
+    label: 'Jurnal Activitate',
+    href: '/admin/logs',
+    icon: History,
   },
   {
     id: 'setari',

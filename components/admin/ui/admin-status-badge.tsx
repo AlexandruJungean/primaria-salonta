@@ -1,13 +1,23 @@
 interface AdminStatusBadgeProps {
-  status: 'active' | 'inactive' | 'draft' | 'published' | 'pending' | 'completed' | 'cancelled';
+  status: 'active' | 'inactive' | 'draft' | 'published' | 'pending' | 'completed' | 'cancelled' | 'in_progress' | 'enabled' | 'disabled';
   size?: 'sm' | 'md';
 }
 
 const statusConfig = {
-  active: { label: 'În lucru', className: 'bg-amber-100 text-amber-800' },
+  // For visibility/enabled states (institutions, webcams, etc.)
+  enabled: { label: 'Activ', className: 'bg-green-100 text-green-800' },
+  disabled: { label: 'Inactiv', className: 'bg-slate-100 text-slate-600' },
+  
+  // For work/processing states (petitions)
+  in_progress: { label: 'În lucru', className: 'bg-amber-100 text-amber-800' },
+  active: { label: 'Activ', className: 'bg-green-100 text-green-800' },
   inactive: { label: 'Inactiv', className: 'bg-slate-100 text-slate-600' },
+  
+  // For publication states
   draft: { label: 'Ciornă', className: 'bg-slate-100 text-slate-600' },
   published: { label: 'Publicat', className: 'bg-green-100 text-green-800' },
+  
+  // For request/ticket states
   pending: { label: 'Nou', className: 'bg-blue-100 text-blue-800' },
   completed: { label: 'Rezolvat', className: 'bg-green-100 text-green-800' },
   cancelled: { label: 'Respins', className: 'bg-red-100 text-red-800' },

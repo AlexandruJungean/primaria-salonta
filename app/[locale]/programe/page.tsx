@@ -1,5 +1,17 @@
-import { useTranslations } from 'next-intl';
-import { Target, Map, Euro, Globe, Building, Building2, Siren, ShieldCheck } from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
+import { 
+  Target, 
+  Map, 
+  Euro, 
+  Globe, 
+  Building, 
+  Building2, 
+  Siren, 
+  ShieldCheck,
+  FileText,
+  Briefcase,
+  type LucideIcon,
+} from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { Card, CardContent } from '@/components/ui/card';
@@ -9,6 +21,8 @@ import { Link } from '@/components/ui/link';
 import { generatePageMetadata } from '@/lib/seo/metadata';
 import { WebPageJsonLd } from '@/lib/seo/json-ld';
 import { type Locale } from '@/i18n/routing';
+import * as programs from '@/lib/supabase/services/programs';
+import { translateContentArray } from '@/lib/google-translate/cache';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -19,19 +33,43 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   });
 }
 
-const SECTIONS = [
-  { id: 'strategieDezvoltare', href: '/programe/strategie-dezvoltare', icon: Target },
-  { id: 'pmud', href: '/programe/pmud', icon: Map },
-  { id: 'pnrr', href: '/programe/pnrr', icon: Euro },
-  { id: 'proiecteEuropene', href: '/programe/proiecte-europene', icon: Globe },
-  { id: 'proiecteLocale', href: '/programe/proiecte-locale', icon: Building },
-  { id: 'programRegionalNordVest', href: '/programe/program-regional-nord-vest', icon: Building2 },
-  { id: 'svsu', href: '/programe/svsu', icon: Siren },
-  { id: 'sna', href: '/programe/sna', icon: ShieldCheck },
-];
+// Icon mapping based on program_type or icon field
+const ICON_MAP: Record<string, LucideIcon> = {
+  'target': Target,
+  'map': Map,
+  'euro': Euro,
+  'globe': Globe,
+  'building': Building,
+  'building2': Building2,
+  'siren': Siren,
+  'shield': ShieldCheck,
+  'file': FileText,
+  'briefcase': Briefcase,
+  // Program type defaults
+  'pnrr': Euro,
+  'pmud': Map,
+  'strategie': Target,
+  'sna': ShieldCheck,
+  'svsu': Siren,
+  'proiecte-europene': Globe,
+  'proiecte-locale': Building,
+  'program-regional': Building2,
+  'altele': FileText,
+};
 
-export default function ProgramePage() {
-  const t = useTranslations('navigation');
+export default async function ProgramePage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'navigation' });
+
+  // Fetch top-level programs from database
+  const programsData = await programs.getTopLevelPrograms();
+
+  // Translate program titles
+  const translatedPrograms = await translateContentArray(
+    programsData,
+    ['title', 'short_description'],
+    locale as 'ro' | 'hu' | 'en'
+  );
 
   return (
     <>
@@ -46,25 +84,40 @@ export default function ProgramePage() {
       <Section background="white">
         <Container>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {SECTIONS.map((section) => {
-              const Icon = section.icon;
+            {translatedPrograms.map((program) => {
+              // Get icon based on icon field or program_type
+              const iconKey = program.icon || program.program_type || 'file';
+              const Icon = ICON_MAP[iconKey] || FileText;
+              
               return (
-                <Link key={section.id} href={section.href}>
+                <Link key={program.id} href={`/programe/${program.slug}`}>
                   <Card hover className="h-full">
                     <CardContent className="flex items-center gap-4 pt-6">
                       <div className="w-12 h-12 rounded-lg bg-primary-100 flex items-center justify-center shrink-0">
                         <Icon className="w-6 h-6 text-primary-700" />
                       </div>
-                      <h3 className="font-semibold text-gray-900">{t(section.id)}</h3>
+                      <div>
+                        <h3 className="font-semibold text-gray-900">{program.title}</h3>
+                        {program.short_description && (
+                          <p className="text-sm text-gray-500 mt-1 line-clamp-2">
+                            {program.short_description}
+                          </p>
+                        )}
+                      </div>
                     </CardContent>
                   </Card>
                 </Link>
               );
             })}
           </div>
+          
+          {translatedPrograms.length === 0 && (
+            <div className="text-center py-12 text-gray-500">
+              Nu există programe disponibile.
+            </div>
+          )}
         </Container>
       </Section>
     </>
   );
 }
-

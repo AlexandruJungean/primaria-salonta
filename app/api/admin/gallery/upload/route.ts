@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { requireAdmin } from '@/lib/auth/verify-admin';
 
 function getSupabaseAdmin() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -13,6 +14,9 @@ function getSupabaseAdmin() {
 }
 
 export async function POST(request: NextRequest) {
+  const authResult = await requireAdmin(request);
+  if (authResult instanceof NextResponse) return authResult;
+
   try {
     const supabaseAdmin = getSupabaseAdmin();
     const formData = await request.formData();

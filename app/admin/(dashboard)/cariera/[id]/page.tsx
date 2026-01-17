@@ -9,11 +9,13 @@ import {
   AdminButton,
   AdminCard,
   AdminInput,
+  AdminDateInput,
   AdminTextarea,
   AdminSelect,
   AdminConfirmDialog,
   toast,
 } from '@/components/admin';
+import { adminFetch } from '@/lib/api-client';
 
 interface JobFormData {
   position: string;
@@ -70,6 +72,7 @@ const DOCUMENT_TYPES = [
   { value: 'contestatii', label: 'Contestații' },
   { value: 'altele', label: 'Alte documente' },
 ];
+
 
 export default function CarieraEditPage() {
   const router = useRouter();
@@ -248,7 +251,7 @@ export default function CarieraEditPage() {
       formData.append('title', newDocTitle || file.name.replace(/\.[^/.]+$/, ''));
       formData.append('sort_order', documents.length.toString());
 
-      const response = await fetch('/api/admin/job-vacancies/documents', {
+      const response = await adminFetch('/api/admin/job-vacancies/documents', {
         method: 'POST',
         body: formData,
       });
@@ -486,17 +489,15 @@ export default function CarieraEditPage() {
         <div className="space-y-6">
           <AdminCard title="Date & Status">
             <div className="space-y-4">
-              <AdminInput
+              <AdminDateInput
                 label="Termen limită înscriere"
-                type="date"
                 value={formData.application_deadline}
-                onChange={(e) => handleChange('application_deadline', e.target.value)}
+                onChange={(v) => handleChange('application_deadline', v)}
               />
-              <AdminInput
+              <AdminDateInput
                 label="Data examen"
-                type="date"
                 value={formData.exam_date}
-                onChange={(e) => handleChange('exam_date', e.target.value)}
+                onChange={(v) => handleChange('exam_date', v)}
               />
               <AdminSelect
                 label="Status"

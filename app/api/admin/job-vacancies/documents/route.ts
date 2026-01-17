@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { logAuditAction, getRequestInfo } from '@/lib/audit/logger';
+import { requireAdmin } from '@/lib/auth/verify-admin';
 
 // Helper to create admin client inside functions
 const createAdminClient = () => {
@@ -15,9 +17,13 @@ const createAdminClient = () => {
 
 // POST - Upload document for job vacancy
 export async function POST(request: NextRequest) {
+  const authResult = await requireAdmin(request);
+  if (authResult instanceof NextResponse) return authResult;
+
   try {
     const supabaseAdmin = createAdminClient();
     const formData = await request.formData();
+    const { ipAddress, userAgent } = getRequestInfo(request);
     
     const file = formData.get('file') as File;
     const vacancyId = formData.get('vacancy_id') as string;
@@ -84,6 +90,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Log the action
+    await logAuditAction({
+      action: 'upload',
+      resourceType: 'job_vacancy',
+      resourceId: vacancyId,
+      resourceTitle: title || file.name,
+      details: { document_type: documentType },
+      ipAddress,
+      userAgent,
+    });
+
     return NextResponse.json({ success: true, document: newDoc });
   } catch (error) {
     console.error('Error in job vacancy document upload:', error);
@@ -96,11 +113,15 @@ export async function POST(request: NextRequest) {
 
 // DELETE - Remove document
 export async function DELETE(request: NextRequest) {
+  const authResult = await requireAdmin(request);
+  if (authResult instanceof NextResponse) return authResult;
+
   try {
     const supabaseAdmin = createAdminClient();
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
     const fileUrl = searchParams.get('file_url');
+    const { ipAddress, userAgent } = getRequestInfo(request);
 
     if (!id) {
       return NextResponse.json(
@@ -108,6 +129,13 @@ export async function DELETE(request: NextRequest) {
         { status: 400 }
       );
     }
+
+    // Get document data for logging before deletion
+    const { data: document } = await supabaseAdmin
+      .from('job_vacancy_documents')
+      .select('title, vacancy_id')
+      .eq('id', id)
+      .single();
 
     // Delete from database
     const { error: dbError } = await supabaseAdmin
@@ -136,6 +164,17 @@ export async function DELETE(request: NextRequest) {
         // Don't fail the request if storage deletion fails
       }
     }
+
+    // Log the action
+    await logAuditAction({
+      action: 'delete',
+      resourceType: 'job_vacancy',
+      resourceId: document?.vacancy_id || id,
+      resourceTitle: document?.title || 'Document concurs',
+      details: { deleted_document_id: id },
+      ipAddress,
+      userAgent,
+    });
 
     return NextResponse.json({ success: true });
   } catch (error) {

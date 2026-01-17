@@ -576,6 +576,91 @@ export function PersonJsonLd({
 }
 
 // ============================================
+// PROGRAM/PROJECT SCHEMA
+// ============================================
+interface ProgramJsonLdProps {
+  name: string;
+  description: string;
+  url: string;
+  imageUrl?: string;
+  startDate?: string;
+  endDate?: string;
+  status?: 'planificat' | 'in_desfasurare' | 'finalizat' | 'anulat';
+  fundingSource?: string;
+  budget?: number;
+  currency?: string;
+  locale?: string;
+}
+
+export function ProgramJsonLd({
+  name,
+  description,
+  url,
+  imageUrl,
+  startDate,
+  endDate,
+  status,
+  fundingSource,
+  budget,
+  currency = 'RON',
+  locale = 'ro',
+}: ProgramJsonLdProps) {
+  // Map status to schema.org event status
+  const statusMap: Record<string, string> = {
+    planificat: 'https://schema.org/EventScheduled',
+    in_desfasurare: 'https://schema.org/EventScheduled',
+    finalizat: 'https://schema.org/EventCancelled', // Using as "completed"
+    anulat: 'https://schema.org/EventCancelled',
+  };
+
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'GovernmentService',
+    name,
+    description,
+    url: `${baseUrl}/${locale}${url}`,
+    ...(imageUrl && { image: imageUrl.startsWith('http') ? imageUrl : `${baseUrl}${imageUrl}` }),
+    provider: {
+      '@type': 'GovernmentOrganization',
+      name: SEO_CONFIG.organization.name,
+      url: baseUrl,
+    },
+    areaServed: {
+      '@type': 'City',
+      name: 'Salonta',
+      containedInPlace: {
+        '@type': 'AdministrativeArea',
+        name: 'Județul Bihor',
+      },
+    },
+    serviceType: 'Government Program',
+    ...(fundingSource && {
+      funder: {
+        '@type': 'Organization',
+        name: fundingSource,
+      },
+    }),
+    ...(budget && {
+      offers: {
+        '@type': 'Offer',
+        price: budget,
+        priceCurrency: currency,
+      },
+    }),
+    ...(startDate && { availabilityStarts: startDate }),
+    ...(endDate && { availabilityEnds: endDate }),
+    ...(status && { additionalType: statusMap[status] || statusMap.in_desfasurare }),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+    />
+  );
+}
+
+// ============================================
 // CONTACT PAGE SCHEMA
 // ============================================
 export function ContactPageJsonLd({ locale = 'ro' }: { locale?: string }) {

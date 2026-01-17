@@ -3,7 +3,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Plus, Target, Euro, MapPin } from 'lucide-react';
-import { supabase } from '@/lib/supabase/client';
 import {
   AdminPageHeader,
   AdminButton,
@@ -13,6 +12,7 @@ import {
   AdminStatusBadge,
   toast,
 } from '@/components/admin';
+import { adminFetch } from '@/lib/api-client';
 
 interface Program {
   id: string;
@@ -29,22 +29,21 @@ interface Program {
 // Conform CHECK constraint din DB
 const TYPE_LABELS: Record<string, string> = {
   pnrr: 'PNRR',
-  regional_nord_vest: 'Program Regional Nord-Vest',
-  european: 'Proiect European',
-  local: 'Proiect Local',
-  strategie: 'Strategie',
   pmud: 'PMUD',
+  strategie: 'Strategie',
   sna: 'SNA',
   svsu: 'SVSU',
+  proiecte_europene: 'Proiecte Europene',
+  proiecte_locale: 'Proiecte Locale',
+  regional_nord_vest: 'Program Regional Nord-Vest',
   altele: 'Altele',
 };
 
 // Conform CHECK constraint din DB
 const STATUS_LABELS: Record<string, string> = {
   planificat: 'Planificat',
-  in_derulare: 'În desfășurare',
+  in_desfasurare: 'În desfășurare',
   finalizat: 'Finalizat',
-  suspendat: 'Suspendat',
   anulat: 'Anulat',
 };
 
@@ -60,12 +59,10 @@ export default function ProgramePage() {
   const loadPrograms = useCallback(async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from('programs')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
+      // Only fetch top-level programs (parent_id is null)
+      const response = await adminFetch('/api/admin/programs?top_level=true');
+      if (!response.ok) throw new Error('Failed to fetch');
+      const data = await response.json();
       setPrograms(data || []);
     } catch (error) {
       console.error('Error loading programs:', error);
@@ -93,8 +90,10 @@ export default function ProgramePage() {
     
     setDeleting(true);
     try {
-      const { error } = await supabase.from('programs').delete().eq('id', itemToDelete.id);
-      if (error) throw error;
+      const response = await adminFetch(`/api/admin/programs?id=${itemToDelete.id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed to delete');
 
       toast.success('Șters', 'Programul a fost șters.');
       setDeleteDialogOpen(false);

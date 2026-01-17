@@ -2,8 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { Plus, FileCheck, Calendar, ExternalLink, AlertTriangle } from 'lucide-react';
-import { supabase } from '@/lib/supabase/client';
+import { Plus, FileCheck, AlertTriangle } from 'lucide-react';
 import {
   AdminPageHeader,
   AdminButton,
@@ -15,6 +14,7 @@ import {
   toast,
   canDeleteItem,
 } from '@/components/admin';
+import { adminFetch } from '@/lib/api-client';
 
 interface Declaration {
   id: string;
@@ -58,26 +58,23 @@ export default function DeclaratiiCLPage() {
   const loadDeclarations = useCallback(async () => {
     setLoading(true);
     try {
-      let query = supabase
-        .from('asset_declarations')
-        .select('*', { count: 'exact' })
-        .eq('department', 'consiliul_local')
-        .order('person_name', { ascending: true });
-
+      const params = new URLSearchParams({
+        department: 'consiliul_local',
+        page: currentPage.toString(),
+        limit: ITEMS_PER_PAGE.toString(),
+      });
+      
       if (yearFilter) {
-        query = query.eq('declaration_year', parseInt(yearFilter));
+        params.append('year', yearFilter);
       }
 
-      const from = (currentPage - 1) * ITEMS_PER_PAGE;
-      const to = from + ITEMS_PER_PAGE - 1;
-      query = query.range(from, to);
+      const response = await adminFetch(`/api/admin/asset-declarations?${params}`);
+      if (!response.ok) throw new Error('Failed to fetch');
+      
+      const result = await response.json();
 
-      const { data, count, error } = await query;
-
-      if (error) throw error;
-
-      setDeclarations(data || []);
-      setTotalCount(count || 0);
+      setDeclarations(result.data || []);
+      setTotalCount(result.count || 0);
     } catch (error) {
       console.error('Error loading declarations:', error);
       toast.error('Eroare', 'Nu s-au putut încărca declarațiile.');
@@ -112,8 +109,11 @@ export default function DeclaratiiCLPage() {
     
     setDeleting(true);
     try {
-      const { error } = await supabase.from('asset_declarations').delete().eq('id', itemToDelete.id);
-      if (error) throw error;
+      const response = await adminFetch(`/api/admin/asset-declarations?id=${itemToDelete.id}`, {
+        method: 'DELETE',
+      });
+      
+      if (!response.ok) throw new Error('Failed to delete');
 
       toast.success('Șters', 'Declarația a fost ștearsă.');
       setDeleteDialogOpen(false);

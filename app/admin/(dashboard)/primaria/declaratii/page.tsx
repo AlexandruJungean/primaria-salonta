@@ -3,7 +3,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Plus, FileCheck, AlertTriangle } from 'lucide-react';
-import { supabase } from '@/lib/supabase/client';
 import {
   AdminPageHeader,
   AdminButton,
@@ -15,6 +14,7 @@ import {
   toast,
   canDeleteItem,
 } from '@/components/admin';
+import { adminFetch } from '@/lib/api-client';
 
 interface Declaration {
   id: string;
@@ -31,11 +31,18 @@ interface Declaration {
 const ITEMS_PER_PAGE = 15;
 const DELETE_LIMIT_HOURS = 24;
 
+const POSITION_TYPES = [
+  { value: '', label: 'Toate' },
+  { value: 'alesi', label: 'Aleși locali (Primar, Viceprimar)' },
+  { value: 'functionari', label: 'Funcționari publici' },
+];
+
 export default function DeclaratiiPrimariePage() {
   const router = useRouter();
   const [declarations, setDeclarations] = useState<Declaration[]>([]);
   const [loading, setLoading] = useState(true);
   const [yearFilter, setYearFilter] = useState('');
+  const [positionFilter, setPositionFilter] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [years, setYears] = useState<number[]>([]);
@@ -54,33 +61,48 @@ export default function DeclaratiiPrimariePage() {
   const loadDeclarations = useCallback(async () => {
     setLoading(true);
     try {
-      let query = supabase
-        .from('asset_declarations')
-        .select('*', { count: 'exact' })
-        .eq('department', 'primaria')
-        .order('person_name', { ascending: true });
+      const params = new URLSearchParams({
+        department: 'primaria',
+        page: currentPage.toString(),
+        limit: ITEMS_PER_PAGE.toString(),
+      });
 
       if (yearFilter) {
-        query = query.eq('declaration_year', parseInt(yearFilter));
+        params.append('year', yearFilter);
       }
 
-      const from = (currentPage - 1) * ITEMS_PER_PAGE;
-      const to = from + ITEMS_PER_PAGE - 1;
-      query = query.range(from, to);
+      if (positionFilter) {
+        params.append('positionFilter', positionFilter);
+      }
 
-      const { data, count, error } = await query;
+      const response = await adminFetch(`/api/admin/asset-declarations?${params}`);
+      if (!response.ok) throw new Error('Failed to fetch');
+      
+      const result = await response.json();
 
-      if (error) throw error;
+      // Filter by position type client-side since the API doesn't support it
+      let filteredData = result.data || [];
+      if (positionFilter === 'alesi') {
+        filteredData = filteredData.filter((d: Declaration) => {
+          const pos = d.position?.toLowerCase() || '';
+          return pos.includes('primar') || pos.includes('viceprimar');
+        });
+      } else if (positionFilter === 'functionari') {
+        filteredData = filteredData.filter((d: Declaration) => {
+          const pos = d.position?.toLowerCase() || '';
+          return pos.includes('funcționar') || pos.includes('functionar') || pos.includes('secretar');
+        });
+      }
 
-      setDeclarations(data || []);
-      setTotalCount(count || 0);
+      setDeclarations(filteredData);
+      setTotalCount(positionFilter ? filteredData.length : (result.count || 0));
     } catch (error) {
       console.error('Error loading declarations:', error);
       toast.error('Eroare', 'Nu s-au putut încărca declarațiile.');
     } finally {
       setLoading(false);
     }
-  }, [currentPage, yearFilter]);
+  }, [currentPage, yearFilter, positionFilter]);
 
   useEffect(() => {
     if (yearFilter) loadDeclarations();
@@ -108,8 +130,11 @@ export default function DeclaratiiPrimariePage() {
     
     setDeleting(true);
     try {
-      const { error } = await supabase.from('asset_declarations').delete().eq('id', itemToDelete.id);
-      if (error) throw error;
+      const response = await adminFetch(`/api/admin/asset-declarations?id=${itemToDelete.id}`, {
+        method: 'DELETE',
+      });
+      
+      if (!response.ok) throw new Error('Failed to delete');
 
       toast.success('Șters', 'Declarația a fost ștearsă.');
       setDeleteDialogOpen(false);
@@ -123,13 +148,25 @@ export default function DeclaratiiPrimariePage() {
     }
   };
 
+  const isAlesLocal = (position: string) => {
+    const pos = position?.toLowerCase() || '';
+    return pos.includes('primar') || pos.includes('viceprimar');
+  };
+
   const columns = [
     {
       key: 'person_name',
       label: 'Persoană',
       render: (item: Declaration) => (
         <div>
-          <p className="font-semibold text-slate-900">{item.person_name}</p>
+          <div className="flex items-center gap-2">
+            <p className="font-semibold text-slate-900">{item.person_name}</p>
+            {isAlesLocal(item.position) && (
+              <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium bg-purple-100 text-purple-800 rounded-full">
+                Ales local
+              </span>
+            )}
+          </div>
           <p className="text-sm text-slate-500">{item.position}</p>
         </div>
       ),
@@ -175,7 +212,7 @@ export default function DeclaratiiPrimariePage() {
     <div>
       <AdminPageHeader
         title="Declarații de Avere - Primărie"
-        description="Gestionează declarațiile de avere și interese ale conducerii primăriei"
+        description="Gestionează declarațiile de avere și interese ale aleșilor locali (primar, viceprimar) și funcționarilor publici"
         breadcrumbs={[
           { label: 'Primăria', href: '/admin/primaria' },
           { label: 'Declarații de Avere' },
@@ -195,7 +232,15 @@ export default function DeclaratiiPrimariePage() {
       </AdminCard>
 
       <AdminCard className="mb-6">
-        <div className="flex gap-4 items-end">
+        <div className="flex gap-4 items-end flex-wrap">
+          <div className="w-64">
+            <AdminSelect 
+              label="Tip persoană" 
+              value={positionFilter} 
+              onChange={(e) => { setPositionFilter(e.target.value); setCurrentPage(1); }} 
+              options={POSITION_TYPES} 
+            />
+          </div>
           <div className="w-40">
             <AdminSelect label="Anul" value={yearFilter} onChange={(e) => { setYearFilter(e.target.value); setCurrentPage(1); }} options={yearOptions} />
           </div>
