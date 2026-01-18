@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Save, Phone, Mail, Clock, Plus, X, Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Save, Phone, Mail, Clock, Plus, X, Loader2, ImageIcon, ChevronRight } from 'lucide-react';
 import {
   AdminPageHeader,
   AdminButton,
@@ -90,6 +91,7 @@ const defaultSettings: SiteSettings = {
 };
 
 export default function SetariPage() {
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [settings, setSettings] = useState<SiteSettings>(defaultSettings);
@@ -220,6 +222,25 @@ export default function SetariPage() {
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Hero Carousel Link */}
+        <AdminCard className="lg:col-span-2">
+          <button
+            onClick={() => router.push('/admin/setari/hero-carousel')}
+            className="w-full flex items-center justify-between p-4 rounded-lg bg-gradient-to-r from-primary-50 to-blue-50 hover:from-primary-100 hover:to-blue-100 transition-colors"
+          >
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-primary-100 rounded-lg">
+                <ImageIcon className="w-6 h-6 text-primary-600" />
+              </div>
+              <div className="text-left">
+                <h3 className="font-semibold text-gray-900">Hero Carousel</h3>
+                <p className="text-sm text-gray-600">Gestionează imaginile din caruselul paginii principale</p>
+              </div>
+            </div>
+            <ChevronRight className="w-5 h-5 text-gray-400" />
+          </button>
+        </AdminCard>
+
         {/* Contact Section */}
         <AdminCard title="Contact" className="lg:col-span-2">
           <div className="space-y-6">

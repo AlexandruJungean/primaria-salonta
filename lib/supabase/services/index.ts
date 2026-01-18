@@ -147,3 +147,12 @@ export {
   type LegislationLink,
   type LegislationLinkInput,
 } from './legislation';
+
+// Hero Slides Services
+export {
+  getHeroSlides,
+  getHeroSlidesForLocale,
+  getAllHeroSlides,
+  type HeroSlide,
+  type HeroSlideTranslated,
+} from './hero-slides';

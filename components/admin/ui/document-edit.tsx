@@ -57,6 +57,10 @@ const DELETE_LIMIT_HOURS = 24;
 
 const SUBCATEGORY_OPTIONS: Record<string, { value: string; label: string }[]> = {
   // Category-based subcategories
+  achizitii: [
+    { value: 'documente', label: 'Documente Achiziții' },
+    { value: 'formulare', label: 'Formulare necesare' },
+  ],
   mediu: [
     { value: 'salubrizare', label: 'Salubrizare' },
     { value: 'apa_canal', label: 'Apă și Canal' },
@@ -115,6 +119,12 @@ const SUBCATEGORY_OPTIONS: Record<string, { value: string; label: string }[]> = 
   'hotararile-autoritatii-deliberative': [
     { value: 'registru_hotarari', label: 'Registru Hotărâri Adoptate' },
     { value: 'registru_proiecte', label: 'Registru Proiecte de Hotărâri' },
+  ],
+  'alte-documente': [
+    { value: 'transparenta', label: 'Raport Transparență Decizională' },
+    { value: 'raport_primar', label: 'Raport Primar' },
+    { value: 'documente', label: 'Documente' },
+    { value: 'registru', label: 'Registru' },
   ],
 };
 

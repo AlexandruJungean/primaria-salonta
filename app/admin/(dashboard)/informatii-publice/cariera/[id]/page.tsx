@@ -125,7 +125,7 @@ export default function CarieraEditPage() {
     } catch (error) {
       console.error('Error loading job:', error);
       toast.error('Eroare', 'Nu s-au putut încărca datele.');
-      router.push('/admin/cariera');
+      router.push('/admin/informatii-publice/cariera');
     } finally {
       setLoading(false);
     }
@@ -209,7 +209,7 @@ export default function CarieraEditPage() {
       }
       
       // Redirect to list page after save
-      router.push('/admin/cariera');
+      router.push('/admin/informatii-publice/cariera');
     } catch (error) {
       console.error('Error saving job:', error);
       toast.error('Eroare la salvare', 'Nu s-au putut salva datele.');
@@ -229,7 +229,7 @@ export default function CarieraEditPage() {
       
       if (error) throw error;
       toast.success('Șters', 'Concursul a fost șters.');
-      router.push('/admin/cariera');
+      router.push('/admin/informatii-publice/cariera');
     } catch (error) {
       console.error('Error deleting:', error);
       toast.error('Eroare', 'Nu s-a putut șterge.');
@@ -308,12 +308,13 @@ export default function CarieraEditPage() {
       <AdminPageHeader
         title={isNew ? 'Adaugă Concurs Nou' : 'Editează Concursul'}
         breadcrumbs={[
-          { label: 'Carieră / Concursuri', href: '/admin/cariera' },
+          { label: 'Informații Publice' },
+          { label: 'Carieră / Concursuri', href: '/admin/informatii-publice/cariera' },
           { label: isNew ? 'Concurs Nou' : formData.position || 'Editare' },
         ]}
         actions={
           <div className="flex gap-3">
-            <AdminButton variant="ghost" icon={ArrowLeft} onClick={() => router.push('/admin/cariera')}>
+            <AdminButton variant="ghost" icon={ArrowLeft} onClick={() => router.push('/admin/informatii-publice/cariera')}>
               Înapoi
             </AdminButton>
             {!isNew && (

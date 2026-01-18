@@ -6,12 +6,22 @@ import { useTranslations, useLocale } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft, ChevronRight, Search } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
-import { HERO_SLIDES } from '@/lib/constants/hero-slides';
 import { Container } from '@/components/ui/container';
 
 const AUTO_SLIDE_INTERVAL = 6000; // 6 seconds
 
-export function HeroCarousel() {
+export interface HeroSlideData {
+  id: string;
+  image: string;
+  alt: string;
+  title?: string;
+}
+
+interface HeroCarouselProps {
+  slides: HeroSlideData[];
+}
+
+export function HeroCarousel({ slides }: HeroCarouselProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -19,6 +29,8 @@ export function HeroCarousel() {
   const tCommon = useTranslations('common');
   const locale = useLocale() as 'ro' | 'hu' | 'en';
   const router = useRouter();
+
+  const slideCount = slides.length;
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,12 +40,12 @@ export function HeroCarousel() {
   };
 
   const nextSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
-  }, []);
+    setCurrentSlide((prev) => (prev + 1) % slideCount);
+  }, [slideCount]);
 
   const prevSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
-  }, []);
+    setCurrentSlide((prev) => (prev - 1 + slideCount) % slideCount);
+  }, [slideCount]);
 
   const goToSlide = (index: number) => {
     setCurrentSlide(index);
@@ -43,16 +55,22 @@ export function HeroCarousel() {
   };
 
   useEffect(() => {
-    if (!isAutoPlaying) return;
+    // Don't auto-slide if only one slide
+    if (!isAutoPlaying || slideCount <= 1) return;
 
     const interval = setInterval(nextSlide, AUTO_SLIDE_INTERVAL);
     return () => clearInterval(interval);
-  }, [isAutoPlaying, nextSlide]);
+  }, [isAutoPlaying, nextSlide, slideCount]);
+
+  // Don't render if no slides
+  if (slides.length === 0) {
+    return null;
+  }
 
   return (
     <section className="relative h-[500px] md:h-[600px] lg:h-[700px] w-full overflow-hidden">
       {/* Slides */}
-      {HERO_SLIDES.map((slide, index) => (
+      {slides.map((slide, index) => (
         <div
           key={slide.id}
           className={cn(
@@ -62,7 +80,7 @@ export function HeroCarousel() {
         >
           <Image
             src={slide.image}
-            alt={slide.translations[locale].alt}
+            alt={slide.alt}
             fill
             className="object-cover"
             priority={index === 0}
@@ -130,48 +148,52 @@ export function HeroCarousel() {
         </Container>
       </div>
 
-      {/* Navigation Arrows */}
-      <button
-        onClick={prevSlide}
-        className={cn(
-          'absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-20',
-          'p-3 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full',
-          'text-white transition-all hover:scale-110',
-          'focus:outline-none focus:ring-2 focus:ring-white/50'
-        )}
-        aria-label="Previous slide"
-      >
-        <ChevronLeft className="w-6 h-6" />
-      </button>
-      <button
-        onClick={nextSlide}
-        className={cn(
-          'absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-20',
-          'p-3 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full',
-          'text-white transition-all hover:scale-110',
-          'focus:outline-none focus:ring-2 focus:ring-white/50'
-        )}
-        aria-label="Next slide"
-      >
-        <ChevronRight className="w-6 h-6" />
-      </button>
-
-      {/* Dot Indicators */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-2">
-        {HERO_SLIDES.map((_, index) => (
+      {/* Navigation Arrows - only show if more than 1 slide */}
+      {slideCount > 1 && (
+        <>
           <button
-            key={index}
-            onClick={() => goToSlide(index)}
+            onClick={prevSlide}
             className={cn(
-              'h-3 rounded-full transition-all duration-300',
-              index === currentSlide
-                ? 'bg-white w-10'
-                : 'bg-white/50 hover:bg-white/70 w-3'
+              'absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-20',
+              'p-3 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full',
+              'text-white transition-all hover:scale-110',
+              'focus:outline-none focus:ring-2 focus:ring-white/50'
             )}
-            aria-label={`Go to slide ${index + 1}`}
-          />
-        ))}
-      </div>
+            aria-label="Previous slide"
+          >
+            <ChevronLeft className="w-6 h-6" />
+          </button>
+          <button
+            onClick={nextSlide}
+            className={cn(
+              'absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-20',
+              'p-3 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full',
+              'text-white transition-all hover:scale-110',
+              'focus:outline-none focus:ring-2 focus:ring-white/50'
+            )}
+            aria-label="Next slide"
+          >
+            <ChevronRight className="w-6 h-6" />
+          </button>
+
+          {/* Dot Indicators */}
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+            {slides.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => goToSlide(index)}
+                className={cn(
+                  'h-3 rounded-full transition-all duration-300',
+                  index === currentSlide
+                    ? 'bg-white w-10'
+                    : 'bg-white/50 hover:bg-white/70 w-3'
+                )}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
+          </div>
+        </>
+      )}
     </section>
   );
 }

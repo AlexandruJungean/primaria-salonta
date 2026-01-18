@@ -111,18 +111,22 @@ export default async function AchizitiiPage({ params }: { params: Promise<{ loca
   const t = await getTranslations({ locale, namespace: 'navigation' });
   const tPage = await getTranslations({ locale, namespace: 'achizitiiPage' });
 
-  // Fetch documents from database
-  const documentsData = await getDocumentsByCategory('achizitii', 500);
+  // Fetch all documents from database
+  const allDocumentsData = await getDocumentsByCategory('achizitii', 500);
   const years = await getDocumentYears('achizitii');
   
   // Translate document titles based on locale
-  const documents = await translateContentArray(
-    documentsData,
+  const allDocuments = await translateContentArray(
+    allDocumentsData,
     ['title', 'description'],
     locale as 'ro' | 'hu' | 'en'
   );
   
-  // Group by year
+  // Separate formulare from regular documents
+  const formulare = allDocuments.filter(doc => doc.subcategory === 'formulare');
+  const documents = allDocuments.filter(doc => doc.subcategory !== 'formulare');
+  
+  // Group regular documents by year
   const documentsByYear = groupDocumentsByYear(documents);
   
   // Sort years descending
@@ -160,36 +164,32 @@ export default async function AchizitiiPage({ params }: { params: Promise<{ loca
             </div>
 
             {/* Required Forms Section */}
-            <Card className="mb-8">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <ClipboardList className="w-5 h-5 text-primary-600" />
-                  {tPage('requiredForms')}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <a
-                    href="https://pub-c6874596c76543a2ac314657c3d9fff8.r2.dev/documente/altele/2026/achizitii-publice-directe.doc"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-gray-700 hover:text-primary-700 transition-colors"
-                  >
-                    <Download className="w-4 h-4 text-primary-500" />
-                    <span>Achiziții publice directe (formulare)</span>
-                  </a>
-                  <a
-                    href="https://pub-c6874596c76543a2ac314657c3d9fff8.r2.dev/documente/altele/2026/achizitii-publice-cerere-de-oferte.doc"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-gray-700 hover:text-primary-700 transition-colors"
-                  >
-                    <Download className="w-4 h-4 text-primary-500" />
-                    <span>Achiziții publice – cerere de oferte (formulare)</span>
-                  </a>
-                </div>
-              </CardContent>
-            </Card>
+            {formulare.length > 0 && (
+              <Card className="mb-8">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <ClipboardList className="w-5 h-5 text-primary-600" />
+                    {tPage('requiredForms')}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    {formulare.map((doc) => (
+                      <a
+                        key={doc.id}
+                        href={doc.file_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-gray-700 hover:text-primary-700 transition-colors"
+                      >
+                        <Download className="w-4 h-4 text-primary-500" />
+                        <span>{doc.title}</span>
+                      </a>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
             {/* Documents from Database */}
             {documents.length > 0 ? (

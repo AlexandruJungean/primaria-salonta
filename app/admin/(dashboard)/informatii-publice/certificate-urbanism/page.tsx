@@ -13,6 +13,7 @@ export default function CertificateUrbanismPage() {
         { label: 'Certificate Urbanism' },
       ]}
       basePath="/admin/informatii-publice/certificate-urbanism"
+      hideCreatedAtColumn
     />
   );
 }

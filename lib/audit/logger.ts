@@ -38,7 +38,9 @@ export type ResourceType =
   | 'user'
   | 'settings'
   | 'report'
-  | 'faq';
+  | 'faq'
+  | 'required_documents_office'
+  | 'required_document';
 
 export interface AuditLogEntry {
   action: AuditAction;
@@ -135,6 +137,8 @@ export function getResourceTypeLabel(resourceType: ResourceType): string {
     settings: 'Setări',
     report: 'Raport',
     faq: 'Întrebare frecventă',
+    required_documents_office: 'Birou acte necesare',
+    required_document: 'Secțiune acte necesare',
   };
   return labels[resourceType] || resourceType;
 }

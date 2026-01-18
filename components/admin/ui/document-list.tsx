@@ -63,6 +63,10 @@ const DELETE_LIMIT_HOURS = 24;
 
 const SUBCATEGORY_OPTIONS: Record<string, { value: string; label: string }[]> = {
   // Category-based subcategories
+  achizitii: [
+    { value: 'documente', label: 'Documente Achiziții' },
+    { value: 'formulare', label: 'Formulare necesare' },
+  ],
   mediu: [
     { value: 'salubrizare', label: 'Salubrizare' },
     { value: 'apa_canal', label: 'Apă și Canal' },

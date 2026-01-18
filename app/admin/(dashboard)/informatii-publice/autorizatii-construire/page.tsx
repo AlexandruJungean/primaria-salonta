@@ -13,6 +13,7 @@ export default function AutorizatiiConstruirePage() {
         { label: 'Autorizații Construire' },
       ]}
       basePath="/admin/informatii-publice/autorizatii-construire"
+      hideCreatedAtColumn
     />
   );
 }

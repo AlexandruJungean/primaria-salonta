@@ -218,7 +218,7 @@ export default function CarieraPage() {
   }, [loadJobs]);
 
   const handleEdit = (item: JobVacancy) => {
-    router.push(`/admin/cariera/${item.id}`);
+    router.push(`/admin/informatii-publice/cariera/${item.id}`);
   };
 
   const confirmDelete = (item: JobVacancy) => {
@@ -330,9 +330,12 @@ export default function CarieraPage() {
       <AdminPageHeader
         title="Carieră / Concursuri"
         description={`${jobs.length} concursuri în baza de date`}
-        breadcrumbs={[{ label: 'Carieră / Concursuri' }]}
+        breadcrumbs={[
+          { label: 'Informații Publice' },
+          { label: 'Carieră / Concursuri' },
+        ]}
         actions={
-          <AdminButton icon={Plus} onClick={() => router.push('/admin/cariera/nou')}>
+          <AdminButton icon={Plus} onClick={() => router.push('/admin/informatii-publice/cariera/nou')}>
             Adaugă Concurs Nou
           </AdminButton>
         }

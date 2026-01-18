@@ -38,11 +38,11 @@ export function Collapsible({
       >
         <div className="flex items-center gap-3">
           {icon}
-          <span className="font-semibold text-gray-900">{title}</span>
+          <span className="font-semibold">{title}</span>
         </div>
         <ChevronDown
           className={cn(
-            'w-5 h-5 text-gray-500 transition-transform duration-200',
+            'w-5 h-5 transition-transform duration-200',
             isOpen && 'rotate-180'
           )}
         />

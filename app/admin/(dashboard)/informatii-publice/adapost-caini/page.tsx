@@ -13,6 +13,7 @@ export default function AdapostCainiPage() {
         { label: 'Adăpost Câini' },
       ]}
       basePath="/admin/informatii-publice/adapost-caini"
+      hideCreatedAtColumn
     />
   );
 }

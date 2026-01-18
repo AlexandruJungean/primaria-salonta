@@ -8,7 +8,7 @@ import { UpcomingEventsSection } from '@/components/sections/upcoming-events-sec
 import { generatePageMetadata } from '@/lib/seo/metadata';
 import { WebPageJsonLd } from '@/lib/seo/json-ld';
 import { type Locale } from '@/i18n/routing';
-import { getLatestNews, getUpcomingEvents } from '@/lib/supabase/services';
+import { getLatestNews, getUpcomingEvents, getHeroSlidesForLocale } from '@/lib/supabase/services';
 import { translateContentArray } from '@/lib/google-translate/cache';
 
 // Dynamic imports for below-the-fold components (reduces initial JS bundle)
@@ -50,9 +50,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const { locale } = await params;
   
   // Fetch data from Supabase
-  const [latestNewsData, upcomingEventsData] = await Promise.all([
+  const [latestNewsData, upcomingEventsData, heroSlides] = await Promise.all([
     getLatestNews(3),
     getUpcomingEvents(4),
+    getHeroSlidesForLocale(locale as 'ro' | 'hu' | 'en'),
   ]);
 
   // Translate content based on locale
@@ -70,7 +71,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         locale={locale}
       />
       {/* Hero Section with Image Carousel */}
-      <HeroCarousel />
+      <HeroCarousel slides={heroSlides} />
 
       {/* Weather Widget */}
       <WeatherWidgetSection />

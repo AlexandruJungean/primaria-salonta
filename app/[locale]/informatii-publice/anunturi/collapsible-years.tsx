@@ -4,27 +4,7 @@ import { useState } from 'react';
 import { ChevronDown, Download, Megaphone, Calendar } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import type { Announcement } from '@/lib/supabase/services/documents';
-
-const CATEGORY_LABELS: Record<string, { ro: string; hu: string; en: string; color: string }> = {
-  general: { ro: 'General', hu: 'Általános', en: 'General', color: 'bg-gray-100 text-gray-700' },
-  administratie: { ro: 'Administrație', hu: 'Közigazgatás', en: 'Administration', color: 'bg-blue-100 text-blue-700' },
-  cultura: { ro: 'Cultură', hu: 'Kultúra', en: 'Culture', color: 'bg-purple-100 text-purple-700' },
-  hotarari: { ro: 'Hotărâri', hu: 'Határozatok', en: 'Decisions', color: 'bg-indigo-100 text-indigo-700' },
-  licitatii: { ro: 'Licitații', hu: 'Árverések', en: 'Auctions', color: 'bg-orange-100 text-orange-700' },
-  mediu: { ro: 'Mediu', hu: 'Környezet', en: 'Environment', color: 'bg-green-100 text-green-700' },
-  urbanism: { ro: 'Urbanism', hu: 'Városrendezés', en: 'Urban Planning', color: 'bg-teal-100 text-teal-700' },
-  agricol: { ro: 'Agricol', hu: 'Mezőgazdaság', en: 'Agriculture', color: 'bg-lime-100 text-lime-700' },
-  locuinte: { ro: 'Locuințe', hu: 'Lakások', en: 'Housing', color: 'bg-amber-100 text-amber-700' },
-  recrutare: { ro: 'Recrutare', hu: 'Toborzás', en: 'Recruitment', color: 'bg-rose-100 text-rose-700' },
-  utilitati: { ro: 'Utilități', hu: 'Közművek', en: 'Utilities', color: 'bg-cyan-100 text-cyan-700' },
-  financiar: { ro: 'Financiar', hu: 'Pénzügyi', en: 'Financial', color: 'bg-emerald-100 text-emerald-700' },
-  proiecte: { ro: 'Proiecte', hu: 'Projektek', en: 'Projects', color: 'bg-sky-100 text-sky-700' },
-  taxe: { ro: 'Taxe', hu: 'Adók', en: 'Taxes', color: 'bg-red-100 text-red-700' },
-  social: { ro: 'Social', hu: 'Szociális', en: 'Social', color: 'bg-pink-100 text-pink-700' },
-  sanatate: { ro: 'Sănătate', hu: 'Egészségügy', en: 'Health', color: 'bg-fuchsia-100 text-fuchsia-700' },
-};
 
 interface YearSectionProps {
   year: number;
@@ -80,10 +60,7 @@ function YearSection({ year, announcements, defaultOpen = false, locale }: YearS
                     <Megaphone className="w-5 h-5 text-primary-600" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-2 flex-wrap">
-                      <Badge className={CATEGORY_LABELS[announcement.category]?.color || 'bg-gray-100 text-gray-700'}>
-                        {CATEGORY_LABELS[announcement.category]?.[locale as 'ro' | 'hu' | 'en'] || announcement.category}
-                      </Badge>
+                    <div className="flex items-center gap-2 mb-2">
                       <span className="text-sm text-gray-500 flex items-center gap-1">
                         <Calendar className="w-4 h-4" />
                         {formatDate(announcement.date)}

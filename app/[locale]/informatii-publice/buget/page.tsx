@@ -31,48 +31,6 @@ interface YearData {
   sections: BudgetSection[];
 }
 
-// Section title mapping - maps subcategory patterns to display titles
-function getSectionTitle(subcategory: string): string {
-  // Handle specific patterns
-  if (subcategory.startsWith('ct_exec_')) {
-    const year = subcategory.replace('ct_exec_', '');
-    return `Aprobare cont execuție și situația financiară ${year}`;
-  }
-  if (subcategory.startsWith('rectificare_')) {
-    const parts = subcategory.replace('rectificare_', '').split('_');
-    if (parts.length === 2) {
-      const monthMap: Record<string, string> = { '01': 'ianuarie', '02': 'februarie', '03': 'martie', '04': 'aprilie', '05': 'mai', '06': 'iunie', '07': 'iulie', '08': 'august', '09': 'septembrie', '10': 'octombrie', '11': 'noiembrie', '12': 'decembrie' };
-      return `Rectificare buget, ${monthMap[parts[1]] || parts[1]}.${parts[0]}`;
-    }
-    return `Rectificare buget ${parts.join('.')}`;
-  }
-  if (subcategory.startsWith('buget_initial_')) {
-    const year = subcategory.replace('buget_initial_', '');
-    return `Buget inițial, ${year}`;
-  }
-  if (subcategory.startsWith('buget_final_')) {
-    const year = subcategory.replace('buget_final_', '');
-    return `Buget final, ${year}`;
-  }
-  if (subcategory.startsWith('sit_fin_q1_')) {
-    const year = subcategory.replace('sit_fin_q1_', '');
-    return `Situația financiară încheiată pe trim. I, ${year}`;
-  }
-  if (subcategory.startsWith('sit_fin_q2_')) {
-    const year = subcategory.replace('sit_fin_q2_', '');
-    return `Situația financiară încheiată pe trim. II, ${year}`;
-  }
-  if (subcategory.startsWith('sit_fin_q3_')) {
-    const year = subcategory.replace('sit_fin_q3_', '');
-    return `Situația financiară încheiată pe trim. III, ${year}`;
-  }
-  if (subcategory.startsWith('sit_fin_q4_')) {
-    const year = subcategory.replace('sit_fin_q4_', '');
-    return `Situația financiară încheiată pe trim. IV, ${year}`;
-  }
-  
-  return subcategory;
-}
 
 function DocumentGrid({ documents }: { documents: BudgetDocument[] }) {
   if (documents.length === 0) return null;
@@ -160,7 +118,7 @@ export default function BugetPage() {
     sectionMap.forEach((docs, subcategory) => {
       sections.push({
         id: subcategory,
-        title: getSectionTitle(subcategory),
+        title: subcategory || 'Fără titlu',
         documents: docs,
       });
     });
