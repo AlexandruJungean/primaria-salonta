@@ -1,6 +1,6 @@
 import { useTranslations } from 'next-intl';
 import { 
-  FileSearch, ShoppingCart, Wallet, Receipt, BadgeCheck, Hammer, Home, Map, Leaf, ShieldCheck, Siren,
+  FileSearch, ShoppingCart, Wallet, Receipt, BadgeCheck, Hammer, Home, Map, Leaf, ShieldCheck,
   FileText, Dog, Megaphone, FileSignature, Gavel, Wheat, Heart, Tag, HardHat, ScrollText, Radio, Network,
   FileQuestion, AlertCircle, ClipboardList
 } from 'lucide-react';
@@ -47,7 +47,6 @@ const SECTIONS = [
   { id: 'seip', href: '/informatii-publice/seip', icon: Network },
   { id: 'solicitareInformatii', href: '/informatii-publice/solicitare-informatii', icon: FileQuestion },
   { id: 'somatii', href: '/informatii-publice/somatii', icon: AlertCircle },
-  { id: 'coronavirus', href: '/informatii-publice/coronavirus', icon: Siren },
 ];
 
 export default function InformatiiPublicePage() {

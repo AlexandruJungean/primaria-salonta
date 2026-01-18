@@ -140,20 +140,17 @@ export default async function EventDetailPage({
             {/* Main Content */}
             <div className="lg:col-span-2">
               {event.description && (
-                <div className="prose prose-lg max-w-none">
-                  <p className="text-gray-700 text-lg leading-relaxed">
-                    {event.description}
-                  </p>
-                </div>
+                <p className="text-gray-700 text-lg leading-relaxed whitespace-pre-line">
+                  {event.description}
+                </p>
               )}
 
               {event.program && (
                 <div className="mt-6">
                   <h2 className="text-xl font-semibold text-gray-900 mb-3">Program</h2>
-                  <div 
-                    className="prose max-w-none text-gray-700"
-                    dangerouslySetInnerHTML={{ __html: event.program }}
-                  />
+                  <p className="text-gray-700 whitespace-pre-line leading-relaxed">
+                    {event.program}
+                  </p>
                 </div>
               )}
 

@@ -787,25 +787,6 @@ export const PAGE_SEO = {
     },
   },
 
-  // Coronavirus
-  coronavirus: {
-    ro: {
-      title: 'Informații COVID-19 - Primăria Salonta',
-      description: 'Informații și măsuri privind prevenirea și combaterea pandemiei COVID-19 în Salonta.',
-      keywords: 'COVID-19, coronavirus, pandemie, măsuri, prevenție',
-    },
-    hu: {
-      title: 'COVID-19 Információk - Nagyszalonta',
-      description: 'Információk és intézkedések a COVID-19 járvány megelőzéséről és leküzdéséről.',
-      keywords: 'COVID-19, koronavírus, járvány, intézkedések',
-    },
-    en: {
-      title: 'COVID-19 Information - Salonta City Hall',
-      description: 'Information and measures regarding COVID-19 pandemic prevention in Salonta.',
-      keywords: 'COVID-19, coronavirus, pandemic, measures, prevention',
-    },
-  },
-
   // Conducere
   conducere: {
     ro: {

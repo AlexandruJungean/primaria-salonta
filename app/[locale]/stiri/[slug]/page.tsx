@@ -130,10 +130,9 @@ export default async function NewsDetailPage({
             {/* Article Content */}
             {news.content && (
               <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
-                <div 
-                  className="prose prose-lg max-w-none text-gray-700"
-                  dangerouslySetInnerHTML={{ __html: news.content }}
-                />
+                <p className="text-gray-700 whitespace-pre-line leading-relaxed">
+                  {news.content}
+                </p>
               </div>
             )}
 

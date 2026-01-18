@@ -49,7 +49,6 @@ import {
   Home,
   Map,
   Leaf,
-  Siren,
   Dog,
   FileSignature,
   Wheat,
@@ -146,7 +145,6 @@ const navigationItems: NavItem[] = [
       { id: 'ip-seip', label: 'SEIP', href: '/admin/informatii-publice/seip', icon: Network },
       { id: 'ip-solicitare', label: 'Solicitare Informații', href: '/admin/informatii-publice/solicitare-informatii', icon: FileQuestion },
       { id: 'ip-somatii', label: 'Somații', href: '/admin/informatii-publice/somatii', icon: AlertCircle },
-      { id: 'ip-coronavirus', label: 'Coronavirus', href: '/admin/informatii-publice/coronavirus', icon: Siren },
     ],
   },
   {

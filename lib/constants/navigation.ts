@@ -295,7 +295,6 @@ export const MAIN_NAVIGATION: NavSection[] = [
           { id: 'regulamente', href: '/informatii-publice/regulamente', icon: ScrollText },
           { id: 'seip', href: '/informatii-publice/seip', icon: Network },
           { id: 'somatii', href: '/informatii-publice/somatii', icon: AlertCircle },
-          { id: 'coronavirus', href: '/informatii-publice/coronavirus', icon: Siren },
         ],
       },
       // Official Monitor group

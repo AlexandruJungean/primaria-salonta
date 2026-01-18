@@ -151,7 +151,6 @@
     "registruAgricol": "Registrul agricol (În curând)",
     "sanatate": "Sănătate (În curând)",
     "problemeSociale": "Probleme sociale – formulare",
-    "coronavirus": "Informații coronavirus",
     "rapoarteStudii": "Rapoarte și studii",
     "rapoarteAudit": "Rapoarte de audit",
     "studii": "Studii",
@@ -770,21 +769,10 @@
     "mandateValidationsTitle": "Validare mandate consilieri / primar",
     "documentsTitle": "Documente",
     "otherLinksTitle": "Alte linkuri utile",
-    "covidLinkTitle": "Informații utile privind coronavirus (COVID-19)",
     "registersTitle": "Registre",
     "archiveMandateTitle": "Arhivă validare mandate (2020-2024)",
     "noDocuments": "Nu există documente disponibile momentan.",
     "councilActivityReports": "Rapoarte de activitate ale consilierilor locali"
-  },
-  "coronavirusPage": {
-    "title": "Informații utile privind coronavirus (COVID-19)",
-    "description": "Hotărâri și recomandări privind coronavirus COVID-19 în Municipiul Salonta",
-    "archiveTitle": "Arhivă informații COVID-19",
-    "archiveText": "Această pagină conține informații arhivate din perioada stării de urgență cauzată de pandemia COVID-19 (2020). Informațiile sunt păstrate în scop documentar.",
-    "documentsTitle": "Documente și formulare",
-    "updatesTitle": "Actualizări și anunțuri",
-    "moreInfo": "Pentru informații actualizate privind serviciile Primăriei Salonta, vă rugăm să consultați pagina de Contact sau să ne sunați la numerele de telefon afișate.",
-    "contactLink": "Contactați-ne"
   },
   "problemeSocialePage": {
     "infoTitle": "Formulare pentru probleme sociale",

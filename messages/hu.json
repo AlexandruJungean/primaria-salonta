@@ -151,7 +151,6 @@
     "registruAgricol": "Mezőgazdasági nyilvántartás (Hamarosan)",
     "sanatate": "Egészségügy (Hamarosan)",
     "problemeSociale": "Szociális problémák – nyomtatványok",
-    "coronavirus": "Koronavírus információk",
     "rapoarteStudii": "Jelentések és tanulmányok",
     "rapoarteAudit": "Könyvvizsgálati jelentések",
     "studii": "Tanulmányok",
@@ -770,21 +769,10 @@
     "mandateValidationsTitle": "Tanácsos / Polgármester mandátum hitelesítések",
     "documentsTitle": "Dokumentumok",
     "otherLinksTitle": "Egyéb hasznos linkek",
-    "covidLinkTitle": "Hasznos koronavírus információk (COVID-19)",
     "registersTitle": "Nyilvántartások",
     "archiveMandateTitle": "Mandátum hitelesítés archívum (2020-2024)",
     "noDocuments": "Jelenleg nincsenek elérhető dokumentumok.",
     "councilActivityReports": "Helyi tanácsosok tevékenységi jelentései"
-  },
-  "coronavirusPage": {
-    "title": "Hasznos koronavírus információk (COVID-19)",
-    "description": "Határozatok és ajánlások a COVID-19 koronavírussal kapcsolatban Nagyszalonta városában",
-    "archiveTitle": "COVID-19 információ archívum",
-    "archiveText": "Ez az oldal a COVID-19 járvány okozta veszélyhelyzet idejéből (2020) származó archivált információkat tartalmaz. Az információkat dokumentációs célból őrizzük.",
-    "documentsTitle": "Dokumentumok és nyomtatványok",
-    "updatesTitle": "Frissítések és hirdetmények",
-    "moreInfo": "A Nagyszalonta Polgármesteri Hivatalának szolgáltatásaival kapcsolatos friss információkért kérjük, látogasson el a Kapcsolat oldalra, vagy hívja a feltüntetett telefonszámokat.",
-    "contactLink": "Kapcsolatfelvétel"
   },
   "problemeSocialePage": {
     "infoTitle": "Szociális problémák nyomtatványai",

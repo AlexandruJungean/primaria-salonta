@@ -352,7 +352,6 @@ export default async function AlteDocumentePage({ params }: { params: Promise<{ 
                   <InternalLinkItem title={t('formulare')} href="/informatii-publice/formulare" />
                   <InternalLinkItem title={t('stiri')} href="/stiri" />
                   <InternalLinkItem title={t('problemeSociale')} href="/servicii-online/probleme-sociale" />
-                  <InternalLinkItem title={ta('covidLinkTitle')} href="/informatii-publice/coronavirus" />
                 </div>
               </CardContent>
             </Card>
