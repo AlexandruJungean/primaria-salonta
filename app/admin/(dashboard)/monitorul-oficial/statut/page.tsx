@@ -13,6 +13,7 @@ export default function StatutPage() {
         { label: 'Statut UAT' },
       ]}
       basePath="/admin/monitorul-oficial/statut"
+      hideCreatedAtColumn
     />
   );
 }

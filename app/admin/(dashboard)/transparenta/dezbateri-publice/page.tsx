@@ -13,6 +13,7 @@ export default function DezbateriPublicePage() {
         { label: 'Dezbateri Publice' },
       ]}
       basePath="/admin/transparenta/dezbateri-publice"
+      hideCreatedAtColumn
     />
   );
 }

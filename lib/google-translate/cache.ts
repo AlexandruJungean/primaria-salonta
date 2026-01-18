@@ -196,6 +196,31 @@ export async function translateContentFields<T extends object>(
 }
 
 /**
+ * Translate a content map (Record<string, string>) with caching
+ * Used for page_content from database
+ */
+export async function translateContentMap(
+  contentMap: Record<string, string>,
+  targetLanguage: SupportedLocale
+): Promise<Record<string, string>> {
+  if (targetLanguage === 'ro' || Object.keys(contentMap).length === 0) {
+    return contentMap;
+  }
+
+  const keys = Object.keys(contentMap);
+  const values = keys.map(key => contentMap[key]);
+  
+  const translations = await getCachedTranslations(values, targetLanguage);
+  
+  const result: Record<string, string> = {};
+  keys.forEach((key, index) => {
+    result[key] = translations[index];
+  });
+  
+  return result;
+}
+
+/**
  * Translate an array of items with caching
  * Works with any object type
  */

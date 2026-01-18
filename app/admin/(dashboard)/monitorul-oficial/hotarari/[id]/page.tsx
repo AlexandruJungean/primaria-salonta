@@ -1,8 +1,12 @@
 'use client';
 
+import { useSearchParams } from 'next/navigation';
 import { DocumentEdit } from '@/components/admin';
 
 export default function HotarariMolEditPage() {
+  const searchParams = useSearchParams();
+  const defaultSubcategory = searchParams.get('subcategory') || undefined;
+
   return (
     <DocumentEdit
       filterType="source_folder"
@@ -13,6 +17,7 @@ export default function HotarariMolEditPage() {
         { label: 'Hotărâri (Registre)' },
       ]}
       basePath="/admin/monitorul-oficial/hotarari"
+      defaultSubcategory={defaultSubcategory}
     />
   );
 }

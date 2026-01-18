@@ -1,8 +1,12 @@
 'use client';
 
+import { useSearchParams } from 'next/navigation';
 import { DocumentEdit } from '@/components/admin';
 
 export default function DocumenteFinanciareEditPage() {
+  const searchParams = useSearchParams();
+  const defaultSubcategory = searchParams.get('subcategory') || undefined;
+
   return (
     <DocumentEdit
       filterType="source_folder"
@@ -13,6 +17,7 @@ export default function DocumenteFinanciareEditPage() {
         { label: 'Documente Financiare' },
       ]}
       basePath="/admin/monitorul-oficial/documente-financiare"
+      defaultSubcategory={defaultSubcategory}
     />
   );
 }

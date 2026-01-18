@@ -168,47 +168,59 @@ export async function getDocumentsBySourceFolderWithAnnexes(
 ): Promise<DocumentWithAnnexes[]> {
   const supabase = createAnonServerClient();
 
-  const { data, error } = await supabase
+  // First, get all parent documents (without parent_id) from this source folder
+  const { data: parentData, error: parentError } = await supabase
     .from('documents')
     .select('*')
     .eq('published', true)
     .eq('source_folder', sourceFolder)
+    .is('parent_id', null)
     .order('year', { ascending: false })
     .order('document_date', { ascending: false, nullsFirst: false })
+    .order('created_at', { ascending: false })
     .limit(limit);
 
-  if (error) {
-    console.error('Error fetching documents by source folder:', error);
+  if (parentError) {
+    console.error('Error fetching documents by source folder:', parentError);
     return [];
   }
 
-  const docs = data || [];
+  const parentDocs = parentData || [];
   
-  // Separate parent documents and annexes
-  const parentDocs: DocumentWithAnnexes[] = [];
-  const annexesByParentId = new Map<string, Document[]>();
+  if (parentDocs.length === 0) {
+    return [];
+  }
 
-  docs.forEach(doc => {
-    if (doc.parent_id) {
-      // This is an annex
-      const annexes = annexesByParentId.get(doc.parent_id) || [];
-      annexes.push(doc);
-      annexesByParentId.set(doc.parent_id, annexes);
-    } else {
-      // This is a parent document
-      parentDocs.push({ ...doc, annexes: [] });
-    }
+  // Get all parent IDs
+  const parentIds = parentDocs.map(doc => doc.id);
+
+  // Fetch all annexes for these parent documents
+  const { data: annexData, error: annexError } = await supabase
+    .from('documents')
+    .select('*')
+    .eq('published', true)
+    .in('parent_id', parentIds)
+    .order('created_at', { ascending: true });
+
+  if (annexError) {
+    console.error('Error fetching annexes:', annexError);
+  }
+
+  // Group annexes by parent_id
+  const annexesByParentId = new Map<string, Document[]>();
+  (annexData || []).forEach(annex => {
+    const annexes = annexesByParentId.get(annex.parent_id!) || [];
+    annexes.push(annex);
+    annexesByParentId.set(annex.parent_id!, annexes);
   });
 
   // Attach annexes to their parent documents
-  parentDocs.forEach(doc => {
-    const annexes = annexesByParentId.get(doc.id);
-    if (annexes) {
-      doc.annexes = annexes;
-    }
-  });
+  const docsWithAnnexes: DocumentWithAnnexes[] = parentDocs.map(doc => ({
+    ...doc,
+    annexes: annexesByParentId.get(doc.id) || [],
+  }));
 
-  return parentDocs;
+  return docsWithAnnexes;
 }
 
 /**

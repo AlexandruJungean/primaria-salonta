@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { Save, ArrowLeft, Trash2, FileText, Upload, ExternalLink, RefreshCw, X } from 'lucide-react';
+import { Save, ArrowLeft, Trash2, FileText, Upload, ExternalLink, RefreshCw, X, Plus, Paperclip } from 'lucide-react';
 import {
   AdminPageHeader,
   AdminButton,
@@ -29,6 +29,15 @@ interface DocumentFormData {
   published: boolean;
 }
 
+interface Annex {
+  id: string;
+  title: string;
+  file_url: string;
+  file_name: string;
+  file_size: number | null;
+  created_at: string;
+}
+
 interface BreadcrumbItem {
   label: string;
   href?: string;
@@ -40,6 +49,7 @@ interface DocumentEditProps {
   pageTitle: string;
   breadcrumbs: BreadcrumbItem[];
   basePath: string;
+  defaultSubcategory?: string;
 }
 
 const RESTRICTED_CATEGORIES = ['buget', 'dispozitii', 'regulamente'];
@@ -79,19 +89,32 @@ const SUBCATEGORY_OPTIONS: Record<string, { value: string; label: string }[]> = 
     { value: 'buget_final', label: 'Buget Final' },
   ],
   // Source folder-based subcategories
+  'generale': [
+    { value: 'dispozitii', label: 'Dispoziții' },
+    { value: 'rapoarte', label: 'Rapoarte anuale' },
+    { value: 'formulare', label: 'Formulare' },
+  ],
   'buletin-informativ': [
     { value: 'a', label: 'a) Acte normative' },
     { value: 'b', label: 'b) Structura organizatorică' },
     { value: 'c', label: 'c) Conducere' },
+    { value: 'd', label: 'd) Contact' },
+    { value: 'e', label: 'e) Audiențe' },
+    { value: 'f', label: 'f) Buget' },
     { value: 'g', label: 'g) Programe și strategii' },
     { value: 'h', label: 'h) Documente interes public' },
     { value: 'i', label: 'i) Categorii documente' },
+    { value: 'j', label: 'j) Contestare' },
   ],
   'documente-si-informatii-financiare': [
     { value: 'executie', label: 'Cont de execuție' },
     { value: 'buget', label: 'Buget general' },
     { value: 'rectificare', label: 'Rectificare bugetară' },
     { value: 'altele', label: 'Alte documente' },
+  ],
+  'hotararile-autoritatii-deliberative': [
+    { value: 'registru_hotarari', label: 'Registru Hotărâri Adoptate' },
+    { value: 'registru_proiecte', label: 'Registru Proiecte de Hotărâri' },
   ],
 };
 
@@ -101,6 +124,7 @@ export function DocumentEdit({
   pageTitle,
   breadcrumbs,
   basePath,
+  defaultSubcategory,
 }: DocumentEditProps) {
   const router = useRouter();
   const params = useParams();
@@ -131,6 +155,16 @@ export function DocumentEdit({
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [showUploadArea, setShowUploadArea] = useState(false);
+  
+  // Annexes state
+  const [annexes, setAnnexes] = useState<Annex[]>([]);
+  const [loadingAnnexes, setLoadingAnnexes] = useState(false);
+  const [uploadingAnnex, setUploadingAnnex] = useState(false);
+  const [annexProgress, setAnnexProgress] = useState(0);
+  const [deleteAnnexDialogOpen, setDeleteAnnexDialogOpen] = useState(false);
+  const [annexToDelete, setAnnexToDelete] = useState<Annex | null>(null);
+  const [deletingAnnex, setDeletingAnnex] = useState(false);
+  
   const [formData, setFormData] = useState<DocumentFormData>({
     title: '',
     file_url: '',
@@ -138,7 +172,7 @@ export function DocumentEdit({
     file_size: 0,
     year: currentYear,
     month: null,
-    subcategory: '',
+    subcategory: defaultSubcategory || '',
     description: '',
     document_date: '',
     published: true,
@@ -218,9 +252,127 @@ export function DocumentEdit({
     }
   }, [id, isNew]);
 
+  // Load annexes
+  const loadAnnexes = useCallback(async () => {
+    if (isNew) return;
+    
+    setLoadingAnnexes(true);
+    try {
+      const response = await adminFetch(`/api/admin/documents?parent_id=${id}`);
+      if (!response.ok) throw new Error('Failed to fetch annexes');
+      const data = await response.json();
+      setAnnexes(data || []);
+    } catch (error) {
+      console.error('Error loading annexes:', error);
+    } finally {
+      setLoadingAnnexes(false);
+    }
+  }, [id, isNew]);
+
   useEffect(() => {
     loadDocument();
-  }, [loadDocument]);
+    loadAnnexes();
+  }, [loadDocument, loadAnnexes]);
+
+  // Upload annex
+  const uploadAnnex = async (file: File) => {
+    if (isNew) {
+      toast.error('Salvează mai întâi', 'Trebuie să salvezi documentul înainte de a adăuga anexe.');
+      return;
+    }
+    
+    setUploadingAnnex(true);
+    setAnnexProgress(0);
+    
+    try {
+      // First, upload the file
+      const formDataUpload = new FormData();
+      formDataUpload.append('file', file);
+      formDataUpload.append('category', 'documente');
+      
+      const uploadResponse = await adminFetch('/api/admin/upload', {
+        method: 'POST',
+        body: formDataUpload,
+      });
+      
+      const uploadData = await uploadResponse.json();
+      
+      if (!uploadResponse.ok) {
+        throw new Error(uploadData.error || 'Upload eșuat');
+      }
+      
+      setAnnexProgress(50);
+      
+      // Then, create the annex document with parent_id
+      const annexData = {
+        title: file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' '),
+        file_url: uploadData.url,
+        file_name: file.name,
+        file_size: file.size,
+        parent_id: id,
+        published: true,
+        category: 'anexa',
+      };
+      
+      const createResponse = await adminFetch('/api/admin/documents', {
+        method: 'POST',
+        body: JSON.stringify(annexData),
+      });
+      
+      if (!createResponse.ok) throw new Error('Failed to create annex');
+      
+      setAnnexProgress(100);
+      toast.success('Anexă adăugată', 'Anexa a fost încărcată cu succes.');
+      loadAnnexes();
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : 'Eroare la upload';
+      toast.error('Eroare la încărcare', errorMsg);
+    } finally {
+      setUploadingAnnex(false);
+      setAnnexProgress(0);
+    }
+  };
+
+  const handleAnnexFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error('Tip de fișier invalid', 'Sunt permise doar fișiere PDF și DOC/DOCX.');
+      return;
+    }
+
+    await uploadAnnex(file);
+    // Reset input
+    e.target.value = '';
+  };
+
+  const confirmDeleteAnnex = (annex: Annex) => {
+    setAnnexToDelete(annex);
+    setDeleteAnnexDialogOpen(true);
+  };
+
+  const handleDeleteAnnex = async () => {
+    if (!annexToDelete) return;
+    
+    setDeletingAnnex(true);
+    try {
+      const response = await adminFetch(`/api/admin/documents?id=${annexToDelete.id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed to delete');
+      toast.success('Anexă ștearsă', 'Anexa a fost ștearsă.');
+      setDeleteAnnexDialogOpen(false);
+      setAnnexToDelete(null);
+      loadAnnexes();
+    } catch (error) {
+      console.error('Error deleting annex:', error);
+      toast.error('Eroare', 'Nu s-a putut șterge anexa.');
+    } finally {
+      setDeletingAnnex(false);
+    }
+  };
 
   const goBack = () => {
     router.push(basePath);
@@ -466,6 +618,75 @@ export function DocumentEdit({
               />
             </div>
           </AdminCard>
+
+          {/* Annexes Section - only show for existing documents and subcategory 'rapoarte' */}
+          {!isNew && formData.subcategory === 'rapoarte' && (
+            <AdminCard title="Anexe / Fișiere Atașate">
+              <div className="space-y-4">
+                {/* Upload new annex */}
+                <div className="border-2 border-dashed border-slate-300 rounded-xl p-4 text-center hover:border-blue-400 transition-colors">
+                  <input
+                    type="file"
+                    accept=".pdf,.doc,.docx"
+                    onChange={handleAnnexFileChange}
+                    className="hidden"
+                    id="annex-upload"
+                    disabled={uploadingAnnex}
+                  />
+                  <label htmlFor="annex-upload" className="cursor-pointer flex items-center justify-center gap-3">
+                    {uploadingAnnex ? (
+                      <>
+                        <div className="animate-spin h-5 w-5 border-2 border-blue-500 border-t-transparent rounded-full" />
+                        <span className="text-sm text-slate-600">Se încarcă... {annexProgress}%</span>
+                      </>
+                    ) : (
+                      <>
+                        <Plus className="w-5 h-5 text-slate-400" />
+                        <span className="text-sm text-slate-600">Adaugă anexă (PDF, DOC, DOCX)</span>
+                      </>
+                    )}
+                  </label>
+                </div>
+
+                {/* Annexes list */}
+                {loadingAnnexes ? (
+                  <div className="flex items-center justify-center py-4">
+                    <div className="animate-spin h-5 w-5 border-2 border-blue-500 border-t-transparent rounded-full" />
+                  </div>
+                ) : annexes.length > 0 ? (
+                  <ul className="space-y-2">
+                    {annexes.map((annex) => (
+                      <li key={annex.id} className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
+                        <Paperclip className="w-4 h-4 text-slate-400 shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-slate-900 truncate">{annex.title}</p>
+                          <p className="text-xs text-slate-500">{annex.file_name}</p>
+                        </div>
+                        <a
+                          href={annex.file_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-1.5 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded transition-colors"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                        </a>
+                        <button
+                          onClick={() => confirmDeleteAnnex(annex)}
+                          className="p-1.5 text-red-600 hover:text-red-800 hover:bg-red-50 rounded transition-colors"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-sm text-slate-500 text-center py-4">
+                    Nu există anexe. Folosește butonul de mai sus pentru a adăuga.
+                  </p>
+                )}
+              </div>
+            </AdminCard>
+          )}
         </div>
 
         <div className="space-y-6">
@@ -566,6 +787,17 @@ export function DocumentEdit({
         confirmLabel="Da, șterge"
         cancelLabel="Anulează"
         loading={deleting}
+      />
+
+      <AdminConfirmDialog
+        isOpen={deleteAnnexDialogOpen}
+        onClose={() => setDeleteAnnexDialogOpen(false)}
+        onConfirm={handleDeleteAnnex}
+        title="Șterge Anexa?"
+        message={`Ești sigur că vrei să ștergi anexa "${annexToDelete?.title}"?`}
+        confirmLabel="Da, șterge"
+        cancelLabel="Anulează"
+        loading={deletingAnnex}
       />
     </div>
   );

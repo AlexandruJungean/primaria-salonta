@@ -13,6 +13,7 @@ export default function DispozitiiMolPage() {
         { label: 'Dispoziții (Registre)' },
       ]}
       basePath="/admin/monitorul-oficial/dispozitii"
+      hideCreatedAtColumn
     />
   );
 }

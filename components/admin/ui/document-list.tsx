@@ -54,6 +54,7 @@ interface DocumentListProps {
   basePath: string; // e.g., '/admin/primaria/organigrama'
   hideYearColumn?: boolean;
   hideYearFilter?: boolean;
+  hideCreatedAtColumn?: boolean;
 }
 
 const ITEMS_PER_PAGE = 20;
@@ -84,19 +85,32 @@ const SUBCATEGORY_OPTIONS: Record<string, { value: string; label: string }[]> = 
     { value: 'transparenta', label: 'Transparență' },
   ],
   // Source folder-based subcategories
+  'generale': [
+    { value: 'dispozitii', label: 'Dispoziții' },
+    { value: 'rapoarte', label: 'Rapoarte anuale' },
+    { value: 'formulare', label: 'Formulare' },
+  ],
   'buletin-informativ': [
     { value: 'a', label: 'a) Acte normative' },
     { value: 'b', label: 'b) Structura organizatorică' },
     { value: 'c', label: 'c) Conducere' },
+    { value: 'd', label: 'd) Contact' },
+    { value: 'e', label: 'e) Audiențe' },
+    { value: 'f', label: 'f) Buget' },
     { value: 'g', label: 'g) Programe și strategii' },
     { value: 'h', label: 'h) Documente interes public' },
     { value: 'i', label: 'i) Categorii documente' },
+    { value: 'j', label: 'j) Contestare' },
   ],
   'documente-si-informatii-financiare': [
     { value: 'executie', label: 'Cont de execuție' },
     { value: 'buget', label: 'Buget general' },
     { value: 'rectificare', label: 'Rectificare bugetară' },
     { value: 'altele', label: 'Alte documente' },
+  ],
+  'hotararile-autoritatii-deliberative': [
+    { value: 'registru_hotarari', label: 'Registru Hotărâri Adoptate' },
+    { value: 'registru_proiecte', label: 'Registru Proiecte de Hotărâri' },
   ],
 };
 
@@ -108,6 +122,7 @@ export function DocumentList({
   basePath,
   hideYearColumn = false,
   hideYearFilter = false,
+  hideCreatedAtColumn = false,
 }: DocumentListProps) {
   const router = useRouter();
   
@@ -342,7 +357,7 @@ export function DocumentList({
         <span className="font-medium text-slate-700">{item.year || '-'}</span>
       ),
     }] : []),
-    {
+    ...(!hideCreatedAtColumn ? [{
       key: 'created_at',
       label: 'Încărcat',
       className: 'w-28',
@@ -352,7 +367,7 @@ export function DocumentList({
           {formatDate(item.created_at)}
         </div>
       ),
-    },
+    }] : []),
     {
       key: 'published',
       label: 'Status',

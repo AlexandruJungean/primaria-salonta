@@ -28,9 +28,15 @@ const MAIN_LINKS = [
 
 /**
  * Check if document is a project register (proiecte de hotărâri)
+ * Uses subcategory first, falls back to title check for legacy documents
  */
-function isProjectRegister(title: string): boolean {
-  const lowerTitle = title.toLowerCase();
+function isProjectRegister(doc: { subcategory?: string | null; title: string }): boolean {
+  // Check subcategory first
+  if (doc.subcategory === 'registru_proiecte') return true;
+  if (doc.subcategory === 'registru_hotarari') return false;
+  
+  // Fallback to title check for documents without subcategory
+  const lowerTitle = doc.title.toLowerCase();
   return lowerTitle.includes('proiect');
 }
 
@@ -52,11 +58,11 @@ export default async function HotarariMolPage({ params }: { params: Promise<{ lo
   // Separate into decision registers and project registers
   // Sort by database year only
   const decisionRegisters = allDocuments
-    .filter(doc => !isProjectRegister(doc.title))
+    .filter(doc => !isProjectRegister(doc))
     .sort((a, b) => (b.year || 0) - (a.year || 0));
   
   const projectRegisters = allDocuments
-    .filter(doc => isProjectRegister(doc.title))
+    .filter(doc => isProjectRegister(doc))
     .sort((a, b) => (b.year || 0) - (a.year || 0));
 
   return (

@@ -6,12 +6,15 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
 import { Link } from '@/components/ui/link';
+import { Pagination } from '@/components/ui/pagination';
 import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
 import * as documentsService from '@/lib/supabase/services/documents';
 import type { Document } from '@/lib/types/database';
 import { notFound } from 'next/navigation';
 import { translateContentArray } from '@/lib/google-translate/cache';
+
+const ITEMS_PER_PAGE = 20;
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; year: string }> }) {
   const { locale, year } = await params;
@@ -94,9 +97,17 @@ function AnnouncementCard({ doc }: { doc: Document }) {
   );
 }
 
-export default async function AnunturiYearPage({ params }: { params: Promise<{ locale: string; year: string }> }) {
+export default async function AnunturiYearPage({ 
+  params, 
+  searchParams 
+}: { 
+  params: Promise<{ locale: string; year: string }>;
+  searchParams: Promise<{ page?: string }>;
+}) {
   const { locale, year } = await params;
+  const { page } = await searchParams;
   const yearNum = parseInt(year, 10);
+  const currentPage = Math.max(1, parseInt(page || '1', 10));
   
   // Validate year
   if (isNaN(yearNum) || yearNum < 2010 || yearNum > 2100) {
@@ -110,9 +121,19 @@ export default async function AnunturiYearPage({ params }: { params: Promise<{ l
   const allDocumentsData = await documentsService.getDocumentsBySourceFolder('anunturi', 2000);
   const yearDocumentsData = allDocumentsData.filter(doc => doc.year === yearNum);
   
+  // Calculate pagination
+  const totalItems = yearDocumentsData.length;
+  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+  const validPage = Math.min(currentPage, Math.max(1, totalPages));
+  const startIndex = (validPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  
+  // Get paginated documents
+  const paginatedDocumentsData = yearDocumentsData.slice(startIndex, endIndex);
+  
   // Translate document titles based on locale
   const yearDocuments = await translateContentArray(
-    yearDocumentsData,
+    paginatedDocumentsData,
     ['title', 'description'],
     locale as 'ro' | 'hu' | 'en'
   );
@@ -172,7 +193,7 @@ export default async function AnunturiYearPage({ params }: { params: Promise<{ l
             <div className="text-center mb-8">
               <h2 className="text-4xl font-bold text-gray-900 mb-2">{year}</h2>
               <p className="text-gray-500">
-                {yearDocuments.length} {ta('announcements')}
+                {totalItems} {ta('announcements')}
               </p>
             </div>
 
@@ -196,11 +217,23 @@ export default async function AnunturiYearPage({ params }: { params: Promise<{ l
 
             {/* Announcements */}
             {yearDocuments.length > 0 ? (
-              <div className="space-y-3">
-                {yearDocuments.map((doc) => (
-                  <AnnouncementCard key={doc.id} doc={doc} />
-                ))}
-              </div>
+              <>
+                <div className="space-y-3">
+                  {yearDocuments.map((doc) => (
+                    <AnnouncementCard key={doc.id} doc={doc} />
+                  ))}
+                </div>
+                
+                {/* Pagination */}
+                <Pagination
+                  currentPage={validPage}
+                  totalPages={totalPages}
+                  totalItems={totalItems}
+                  itemsPerPage={ITEMS_PER_PAGE}
+                  baseUrl={`/transparenta/anunturi/${year}`}
+                  className="mt-8"
+                />
+              </>
             ) : (
               <div className="text-center py-12">
                 <FileText className="w-12 h-12 text-gray-300 mx-auto mb-4" />

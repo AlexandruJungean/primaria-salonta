@@ -13,6 +13,7 @@ export default function AlteDocumenteMolPage() {
         { label: 'Alte Documente' },
       ]}
       basePath="/admin/monitorul-oficial/alte-documente"
+      hideCreatedAtColumn
     />
   );
 }

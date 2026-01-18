@@ -277,6 +277,42 @@ export interface CouncilCommission {
 }
 
 // ============================================
+// PAGE CONTENT (Editable text blocks)
+// ============================================
+
+export interface PageContent {
+  id: string;
+  page_key: string;
+  content_key: string;
+  content: string;
+  content_type: 'text' | 'html' | 'markdown';
+  sort_order: number;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+// ============================================
+// EXTERNAL LINKS
+// ============================================
+
+export interface ExternalLink {
+  id: string;
+  page_key: string;
+  title: string;
+  url: string;
+  description: string | null;
+  link_type: 'website' | 'email' | 'phone' | 'document' | 'internal' | 'external';
+  icon: string | null;
+  section: string | null;
+  sort_order: number;
+  is_active: boolean;
+  open_in_new_tab: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+// ============================================
 // PAGINATION & FILTERS
 // ============================================
 

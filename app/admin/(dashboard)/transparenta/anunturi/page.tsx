@@ -13,6 +13,7 @@ export default function AnunturiPage() {
         { label: 'Anunțuri' },
       ]}
       basePath="/admin/transparenta/anunturi"
+      hideCreatedAtColumn
     />
   );
 }

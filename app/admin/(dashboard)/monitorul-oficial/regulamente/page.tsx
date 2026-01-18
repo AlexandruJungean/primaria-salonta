@@ -15,6 +15,7 @@ export default function RegulamenteMolPage() {
       basePath="/admin/monitorul-oficial/regulamente"
       hideYearColumn
       hideYearFilter
+      hideCreatedAtColumn
     />
   );
 }

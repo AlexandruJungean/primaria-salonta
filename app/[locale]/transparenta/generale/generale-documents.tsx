@@ -24,6 +24,10 @@ export function GeneraleDocuments({
   labels 
 }: GeneraleDocumentsProps) {
   const [dispozitiiOpen, setDispozitiiOpen] = useState(false);
+  const [rapoarteOpen, setRapoarteOpen] = useState(false);
+
+  // Count total rapoarte
+  const totalRapoarte = sortedYears.reduce((acc, year) => acc + rapoarteByYear[year].length, 0);
 
   return (
     <>
@@ -76,21 +80,41 @@ export function GeneraleDocuments({
         </div>
       )}
 
-      {/* Rapoarte Section - Collapsible by Year */}
+      {/* Rapoarte Section - Entire section is collapsible */}
       {sortedYears.length > 0 && (
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-3">
-            <FileText className="w-7 h-7 text-orange-600" />
-            {labels.rapoarteTitle}
-          </h2>
-          <CollapsibleGroup>
-            {sortedYears.map((year, index) => (
-              <Collapsible
-                key={year}
-                title={`${year} - ${labels.rapoarteAnuale}`}
-                defaultOpen={index === 0} // First year open by default
-                className="bg-white"
-              >
+        <div className="bg-gradient-to-r from-orange-50 to-orange-100/50 rounded-2xl border border-orange-200 overflow-hidden">
+          <button
+            onClick={() => setRapoarteOpen(!rapoarteOpen)}
+            className="w-full p-6 flex items-center justify-between text-left hover:bg-orange-100/50 transition-colors"
+          >
+            <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+              <FileText className="w-7 h-7 text-orange-600" />
+              {labels.rapoarteTitle}
+              <span className="text-sm font-normal text-gray-500">({totalRapoarte} documente, {sortedYears.length} ani)</span>
+            </h2>
+            <ChevronDown 
+              className={cn(
+                "w-6 h-6 text-orange-600 transition-transform duration-200",
+                rapoarteOpen && "rotate-180"
+              )} 
+            />
+          </button>
+          <div
+            className={cn(
+              "grid transition-all duration-300 ease-in-out",
+              rapoarteOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+            )}
+          >
+            <div className="overflow-hidden">
+              <div className="px-6 pb-6">
+                <CollapsibleGroup>
+                  {sortedYears.map((year) => (
+                    <Collapsible
+                      key={year}
+                      title={`${year} - ${labels.rapoarteAnuale}`}
+                      defaultOpen={false}
+                      className="bg-white"
+                    >
                 <ul className="space-y-3">
                   {rapoarteByYear[year].map((doc) => (
                     <li key={doc.id}>
@@ -125,10 +149,13 @@ export function GeneraleDocuments({
                       )}
                     </li>
                   ))}
-                </ul>
-              </Collapsible>
-            ))}
-          </CollapsibleGroup>
+                      </ul>
+                    </Collapsible>
+                  ))}
+                </CollapsibleGroup>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </>

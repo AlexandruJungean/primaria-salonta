@@ -46,19 +46,54 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(data);
     }
 
+    // Parse pagination params
+    const page = parseInt(searchParams.get('page') || '1', 10);
+    const limit = parseInt(searchParams.get('limit') || '50', 10);
+    const offset = (page - 1) * limit;
+    const source_folder = searchParams.get('source_folder');
+    const subcategory = searchParams.get('subcategory');
+    const search = searchParams.get('search');
+    const parentsOnly = searchParams.get('parents_only') === 'true';
+
     let query = supabase
       .from('documents')
-      .select('*')
+      .select('*', { count: 'exact' })
       .order('created_at', { ascending: false });
 
     if (category) {
       query = query.eq('category', category);
     }
 
-    const { data, error } = await query;
+    if (source_folder) {
+      query = query.eq('source_folder', source_folder);
+    }
+
+    if (subcategory) {
+      query = query.eq('subcategory', subcategory);
+    }
+
+    if (search) {
+      query = query.ilike('title', `%${search}%`);
+    }
+
+    if (parentsOnly) {
+      query = query.is('parent_id', null);
+    }
+
+    // Apply pagination
+    query = query.range(offset, offset + limit - 1);
+
+    const { data, error, count } = await query;
 
     if (error) throw error;
-    return NextResponse.json(data);
+    
+    return NextResponse.json({
+      data: data || [],
+      count: count || 0,
+      page,
+      limit,
+      totalPages: Math.ceil((count || 0) / limit),
+    });
   } catch (error) {
     console.error('Error fetching documents:', error);
     return NextResponse.json({ error: 'Failed to fetch documents' }, { status: 500 });
