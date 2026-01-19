@@ -45,7 +45,6 @@ export async function translateText(
 
   try {
     const params = new URLSearchParams({
-      key: apiKey,
       q: text,
       target: targetLanguage,
       format: 'text',
@@ -55,12 +54,15 @@ export async function translateText(
       params.append('source', sourceLanguage);
     }
 
-    const response = await fetch(`${GOOGLE_TRANSLATE_API_URL}?${params}`, {
+    const body = params.toString();
+    
+    const response = await fetch(`${GOOGLE_TRANSLATE_API_URL}?key=${apiKey}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': '0',
+        'Content-Length': Buffer.byteLength(body).toString(),
       },
+      body,
     });
 
     if (!response.ok) {
@@ -81,8 +83,72 @@ export async function translateText(
   }
 }
 
+// Google Translate API limit
+const MAX_TEXTS_PER_REQUEST = 128;
+
 /**
- * Translate multiple texts in a single API call (more efficient)
+ * Translate a batch of texts (internal helper, respects API limit)
+ */
+async function translateBatch(
+  textsWithIndices: { text: string; index: number }[],
+  targetLanguage: SupportedLocale,
+  apiKey: string,
+  sourceLanguage?: SupportedLocale
+): Promise<Map<number, TranslationResult>> {
+  const resultMap = new Map<number, TranslationResult>();
+
+  if (textsWithIndices.length === 0) {
+    return resultMap;
+  }
+
+  try {
+    const params = new URLSearchParams({
+      target: targetLanguage,
+      format: 'text',
+    });
+
+    // Add each text as a separate 'q' parameter
+    textsWithIndices.forEach(t => params.append('q', t.text));
+
+    if (sourceLanguage) {
+      params.append('source', sourceLanguage);
+    }
+
+    const body = params.toString();
+
+    const response = await fetch(`${GOOGLE_TRANSLATE_API_URL}?key=${apiKey}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Length': Buffer.byteLength(body).toString(),
+      },
+      body,
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      console.error('Google Translate API error:', error);
+      return resultMap;
+    }
+
+    const data: GoogleTranslateResponse = await response.json();
+
+    textsWithIndices.forEach((t, i) => {
+      resultMap.set(t.index, {
+        translatedText: data.data.translations[i].translatedText,
+        detectedSourceLanguage: data.data.translations[i].detectedSourceLanguage,
+      });
+    });
+
+    return resultMap;
+  } catch (error) {
+    console.error('Translation batch error:', error);
+    return resultMap;
+  }
+}
+
+/**
+ * Translate multiple texts with automatic batching (respects 128 text limit)
  */
 export async function translateTexts(
   texts: string[],
@@ -109,51 +175,28 @@ export async function translateTexts(
     return texts.map(text => ({ translatedText: text }));
   }
 
-  try {
-    const params = new URLSearchParams({
-      key: apiKey,
-      target: targetLanguage,
-      format: 'text',
-    });
-
-    // Add each text as a separate 'q' parameter
-    nonEmptyTexts.forEach(t => params.append('q', t.text));
-
-    if (sourceLanguage) {
-      params.append('source', sourceLanguage);
-    }
-
-    const response = await fetch(`${GOOGLE_TRANSLATE_API_URL}?${params}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': '0',
-      },
-    });
-
-    if (!response.ok) {
-      const error = await response.text();
-      console.error('Google Translate API error:', error);
-      return texts.map(text => ({ translatedText: text }));
-    }
-
-    const data: GoogleTranslateResponse = await response.json();
-    
-    // Map translations back to original indices
-    const results: TranslationResult[] = texts.map(text => ({ translatedText: text }));
-    
-    nonEmptyTexts.forEach((t, i) => {
-      results[t.index] = {
-        translatedText: data.data.translations[i].translatedText,
-        detectedSourceLanguage: data.data.translations[i].detectedSourceLanguage,
-      };
-    });
-
-    return results;
-  } catch (error) {
-    console.error('Translation error:', error);
-    return texts.map(text => ({ translatedText: text }));
+  // Split into batches of MAX_TEXTS_PER_REQUEST
+  const batches: { text: string; index: number }[][] = [];
+  for (let i = 0; i < nonEmptyTexts.length; i += MAX_TEXTS_PER_REQUEST) {
+    batches.push(nonEmptyTexts.slice(i, i + MAX_TEXTS_PER_REQUEST));
   }
+
+  // Process all batches in parallel
+  const batchResults = await Promise.all(
+    batches.map(batch => translateBatch(batch, targetLanguage, apiKey, sourceLanguage))
+  );
+
+  // Merge all batch results
+  const allTranslations = new Map<number, TranslationResult>();
+  batchResults.forEach(batchMap => {
+    batchMap.forEach((value, key) => allTranslations.set(key, value));
+  });
+
+  // Build final results array
+  return texts.map((text, index) => {
+    const translation = allTranslations.get(index);
+    return translation || { translatedText: text };
+  });
 }
 
 /**
