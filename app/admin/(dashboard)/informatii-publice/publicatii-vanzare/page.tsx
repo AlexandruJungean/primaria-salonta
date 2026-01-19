@@ -13,6 +13,7 @@ export default function PublicatiiVanzarePage() {
         { label: 'Publicații Vânzare' },
       ]}
       basePath="/admin/informatii-publice/publicatii-vanzare"
+      hideCreatedAtColumn
     />
   );
 }

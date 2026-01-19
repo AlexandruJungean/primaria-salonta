@@ -13,6 +13,7 @@ export default function TaxeImpozitePage() {
         { label: 'Taxe și Impozite' },
       ]}
       basePath="/admin/informatii-publice/taxe-impozite"
+      hideCreatedAtColumn
     />
   );
 }

@@ -13,6 +13,7 @@ export default function PlanuriUrbanisticePage() {
         { label: 'Planuri Urbanistice' },
       ]}
       basePath="/admin/informatii-publice/planuri-urbanistice"
+      hideCreatedAtColumn
     />
   );
 }

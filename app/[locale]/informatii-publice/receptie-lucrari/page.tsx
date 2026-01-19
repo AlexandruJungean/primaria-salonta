@@ -1,5 +1,5 @@
 import { getTranslations } from 'next-intl/server';
-import { HardHat, FileText, MapPin, CheckCircle } from 'lucide-react';
+import { HardHat, FileText, CheckCircle, AlertCircle } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,6 +7,7 @@ import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
 import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
+import { getPageContentArray } from '@/lib/supabase/services/page-content';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -20,7 +21,20 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 export default async function ReceptieLucrariPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'navigation' });
-  const tPage = await getTranslations({ locale, namespace: 'receptieLucrariPage' });
+
+  // Fetch content from database
+  const allContent = await getPageContentArray('receptie-lucrari');
+  
+  // Group content by content_key prefix
+  const section1Title = allContent.find(c => c.content_key === 'section1_title')?.content || 'Documentație necesară pentru realizarea recepției la terminarea lucrărilor';
+  const section1Items = allContent
+    .filter(c => c.content_key.startsWith('section1_item_') && c.is_active)
+    .sort((a, b) => a.sort_order - b.sort_order);
+  
+  const section2Intro = allContent.find(c => c.content_key === 'section2_intro')?.content || '';
+  const section2Items = allContent
+    .filter(c => c.content_key.startsWith('section2_item_') && c.is_active)
+    .sort((a, b) => a.sort_order - b.sort_order);
 
   return (
     <>
@@ -33,97 +47,81 @@ export default async function ReceptieLucrariPage({ params }: { params: Promise<
       <Section background="white">
         <Container>
           <div className="max-w-4xl mx-auto">
-            {/* Info Banner */}
-            <Card className="mb-8 bg-amber-50 border-amber-200">
-              <CardContent className="pt-6">
-                <div className="flex items-start gap-4">
-                  <HardHat className="w-8 h-8 text-amber-600 shrink-0" />
-                  <div>
-                    <h3 className="font-semibold text-amber-900 mb-2">{tPage('infoTitle')}</h3>
-                    <p className="text-amber-800 text-sm">
-                      {tPage('infoText')}
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Initial Documents Section */}
+            {/* Section 1 - Initial Documents */}
             <Card className="mb-6">
               <CardHeader>
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
-                    <FileText className="w-5 h-5 text-blue-600" />
+                  <div className="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center">
+                    <HardHat className="w-5 h-5 text-amber-600" />
                   </div>
-                  <div>
-                    <CardTitle className="text-lg">{tPage('initialDocsTitle')}</CardTitle>
-                    <p className="text-sm text-gray-500 mt-1">{tPage('initialDocsDesc')}</p>
-                  </div>
+                  <CardTitle className="text-lg">{section1Title}</CardTitle>
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-                    <CheckCircle className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />
+                {section1Items.length > 0 ? (
+                  <div className="space-y-3">
+                    {section1Items.map((item) => (
+                      <div key={item.id} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                        <CheckCircle className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />
+                        <p className="text-gray-700">{item.content}</p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-500 text-sm">Nu există documente configurate.</p>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Section 2 - On-Site Documents */}
+            {(section2Intro || section2Items.length > 0) && (
+              <Card className="mb-6">
+                <CardHeader>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
+                      <FileText className="w-5 h-5 text-blue-600" />
+                    </div>
+                    <div className="flex-1">
+                      <CardTitle className="text-lg">Documente pentru teren</CardTitle>
+                      {section2Intro && (
+                        <p className="text-sm text-gray-600 mt-2">{section2Intro}</p>
+                      )}
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  {section2Items.length > 0 ? (
+                    <div className="space-y-3">
+                      {section2Items.map((item) => (
+                        <div key={item.id} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                          <CheckCircle className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />
+                          <p className="text-gray-700">{item.content}</p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-gray-500 text-sm">Nu există documente configurate.</p>
+                  )}
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Empty state when no content */}
+            {section1Items.length === 0 && section2Items.length === 0 && (
+              <Card className="bg-amber-50 border-amber-200">
+                <CardContent className="pt-6">
+                  <div className="flex items-start gap-4">
+                    <AlertCircle className="w-8 h-8 text-amber-600 shrink-0" />
                     <div>
-                      <h4 className="font-medium text-gray-900">{tPage('doc1Title')}</h4>
-                      <p className="text-sm text-gray-600 mt-1">{tPage('doc1Desc')}</p>
+                      <h3 className="font-semibold text-amber-900 mb-2">Conținut în curs de actualizare</h3>
+                      <p className="text-amber-800 text-sm">
+                        Informațiile pentru această pagină sunt în curs de configurare.
+                      </p>
                     </div>
                   </div>
-                  <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-                    <CheckCircle className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />
-                    <p className="text-gray-700">{tPage('doc2')}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* On-Site Documents Section */}
-            <Card className="mb-6">
-              <CardHeader>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center">
-                    <MapPin className="w-5 h-5 text-orange-600" />
-                  </div>
-                  <div>
-                    <CardTitle className="text-lg">{tPage('onSiteDocsTitle')}</CardTitle>
-                    <p className="text-sm text-gray-500 mt-1">{tPage('onSiteDocsDesc')}</p>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {[
-                    tPage('siteDoc1'),
-                    tPage('siteDoc2'),
-                    tPage('siteDoc3'),
-                    tPage('siteDoc4'),
-                    tPage('siteDoc5'),
-                    tPage('siteDoc6'),
-                  ].map((doc, index) => (
-                    <div key={index} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-                      <CheckCircle className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />
-                      <p className="text-gray-700">{doc}</p>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Note */}
-            <Card className="bg-gray-50 border-gray-200">
-              <CardContent className="pt-6">
-                <div className="flex items-start gap-4">
-                  <FileText className="w-8 h-8 text-gray-400 shrink-0" />
-                  <div>
-                    <h3 className="font-semibold text-gray-700 mb-2">{tPage('noteTitle')}</h3>
-                    <p className="text-gray-600 text-sm">
-                      {tPage('noteText')}
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            )}
           </div>
         </Container>
       </Section>

@@ -13,6 +13,7 @@ export default function LicitatiiPage() {
         { label: 'Licitații' },
       ]}
       basePath="/admin/informatii-publice/licitatii"
+      hideCreatedAtColumn
     />
   );
 }

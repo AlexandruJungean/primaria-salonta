@@ -13,6 +13,7 @@ export default function OferteTerenPage() {
         { label: 'Oferte Terenuri' },
       ]}
       basePath="/admin/informatii-publice/oferte-terenuri"
+      hideCreatedAtColumn
     />
   );
 }

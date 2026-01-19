@@ -13,6 +13,7 @@ export default function PublicatiiCasatoriePage() {
         { label: 'Publicații Căsătorie' },
       ]}
       basePath="/admin/informatii-publice/publicatii-casatorie"
+      hideCreatedAtColumn
     />
   );
 }

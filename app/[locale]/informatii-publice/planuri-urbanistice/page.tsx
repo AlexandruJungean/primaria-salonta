@@ -1,5 +1,5 @@
 import { getTranslations } from 'next-intl/server';
-import { Map, Download, FileText, Calendar } from 'lucide-react';
+import { Map, Download, FileText } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { Card, CardContent } from '@/components/ui/card';
@@ -81,10 +81,6 @@ export default async function PlanuriUrbanisticePage({ params }: { params: Promi
                     <p className="text-sm text-gray-500">{tPage('pugDesc')}</p>
                   </div>
                 </div>
-                <span className="text-sm text-gray-500 flex items-center gap-1">
-                  <Calendar className="w-4 h-4" />
-                  06.03.2017
-                </span>
               </div>
 
               {pugDocs.length > 0 ? (

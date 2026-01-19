@@ -1,5 +1,5 @@
 import { getTranslations } from 'next-intl/server';
-import { ScrollText, Download, FileText, Archive, Paperclip } from 'lucide-react';
+import { ScrollText, Download, FileText, Paperclip } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { Card, CardContent } from '@/components/ui/card';
@@ -9,6 +9,7 @@ import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
 import * as documents from '@/lib/supabase/services/documents';
 import type { DocumentWithAnnexes } from '@/lib/types/database';
+import { ArchiveSection } from './archive-section';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -153,26 +154,15 @@ export default async function RegulamentePage({ params }: { params: Promise<{ lo
               </div>
             )}
 
-            {/* Archive Regulations */}
-            {archiveRegulations.length > 0 && (
-              <div className="mb-8">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center">
-                    <Archive className="w-5 h-5 text-gray-600" />
-                  </div>
-                  <div>
-                    <h2 className="text-xl font-bold text-gray-900">{tPage('archiveTitle')}</h2>
-                    <span className="text-sm text-gray-500">({archiveRegulations.length} {tPage('documents')})</span>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  {archiveRegulations.map((reg) => (
-                    <DocumentItem key={reg.id} doc={reg} isArchive />
-                  ))}
-                </div>
-              </div>
-            )}
+            {/* Archive Regulations - Collapsible */}
+            <ArchiveSection 
+              documents={archiveRegulations}
+              labels={{
+                archiveTitle: tPage('archiveTitle'),
+                documentsLabel: tPage('documents'),
+                annexes: labels.annexes,
+              }}
+            />
 
             {/* Empty state */}
             {currentRegulations.length === 0 && archiveRegulations.length === 0 && (

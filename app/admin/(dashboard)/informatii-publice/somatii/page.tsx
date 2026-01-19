@@ -13,6 +13,7 @@ export default function SomatiiPage() {
         { label: 'Somații' },
       ]}
       basePath="/admin/informatii-publice/somatii"
+      hideCreatedAtColumn
     />
   );
 }

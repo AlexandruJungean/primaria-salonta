@@ -13,6 +13,7 @@ export default function SolicitareInformatiiPage() {
         { label: 'Solicitare Informații' },
       ]}
       basePath="/admin/informatii-publice/solicitare-informatii"
+      hideCreatedAtColumn
     />
   );
 }

@@ -10,12 +10,21 @@ import {
   Mail,
   MessageSquare,
   Plus,
-  FileUp,
   TrendingUp,
   Users,
   Info,
   FileText,
   AlertCircle,
+  Shield,
+  Lock,
+  Database,
+  Cloud,
+  Key,
+  FileCheck,
+  UserCheck,
+  Eye,
+  Server,
+  CheckCircle,
 } from 'lucide-react';
 import { AdminCard, AdminCardGrid, AdminPageHeader } from '@/components/admin';
 import { adminFetch } from '@/lib/api-client';
@@ -239,6 +248,226 @@ export default function AdminDashboardPage() {
                 <p className="text-sm text-slate-600">Monitorizează erorile din aplicație</p>
               </div>
             </Link>
+          </div>
+        </AdminCard>
+      </div>
+
+      {/* Security Information Section */}
+      <div className="mt-8">
+        <AdminCard 
+          title="Securitate și Protecția Datelor" 
+          description="Măsuri de securitate implementate pentru protejarea datelor și a aplicației"
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Authentication & Authorization */}
+            <div className="p-5 rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-lg bg-blue-500 flex items-center justify-center">
+                  <UserCheck className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="text-lg font-semibold text-slate-900">Autentificare și Autorizare</h3>
+              </div>
+              <ul className="space-y-2 text-sm text-slate-600">
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  <span><strong>Supabase Auth</strong> - Sistem de autentificare securizat cu JWT tokens</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  <span><strong>Bearer Token</strong> - Autentificare API prin token în header Authorization</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  <span><strong>Sesiuni securizate</strong> - Managementul automat al sesiunilor cu refresh tokens</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  <span><strong>Verificare admin per acțiune</strong> - Fiecare request API verifică permisiunile</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Data Storage */}
+            <div className="p-5 rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-100">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-lg bg-emerald-500 flex items-center justify-center">
+                  <Database className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="text-lg font-semibold text-slate-900">Stocare Date</h3>
+              </div>
+              <ul className="space-y-2 text-sm text-slate-600">
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  <span><strong>Supabase PostgreSQL</strong> - Bază de date cu Row Level Security (RLS)</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  <span><strong>Supabase Storage</strong> - Stocare imagini cu politici de acces</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  <span><strong>Cloudflare R2</strong> - Stocare documente cu CDN global și protecție DDoS</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  <span><strong>Presigned URLs</strong> - URL-uri temporare pentru upload securizat</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Anti-Spam Protection */}
+            <div className="p-5 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-100">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-lg bg-amber-500 flex items-center justify-center">
+                  <Shield className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="text-lg font-semibold text-slate-900">Protecție Anti-Spam și Boți</h3>
+              </div>
+              <ul className="space-y-2 text-sm text-slate-600">
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  <span><strong>Google reCAPTCHA v3</strong> - Verificare invizibilă anti-bot pe formulare</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  <span><strong>Scor de încredere</strong> - Analiza comportamentului cu prag minim 0.5</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  <span><strong>Blocarea email-urilor temporare</strong> - Lista neagră de domenii spam</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  <span><strong>Verificare DNS/MX</strong> - Validarea domeniului email prin DNS lookup</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Input Validation */}
+            <div className="p-5 rounded-xl bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-100">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-lg bg-purple-500 flex items-center justify-center">
+                  <FileCheck className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="text-lg font-semibold text-slate-900">Validare Date și Fișiere</h3>
+              </div>
+              <ul className="space-y-2 text-sm text-slate-600">
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  <span><strong>Zod Schemas</strong> - Validare strictă a datelor de intrare</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  <span><strong>Tipuri MIME permise</strong> - PDF, DOC, DOCX, XLS, XLSX, imagini</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  <span><strong>Limite dimensiune</strong> - Max 50MB documente, 10MB imagini</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  <span><strong>Sanitizare input</strong> - Curățare slug-uri, nume fișiere, text</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Audit & Monitoring */}
+            <div className="p-5 rounded-xl bg-gradient-to-br from-slate-50 to-gray-100 border border-slate-200">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-lg bg-slate-600 flex items-center justify-center">
+                  <Eye className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="text-lg font-semibold text-slate-900">Audit și Monitorizare</h3>
+              </div>
+              <ul className="space-y-2 text-sm text-slate-600">
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  <span><strong>Jurnal de audit</strong> - Logarea tuturor acțiunilor admin (creare, modificare, ștergere)</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  <span><strong>Logare erori</strong> - Înregistrare automată cu nivel de severitate</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  <span><strong>Tracking IP și User-Agent</strong> - Identificarea dispozitivelor și locațiilor</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  <span><strong>Sanitizare log-uri</strong> - Excluderea automată a datelor sensibile</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Infrastructure Security */}
+            <div className="p-5 rounded-xl bg-gradient-to-br from-red-50 to-rose-50 border border-red-100">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-lg bg-red-500 flex items-center justify-center">
+                  <Server className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="text-lg font-semibold text-slate-900">Securitate Infrastructură</h3>
+              </div>
+              <ul className="space-y-2 text-sm text-slate-600">
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  <span><strong>HTTPS obligatoriu</strong> - Criptare SSL/TLS pentru toate conexiunile</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  <span><strong>Variabile de mediu</strong> - Secretele stocate securizat, nu în cod</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  <span><strong>Cloudflare CDN</strong> - Protecție DDoS, WAF și cache global</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  <span><strong>Pagini admin noindex</strong> - Ascunderea panoului de la motoarele de căutare</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Summary Box */}
+          <div className="mt-6 p-4 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl text-white">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
+                <Lock className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h4 className="font-semibold text-lg mb-1">Infrastructură de Securitate Enterprise</h4>
+                <p className="text-blue-100 text-sm leading-relaxed">
+                  Aplicația utilizează servicii cloud de nivel enterprise (Supabase, Cloudflare) care asigură 
+                  disponibilitate ridicată, criptare în tranzit și în repaus, conformitate GDPR 
+                  și monitorizare 24/7. Toate datele sunt procesate și stocate în conformitate cu regulamentele 
+                  europene de protecție a datelor.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Technology Stack */}
+          <div className="mt-6 pt-6 border-t border-slate-200">
+            <h4 className="font-medium text-slate-900 mb-3">Tehnologii Utilizate pentru Securitate:</h4>
+            <div className="flex flex-wrap gap-2">
+              {[
+                { name: 'Supabase Auth', color: 'bg-emerald-100 text-emerald-700' },
+                { name: 'PostgreSQL RLS', color: 'bg-blue-100 text-blue-700' },
+                { name: 'Cloudflare R2', color: 'bg-orange-100 text-orange-700' },
+                { name: 'reCAPTCHA v3', color: 'bg-yellow-100 text-yellow-700' },
+                { name: 'JWT Tokens', color: 'bg-purple-100 text-purple-700' },
+                { name: 'Zod Validation', color: 'bg-pink-100 text-pink-700' },
+                { name: 'SMTP/TLS', color: 'bg-red-100 text-red-700' },
+                { name: 'DNS Verification', color: 'bg-cyan-100 text-cyan-700' },
+              ].map((tech) => (
+                <span
+                  key={tech.name}
+                  className={`px-3 py-1.5 rounded-full text-sm font-medium ${tech.color}`}
+                >
+                  {tech.name}
+                </span>
+              ))}
+            </div>
           </div>
         </AdminCard>
       </div>

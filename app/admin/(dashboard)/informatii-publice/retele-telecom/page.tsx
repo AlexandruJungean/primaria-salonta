@@ -13,6 +13,7 @@ export default function ReteleTelecomPage() {
         { label: 'Rețele Telecom' },
       ]}
       basePath="/admin/informatii-publice/retele-telecom"
+      hideCreatedAtColumn
     />
   );
 }

@@ -13,6 +13,7 @@ export default function DispozitiiIPPage() {
         { label: 'Dispoziții' },
       ]}
       basePath="/admin/informatii-publice/dispozitii"
+      hideCreatedAtColumn
     />
   );
 }
