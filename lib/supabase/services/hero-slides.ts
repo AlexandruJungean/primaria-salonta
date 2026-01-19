@@ -48,7 +48,7 @@ export async function getHeroSlides(): Promise<HeroSlide[]> {
 /**
  * Get hero slides formatted for the carousel component
  */
-export async function getHeroSlidesForLocale(_locale: 'ro' | 'hu' | 'en'): Promise<HeroSlideTranslated[]> {
+export async function getHeroSlidesForLocale(): Promise<HeroSlideTranslated[]> {
   const slides = await getHeroSlides();
 
   return slides.map(slide => ({

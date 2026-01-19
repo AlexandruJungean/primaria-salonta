@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { MapPin, Clock, ArrowRight } from 'lucide-react';
 import { Container } from '@/components/ui/container';
@@ -11,7 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import type { Event } from '@/lib/types/database';
 
 interface UpcomingEventsSectionProps {
-  events?: Event[];
+  initialEvents?: Event[];
 }
 
 const EVENT_TYPE_CONFIG: Record<string, { color: string; translations: Record<string, string> }> = {
@@ -45,10 +46,61 @@ const EVENT_TYPE_CONFIG: Record<string, { color: string; translations: Record<st
   },
 };
 
-export function UpcomingEventsSection({ events = [] }: UpcomingEventsSectionProps) {
+export function UpcomingEventsSection({ initialEvents }: UpcomingEventsSectionProps) {
   const t = useTranslations('homepage');
   const locale = useLocale() as 'ro' | 'hu' | 'en';
+  const [events, setEvents] = useState<Event[]>(initialEvents || []);
+  const [isLoading, setIsLoading] = useState(!initialEvents);
 
+  // Fetch events client-side if not provided
+  useEffect(() => {
+    if (initialEvents) return;
+
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch('/api/public/events?limit=4');
+        const data = await response.json();
+        setEvents(data.data || []);
+      } catch (error) {
+        console.error('Failed to fetch events:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchEvents();
+  }, [initialEvents]);
+
+  // Loading skeleton
+  if (isLoading) {
+    return (
+      <Section background="white">
+        <Container>
+          <SectionHeader 
+            title={t('upcomingEvents')} 
+            subtitle={t('upcomingEventsSubtitle')} 
+          />
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[1, 2, 3, 4].map((i) => (
+              <Card key={i} className="overflow-hidden">
+                <div className="bg-primary-900/20 p-4 text-center">
+                  <div className="h-8 bg-gray-300 rounded animate-pulse mx-auto w-12 mb-2" />
+                  <div className="h-4 bg-gray-300 rounded animate-pulse mx-auto w-16" />
+                </div>
+                <CardContent className="pt-4">
+                  <div className="h-5 bg-gray-200 rounded animate-pulse w-20 mb-3" />
+                  <div className="h-6 bg-gray-200 rounded animate-pulse mb-2" />
+                  <div className="h-4 bg-gray-200 rounded animate-pulse w-3/4" />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </Container>
+      </Section>
+    );
+  }
+
+  // Don't render if no events
   if (events.length === 0) {
     return null;
   }

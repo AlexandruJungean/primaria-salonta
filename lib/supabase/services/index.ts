@@ -156,3 +156,9 @@ export {
   type HeroSlide,
   type HeroSlideTranslated,
 } from './hero-slides';
+
+// Layout Data Services (combined data for layout)
+export {
+  getLayoutData,
+  type LayoutData,
+} from './layout-data';

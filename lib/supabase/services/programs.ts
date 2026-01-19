@@ -542,6 +542,8 @@ export interface ProgramNavItem {
 /**
  * Get top-level programs for navigation menu
  */
+// Internal function to fetch programs for nav
+// Get programs for navigation menu
 export async function getProgramsForNav(): Promise<ProgramNavItem[]> {
   const supabase = createAnonServerClient();
 

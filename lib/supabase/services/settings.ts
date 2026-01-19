@@ -36,12 +36,12 @@ export const defaultSettings: SiteSettings = {
 };
 
 /**
- * Get site settings from database (no caching - changes are visible immediately)
+ * Get site settings from database
+ * Uses noStore to ensure changes are visible immediately
  */
 export async function getSiteSettings(): Promise<SiteSettings> {
-  // Prevent Next.js from caching this data
   noStore();
-
+  
   try {
     const supabase = createAnonServerClient();
 
@@ -50,12 +50,10 @@ export async function getSiteSettings(): Promise<SiteSettings> {
       .select('key, value');
 
     if (error) {
-      // If table doesn't exist or other error, return defaults
       console.error('Error fetching site settings:', error);
       return defaultSettings;
     }
 
-    // Convert array of key-value pairs to object
     const settings: SiteSettings = { ...defaultSettings };
     for (const row of data || []) {
       if (row.key in settings) {
@@ -80,10 +78,35 @@ export async function getNotificationEmails(): Promise<string[]> {
     : defaultSettings.notification_emails;
 }
 
+// Contact info return type
+export interface ContactInfo {
+  phone: {
+    main: string;
+    landline: string[];
+    fax: string;
+    display: string;
+  };
+  email: {
+    primary: string;
+    secondary: string;
+    display: string;
+    all: string[];
+  };
+  workingHours: string;
+  socialMedia: {
+    facebook: string;
+    instagram: string;
+    tiktok: string;
+    youtube: string;
+    twitter: string;
+    linkedin: string;
+  };
+}
+
 /**
  * Get contact info formatted for display
  */
-export async function getContactInfo() {
+export async function getContactInfo(): Promise<ContactInfo> {
   const settings = await getSiteSettings();
   
   return {
@@ -112,9 +135,8 @@ export async function getContactInfo() {
 }
 
 /**
- * Invalidate the settings cache (no-op since caching is disabled for immediate updates)
+ * Invalidate the settings cache - no-op since we use noStore
  */
 export function invalidateSettingsCache() {
   // No caching, so nothing to invalidate
-  // Kept for API compatibility
 }

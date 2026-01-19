@@ -8,8 +8,7 @@ import { UpcomingEventsSection } from '@/components/sections/upcoming-events-sec
 import { generatePageMetadata } from '@/lib/seo/metadata';
 import { WebPageJsonLd } from '@/lib/seo/json-ld';
 import { type Locale } from '@/i18n/routing';
-import { getLatestNews, getUpcomingEvents, getHeroSlidesForLocale } from '@/lib/supabase/services';
-import { translateContentArray } from '@/lib/google-translate/cache';
+import { getHeroSlidesForLocale } from '@/lib/supabase/services';
 
 // Enable ISR - revalidate homepage every 60 seconds for fresh content while maintaining fast response times
 export const revalidate = 60;
@@ -52,18 +51,9 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   
-  // Fetch data from Supabase
-  const [latestNewsData, upcomingEventsData, heroSlides] = await Promise.all([
-    getLatestNews(3),
-    getUpcomingEvents(4),
-    getHeroSlidesForLocale(locale as 'ro' | 'hu' | 'en'),
-  ]);
-
-  // Translate content based on locale
-  const [latestNews, upcomingEvents] = await Promise.all([
-    translateContentArray(latestNewsData, ['title', 'excerpt'], locale as 'ro' | 'hu' | 'en'),
-    translateContentArray(upcomingEventsData, ['title', 'description', 'location'], locale as 'ro' | 'hu' | 'en'),
-  ]);
+  // Only fetch hero slides server-side (critical for LCP - Largest Contentful Paint)
+  // News and events are fetched client-side for faster initial page load
+  const heroSlides = await getHeroSlidesForLocale();
   
   return (
     <>
@@ -88,11 +78,11 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       {/* City Statistics */}
       <CityStatsSection />
 
-      {/* Latest News */}
-      <NewsSection news={latestNews} />
+      {/* Latest News - fetched client-side */}
+      <NewsSection />
 
-      {/* Upcoming Events */}
-      <UpcomingEventsSection events={upcomingEvents} />
+      {/* Upcoming Events - fetched client-side */}
+      <UpcomingEventsSection />
 
       {/* Interactive City Map */}
       <CityMapSection />

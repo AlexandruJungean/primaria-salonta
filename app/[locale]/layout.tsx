@@ -3,7 +3,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
-import { Open_Sans, Source_Serif_4 } from 'next/font/google';
+import { Open_Sans } from 'next/font/google';
 import '../globals.css';
 
 import { Header } from '@/components/layout/header';
@@ -13,9 +13,7 @@ import { CookieConsent } from '@/components/features/cookie-consent';
 import { NavigationProvider } from '@/components/layout/navigation-context';
 import { SiteSettingsProvider } from '@/components/layout/site-settings-context';
 import { RecaptchaProvider } from '@/components/features/recaptcha-provider';
-import { getInstitutionsForNav } from '@/lib/supabase/services/institutions';
-import { getProgramsForNav } from '@/lib/supabase/services/programs';
-import { getContactInfo } from '@/lib/supabase/services/settings';
+import { getLayoutData } from '@/lib/supabase/services/layout-data';
 import { translateContentArray } from '@/lib/google-translate/cache';
 import { 
   SEO_CONFIG, 
@@ -29,12 +27,8 @@ const openSans = Open_Sans({
   variable: '--font-open-sans',
   subsets: ['latin', 'latin-ext'],
   display: 'swap',
-});
-
-const sourceSerif = Source_Serif_4({
-  variable: '--font-source-serif',
-  subsets: ['latin', 'latin-ext'],
-  display: 'swap',
+  // Preload only the weights we actually use
+  weight: ['400', '500', '600', '700'],
 });
 
 const baseUrl = SEO_CONFIG.siteUrl;
@@ -190,26 +184,26 @@ export default async function LocaleLayout({
   // Get messages for the current locale
   const messages = await getMessages();
   
-  // Fetch dynamic data for navigation and site settings
-  const [institutions, programsRaw, contactInfo] = await Promise.all([
-    getInstitutionsForNav(),
-    getProgramsForNav(),
-    getContactInfo(),
-  ]);
+  // Fetch all layout data from single cached source
+  const layoutData = await getLayoutData();
+  const { institutions, contactInfo } = layoutData;
 
-  // Translate program titles for non-Romanian locales
-  const programs = await translateContentArray(
-    programsRaw,
-    ['title'],
-    locale as 'ro' | 'hu' | 'en'
-  );
+  // Skip translation for Romanian (default language) - no API call needed
+  // This significantly speeds up initial page load
+  const programs = locale === 'ro' 
+    ? layoutData.programs 
+    : await translateContentArray(
+        layoutData.programs,
+        ['title'],
+        locale as 'ro' | 'hu' | 'en'
+      );
 
   return (
     <html lang={locale} suppressHydrationWarning>
       <head>
         <CombinedJsonLd locale={locale} />
       </head>
-      <body className={`${openSans.variable} ${sourceSerif.variable} antialiased min-h-screen flex flex-col`}>
+      <body className={`${openSans.variable} antialiased min-h-screen flex flex-col`}>
         <NextIntlClientProvider messages={messages}>
           <RecaptchaProvider>
             <SiteSettingsProvider contactInfo={contactInfo}>

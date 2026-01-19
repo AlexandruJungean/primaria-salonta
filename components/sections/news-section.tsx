@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/components/ui/link';
 import Image from 'next/image';
@@ -12,14 +13,58 @@ import { formatArticleDate } from '@/lib/utils/format-date';
 import type { News } from '@/lib/types/database';
 
 interface NewsSectionProps {
-  news?: News[];
+  initialNews?: News[];
 }
 
-export function NewsSection({ news = [] }: NewsSectionProps) {
+export function NewsSection({ initialNews }: NewsSectionProps) {
   const t = useTranslations('homepage');
   const locale = useLocale() as 'ro' | 'hu' | 'en';
+  const [news, setNews] = useState<News[]>(initialNews || []);
+  const [isLoading, setIsLoading] = useState(!initialNews);
 
-  // If no news provided, show empty state
+  // Fetch news client-side if not provided
+  useEffect(() => {
+    if (initialNews) return;
+
+    const fetchNews = async () => {
+      try {
+        const response = await fetch('/api/public/news?limit=3');
+        const data = await response.json();
+        setNews(data.data || []);
+      } catch (error) {
+        console.error('Failed to fetch news:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchNews();
+  }, [initialNews]);
+
+  // Loading skeleton
+  if (isLoading) {
+    return (
+      <Section background="white">
+        <Container>
+          <SectionHeader title={t('latestNews')} />
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3].map((i) => (
+              <Card key={i} className="overflow-hidden">
+                <div className="h-48 bg-gray-200 animate-pulse" />
+                <CardContent className="pt-4">
+                  <div className="h-4 bg-gray-200 rounded animate-pulse mb-3 w-24" />
+                  <div className="h-6 bg-gray-200 rounded animate-pulse mb-2" />
+                  <div className="h-4 bg-gray-200 rounded animate-pulse w-3/4" />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </Container>
+      </Section>
+    );
+  }
+
+  // If no news, show empty state
   if (news.length === 0) {
     return (
       <Section background="white">
