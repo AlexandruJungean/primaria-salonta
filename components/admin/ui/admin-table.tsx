@@ -55,19 +55,19 @@ export function AdminTable<T extends { id: string }>({
   return (
     <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
       <div className="overflow-x-auto">
-        <table className="w-full">
+        <table className="w-full min-w-[600px]">
           <thead>
             <tr className="bg-slate-50 border-b border-slate-200">
               {columns.map(column => (
                 <th
                   key={String(column.key)}
-                  className={`px-6 py-4 text-left text-base font-semibold text-slate-700 ${column.className || ''}`}
+                  className={`px-3 sm:px-6 py-3 sm:py-4 text-left text-sm sm:text-base font-semibold text-slate-700 whitespace-nowrap ${column.className || ''}`}
                 >
                   {column.label}
                 </th>
               ))}
               {hasActions && (
-                <th className="px-6 py-4 text-right text-base font-semibold text-slate-700 w-48">
+                <th className="px-3 sm:px-6 py-3 sm:py-4 text-right text-sm sm:text-base font-semibold text-slate-700 w-32 sm:w-48">
                   Acțiuni
                 </th>
               )}
@@ -79,7 +79,7 @@ export function AdminTable<T extends { id: string }>({
                 {columns.map(column => (
                   <td
                     key={String(column.key)}
-                    className={`px-6 py-4 text-base text-slate-900 ${column.className || ''}`}
+                    className={`px-3 sm:px-6 py-3 sm:py-4 text-sm sm:text-base text-slate-900 ${column.className || ''}`}
                   >
                     {column.render
                       ? column.render(item)
@@ -87,30 +87,30 @@ export function AdminTable<T extends { id: string }>({
                   </td>
                 ))}
                 {hasActions && (
-                  <td className="px-6 py-4 text-right">
-                    <div className="flex items-center justify-end gap-2">
+                  <td className="px-3 sm:px-6 py-3 sm:py-4 text-right">
+                    <div className="flex items-center justify-end gap-1 sm:gap-2">
                       {onView && (
                         <button
                           onClick={() => onView(item)}
-                          className="p-2 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          className="p-1.5 sm:p-2 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                           title="Vizualizează"
                         >
-                          <Eye className="w-5 h-5" />
+                          <Eye className="w-4 h-4 sm:w-5 sm:h-5" />
                         </button>
                       )}
                       {onEdit && (
                         <button
                           onClick={() => onEdit(item)}
-                          className="p-2 text-slate-500 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"
+                          className="p-1.5 sm:p-2 text-slate-500 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"
                           title="Editează"
                         >
-                          <Pencil className="w-5 h-5" />
+                          <Pencil className="w-4 h-4 sm:w-5 sm:h-5" />
                         </button>
                       )}
                       {onDelete && (
                         <button
                           onClick={() => canDelete(item) && onDelete(item)}
-                          className={`p-2 rounded-lg transition-colors ${
+                          className={`p-1.5 sm:p-2 rounded-lg transition-colors ${
                             canDelete(item)
                               ? 'text-slate-500 hover:text-red-600 hover:bg-red-50'
                               : 'text-slate-300 cursor-not-allowed'
@@ -118,7 +118,7 @@ export function AdminTable<T extends { id: string }>({
                           title={deleteTooltip ? deleteTooltip(item) : (canDelete(item) ? 'Șterge' : 'Nu se poate șterge')}
                           disabled={!canDelete(item)}
                         >
-                          <Trash2 className="w-5 h-5" />
+                          <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
                         </button>
                       )}
                     </div>
@@ -154,11 +154,11 @@ export function AdminPagination({
   if (totalPages <= 1) return null;
 
   return (
-    <div className="flex items-center justify-between px-6 py-4 bg-white border-t border-slate-200 rounded-b-xl">
-      <p className="text-base text-slate-600">
-        Afișare {startItem} - {endItem} din {totalItems} rezultate
+    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-4 sm:px-6 py-4 bg-white border-t border-slate-200 rounded-b-xl">
+      <p className="text-sm sm:text-base text-slate-600 order-2 sm:order-1">
+        {startItem} - {endItem} din {totalItems}
       </p>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 order-1 sm:order-2">
         <AdminButton
           variant="secondary"
           size="sm"
@@ -166,10 +166,10 @@ export function AdminPagination({
           disabled={currentPage === 1}
           icon={ChevronLeft}
         >
-          Anterior
+          <span className="hidden sm:inline">Anterior</span>
         </AdminButton>
-        <span className="px-4 py-2 text-base font-medium text-slate-700">
-          Pagina {currentPage} din {totalPages}
+        <span className="px-3 sm:px-4 py-2 text-sm sm:text-base font-medium text-slate-700">
+          {currentPage} / {totalPages}
         </span>
         <AdminButton
           variant="secondary"
@@ -179,7 +179,7 @@ export function AdminPagination({
           icon={ChevronRight}
           iconPosition="right"
         >
-          Următor
+          <span className="hidden sm:inline">Următor</span>
         </AdminButton>
       </div>
     </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import NextImage from 'next/image';
 import { usePathname } from 'next/navigation';
@@ -270,44 +270,78 @@ function NavItemComponent({ item, level = 0 }: { item: NavItem; level?: number }
   );
 }
 
-export function AdminSidebar() {
+interface AdminSidebarProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+}
+
+export function AdminSidebar({ isOpen = true, onClose }: AdminSidebarProps) {
+  const pathname = usePathname();
+
+  // Close sidebar when route changes (mobile)
+  useEffect(() => {
+    if (onClose) {
+      onClose();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
+
   return (
-    <aside className="w-72 bg-slate-800 min-h-screen flex flex-col">
-      {/* Logo */}
-      <div className="p-6 border-b border-slate-700">
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center p-1">
-            <NextImage
-              src="/logo/logo-transparent.webp"
-              alt="Primăria Salonta"
-              width={40}
-              height={40}
-              className="object-contain"
-            />
-          </div>
-          <div>
-            <h1 className="text-lg font-bold text-white">Primăria Salonta</h1>
-            <p className="text-sm text-slate-400">Panou Admin</p>
+    <>
+      {/* Mobile Overlay */}
+      {isOpen && onClose && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={onClose}
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside 
+        className={`
+          fixed lg:static inset-y-0 left-0 z-50
+          w-72 bg-slate-800 min-h-screen flex flex-col
+          transform transition-transform duration-300 ease-in-out
+          ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+          lg:translate-x-0
+        `}
+      >
+        {/* Logo */}
+        <div className="p-6 border-b border-slate-700">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center p-1">
+              <NextImage
+                src="/logo/logo-transparent.webp"
+                alt="Primăria Salonta"
+                width={40}
+                height={40}
+                className="object-contain"
+              />
+            </div>
+            <div>
+              <h1 className="text-lg font-bold text-white">Primăria Salonta</h1>
+              <p className="text-sm text-slate-400">Panou Admin</p>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-        {navigationItems.map(item => (
-          <NavItemComponent key={item.id} item={item} />
-        ))}
-      </nav>
+        {/* Navigation */}
+        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+          {navigationItems.map(item => (
+            <NavItemComponent key={item.id} item={item} />
+          ))}
+        </nav>
 
-      {/* Footer */}
-      <div className="p-4 border-t border-slate-700">
-        <Link
-          href="/ro"
-          className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors"
-        >
-          ← Înapoi la website
-        </Link>
-      </div>
-    </aside>
+        {/* Footer */}
+        <div className="p-4 border-t border-slate-700">
+          <Link
+            href="/ro"
+            className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors"
+          >
+            ← Înapoi la website
+          </Link>
+        </div>
+      </aside>
+    </>
   );
 }

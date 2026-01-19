@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useAdminAuth, AdminSidebar, AdminHeader, AdminToastContainer } from '@/components/admin';
 
 export default function AdminDashboardLayout({
@@ -8,6 +9,7 @@ export default function AdminDashboardLayout({
   children: React.ReactNode;
 }) {
   const { user, loading, logout } = useAdminAuth();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   if (loading) {
     return (
@@ -26,18 +28,23 @@ export default function AdminDashboardLayout({
 
   return (
     <div className="min-h-screen bg-slate-100 flex">
-      {/* Sidebar */}
-      <AdminSidebar />
+      {/* Sidebar - hidden on mobile by default, shown via hamburger menu */}
+      <AdminSidebar 
+        isOpen={sidebarOpen} 
+        onClose={() => setSidebarOpen(false)} 
+      />
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col min-h-screen">
+      <div className="flex-1 flex flex-col min-h-screen w-full lg:w-auto">
         <AdminHeader
           userName={user.fullName}
           userRole={user.role}
           onLogout={logout}
+          onMenuToggle={() => setSidebarOpen(true)}
         />
         
-        <main className="flex-1 p-8">
+        {/* Responsive padding */}
+        <main className="flex-1 p-4 sm:p-6 lg:p-8">
           {children}
         </main>
       </div>
