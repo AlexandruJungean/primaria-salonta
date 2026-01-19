@@ -179,7 +179,9 @@
     "weatherUnavailable": "Vremea nu este disponibilă momentan",
     "feelsLike": "Se simte ca",
     "humidity": "Umiditate",
-    "wind": "Vânt"
+    "wind": "Vânt",
+    "seeAllNews": "Vezi toate știrile",
+    "seeAllEvents": "Vezi toate evenimentele"
   },
   "footer": {
     "address": "Adresă",

@@ -1,5 +1,4 @@
 import { createServerClient } from '@/lib/supabase/server';
-import { unstable_noStore as noStore } from 'next/cache';
 
 export interface HeroSlide {
   id: string;
@@ -25,8 +24,6 @@ export interface HeroSlideTranslated {
  * Get all active hero slides ordered by sort_order
  */
 export async function getHeroSlides(): Promise<HeroSlide[]> {
-  noStore();
-
   try {
     const supabase = createServerClient();
 
@@ -65,8 +62,11 @@ export async function getHeroSlidesForLocale(_locale: 'ro' | 'hu' | 'en'): Promi
 
 /**
  * Get all hero slides (including inactive) for admin
+ * Uses noStore to ensure admin always sees fresh data
  */
 export async function getAllHeroSlides(): Promise<HeroSlide[]> {
+  // Dynamic import to avoid bundling in non-admin pages
+  const { unstable_noStore: noStore } = await import('next/cache');
   noStore();
 
   try {

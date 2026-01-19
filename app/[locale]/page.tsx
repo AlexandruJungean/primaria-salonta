@@ -11,6 +11,9 @@ import { type Locale } from '@/i18n/routing';
 import { getLatestNews, getUpcomingEvents, getHeroSlidesForLocale } from '@/lib/supabase/services';
 import { translateContentArray } from '@/lib/google-translate/cache';
 
+// Enable ISR - revalidate homepage every 60 seconds for fresh content while maintaining fast response times
+export const revalidate = 60;
+
 // Dynamic imports for below-the-fold components (reduces initial JS bundle)
 const WeatherWidgetSection = dynamic(
   () => import('@/components/sections/weather-widget-section').then(mod => ({ default: mod.WeatherWidgetSection })),

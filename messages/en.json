@@ -179,7 +179,9 @@
     "weatherUnavailable": "Weather is currently unavailable",
     "feelsLike": "Feels like",
     "humidity": "Humidity",
-    "wind": "Wind"
+    "wind": "Wind",
+    "seeAllNews": "View all news",
+    "seeAllEvents": "View all events"
   },
   "footer": {
     "address": "Address",

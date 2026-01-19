@@ -15,8 +15,7 @@ export function ContactInfoSection() {
     <Section background="white">
       <Container>
         <SectionHeader 
-          title={t('address')} 
-          subtitle={t('contactUs')} 
+          title={t('contactUs')} 
         />
         
         {/* Contact Info Grid with Schema.org markup */}

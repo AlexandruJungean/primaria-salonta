@@ -17,7 +17,6 @@ interface NewsSectionProps {
 
 export function NewsSection({ news = [] }: NewsSectionProps) {
   const t = useTranslations('homepage');
-  const tCommon = useTranslations('common');
   const locale = useLocale() as 'ro' | 'hu' | 'en';
 
   // If no news provided, show empty state
@@ -78,7 +77,7 @@ export function NewsSection({ news = [] }: NewsSectionProps) {
         <div className="text-center mt-8">
           <Button variant="outline" asChild>
             <Link href="/stiri" className="inline-flex items-center gap-2">
-              {tCommon('seeAll')}
+              {t('seeAllNews')}
               <ArrowRight className="w-4 h-4" />
             </Link>
           </Button>

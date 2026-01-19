@@ -47,7 +47,6 @@ const EVENT_TYPE_CONFIG: Record<string, { color: string; translations: Record<st
 
 export function UpcomingEventsSection({ events = [] }: UpcomingEventsSectionProps) {
   const t = useTranslations('homepage');
-  const tCommon = useTranslations('common');
   const locale = useLocale() as 'ro' | 'hu' | 'en';
 
   if (events.length === 0) {
@@ -127,7 +126,7 @@ export function UpcomingEventsSection({ events = [] }: UpcomingEventsSectionProp
         <div className="text-center mt-8">
           <Button variant="outline" asChild>
             <Link href="/evenimente" className="inline-flex items-center gap-2">
-              {tCommon('seeAll')}
+              {t('seeAllEvents')}
               <ArrowRight className="w-4 h-4" />
             </Link>
           </Button>
