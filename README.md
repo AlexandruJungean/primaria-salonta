@@ -7,10 +7,26 @@ Website-ul oficial al Primăriei Municipiului Salonta, dezvoltat cu Next.js 16, 
 - **Framework:** Next.js 16.1.1
 - **Language:** TypeScript
 - **Styling:** Tailwind CSS 4
-- **Database:** Supabase (PostgreSQL)
-- **Storage:** Cloudflare R2
+- **Database:** Supabase (PostgreSQL cu Row Level Security)
+- **Storage:** Cloudflare R2 (documente) + Supabase Storage (imagini)
+- **Cache/Rate Limiting:** Upstash Redis
 - **Hosting:** Netlify
 - **i18n:** next-intl (RO, HU, EN)
+
+## 🔒 Securitate
+
+Aplicația implementează multiple măsuri de securitate:
+
+- **Autentificare:** Supabase Auth cu JWT tokens și Bearer token pentru API
+- **Rate Limiting:** Upstash Redis (login, upload, formulare publice)
+- **Anti-Spam:** Google reCAPTCHA v3, blocarea email-urilor temporare, verificare DNS/MX
+- **Validare Input:** Zod schemas, validare MIME type, limite dimensiune fișiere
+- **Protecție Imagini:** Compresie automată WebP, eliminare metadate EXIF
+- **Baza de Date:** Row Level Security (RLS), Prepared Statements
+- **Audit:** Jurnal de audit pentru toate acțiunile admin, logare erori
+- **Infrastructură:** HTTPS obligatoriu, Cloudflare CDN cu protecție DDoS
+
+Pentru detalii complete, vezi [SECURITY_REQUIREMENTS.md](./docs/SECURITY_REQUIREMENTS.md).
 
 ## 📋 Prerequisites
 
@@ -18,6 +34,7 @@ Website-ul oficial al Primăriei Municipiului Salonta, dezvoltat cu Next.js 16, 
 - npm sau yarn
 - Cont Supabase (gratuit)
 - Cont Cloudflare (pentru R2)
+- Cont Upstash (pentru Redis - rate limiting)
 - Cont Netlify (pentru hosting)
 
 ## 🛠️ Setup Local
@@ -51,11 +68,19 @@ R2_SECRET_ACCESS_KEY=xxxxx
 R2_BUCKET_NAME=primaria-salonta-docs
 R2_ENDPOINT=https://xxxxx.r2.cloudflarestorage.com
 
+# Upstash Redis (Rate Limiting)
+UPSTASH_REDIS_REST_URL=https://xxxxx.upstash.io
+UPSTASH_REDIS_REST_TOKEN=xxxxx
+
+# Google reCAPTCHA v3
+NEXT_PUBLIC_RECAPTCHA_SITE_KEY=xxxxx
+RECAPTCHA_SECRET_KEY=xxxxx
+
 # App
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
-Vezi `Setup_Supabase_Cloudflare.md` pentru ghidul complet de configurare.
+Vezi [Setup_Supabase_Cloudflare.md](./docs/Setup_Supabase_Cloudflare.md) pentru ghidul complet de configurare.
 
 ### 4. Rulează serverul de development
 
@@ -95,12 +120,6 @@ web-primaria-salonta/
 - 🇷🇴 Română (implicit)
 - 🇭🇺 Maghiară
 - 🇬🇧 Engleză
-
-## 📖 Documentație
-
-- [Technical_Details.md](./Technical_Details.md) - Detalii tehnice și scheme bază de date
-- [Project_Plan.md](./Project_Plan.md) - Planul proiectului și sitemap
-- [Setup_Supabase_Cloudflare.md](./Setup_Supabase_Cloudflare.md) - Ghid configurare infrastructură
 
 ## 🚀 Deploy pe Netlify
 

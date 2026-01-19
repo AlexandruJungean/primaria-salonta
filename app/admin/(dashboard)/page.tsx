@@ -358,7 +358,7 @@ export default function AdminDashboardPage() {
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
-                  <span><strong>Tipuri MIME permise</strong> - PDF, DOC, DOCX, XLS, XLSX, imagini</span>
+                  <span><strong>Compresie automată imagini</strong> - Conversie WebP, eliminare EXIF</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
@@ -399,6 +399,34 @@ export default function AdminDashboardPage() {
               </ul>
             </div>
 
+            {/* Rate Limiting */}
+            <div className="p-5 rounded-xl bg-gradient-to-br from-cyan-50 to-sky-50 border border-cyan-100">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-lg bg-cyan-500 flex items-center justify-center">
+                  <Shield className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="text-lg font-semibold text-slate-900">Rate Limiting</h3>
+              </div>
+              <ul className="space-y-2 text-sm text-slate-600">
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  <span><strong>Upstash Redis</strong> - Rate limiting distribuit în cloud</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  <span><strong>Login</strong> - 5 încercări / 15 minute per IP</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  <span><strong>Upload</strong> - 30 fișiere / minut per utilizator</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                  <span><strong>Formulare publice</strong> - 3 trimiteri / oră per IP</span>
+                </li>
+              </ul>
+            </div>
+
             {/* Infrastructure Security */}
             <div className="p-5 rounded-xl bg-gradient-to-br from-red-50 to-rose-50 border border-red-100">
               <div className="flex items-center gap-3 mb-4">
@@ -422,7 +450,7 @@ export default function AdminDashboardPage() {
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
-                  <span><strong>Pagini admin noindex</strong> - Ascunderea panoului de la motoarele de căutare</span>
+                  <span><strong>Prepared Statements</strong> - Protecție SQL Injection prin Supabase</span>
                 </li>
               </ul>
             </div>
@@ -457,8 +485,9 @@ export default function AdminDashboardPage() {
                 { name: 'reCAPTCHA v3', color: 'bg-yellow-100 text-yellow-700' },
                 { name: 'JWT Tokens', color: 'bg-purple-100 text-purple-700' },
                 { name: 'Zod Validation', color: 'bg-pink-100 text-pink-700' },
-                { name: 'SMTP/TLS', color: 'bg-red-100 text-red-700' },
+                { name: 'Upstash Redis', color: 'bg-red-100 text-red-700' },
                 { name: 'DNS Verification', color: 'bg-cyan-100 text-cyan-700' },
+                { name: 'WebP Compression', color: 'bg-teal-100 text-teal-700' },
               ].map((tech) => (
                 <span
                   key={tech.name}
