@@ -23,7 +23,7 @@ export function AboutSection() {
           <div className="relative mx-auto lg:mx-0">
             <div className="relative w-64 lg:w-[300px] aspect-[3/5] rounded-2xl overflow-hidden shadow-2xl">
               <Image
-                src="/images/primaria-salonta-6.webp"
+                src="/images/primaria-salonta-6.jpeg"
                 alt="Primăria Municipiului Salonta"
                 fill
                 className="object-cover object-center"
