@@ -14,6 +14,7 @@ import { PageHeader } from '@/components/pages/page-header';
 import { Button } from '@/components/ui/button';
 import { useSiteSettings } from '@/components/layout/site-settings-context';
 import { petitionFormSchema, type PetitionFormData } from '@/lib/validations/forms';
+import { useEnsureRecaptcha } from '@/components/features/recaptcha-provider';
 
 const pageLabels = {
   ro: {
@@ -111,6 +112,8 @@ const pageLabels = {
 export default function PetitiiPage() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  // Trigger reCAPTCHA lazy loading when this form component mounts
+  useEnsureRecaptcha();
   const { executeRecaptcha } = useGoogleReCaptcha();
   const locale = useLocale() as 'ro' | 'hu' | 'en';
   const labels = pageLabels[locale] || pageLabels.ro;

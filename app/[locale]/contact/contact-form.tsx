@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { contactFormSchema, type ContactFormData } from '@/lib/validations/forms';
+import { useEnsureRecaptcha } from '@/components/features/recaptcha-provider';
 
 interface ContactFormProps {
   labels: {
@@ -33,6 +34,8 @@ interface ContactFormProps {
 export function ContactForm({ labels }: ContactFormProps) {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  // Trigger reCAPTCHA lazy loading when this form component mounts
+  useEnsureRecaptcha();
   const { executeRecaptcha } = useGoogleReCaptcha();
   const locale = useLocale();
 

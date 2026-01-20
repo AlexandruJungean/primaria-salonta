@@ -69,27 +69,31 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
 
   return (
     <section className="relative h-[500px] md:h-[600px] lg:h-[700px] w-full overflow-hidden">
-      {/* Slides */}
-      {slides.map((slide, index) => (
-        <div
-          key={slide.id}
-          className={cn(
-            'absolute inset-0 transition-opacity duration-1000',
-            index === currentSlide ? 'opacity-100' : 'opacity-0 pointer-events-none'
-          )}
-        >
-          <Image
-            src={slide.image}
-            alt={slide.alt}
-            fill
-            className="object-cover"
-            priority={index === 0}
-            sizes="100vw"
-          />
-          {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
-        </div>
-      ))}
+        {/* Slides */}
+        {slides.map((slide, index) => (
+          <div
+            key={slide.id}
+            className={cn(
+              'absolute inset-0 transition-opacity duration-1000',
+              index === currentSlide ? 'opacity-100' : 'opacity-0 pointer-events-none'
+            )}
+          >
+            <Image
+              src={slide.image}
+              alt={slide.alt}
+              fill
+              className="object-cover"
+              // Only first slide has priority, others load lazily
+              priority={index === 0}
+              loading={index === 0 ? 'eager' : 'lazy'}
+              sizes="100vw"
+              // Improve LCP by using fetchpriority for first image
+              {...(index === 0 ? { fetchPriority: 'high' } : {})}
+            />
+            {/* Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
+          </div>
+        ))}
 
       {/* Content Overlay */}
       <div className="relative z-10 h-full flex flex-col items-center justify-center px-4">

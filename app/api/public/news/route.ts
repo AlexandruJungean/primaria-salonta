@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import { createAnonServerClient } from '@/lib/supabase/server';
 
-export const dynamic = 'force-dynamic';
+// Allow caching - revalidate every 60 seconds
+export const revalidate = 60;
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);

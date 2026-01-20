@@ -13,6 +13,20 @@ import { getHeroSlidesForLocale } from '@/lib/supabase/services';
 // Enable ISR - revalidate homepage every 60 seconds for fresh content while maintaining fast response times
 export const revalidate = 60;
 
+// Preload component for LCP image optimization
+function HeroImagePreload({ imageUrl }: { imageUrl: string | null }) {
+  if (!imageUrl) return null;
+  
+  return (
+    <link
+      rel="preload"
+      as="image"
+      href={imageUrl}
+      fetchPriority="high"
+    />
+  );
+}
+
 // Dynamic imports for below-the-fold components (reduces initial JS bundle)
 const WeatherWidgetSection = dynamic(
   () => import('@/components/sections/weather-widget-section').then(mod => ({ default: mod.WeatherWidgetSection })),
@@ -55,8 +69,14 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   // News and events are fetched client-side for faster initial page load
   const heroSlides = await getHeroSlidesForLocale();
   
+  // Get first slide image URL for preload (LCP optimization)
+  const firstSlideImage = heroSlides[0]?.image || null;
+  
   return (
     <>
+      {/* Preload LCP image for faster initial render */}
+      <HeroImagePreload imageUrl={firstSlideImage} />
+      
       <WebPageJsonLd
         title="Primăria Municipiului Salonta"
         description="Site-ul oficial al Primăriei Municipiului Salonta - Bihor, România"

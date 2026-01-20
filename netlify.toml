@@ -63,6 +63,15 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
 
 # ============================================
+# API ROUTES CACHING
+# Cache public API responses for better performance
+# ============================================
+[[headers]]
+  for = "/api/public/*"
+  [headers.values]
+    Cache-Control = "public, s-maxage=60, stale-while-revalidate=300"
+
+# ============================================
 # PERFORMANCE HINTS
 # ============================================
 [[headers]]
