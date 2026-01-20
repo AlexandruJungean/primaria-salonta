@@ -73,10 +73,15 @@ const translations = {
   },
 };
 
+// Delay before showing the cookie consent banner (in ms)
+// This prevents prefetch requests from slowing down initial page load
+const SHOW_DELAY_MS = 2500;
+
 export function CookieConsent() {
   const locale = useLocale() as keyof typeof translations;
   const t = translations[locale] || translations.ro;
   
+  const [isReady, setIsReady] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [preferences, setPreferences] = useState({
@@ -87,22 +92,28 @@ export function CookieConsent() {
   });
 
   useEffect(() => {
-    // Check if consent was already given
-    const stored = localStorage.getItem(COOKIE_CONSENT_KEY);
-    if (stored) {
-      try {
-        const parsed: CookieConsent = JSON.parse(stored);
-        // If version changed, show banner again
-        if (parsed.version !== COOKIE_CONSENT_VERSION) {
+    // Delay the consent check to avoid prefetch requests during initial page load
+    const timer = setTimeout(() => {
+      // Check if consent was already given
+      const stored = localStorage.getItem(COOKIE_CONSENT_KEY);
+      if (stored) {
+        try {
+          const parsed: CookieConsent = JSON.parse(stored);
+          // If version changed, show banner again
+          if (parsed.version !== COOKIE_CONSENT_VERSION) {
+            setIsVisible(true);
+          }
+        } catch {
           setIsVisible(true);
         }
-      } catch {
+      } else {
+        // No consent stored, show banner
         setIsVisible(true);
       }
-    } else {
-      // No consent stored, show banner
-      setIsVisible(true);
-    }
+      setIsReady(true);
+    }, SHOW_DELAY_MS);
+
+    return () => clearTimeout(timer);
   }, []);
 
   const saveConsent = (consent: ConsentType) => {
@@ -130,7 +141,8 @@ export function CookieConsent() {
     saveConsent(allSelected ? 'all' : 'essential');
   };
 
-  if (!isVisible) return null;
+  // Don't render anything until ready (delayed) and consent is needed
+  if (!isReady || !isVisible) return null;
 
   return (
     <>
