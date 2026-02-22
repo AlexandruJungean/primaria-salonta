@@ -225,11 +225,11 @@ export function MobileNav() {
         <div className="flex items-center justify-between p-4 border-b">
           <div className="flex items-center gap-3">
             <Image
-              src="/logo/logo-transparent.webp"
+              src="/logo/icon.webp"
               alt="Primăria Salonta"
-              width={40}
-              height={40}
-              className="w-10 h-10"
+              width={421}
+              height={600}
+              className="w-10 h-auto"
             />
             <span className="font-semibold text-gray-900">Primăria Salonta</span>
           </div>

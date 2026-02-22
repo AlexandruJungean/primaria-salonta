@@ -24,8 +24,8 @@ export function OrganizationJsonLd() {
     logo: {
       '@type': 'ImageObject',
       url: `${baseUrl}${SEO_CONFIG.images.logo}`,
-      width: 512,
-      height: 512,
+      width: 1080,
+      height: 310,
     },
     image: `${baseUrl}${SEO_CONFIG.images.ogImage}`,
     description: 'Primăria Municipiului Salonta - autoritate a administrației publice locale care administrează și gestionează interesele comunității locale.',

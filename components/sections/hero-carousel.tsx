@@ -99,13 +99,13 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
       <div className="relative z-10 h-full flex flex-col items-center justify-center px-4">
         <Container className="text-center">
           {/* Logo */}
-          <div className="animate-fade-in">
+          <div className="animate-fade-in pb-4">
             <Image
-              src="/logo/logo-transparent.webp"
+              src="/logo/icon.webp"
               alt="Primăria Salonta"
-              width={200}
-              height={200}
-              className="w-34 h-34 md:w-40 md:h-40 lg:w-48 lg:h-48 mx-auto drop-shadow-lg"
+              width={421}
+              height={600}
+              className="h-34 md:h-40 lg:h-48 w-auto mx-auto drop-shadow-lg"
               priority
             />
           </div>

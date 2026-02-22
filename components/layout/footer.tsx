@@ -52,22 +52,14 @@ export function Footer() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
             {/* Logo & About */}
             <div className="lg:col-span-1">
-              <Link href="/" className="flex items-center gap-3 mb-6">
+              <Link href="/" className="inline-block mb-6">
                 <Image
-                  src="/logo/logo-transparent.webp"
+                  src="/logo/logo-white.webp"
                   alt="Primăria Salonta"
-                  width={60}
-                  height={60}
-                  className="w-14 h-14"
+                  width={1080}
+                  height={310}
+                  className="h-14 w-auto"
                 />
-                <div>
-                  <div className="font-bold text-xl leading-tight">
-                    Primăria Salonta
-                  </div>
-                  <div className="text-sm text-primary-200">
-                    Municipiul Salonta
-                  </div>
-                </div>
               </Link>
               <p className="text-primary-200 text-sm mb-6">
                 Site-ul oficial al Primăriei Municipiului Salonta, județul Bihor, România.

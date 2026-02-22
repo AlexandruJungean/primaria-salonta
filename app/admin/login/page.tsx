@@ -87,10 +87,10 @@ export default function AdminLoginPage() {
         <div className="text-center mb-8">
           <div className="w-24 h-24 mx-auto mb-4 bg-white rounded-2xl flex items-center justify-center shadow-lg p-2">
             <Image
-              src="/logo/logo-transparent.webp"
+              src="/logo/icon.webp"
               alt="Primăria Salonta"
-              width={80}
-              height={80}
+              width={421}
+              height={600}
               className="object-contain"
               priority
             />

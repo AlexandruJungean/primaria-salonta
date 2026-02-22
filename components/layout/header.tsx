@@ -87,23 +87,15 @@ export function Header() {
       <Container>
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 shrink-0">
+          <Link href="/" className="shrink-0">
             <Image
-              src="/logo/logo-transparent.webp"
+              src="/logo/logo.webp"
               alt="Primăria Salonta"
-              width={50}
-              height={50}
-              className="w-10 h-10 lg:w-12 lg:h-12"
+              width={1080}
+              height={310}
+              className="h-10 lg:h-12 w-auto"
               priority
             />
-            <div className="hidden sm:block">
-              <div className="font-bold text-primary-900 text-lg leading-tight">
-                Primăria Salonta
-              </div>
-              <div className="text-xs text-gray-500 hidden md:block">
-                Municipiul Salonta
-              </div>
-            </div>
           </Link>
 
           {/* Desktop Navigation - hidden on mobile */}

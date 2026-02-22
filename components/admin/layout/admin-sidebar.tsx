@@ -308,13 +308,13 @@ export function AdminSidebar({ isOpen = true, onClose }: AdminSidebarProps) {
       >
         {/* Logo */}
         <div className="p-6 border-b border-slate-700">
-          <div className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
             <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center p-1">
               <NextImage
-                src="/logo/logo-transparent.webp"
+                src="/logo/icon.webp"
                 alt="Primăria Salonta"
-                width={40}
-                height={40}
+                width={421}
+                height={600}
                 className="object-contain"
               />
             </div>
@@ -322,7 +322,7 @@ export function AdminSidebar({ isOpen = true, onClose }: AdminSidebarProps) {
               <h1 className="text-lg font-bold text-white">Primăria Salonta</h1>
               <p className="text-sm text-slate-400">Panou Admin</p>
             </div>
-          </div>
+          </Link>
         </div>
 
         {/* Navigation */}
