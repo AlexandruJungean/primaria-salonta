@@ -100,7 +100,7 @@ export default async function AlteDocumentePage({ params }: { params: Promise<{ 
 
   // Fetch documents from database
   const baseDocuments = await getDocumentsBySourceFolder('alte-documente');
-  const minutesDocuments = await getDocumentsBySourceFolder('minute-sedinte-consiliu', 500);
+  const minutesDocuments = await getDocumentsBySourceFolder('minute-sedinte-consiliu');
   const archiveMandateDocuments = await getDocumentsBySourceFolder('arhiva-validare-mandate-2020-2024');
 
   // Fetch links from database

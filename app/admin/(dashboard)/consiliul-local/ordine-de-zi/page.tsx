@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { Plus, Search, Calendar, AlertTriangle, FileText } from 'lucide-react';
+import { Plus, Search, Calendar, FileText } from 'lucide-react';
 import {
   AdminPageHeader,
   AdminButton,
@@ -13,8 +13,6 @@ import {
   AdminStatusBadge,
   AdminInput,
   toast,
-  canDeleteItem,
-  formatDeleteTimeRemaining,
 } from '@/components/admin';
 import { adminFetch } from '@/lib/api-client';
 
@@ -29,7 +27,6 @@ interface SessionItem {
 }
 
 const ITEMS_PER_PAGE = 15;
-const DELETE_LIMIT_HOURS = 24;
 
 export default function OrdineDeZiListPage() {
   const router = useRouter();
@@ -83,24 +80,7 @@ export default function OrdineDeZiListPage() {
     router.push(`/admin/consiliul-local/ordine-de-zi/${item.id}`);
   };
 
-  const canDelete = (item: SessionItem): boolean => {
-    return canDeleteItem(item.created_at, DELETE_LIMIT_HOURS);
-  };
-
-  const getDeleteTooltip = (item: SessionItem): string => {
-    if (canDelete(item)) {
-      const hoursRemaining = DELETE_LIMIT_HOURS - 
-        (new Date().getTime() - new Date(item.created_at).getTime()) / (1000 * 60 * 60);
-      return `Șterge (${formatDeleteTimeRemaining(hoursRemaining)})`;
-    }
-    return 'Nu se poate șterge - au trecut mai mult de 24 ore';
-  };
-
   const confirmDelete = (item: SessionItem) => {
-    if (!canDelete(item)) {
-      toast.warning('Nu se poate șterge', 'Ordinele de zi pot fi șterse doar în primele 24 de ore.');
-      return;
-    }
     setItemToDelete(item);
     setDeleteDialogOpen(true);
   };
@@ -165,18 +145,6 @@ export default function OrdineDeZiListPage() {
         <AdminStatusBadge status={item.published ? 'enabled' : 'disabled'} />
       ),
     },
-    {
-      key: 'can_delete',
-      label: '',
-      className: 'w-10',
-      render: (item: SessionItem) => (
-        !canDelete(item) ? (
-          <span title="Nu se poate șterge - au trecut 24h">
-            <AlertTriangle className="w-4 h-4 text-amber-500" />
-          </span>
-        ) : null
-      ),
-    },
   ];
 
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
@@ -197,15 +165,6 @@ export default function OrdineDeZiListPage() {
         }
       />
 
-      <AdminCard className="mb-6 bg-amber-50 border-amber-200">
-        <div className="flex items-center gap-3">
-          <AlertTriangle className="w-5 h-5 text-amber-600" />
-          <p className="text-amber-800">
-            <strong>Atenție:</strong> Ordinele de zi pot fi șterse doar în primele 24 de ore de la creare.
-          </p>
-        </div>
-      </AdminCard>
-
       <AdminCard className="mb-6">
         <form onSubmit={handleSearch} className="flex gap-4">
           <div className="flex-1">
@@ -221,8 +180,6 @@ export default function OrdineDeZiListPage() {
         loading={loading}
         onEdit={handleEdit}
         onDelete={confirmDelete}
-        canDelete={canDelete}
-        deleteTooltip={getDeleteTooltip}
         emptyMessage="Nu există ordine de zi."
       />
 

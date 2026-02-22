@@ -29,7 +29,7 @@ export default async function GeneralePage({ params }: { params: Promise<{ local
   const [contentMap, externalLinks, allDocsData] = await Promise.all([
     getPageContent('transparenta-generale'),
     getExternalLinks('transparenta-generale'),
-    getDocumentsBySourceFolderWithAnnexes('generale', 500),
+    getDocumentsBySourceFolderWithAnnexes('generale'),
   ]);
 
   // Translate content map based on locale

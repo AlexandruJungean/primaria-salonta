@@ -12,7 +12,6 @@ import {
   AdminTextarea,
   AdminConfirmDialog,
   toast,
-  canDeleteItem,
 } from '@/components/admin';
 import { adminFetch } from '@/lib/api-client';
 
@@ -54,8 +53,6 @@ const initialFormData: SessionFormData = {
 };
 
 
-const DELETE_LIMIT_HOURS = 24;
-
 export default function HotarariEditPage() {
   const router = useRouter();
   const params = useParams();
@@ -64,7 +61,6 @@ export default function HotarariEditPage() {
 
   const [formData, setFormData] = useState<SessionFormData>(initialFormData);
   const [decisions, setDecisions] = useState<Decision[]>([]);
-  const [createdAt, setCreatedAt] = useState<string | null>(null);
   const [loading, setLoading] = useState(!isNew);
   const [saving, setSaving] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -94,7 +90,6 @@ export default function HotarariEditPage() {
           description: data.description || '',
           published: data.published ?? true,
         });
-        setCreatedAt(data.created_at);
         setDecisions(data.decisions || []);
       }
     } catch (error) {
@@ -262,8 +257,6 @@ export default function HotarariEditPage() {
   };
 
 
-  const canDelete = (): boolean => canDeleteItem(createdAt, DELETE_LIMIT_HOURS);
-
   const handleDelete = async () => {
     if (isNew) return;
     setDeleting(true);
@@ -312,7 +305,7 @@ export default function HotarariEditPage() {
         actions={
           <div className="flex gap-3">
             <AdminButton variant="ghost" icon={ArrowLeft} onClick={() => router.push('/admin/consiliul-local/hotarari')}>Înapoi</AdminButton>
-            {!isNew && canDelete() && <AdminButton variant="danger" icon={Trash2} onClick={() => setDeleteDialogOpen(true)}>Șterge</AdminButton>}
+            {!isNew && <AdminButton variant="danger" icon={Trash2} onClick={() => setDeleteDialogOpen(true)}>Șterge</AdminButton>}
           </div>
         }
       />

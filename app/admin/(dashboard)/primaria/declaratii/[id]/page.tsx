@@ -11,7 +11,6 @@ import {
   AdminSelect,
   AdminConfirmDialog,
   toast,
-  canDeleteItem,
 } from '@/components/admin';
 import { adminFetch } from '@/lib/api-client';
 
@@ -47,8 +46,6 @@ const initialFormData: DeclarationFormData = {
   published: true,
 };
 
-const DELETE_LIMIT_HOURS = 24;
-
 export default function DeclaratiePrimarieEditPage() {
   const router = useRouter();
   const params = useParams();
@@ -59,7 +56,6 @@ export default function DeclaratiePrimarieEditPage() {
   const intereseFileRef = useRef<HTMLInputElement>(null);
 
   const [formData, setFormData] = useState<DeclarationFormData>(initialFormData);
-  const [createdAt, setCreatedAt] = useState<string | null>(null);
   const [loading, setLoading] = useState(!isNew);
   const [saving, setSaving] = useState(false);
   const [uploadingAvere, setUploadingAvere] = useState(false);
@@ -88,7 +84,6 @@ export default function DeclaratiePrimarieEditPage() {
           interese_file_name: data.interese_file_name || '',
           published: data.published ?? true,
         });
-        setCreatedAt(data.created_at);
       }
     } catch (error) {
       console.error('Error loading declaration:', error);
@@ -206,8 +201,6 @@ export default function DeclaratiePrimarieEditPage() {
     }
   };
 
-  const canDelete = (): boolean => canDeleteItem(createdAt, DELETE_LIMIT_HOURS);
-
   const handleDelete = async () => {
     if (isNew) return;
     setDeleting(true);
@@ -243,7 +236,7 @@ export default function DeclaratiePrimarieEditPage() {
         actions={
           <div className="flex gap-3">
             <AdminButton variant="ghost" icon={ArrowLeft} onClick={() => router.push('/admin/primaria/declaratii')}>Înapoi</AdminButton>
-            {!isNew && canDelete() && <AdminButton variant="danger" icon={Trash2} onClick={() => setDeleteDialogOpen(true)}>Șterge</AdminButton>}
+            {!isNew && <AdminButton variant="danger" icon={Trash2} onClick={() => setDeleteDialogOpen(true)}>Șterge</AdminButton>}
           </div>
         }
       />
@@ -277,15 +270,13 @@ export default function DeclaratiePrimarieEditPage() {
                   >
                     Deschide
                   </a>
-                  {canDelete() && (
-                    <button
-                      onClick={() => setFormData(prev => ({ ...prev, avere_file_url: '', avere_file_name: '' }))}
-                      className="p-2 text-red-500 hover:bg-red-100 rounded-lg transition-colors"
-                      title="Șterge fișierul"
-                    >
-                      <X className="w-5 h-5" />
-                    </button>
-                  )}
+                  <button
+                    onClick={() => setFormData(prev => ({ ...prev, avere_file_url: '', avere_file_name: '' }))}
+                    className="p-2 text-red-500 hover:bg-red-100 rounded-lg transition-colors"
+                    title="Șterge fișierul"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
                 </div>
               </div>
             ) : (
@@ -330,15 +321,13 @@ export default function DeclaratiePrimarieEditPage() {
                   >
                     Deschide
                   </a>
-                  {canDelete() && (
-                    <button
-                      onClick={() => setFormData(prev => ({ ...prev, interese_file_url: '', interese_file_name: '' }))}
-                      className="p-2 text-red-500 hover:bg-red-100 rounded-lg transition-colors"
-                      title="Șterge fișierul"
-                    >
-                      <X className="w-5 h-5" />
-                    </button>
-                  )}
+                  <button
+                    onClick={() => setFormData(prev => ({ ...prev, interese_file_url: '', interese_file_name: '' }))}
+                    className="p-2 text-red-500 hover:bg-red-100 rounded-lg transition-colors"
+                    title="Șterge fișierul"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
                 </div>
               </div>
             ) : (

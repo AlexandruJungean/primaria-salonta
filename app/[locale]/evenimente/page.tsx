@@ -14,7 +14,7 @@ export default async function EvenimentePage({
   const { locale } = await params;
   
   // Fetch all events from database
-  const { data: eventsData } = await getEvents({ limit: 100 });
+  const { data: eventsData } = await getEvents();
 
   // Translate event titles and descriptions based on locale
   const events = await translateContentArray(

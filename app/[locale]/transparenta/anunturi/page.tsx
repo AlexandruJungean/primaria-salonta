@@ -25,7 +25,7 @@ export default async function AnunturiPage({ params }: { params: Promise<{ local
   const ta = await getTranslations({ locale, namespace: 'anunturiPage' });
 
   // Fetch all announcements to get year counts
-  const allDocuments = await documentsService.getDocumentsBySourceFolder('anunturi', 2000);
+  const allDocuments = await documentsService.getDocumentsBySourceFolder('anunturi');
 
   // Group by year and count
   const yearCounts: Record<number, number> = {};

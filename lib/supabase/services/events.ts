@@ -134,8 +134,7 @@ export async function getEventBySlug(slug: string): Promise<EventWithImages | nu
  * Get events by type
  */
 export async function getEventsByType(
-  eventType: Event['event_type'],
-  limit: number = 10
+  eventType: Event['event_type']
 ): Promise<Event[]> {
   const supabase = createAnonServerClient();
 
@@ -144,8 +143,7 @@ export async function getEventsByType(
     .select('*')
     .eq('published', true)
     .eq('event_type', eventType)
-    .order('start_date', { ascending: false })
-    .limit(limit);
+    .order('start_date', { ascending: false });
 
   if (error) {
     console.error('Error fetching events by type:', error);

@@ -24,7 +24,7 @@ export default async function OrganigramaPage({ params }: { params: Promise<{ lo
   const to = await getTranslations({ locale, namespace: 'organigramaPage' });
 
   // Fetch documents from database
-  const organigramaDocs = await documents.getDocumentsBySourceFolder('organigrama', 50);
+  const organigramaDocs = await documents.getDocumentsBySourceFolder('organigrama');
 
   const pageLabels = {
     ro: {

@@ -112,7 +112,7 @@ export default async function AchizitiiPage({ params }: { params: Promise<{ loca
   const tPage = await getTranslations({ locale, namespace: 'achizitiiPage' });
 
   // Fetch all documents from database
-  const allDocumentsData = await getDocumentsByCategory('achizitii', 500);
+  const allDocumentsData = await getDocumentsByCategory('achizitii');
   const years = await getDocumentYears('achizitii');
   
   // Translate document titles based on locale

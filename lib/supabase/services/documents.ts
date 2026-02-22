@@ -58,8 +58,7 @@ export async function getDocuments(
  * Get documents by category
  */
 export async function getDocumentsByCategory(
-  category: string,
-  limit: number = 500
+  category: string
 ): Promise<Document[]> {
   const supabase = createAnonServerClient();
 
@@ -69,8 +68,7 @@ export async function getDocumentsByCategory(
     .eq('published', true)
     .eq('category', category)
     .order('year', { ascending: false })
-    .order('document_date', { ascending: false, nullsFirst: false })
-    .limit(limit);
+    .order('document_date', { ascending: false, nullsFirst: false });
 
   if (error) {
     console.error('Error fetching documents by category:', error);
@@ -85,8 +83,7 @@ export async function getDocumentsByCategory(
  * Returns parent documents with their annexes nested
  */
 export async function getDocumentsByCategoryWithAnnexes(
-  category: string,
-  limit: number = 500
+  category: string
 ): Promise<DocumentWithAnnexes[]> {
   const supabase = createAnonServerClient();
 
@@ -96,8 +93,7 @@ export async function getDocumentsByCategoryWithAnnexes(
     .eq('published', true)
     .eq('category', category)
     .order('year', { ascending: false })
-    .order('document_date', { ascending: false, nullsFirst: false })
-    .limit(limit);
+    .order('document_date', { ascending: false, nullsFirst: false });
 
   if (error) {
     console.error('Error fetching documents by category:', error);
@@ -137,8 +133,7 @@ export async function getDocumentsByCategoryWithAnnexes(
  * Get documents by source folder (used for pages that need specific migrated content)
  */
 export async function getDocumentsBySourceFolder(
-  sourceFolder: string,
-  limit: number = 100
+  sourceFolder: string
 ): Promise<Document[]> {
   const supabase = createAnonServerClient();
 
@@ -147,8 +142,7 @@ export async function getDocumentsBySourceFolder(
     .select('*')
     .eq('published', true)
     .eq('source_folder', sourceFolder)
-    .order('title', { ascending: true })
-    .limit(limit);
+    .order('title', { ascending: true });
 
   if (error) {
     console.error('Error fetching documents by source folder:', error);
@@ -163,8 +157,7 @@ export async function getDocumentsBySourceFolder(
  * Returns parent documents with their annexes nested
  */
 export async function getDocumentsBySourceFolderWithAnnexes(
-  sourceFolder: string,
-  limit: number = 500
+  sourceFolder: string
 ): Promise<DocumentWithAnnexes[]> {
   const supabase = createAnonServerClient();
 
@@ -177,8 +170,7 @@ export async function getDocumentsBySourceFolderWithAnnexes(
     .is('parent_id', null)
     .order('year', { ascending: false })
     .order('document_date', { ascending: false, nullsFirst: false })
-    .order('created_at', { ascending: false })
-    .limit(limit);
+    .order('created_at', { ascending: false });
 
   if (parentError) {
     console.error('Error fetching documents by source folder:', parentError);
@@ -365,8 +357,7 @@ export async function getAssetDeclarationsByDepartment(
     .select('*')
     .eq('published', true)
     .order('declaration_year', { ascending: false })
-    .order('person_name', { ascending: true })
-    .limit(2000); // Increased limit to ensure all declarations are fetched
+    .order('person_name', { ascending: true });
 
   if (year) {
     query = query.eq('declaration_year', year);
@@ -496,7 +487,7 @@ export interface Announcement {
  * Get announcements with grouped attachments
  * Documents are grouped by description (announcement title) + document_date
  */
-export async function getAnnouncements(limit: number = 500): Promise<Announcement[]> {
+export async function getAnnouncements(): Promise<Announcement[]> {
   const supabase = createAnonServerClient();
 
   const { data, error } = await supabase
@@ -505,8 +496,7 @@ export async function getAnnouncements(limit: number = 500): Promise<Announcemen
     .eq('published', true)
     .eq('category', 'anunturi')
     .order('document_date', { ascending: false, nullsFirst: false })
-    .order('created_at', { ascending: false })
-    .limit(limit);
+    .order('created_at', { ascending: false });
 
   if (error) {
     console.error('Error fetching announcements:', error);

@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { Plus, FileCheck, AlertTriangle } from 'lucide-react';
+import { Plus, FileCheck } from 'lucide-react';
 import {
   AdminPageHeader,
   AdminButton,
@@ -12,7 +12,6 @@ import {
   AdminConfirmDialog,
   AdminSelect,
   toast,
-  canDeleteItem,
 } from '@/components/admin';
 import { adminFetch } from '@/lib/api-client';
 
@@ -29,7 +28,6 @@ interface Declaration {
 }
 
 const ITEMS_PER_PAGE = 15;
-const DELETE_LIMIT_HOURS = 24;
 
 export default function DeclaratiiCLPage() {
   const router = useRouter();
@@ -91,15 +89,7 @@ export default function DeclaratiiCLPage() {
     router.push(`/admin/consiliul-local/declaratii/${item.id}`);
   };
 
-  const canDelete = (item: Declaration): boolean => {
-    return canDeleteItem(item.created_at, DELETE_LIMIT_HOURS);
-  };
-
   const confirmDelete = (item: Declaration) => {
-    if (!canDelete(item)) {
-      toast.warning('Nu se poate șterge', 'Declarațiile pot fi șterse doar în primele 24 de ore.');
-      return;
-    }
     setItemToDelete(item);
     setDeleteDialogOpen(true);
   };
@@ -162,14 +152,6 @@ export default function DeclaratiiCLPage() {
         ) : <span className="text-slate-400">-</span>
       ),
     },
-    {
-      key: 'can_delete',
-      label: '',
-      className: 'w-10',
-      render: (item: Declaration) => (
-        !canDelete(item) ? <span title="Nu se poate șterge"><AlertTriangle className="w-4 h-4 text-amber-500" /></span> : null
-      ),
-    },
   ];
 
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
@@ -191,15 +173,6 @@ export default function DeclaratiiCLPage() {
         }
       />
 
-      <AdminCard className="mb-6 bg-amber-50 border-amber-200">
-        <div className="flex items-center gap-3">
-          <AlertTriangle className="w-5 h-5 text-amber-600" />
-          <p className="text-amber-800">
-            <strong>Atenție:</strong> Declarațiile pot fi șterse doar în primele 24 de ore de la încărcare.
-          </p>
-        </div>
-      </AdminCard>
-
       <AdminCard className="mb-6">
         <div className="flex gap-4 items-end">
           <div className="w-40">
@@ -214,7 +187,6 @@ export default function DeclaratiiCLPage() {
         loading={loading}
         onEdit={handleEdit}
         onDelete={confirmDelete}
-        canDelete={canDelete}
         emptyMessage="Nu există declarații pentru anul selectat."
       />
 

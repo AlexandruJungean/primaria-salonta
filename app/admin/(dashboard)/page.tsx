@@ -18,8 +18,6 @@ import {
   Shield,
   Lock,
   Database,
-  Cloud,
-  Key,
   FileCheck,
   UserCheck,
   Eye,
@@ -270,7 +268,7 @@ export default function AdminDashboardPage() {
               <ul className="space-y-2 text-sm text-slate-600">
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
-                  <span><strong>Supabase Auth</strong> - Sistem de autentificare securizat cu JWT tokens</span>
+                  <span><strong>JWT Tokens</strong> - Sistem de autentificare securizat cu token-uri semnate</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
@@ -298,19 +296,19 @@ export default function AdminDashboardPage() {
               <ul className="space-y-2 text-sm text-slate-600">
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
-                  <span><strong>Supabase PostgreSQL</strong> - Bază de date cu Row Level Security (RLS)</span>
+                  <span><strong>PostgreSQL</strong> - Bază de date pe serverul primăriei cu Row Level Security (RLS)</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
-                  <span><strong>Supabase Storage</strong> - Stocare imagini cu politici de acces</span>
+                  <span><strong>Stocare locală</strong> - Documente și imagini pe serverul primăriei</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
-                  <span><strong>Cloudflare R2</strong> - Stocare documente cu CDN global și protecție DDoS</span>
+                  <span><strong>Control total</strong> - Datele rămân exclusiv pe infrastructura primăriei</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
-                  <span><strong>Presigned URLs</strong> - URL-uri temporare pentru upload securizat</span>
+                  <span><strong>Backup automat</strong> - Copii de siguranță periodice ale bazei de date și fișierelor</span>
                 </li>
               </ul>
             </div>
@@ -410,7 +408,7 @@ export default function AdminDashboardPage() {
               <ul className="space-y-2 text-sm text-slate-600">
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
-                  <span><strong>Upstash Redis</strong> - Rate limiting distribuit în cloud</span>
+                  <span><strong>Limitare request-uri</strong> - Protecție împotriva abuzurilor</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
@@ -446,11 +444,11 @@ export default function AdminDashboardPage() {
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
-                  <span><strong>Cloudflare CDN</strong> - Protecție DDoS, WAF și cache global</span>
+                  <span><strong>Server propriu</strong> - Infrastructură controlată integral de primărie</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
-                  <span><strong>Prepared Statements</strong> - Protecție SQL Injection prin Supabase</span>
+                  <span><strong>Prepared Statements</strong> - Protecție SQL Injection prin PostgreSQL</span>
                 </li>
               </ul>
             </div>
@@ -463,12 +461,12 @@ export default function AdminDashboardPage() {
                 <Lock className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h4 className="font-semibold text-lg mb-1">Infrastructură de Securitate Enterprise</h4>
+                <h4 className="font-semibold text-lg mb-1">Infrastructură Self-Hosted pe Serverul Primăriei</h4>
                 <p className="text-blue-100 text-sm leading-relaxed">
-                  Aplicația utilizează servicii cloud de nivel enterprise (Supabase, Cloudflare) care asigură 
-                  disponibilitate ridicată, criptare în tranzit și în repaus, conformitate GDPR 
-                  și monitorizare 24/7. Toate datele sunt procesate și stocate în conformitate cu regulamentele 
-                  europene de protecție a datelor.
+                  Aplicația rulează pe serverul propriu al primăriei, asigurând control total asupra datelor.
+                  Baza de date PostgreSQL și fișierele sunt stocate local, cu criptare în tranzit și în repaus,
+                  conformitate GDPR și backup automat. Toate datele sunt procesate și stocate în conformitate 
+                  cu regulamentele europene de protecție a datelor.
                 </p>
               </div>
             </div>
@@ -479,15 +477,14 @@ export default function AdminDashboardPage() {
             <h4 className="font-medium text-slate-900 mb-3">Tehnologii Utilizate pentru Securitate:</h4>
             <div className="flex flex-wrap gap-2">
               {[
-                { name: 'Supabase Auth', color: 'bg-emerald-100 text-emerald-700' },
-                { name: 'PostgreSQL RLS', color: 'bg-blue-100 text-blue-700' },
-                { name: 'Cloudflare R2', color: 'bg-orange-100 text-orange-700' },
-                { name: 'reCAPTCHA v3', color: 'bg-yellow-100 text-yellow-700' },
+                { name: 'PostgreSQL', color: 'bg-blue-100 text-blue-700' },
                 { name: 'JWT Tokens', color: 'bg-purple-100 text-purple-700' },
+                { name: 'reCAPTCHA v3', color: 'bg-yellow-100 text-yellow-700' },
                 { name: 'Zod Validation', color: 'bg-pink-100 text-pink-700' },
-                { name: 'Upstash Redis', color: 'bg-red-100 text-red-700' },
+                { name: 'Rate Limiting', color: 'bg-red-100 text-red-700' },
                 { name: 'DNS Verification', color: 'bg-cyan-100 text-cyan-700' },
                 { name: 'WebP Compression', color: 'bg-teal-100 text-teal-700' },
+                { name: 'Server Propriu', color: 'bg-emerald-100 text-emerald-700' },
               ].map((tech) => (
                 <span
                   key={tech.name}

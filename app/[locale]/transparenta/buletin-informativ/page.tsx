@@ -29,7 +29,7 @@ export default async function BuletinInformativPage({ params }: { params: Promis
 
   // Fetch documents and links from database
   const [allDocumentsData, externalLinksData] = await Promise.all([
-    documentsService.getDocumentsBySourceFolder('buletin-informativ', 100),
+    documentsService.getDocumentsBySourceFolder('buletin-informativ'),
     getExternalLinks('buletin-informativ'),
   ]);
   

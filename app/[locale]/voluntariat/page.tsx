@@ -25,7 +25,7 @@ export default async function VoluntariatPage({ params }: { params: Promise<{ lo
   const tp = await getTranslations({ locale, namespace: 'voluntariatPage' });
 
   // Fetch volunteer activity documents from database
-  const volunteerDocs = await documents.getDocumentsBySourceFolder('activitate-de-voluntariat', 50);
+  const volunteerDocs = await documents.getDocumentsBySourceFolder('activitate-de-voluntariat');
 
   const pageLabels = {
     ro: {

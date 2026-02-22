@@ -26,7 +26,7 @@ export default async function DezbateriPublicePage({ params }: { params: Promise
   const td = await getTranslations({ locale, namespace: 'dezbateriPage' });
 
   // Fetch documents from database
-  const allDocumentsData = await documentsService.getDocumentsBySourceFolder('dezbateri-publice', 500);
+  const allDocumentsData = await documentsService.getDocumentsBySourceFolder('dezbateri-publice');
   
   // Translate document titles based on locale
   const allDocuments = await translateContentArray(

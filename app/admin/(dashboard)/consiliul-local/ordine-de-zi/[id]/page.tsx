@@ -12,7 +12,6 @@ import {
   AdminTextarea,
   AdminConfirmDialog,
   toast,
-  canDeleteItem,
 } from '@/components/admin';
 import { adminFetch } from '@/lib/api-client';
 
@@ -54,9 +53,6 @@ const initialFormData: SessionFormData = {
 };
 
 
-
-const DELETE_LIMIT_HOURS = 24;
-
 export default function OrdineDeZiEditPage() {
   const router = useRouter();
   const params = useParams();
@@ -66,7 +62,6 @@ export default function OrdineDeZiEditPage() {
 
   const [formData, setFormData] = useState<SessionFormData>(initialFormData);
   const [documents, setDocuments] = useState<SessionDocument[]>([]);
-  const [createdAt, setCreatedAt] = useState<string | null>(null);
   const [loading, setLoading] = useState(!isNew);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -99,7 +94,6 @@ export default function OrdineDeZiEditPage() {
           meeting_passcode: data.meeting_passcode || '',
           published: data.published ?? true,
         });
-        setCreatedAt(data.created_at);
         setDocuments(data.documents || []);
       }
     } catch (error) {
@@ -270,8 +264,6 @@ export default function OrdineDeZiEditPage() {
     }
   };
 
-  const canDelete = (): boolean => canDeleteItem(createdAt, DELETE_LIMIT_HOURS);
-
   const handleDelete = async () => {
     if (isNew) return;
     setDeleting(true);
@@ -315,7 +307,7 @@ export default function OrdineDeZiEditPage() {
         actions={
           <div className="flex gap-3">
             <AdminButton variant="ghost" icon={ArrowLeft} onClick={() => router.push('/admin/consiliul-local/ordine-de-zi')}>Înapoi</AdminButton>
-            {!isNew && canDelete() && <AdminButton variant="danger" icon={Trash2} onClick={() => setDeleteDialogOpen(true)}>Șterge</AdminButton>}
+            {!isNew && <AdminButton variant="danger" icon={Trash2} onClick={() => setDeleteDialogOpen(true)}>Șterge</AdminButton>}
           </div>
         }
       />
@@ -470,11 +462,6 @@ export default function OrdineDeZiEditPage() {
             </div>
           </AdminCard>
 
-          {!isNew && !canDelete() && (
-            <AdminCard className="bg-amber-50 border-amber-200">
-              <p className="text-amber-800 text-sm"><strong>Notă:</strong> Nu mai poate fi ștearsă (au trecut 24h).</p>
-            </AdminCard>
-          )}
         </div>
       </div>
 

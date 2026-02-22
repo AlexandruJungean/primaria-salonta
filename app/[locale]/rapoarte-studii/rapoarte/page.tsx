@@ -24,7 +24,7 @@ export default async function RapoartePage({ params }: { params: Promise<{ local
   const t = await getTranslations({ locale, namespace: 'navigation' });
 
   // Fetch audit reports from database
-  const { data: auditReportsData } = await reports.getReports({ reportType: 'audit', limit: 100 });
+  const { data: auditReportsData } = await reports.getReports({ reportType: 'audit' });
   
   // Translate report titles based on locale
   const auditReports = await translateContentArray(

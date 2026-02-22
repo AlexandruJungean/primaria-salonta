@@ -7,7 +7,6 @@ import {
   Search, 
   Calendar, 
   FileText, 
-  AlertTriangle, 
   ExternalLink,
   X,
 } from 'lucide-react';
@@ -22,8 +21,6 @@ import {
   AdminInput,
   AdminSelect,
   toast,
-  canDeleteItem,
-  formatDeleteTimeRemaining,
 } from '@/components/admin';
 
 interface Document {
@@ -58,8 +55,6 @@ interface DocumentListProps {
 }
 
 const ITEMS_PER_PAGE = 20;
-const RESTRICTED_CATEGORIES = ['buget', 'dispozitii', 'regulamente'];
-const DELETE_LIMIT_HOURS = 24;
 
 const SUBCATEGORY_OPTIONS: Record<string, { value: string; label: string }[]> = {
   // Category-based subcategories
@@ -129,8 +124,6 @@ export function DocumentList({
   hideCreatedAtColumn = false,
 }: DocumentListProps) {
   const router = useRouter();
-  
-  const isRestricted = filterType === 'category' && RESTRICTED_CATEGORIES.includes(filterValue);
   const hasSubcategories = SUBCATEGORY_OPTIONS[filterValue];
 
   const [documents, setDocuments] = useState<Document[]>([]);
@@ -239,29 +232,7 @@ export function DocumentList({
     router.push(`${basePath}/${item.id}`);
   };
 
-  const canDelete = (item: Document): boolean => {
-    if (!isRestricted) return true;
-    return canDeleteItem(item.created_at, DELETE_LIMIT_HOURS);
-  };
-
-  const getDeleteTooltip = (item: Document): string => {
-    if (!isRestricted) return 'Șterge';
-    if (canDelete(item)) {
-      const hoursRemaining = DELETE_LIMIT_HOURS - 
-        (new Date().getTime() - new Date(item.created_at).getTime()) / (1000 * 60 * 60);
-      return `Șterge (${formatDeleteTimeRemaining(hoursRemaining)})`;
-    }
-    return 'Nu se poate șterge - au trecut mai mult de 24 ore';
-  };
-
   const confirmDelete = (item: Document) => {
-    if (!canDelete(item)) {
-      toast.warning(
-        'Nu se poate șterge',
-        'Acest document poate fi șters doar în primele 24 de ore de la încărcare.'
-      );
-      return;
-    }
     setItemToDelete(item);
     setDeleteDialogOpen(true);
   };
@@ -402,18 +373,6 @@ export function DocumentList({
         </a>
       ),
     },
-    ...(isRestricted ? [{
-      key: 'can_delete',
-      label: '',
-      className: 'w-10',
-      render: (item: Document) => (
-        !canDelete(item) ? (
-          <span title="Nu se poate șterge - au trecut 24h">
-            <AlertTriangle className="w-4 h-4 text-amber-500" />
-          </span>
-        ) : null
-      ),
-    }] : []),
   ];
 
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
@@ -437,17 +396,6 @@ export function DocumentList({
           </AdminButton>
         }
       />
-
-      {isRestricted && (
-        <AdminCard className="mb-6 bg-amber-50 border-amber-200">
-          <div className="flex items-center gap-3">
-            <AlertTriangle className="w-5 h-5 text-amber-600" />
-            <p className="text-amber-800">
-              <strong>Atenție:</strong> Documentele din această categorie pot fi șterse doar în primele 24 de ore de la încărcare.
-            </p>
-          </div>
-        </AdminCard>
-      )}
 
       <AdminCard className="mb-6">
         <form onSubmit={handleSearch} className="flex flex-wrap gap-4">
@@ -504,8 +452,6 @@ export function DocumentList({
         loading={loading}
         onEdit={handleEdit}
         onDelete={confirmDelete}
-        canDelete={canDelete}
-        deleteTooltip={getDeleteTooltip}
         emptyMessage={`Nu există documente. Apasă 'Încarcă Document Nou' pentru a adăuga primul document.`}
       />
 

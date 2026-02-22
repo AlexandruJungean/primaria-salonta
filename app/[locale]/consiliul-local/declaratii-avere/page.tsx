@@ -28,8 +28,8 @@ export default async function DeclaratiiAverePage({
 
   // Fetch declarations only for council members (consiliul_local department)
   const { data: declarations } = await getAssetDeclarations({ 
-    limit: 500,
-    department: 'consiliul_local'
+    department: 'consiliul_local',
+    limit: 10000,
   });
 
   return (

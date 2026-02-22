@@ -24,7 +24,7 @@ export default async function HotarariRepublicatePage({ params }: { params: Prom
   const t = await getTranslations({ locale, namespace: 'navigation' });
 
   // Fetch republished decisions from database by source folder (with annexes)
-  const allDecisions = await getDocumentsBySourceFolderWithAnnexes('hotarari-republicate', 200);
+  const allDecisions = await getDocumentsBySourceFolderWithAnnexes('hotarari-republicate');
   
   // Sort by year descending (use doc.year from database)
   const republishedDecisions = [...allDecisions].sort((a, b) => {

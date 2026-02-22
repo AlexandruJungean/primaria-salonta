@@ -24,7 +24,7 @@ export default async function RegulamentPage({ params }: { params: Promise<{ loc
   const tr = await getTranslations({ locale, namespace: 'regulamentPage' });
 
   // Fetch documents from database
-  const regulamentDocs = await documents.getDocumentsBySourceFolder('regulament-de-organizare-si-functionare', 50);
+  const regulamentDocs = await documents.getDocumentsBySourceFolder('regulament-de-organizare-si-functionare');
 
   const pageLabels = {
     ro: {

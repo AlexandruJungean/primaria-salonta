@@ -24,7 +24,7 @@ export default async function StudiiPage({ params }: { params: Promise<{ locale:
   const t = await getTranslations({ locale, namespace: 'navigation' });
 
   // Fetch studies from database (studiu_fezabilitate and studiu_impact types)
-  const { data: studiesData } = await reports.getReports({ reportType: 'studiu_fezabilitate', limit: 100 });
+  const { data: studiesData } = await reports.getReports({ reportType: 'studiu_fezabilitate' });
   
   // Translate study titles based on locale
   const studies = await translateContentArray(

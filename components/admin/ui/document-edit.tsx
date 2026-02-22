@@ -12,7 +12,6 @@ import {
   AdminSelect,
   AdminConfirmDialog,
   toast,
-  canDeleteItem,
 } from '@/components/admin';
 import { adminFetch } from '@/lib/api-client';
 
@@ -51,9 +50,6 @@ interface DocumentEditProps {
   basePath: string;
   defaultSubcategory?: string;
 }
-
-const RESTRICTED_CATEGORIES = ['buget', 'dispozitii', 'regulamente'];
-const DELETE_LIMIT_HOURS = 24;
 
 const SUBCATEGORY_OPTIONS: Record<string, { value: string; label: string }[]> = {
   // Category-based subcategories
@@ -142,7 +138,6 @@ export function DocumentEdit({
   const id = params.id as string;
   const isNew = id === 'nou';
   
-  const isRestricted = filterType === 'category' && RESTRICTED_CATEGORIES.includes(filterValue);
   const hasSubcategories = SUBCATEGORY_OPTIONS[filterValue];
   
   const currentYear = new Date().getFullYear();
@@ -467,11 +462,6 @@ export function DocumentEdit({
     }
   };
 
-  const canDeleteDoc = (): boolean => {
-    if (!isRestricted) return true;
-    return canDeleteItem(createdAt, DELETE_LIMIT_HOURS);
-  };
-
   const handleDelete = async () => {
     if (isNew) return;
     setDeleting(true);
@@ -515,7 +505,7 @@ export function DocumentEdit({
             <AdminButton variant="ghost" icon={ArrowLeft} onClick={goBack}>
               Înapoi
             </AdminButton>
-            {!isNew && canDeleteDoc() && (
+            {!isNew && (
               <AdminButton variant="danger" icon={Trash2} onClick={() => setDeleteDialogOpen(true)}>
                 Șterge
               </AdminButton>
@@ -778,13 +768,6 @@ export function DocumentEdit({
             </div>
           </AdminCard>
 
-          {isRestricted && !isNew && !canDeleteDoc() && (
-            <AdminCard className="bg-amber-50 border-amber-200">
-              <p className="text-amber-800 text-sm">
-                <strong>Notă:</strong> Acest document nu mai poate fi șters deoarece au trecut mai mult de 24 de ore de la creare.
-              </p>
-            </AdminCard>
-          )}
         </div>
       </div>
 

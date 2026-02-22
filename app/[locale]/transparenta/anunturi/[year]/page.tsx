@@ -118,7 +118,7 @@ export default async function AnunturiYearPage({
   const ta = await getTranslations({ locale, namespace: 'anunturiPage' });
 
   // Fetch announcements for this year
-  const allDocumentsData = await documentsService.getDocumentsBySourceFolder('anunturi', 2000);
+  const allDocumentsData = await documentsService.getDocumentsBySourceFolder('anunturi');
   const yearDocumentsData = allDocumentsData.filter(doc => doc.year === yearNum);
   
   // Calculate pagination
