@@ -50,7 +50,7 @@ export const SEO_CONFIG = {
   
   // Default images
   images: {
-    ogImage: '/og-image.webp',
+    ogImage: '/og-image.png',
     logo: '/logo/logo.webp',
     logoWhite: '/logo/logo-white.webp',
     icon: '/logo/icon.webp',

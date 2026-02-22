@@ -28,7 +28,7 @@ export default function robots(): MetadataRoute.Robots {
       // Google Images bot
       {
         userAgent: 'Googlebot-Image',
-        allow: ['/images/', '/logo/', '/og-image.webp'],
+        allow: ['/images/', '/logo/', '/og-image.png'],
       },
       // Bing bot
       {
