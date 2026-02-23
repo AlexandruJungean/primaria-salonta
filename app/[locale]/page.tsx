@@ -8,7 +8,7 @@ import { UpcomingEventsSection } from '@/components/sections/upcoming-events-sec
 import { generatePageMetadata } from '@/lib/seo/metadata';
 import { WebPageJsonLd } from '@/lib/seo/json-ld';
 import { type Locale } from '@/i18n/routing';
-import { getHeroSlidesForLocale } from '@/lib/supabase/services';
+import { getHeroSlidesForLocale, getLatestNews, getUpcomingEvents } from '@/lib/supabase/services';
 
 // Enable ISR - revalidate homepage every 60 seconds for fresh content while maintaining fast response times
 export const revalidate = 60;
@@ -65,9 +65,11 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   
-  // Only fetch hero slides server-side (critical for LCP - Largest Contentful Paint)
-  // News and events are fetched client-side for faster initial page load
-  const heroSlides = await getHeroSlidesForLocale();
+  const [heroSlides, latestNews, upcomingEvents] = await Promise.all([
+    getHeroSlidesForLocale(),
+    getLatestNews(3),
+    getUpcomingEvents(4),
+  ]);
   
   // Get first slide image URL for preload (LCP optimization)
   const firstSlideImage = heroSlides[0]?.image || null;
@@ -98,11 +100,11 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       {/* City Statistics */}
       <CityStatsSection />
 
-      {/* Latest News - fetched client-side */}
-      <NewsSection />
+      {/* Latest News */}
+      <NewsSection initialNews={latestNews} />
 
-      {/* Upcoming Events - fetched client-side */}
-      <UpcomingEventsSection />
+      {/* Upcoming Events */}
+      <UpcomingEventsSection initialEvents={upcomingEvents} />
 
       {/* Interactive City Map */}
       <CityMapSection />
