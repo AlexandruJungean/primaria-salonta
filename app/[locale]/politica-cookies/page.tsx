@@ -48,7 +48,7 @@ export default function PoliticaCookiesPage() {
               </p>
             </div>
 
-            <h2 className="text-2xl font-bold mb-6">2. Cookie-uri utilizate pe salonta.ro</h2>
+            <h2 className="text-2xl font-bold mb-6">2. Cookie-uri utilizate pe salonta.net</h2>
             
             <div className="grid gap-6 md:grid-cols-2 mb-12">
               <Card>

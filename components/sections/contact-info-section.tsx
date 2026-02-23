@@ -26,7 +26,7 @@ export function ContactInfoSection() {
         >
           {/* Hidden schema.org properties */}
           <meta itemProp="name" content="Primăria Municipiului Salonta" />
-          <meta itemProp="url" content="https://salonta.ro" />
+          <meta itemProp="url" content="https://salonta.net" />
           
           {/* Address Card */}
           <div 

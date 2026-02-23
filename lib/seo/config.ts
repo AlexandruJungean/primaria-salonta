@@ -9,7 +9,7 @@ export const SEO_CONFIG = {
     hu: 'Nagyszalonta Polgármesteri Hivatala',
     en: 'Salonta City Hall',
   },
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://salonta.ro',
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://salonta.net',
   defaultLocale: 'ro',
   locales: ['ro', 'hu', 'en'] as const,
   

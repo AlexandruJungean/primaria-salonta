@@ -66,7 +66,7 @@ export default function PoliticaConfidentialitatePage() {
               <p>
                 Această politică de confidențialitate descrie modul în care colectăm, utilizăm, 
                 stocăm și protejăm informațiile dumneavoastră personale atunci când utilizați 
-                site-ul nostru web <strong>salonta.ro</strong> și serviciile online oferite.
+                site-ul nostru web <strong>salonta.net</strong> și serviciile online oferite.
               </p>
             </div>
 
@@ -77,7 +77,7 @@ export default function PoliticaConfidentialitatePage() {
             </h2>
 
             <p className="text-muted-foreground mb-6">
-              Prin intermediul site-ului <strong>salonta.ro</strong> colectăm exclusiv următoarele categorii de date:
+              Prin intermediul site-ului <strong>salonta.net</strong> colectăm exclusiv următoarele categorii de date:
             </p>
             
             <div className="grid gap-4 md:grid-cols-2 mb-12">

@@ -2,11 +2,11 @@
 # Order matters: most specific first
 
 # Direct HTTP www to HTTPS non-www (single redirect instead of two)
-http://www.salonta.ro/* https://salonta.ro/:splat 301!
+http://www.salonta.net/* https://salonta.net/:splat 301!
 
 # HTTP to HTTPS (non-www)
-http://salonta.ro/* https://salonta.ro/:splat 301!
+http://salonta.net/* https://salonta.net/:splat 301!
 
 # HTTPS www to HTTPS non-www
-https://www.salonta.ro/* https://salonta.ro/:splat 301!
+https://www.salonta.net/* https://salonta.net/:splat 301!
 

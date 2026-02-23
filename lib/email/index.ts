@@ -109,7 +109,7 @@ export function contactEmailTemplate(data: {
           </div>
         </div>
         <div class="footer">
-          Acest mesaj a fost trimis automat de pe website-ul primariasalonta.ro
+          Acest mesaj a fost trimis automat de pe website-ul salonta.net
         </div>
       </div>
     </body>
@@ -391,7 +391,7 @@ export function petitionEmailTemplate(data: {
           ` : ''}
         </div>
         <div class="footer">
-          Această petiție a fost trimisă automat de pe website-ul primariasalonta.ro
+          Această petiție a fost trimisă automat de pe website-ul salonta.net
         </div>
       </div>
     </body>

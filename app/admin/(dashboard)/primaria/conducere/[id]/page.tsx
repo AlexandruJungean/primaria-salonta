@@ -269,7 +269,7 @@ export default function ConducereEditPage() {
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleChange('email', e.target.value)}
-                placeholder="email@salonta.ro"
+                placeholder="email@salonta.net"
               />
               <AdminInput
                 label="Telefon"
