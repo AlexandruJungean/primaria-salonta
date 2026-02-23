@@ -8,7 +8,7 @@ interface AdminUser {
   id: string;
   email: string;
   fullName: string;
-  role: 'admin' | 'editor' | 'viewer';
+  role: 'super_admin' | 'admin' | 'editor' | 'viewer';
   department: string | null;
   isActive: boolean;
 }
@@ -64,7 +64,7 @@ export function useAdminAuth(): UseAdminAuthResult {
         id: authUser.id,
         email: authUser.email || '',
         fullName: profile.full_name,
-        role: profile.role as 'admin' | 'editor' | 'viewer',
+        role: profile.role as 'super_admin' | 'admin' | 'editor' | 'viewer',
         department: profile.department || null,
         isActive: profile.is_active,
       });
@@ -102,8 +102,8 @@ export function useAdminAuth(): UseAdminAuthResult {
     loading,
     error,
     logout,
-    isAdmin: user?.role === 'admin',
+    isAdmin: user?.role === 'super_admin' || user?.role === 'admin',
     isEditor: user?.role === 'editor',
-    canEdit: user?.role === 'admin' || user?.role === 'editor',
+    canEdit: user?.role === 'super_admin' || user?.role === 'admin' || user?.role === 'editor',
   };
 }

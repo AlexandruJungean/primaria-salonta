@@ -121,9 +121,14 @@ export function HeroCarousel({ slides }: HeroCarouselProps) {
           </p>
 
           {/* Search Bar */}
-          <form onSubmit={handleSearch} className="w-full max-w-xl mx-auto mb-8 animate-fade-in">
+          <form onSubmit={handleSearch} className="w-full max-w-xl mx-auto mb-8 animate-fade-in" role="search">
             <div className="relative">
+              <label htmlFor="hero-search" className="sr-only">
+                {tCommon('search')}
+              </label>
               <input
+                id="hero-search"
+                name="q"
                 type="search"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}

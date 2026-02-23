@@ -4,7 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 export interface AdminUser {
   id: string;
   email: string;
-  role: 'admin' | 'editor' | 'viewer';
+  role: 'super_admin' | 'admin' | 'editor' | 'viewer';
   fullName: string;
   department: string | null;
   isActive: boolean;
@@ -107,7 +107,7 @@ export async function verifyAdmin(request: NextRequest): Promise<VerifyAdminResu
       user: {
         id: user.id,
         email: user.email || '',
-        role: profile.role as 'admin' | 'editor' | 'viewer',
+        role: profile.role as 'super_admin' | 'admin' | 'editor' | 'viewer',
         fullName: profile.full_name,
         department: profile.department,
         isActive: profile.is_active,
@@ -139,7 +139,7 @@ export async function requireAdmin(request: NextRequest): Promise<NextResponse |
 /**
  * Verifică dacă utilizatorul are un anumit rol
  */
-export function hasRole(user: AdminUser, allowedRoles: Array<'admin' | 'editor' | 'viewer'>): boolean {
+export function hasRole(user: AdminUser, allowedRoles: Array<'super_admin' | 'admin' | 'editor' | 'viewer'>): boolean {
   return allowedRoles.includes(user.role);
 }
 
@@ -148,7 +148,7 @@ export function hasRole(user: AdminUser, allowedRoles: Array<'admin' | 'editor' 
  */
 export async function requireRole(
   request: NextRequest,
-  allowedRoles: Array<'admin' | 'editor' | 'viewer'>
+  allowedRoles: Array<'super_admin' | 'admin' | 'editor' | 'viewer'>
 ): Promise<NextResponse | AdminUser> {
   const result = await requireAdmin(request);
 

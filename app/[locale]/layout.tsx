@@ -27,8 +27,6 @@ const openSans = Open_Sans({
   variable: '--font-open-sans',
   subsets: ['latin', 'latin-ext'],
   display: 'swap',
-  // Preload only the weights we actually use
-  weight: ['400', '500', '600', '700'],
 });
 
 const baseUrl = SEO_CONFIG.siteUrl;
