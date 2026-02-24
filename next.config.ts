@@ -7,7 +7,6 @@ const nextConfig: NextConfig = {
   // Disable X-Powered-By header for security (hides Next.js info from attackers)
   poweredByHeader: false,
   images: {
-    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
@@ -23,6 +22,7 @@ const nextConfig: NextConfig = {
         hostname: '*.r2.dev',
       },
     ],
+    formats: ['image/avif', 'image/webp'],
   },
   experimental: {
     optimizePackageImports: ['lucide-react', 'date-fns'],
