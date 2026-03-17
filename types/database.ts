@@ -10,7 +10,7 @@ export type Database = {
         Row: {
           id: string;
           full_name: string;
-          role: 'super_admin' | 'admin' | 'editor' | 'viewer';
+          role: 'super_admin' | 'admin' | 'editor';
           department: string | null;
           phone: string | null;
           avatar_url: string | null;
@@ -22,7 +22,7 @@ export type Database = {
         Insert: {
           id: string;
           full_name: string;
-          role?: 'super_admin' | 'admin' | 'editor' | 'viewer';
+          role?: 'super_admin' | 'admin' | 'editor';
           department?: string | null;
           phone?: string | null;
           avatar_url?: string | null;
