@@ -25,12 +25,11 @@ const ROLE_HIERARCHY: Record<string, number> = {
   super_admin: 4,
   admin: 3,
   editor: 2,
-  viewer: 1,
 };
 
-// POST - Reset another user's password (admin only)
+// POST - Reset another user's password (super_admin only)
 export async function POST(request: NextRequest) {
-  const authResult = await requireRole(request, ['admin']);
+  const authResult = await requireRole(request, ['super_admin']);
   if (authResult instanceof NextResponse) return authResult;
   const actor = authResult;
 

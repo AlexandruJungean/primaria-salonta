@@ -14,7 +14,6 @@ const ROLE_HIERARCHY: Record<string, number> = {
   super_admin: 4,
   admin: 3,
   editor: 2,
-  viewer: 1,
 };
 
 function canManageRole(actorRole: string, targetRole: string): boolean {
@@ -23,7 +22,7 @@ function canManageRole(actorRole: string, targetRole: string): boolean {
 
 // GET - List all admin users (excluding password_hash)
 export async function GET(request: NextRequest) {
-  const authResult = await requireRole(request, ['admin']);
+  const authResult = await requireRole(request, ['super_admin']);
   if (authResult instanceof NextResponse) return authResult;
 
   const supabase = createAdminClient();
@@ -42,9 +41,9 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST - Create new admin user
+// POST - Create new admin user (super_admin only)
 export async function POST(request: NextRequest) {
-  const authResult = await requireRole(request, ['admin']);
+  const authResult = await requireRole(request, ['super_admin']);
   if (authResult instanceof NextResponse) return authResult;
   const actor = authResult;
 
@@ -130,9 +129,9 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// PATCH - Update admin user
+// PATCH - Update admin user (super_admin only)
 export async function PATCH(request: NextRequest) {
-  const authResult = await requireRole(request, ['admin']);
+  const authResult = await requireRole(request, ['super_admin']);
   if (authResult instanceof NextResponse) return authResult;
   const actor = authResult;
 
