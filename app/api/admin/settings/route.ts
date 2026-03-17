@@ -142,16 +142,10 @@ export async function PUT(request: NextRequest) {
     const body = await request.json();
     const { ipAddress, userAgent } = getRequestInfo(request);
 
-    console.log('PUT /api/admin/settings - Saving settings:', Object.keys(body));
-
-    // Upsert all settings
     const result = await upsertSettings(supabaseAdmin, body);
     if (!result.success) {
-      console.error('PUT /api/admin/settings - Failed:', result.error);
       return NextResponse.json({ error: result.error }, { status: 500 });
     }
-
-    console.log('PUT /api/admin/settings - Success');
 
     // Invalidate the settings cache so changes take effect immediately
     invalidateSettingsCache();

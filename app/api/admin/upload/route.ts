@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
           ratio: getCompressionRatio(compressed.originalSize, compressed.compressedSize),
         };
 
-        console.log(`Image compressed: ${formatFileSize(compressed.originalSize)} → ${formatFileSize(compressed.compressedSize)} (${compressionInfo.ratio}% reduction)`);
+
       } catch (compressionError) {
         // Dacă compresia eșuează, continuă cu fișierul original
         console.warn('Image compression failed, using original:', compressionError);

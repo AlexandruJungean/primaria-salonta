@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
           ratio: getCompressionRatio(compressed.originalSize, compressed.compressedSize),
         };
 
-        console.log(`News image compressed: ${formatFileSize(compressed.originalSize)} → ${formatFileSize(compressed.compressedSize)} (${compressionInfo.ratio}% reduction)`);
+
       } catch (compressionError) {
         console.warn('Image compression failed, using original:', compressionError);
       }
