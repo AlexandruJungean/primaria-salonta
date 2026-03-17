@@ -9,6 +9,7 @@ import { generatePageMetadata } from '@/lib/seo/metadata';
 import { WebPageJsonLd } from '@/lib/seo/json-ld';
 import { type Locale } from '@/i18n/routing';
 import { getHeroSlidesForLocale, getLatestNews, getUpcomingEvents } from '@/lib/supabase/services';
+import { getCityStats } from '@/lib/supabase/services/settings';
 
 // Enable ISR - revalidate homepage every 60 seconds for fresh content while maintaining fast response times
 export const revalidate = 60;
@@ -65,10 +66,11 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   
-  const [heroSlides, latestNews, upcomingEvents] = await Promise.all([
+  const [heroSlides, latestNews, upcomingEvents, cityStats] = await Promise.all([
     getHeroSlidesForLocale(),
     getLatestNews(3),
     getUpcomingEvents(4),
+    getCityStats(),
   ]);
   
   // Get first slide image URL for preload (LCP optimization)
@@ -98,7 +100,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <AboutSection />
 
       {/* City Statistics */}
-      <CityStatsSection />
+      <CityStatsSection stats={cityStats} />
 
       {/* Latest News */}
       <NewsSection initialNews={latestNews} />

@@ -12,50 +12,25 @@ import {
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { cn } from '@/lib/utils/cn';
+import type { CityStatItem } from '@/lib/supabase/services/settings';
 
-const CITY_STATS = [
-  {
-    id: 'population',
-    value: '17.527',
-    icon: Users,
-    iconBg: 'bg-blue-500',
-  },
-  {
-    id: 'area',
-    value: '148,8',
-    unit: 'km²',
-    icon: MapPin,
-    iconBg: 'bg-green-500',
-  },
-  {
-    id: 'altitude',
-    value: '96',
-    unit: 'm',
-    icon: Mountain,
-    iconBg: 'bg-purple-500',
-  },
-  {
-    id: 'founded',
-    value: '1214',
-    icon: Calendar,
-    iconBg: 'bg-amber-500',
-  },
-  {
-    id: 'twinCities',
-    value: '6',
-    icon: Globe,
-    iconBg: 'bg-cyan-500',
-  },
-  {
-    id: 'honoraryCitizens',
-    value: '10',
-    icon: Award,
-    iconBg: 'bg-rose-500',
-  },
-];
+const STAT_CONFIG: Record<string, { icon: React.ComponentType<{ className?: string }>; iconBg: string }> = {
+  population: { icon: Users, iconBg: 'bg-blue-500' },
+  area: { icon: MapPin, iconBg: 'bg-green-500' },
+  altitude: { icon: Mountain, iconBg: 'bg-purple-500' },
+  founded: { icon: Calendar, iconBg: 'bg-amber-500' },
+  twinCities: { icon: Globe, iconBg: 'bg-cyan-500' },
+  honoraryCitizens: { icon: Award, iconBg: 'bg-rose-500' },
+};
 
-export function CityStatsSection() {
+interface CityStatsSectionProps {
+  stats?: CityStatItem[];
+}
+
+export function CityStatsSection({ stats }: CityStatsSectionProps) {
   const t = useTranslations('cityStats');
+
+  const displayStats = stats || [];
 
   return (
     <Section background="gray">
@@ -66,8 +41,9 @@ export function CityStatsSection() {
           </h2>
           
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-            {CITY_STATS.map((stat) => {
-              const Icon = stat.icon;
+            {displayStats.map((stat) => {
+              const config = STAT_CONFIG[stat.id] || { icon: Users, iconBg: 'bg-slate-500' };
+              const Icon = config.icon;
               return (
                 <div
                   key={stat.id}
@@ -75,7 +51,7 @@ export function CityStatsSection() {
                 >
                   <div className={cn(
                     'w-12 h-12 rounded-xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform',
-                    stat.iconBg
+                    config.iconBg
                   )}>
                     <Icon className="w-6 h-6 text-white" />
                   </div>

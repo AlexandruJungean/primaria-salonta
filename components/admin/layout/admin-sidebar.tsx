@@ -57,6 +57,7 @@ import {
   FileQuestion,
   AlertCircle,
   ClipboardList,
+  UserCog,
 } from 'lucide-react';
 
 interface NavItem {
@@ -65,6 +66,7 @@ interface NavItem {
   href?: string;
   icon: React.ComponentType<{ className?: string }>;
   children?: NavItem[];
+  requiredRole?: string;
 }
 
 const navigationItems: NavItem[] = [
@@ -203,6 +205,13 @@ const navigationItems: NavItem[] = [
     ],
   },
   {
+    id: 'utilizatori',
+    label: 'Utilizatori',
+    href: '/admin/utilizatori',
+    icon: UserCog,
+    requiredRole: 'super_admin',
+  },
+  {
     id: 'setari',
     label: 'Setări',
     href: '/admin/setari',
@@ -273,10 +282,15 @@ function NavItemComponent({ item, level = 0 }: { item: NavItem; level?: number }
 interface AdminSidebarProps {
   isOpen?: boolean;
   onClose?: () => void;
+  userRole?: string;
 }
 
-export function AdminSidebar({ isOpen = true, onClose }: AdminSidebarProps) {
+export function AdminSidebar({ isOpen = true, onClose, userRole }: AdminSidebarProps) {
   const pathname = usePathname();
+
+  const visibleItems = navigationItems.filter(
+    item => !item.requiredRole || item.requiredRole === userRole
+  );
 
   // Close sidebar when route changes (mobile)
   useEffect(() => {
@@ -327,7 +341,7 @@ export function AdminSidebar({ isOpen = true, onClose }: AdminSidebarProps) {
 
         {/* Navigation */}
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-          {navigationItems.map(item => (
+          {visibleItems.map(item => (
             <NavItemComponent key={item.id} item={item} />
           ))}
         </nav>

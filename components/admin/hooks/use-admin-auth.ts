@@ -2,13 +2,12 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { supabase, type AdminProfile } from '@/lib/supabase/client';
 
 interface AdminUser {
   id: string;
   email: string;
   fullName: string;
-  role: 'super_admin' | 'admin' | 'editor' | 'viewer';
+  role: 'super_admin' | 'admin' | 'editor';
   department: string | null;
   isActive: boolean;
 }
@@ -34,40 +33,23 @@ export function useAdminAuth(): UseAdminAuthResult {
       setLoading(true);
       setError(null);
 
-      const { data: { user: authUser } } = await supabase.auth.getUser();
-      
-      if (!authUser) {
-        router.push('/admin/login');
-        return;
-      }
-
-      const { data: profile, error: profileError } = await supabase
-        .from('admin_profiles')
-        .select('*')
-        .eq('id', authUser.id)
-        .single<AdminProfile>();
-
-      if (profileError || !profile) {
-        await supabase.auth.signOut();
-        router.push('/admin/login');
-        return;
-      }
-
-      if (!profile.is_active) {
-        await supabase.auth.signOut();
-        setError('Contul dumneavoastră a fost dezactivat.');
-        router.push('/admin/login');
-        return;
-      }
-
-      setUser({
-        id: authUser.id,
-        email: authUser.email || '',
-        fullName: profile.full_name,
-        role: profile.role as 'super_admin' | 'admin' | 'editor' | 'viewer',
-        department: profile.department || null,
-        isActive: profile.is_active,
+      const response = await fetch('/api/admin/auth/session', {
+        credentials: 'include',
       });
+
+      if (!response.ok) {
+        router.push('/admin/login');
+        return;
+      }
+
+      const data = await response.json();
+
+      if (!data.user) {
+        router.push('/admin/login');
+        return;
+      }
+
+      setUser(data.user);
     } catch (err) {
       console.error('Auth error:', err);
       setError('Eroare la verificarea autentificării.');
@@ -79,20 +61,17 @@ export function useAdminAuth(): UseAdminAuthResult {
 
   useEffect(() => {
     checkAuth();
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      if (event === 'SIGNED_OUT') {
-        setUser(null);
-        router.push('/admin/login');
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [checkAuth, router]);
+  }, [checkAuth]);
 
   const logout = useCallback(async () => {
-    await supabase.auth.signOut();
+    try {
+      await fetch('/api/admin/auth/logout', {
+        method: 'POST',
+        credentials: 'include',
+      });
+    } catch {
+      // logout failure is non-critical, we redirect anyway
+    }
     setUser(null);
     router.push('/admin/login');
   }, [router]);
