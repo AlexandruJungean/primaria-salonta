@@ -31,14 +31,12 @@ const ROLE_LABELS: Record<string, string> = {
   super_admin: 'Super Admin',
   admin: 'Administrator',
   editor: 'Editor',
-  viewer: 'Vizitator',
 };
 
 const ROLE_COLORS: Record<string, string> = {
   super_admin: 'bg-purple-100 text-purple-800',
   admin: 'bg-blue-100 text-blue-800',
   editor: 'bg-green-100 text-green-800',
-  viewer: 'bg-slate-100 text-slate-600',
 };
 
 export default function UtilizatoriPage() {
@@ -53,7 +51,7 @@ export default function UtilizatoriPage() {
     open: false, user: null, saving: false, tempPassword: null, copied: false,
   });
 
-  const canAccess = user?.role === 'admin' || user?.role === 'super_admin';
+  const canAccess = user?.role === 'super_admin';
 
   const loadUsers = useCallback(async () => {
     try {
@@ -160,7 +158,7 @@ export default function UtilizatoriPage() {
       key: 'role' as const,
       label: 'Rol',
       render: (u: AdminUserProfile) => (
-        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium ${ROLE_COLORS[u.role] || ROLE_COLORS.viewer}`}>
+        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium ${ROLE_COLORS[u.role] || ROLE_COLORS.editor}`}>
           {u.role === 'super_admin' ? <ShieldCheck className="w-3.5 h-3.5" /> : <Shield className="w-3.5 h-3.5" />}
           {ROLE_LABELS[u.role] || u.role}
         </span>

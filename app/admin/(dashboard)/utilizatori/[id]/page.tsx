@@ -28,7 +28,6 @@ const ROLE_OPTIONS = [
   { value: 'super_admin', label: 'Super Admin - Acces complet' },
   { value: 'admin', label: 'Administrator - Gestionare conținut și utilizatori' },
   { value: 'editor', label: 'Editor - Creare și editare conținut' },
-  { value: 'viewer', label: 'Vizitator - Doar vizualizare' },
 ];
 
 export default function EditUserPage() {
@@ -51,7 +50,7 @@ export default function EditUserPage() {
   const [saving, setSaving] = useState(false);
   const [errors, setErrors] = useState<Partial<Record<keyof UserForm, string>>>({});
 
-  const canAccess = currentUser?.role === 'admin' || currentUser?.role === 'super_admin';
+  const canAccess = currentUser?.role === 'super_admin';
 
   useEffect(() => {
     if (!isNew && userId) {
@@ -198,9 +197,7 @@ export default function EditUserPage() {
     );
   }
 
-  const availableRoles = currentUser?.role === 'super_admin'
-    ? ROLE_OPTIONS
-    : ROLE_OPTIONS.filter(r => r.value === 'editor' || r.value === 'viewer');
+  const availableRoles = ROLE_OPTIONS;
 
   return (
     <div>

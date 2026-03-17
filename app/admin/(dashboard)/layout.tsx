@@ -31,7 +31,8 @@ export default function AdminDashboardLayout({
       {/* Sidebar - hidden on mobile by default, shown via hamburger menu */}
       <AdminSidebar 
         isOpen={sidebarOpen} 
-        onClose={() => setSidebarOpen(false)} 
+        onClose={() => setSidebarOpen(false)}
+        userRole={user.role}
       />
 
       {/* Main Content */}

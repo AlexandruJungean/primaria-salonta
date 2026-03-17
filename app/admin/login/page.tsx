@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { supabase, AdminProfile } from '@/lib/supabase/client';
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -18,58 +17,35 @@ export default function AdminLoginPage() {
     setLoading(true);
 
     try {
-      const { data, error: authError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+      const response = await fetch('/api/admin/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+        credentials: 'include',
       });
 
-      if (authError) {
-        throw authError;
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Eroare la autentificare');
       }
 
-      if (data.user) {
-        // Check if user has admin profile
-        const { data: profile, error: profileError } = await supabase
-          .from('admin_profiles')
-          .select('*')
-          .eq('id', data.user.id)
-          .single<AdminProfile>();
-
-        if (profileError || !profile) {
-          await supabase.auth.signOut();
-          throw new Error('Nu aveți permisiuni de administrator.');
-        }
-
-        if (!profile.is_active) {
-          await supabase.auth.signOut();
-          throw new Error('Contul dumneavoastră a fost dezactivat.');
-        }
-
-        // Update last login
-        await supabase
-          .from('admin_profiles')
-          .update({ last_login: new Date().toISOString() } as Partial<AdminProfile>)
-          .eq('id', data.user.id);
-
-        // Log the login action
-        try {
-          await fetch('/api/admin/auth/log', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              action: 'login',
-              userId: data.user.id,
-              userEmail: data.user.email,
-              userName: profile.full_name,
-            }),
-          });
-        } catch (logError) {
-          console.warn('Failed to log login action:', logError);
-        }
-
-        // Redirect to admin panel
-        router.push('/admin');
+      try {
+        await fetch('/api/admin/auth/log', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'login',
+            userId: data.user.id,
+            userEmail: data.user.email,
+            userName: data.user.fullName,
+          }),
+        });
+      } catch {
+        // audit log failure is non-critical
       }
+
+      router.push('/admin');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Eroare la autentificare');
     } finally {
@@ -79,11 +55,9 @@ export default function AdminLoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5 decorative-cross-pattern" />
       
       <div className="relative z-10 w-full max-w-md px-4">
-        {/* Logo & Title */}
         <div className="text-center mb-8">
           <div className="w-24 h-24 mx-auto mb-4 bg-white rounded-2xl flex items-center justify-center shadow-lg p-2">
             <Image
@@ -99,10 +73,8 @@ export default function AdminLoginPage() {
           <p className="text-slate-400 mt-1">Panou de Administrare</p>
         </div>
 
-        {/* Login Card */}
         <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-8 shadow-2xl border border-white/10">
           <form onSubmit={handleLogin} className="space-y-6">
-            {/* Error Message */}
             {error && (
               <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4 text-red-400 text-sm">
                 <div className="flex items-center gap-2">
@@ -114,7 +86,6 @@ export default function AdminLoginPage() {
               </div>
             )}
 
-            {/* Email Input */}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-2">
                 Adresa de email
@@ -130,7 +101,6 @@ export default function AdminLoginPage() {
               />
             </div>
 
-            {/* Password Input */}
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-slate-300 mb-2">
                 Parola
@@ -146,7 +116,6 @@ export default function AdminLoginPage() {
               />
             </div>
 
-            {/* Submit Button */}
             <button
               type="submit"
               disabled={loading}
@@ -166,7 +135,6 @@ export default function AdminLoginPage() {
             </button>
           </form>
 
-          {/* Back to Website */}
           <div className="mt-6 text-center">
             <a
               href="/ro"
@@ -177,7 +145,6 @@ export default function AdminLoginPage() {
           </div>
         </div>
 
-        {/* Footer */}
         <p className="text-center text-slate-500 text-sm mt-8">
           © {new Date().getFullYear()} Primăria Municipiului Salonta
         </p>
@@ -185,4 +152,3 @@ export default function AdminLoginPage() {
     </div>
   );
 }
-

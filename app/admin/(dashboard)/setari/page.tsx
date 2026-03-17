@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Save, Phone, Mail, Clock, Plus, X, Loader2, ImageIcon, ChevronRight } from 'lucide-react';
+import { Save, Phone, Mail, Clock, Plus, X, Loader2, ImageIcon, ChevronRight, BarChart3 } from 'lucide-react';
 import {
   AdminPageHeader,
   AdminButton,
@@ -57,6 +57,12 @@ function LinkedInIcon({ className }: { className?: string }) {
   );
 }
 
+interface CityStatItem {
+  id: string;
+  value: string;
+  unit?: string;
+}
+
 interface SiteSettings {
   // Contact
   phones: string[];
@@ -74,7 +80,19 @@ interface SiteSettings {
 
   // Notifications
   notification_emails: string[];
+
+  // City Statistics
+  city_stats: CityStatItem[];
 }
+
+const STAT_LABELS: Record<string, string> = {
+  population: 'Populație',
+  area: 'Suprafață',
+  altitude: 'Altitudine',
+  founded: 'Atestare documentară',
+  twinCities: 'Orașe înfrățite',
+  honoraryCitizens: 'Cetățeni de onoare',
+};
 
 const defaultSettings: SiteSettings = {
   phones: ['0359-409730', '0359-409731', '0259-373243'],
@@ -88,6 +106,14 @@ const defaultSettings: SiteSettings = {
   twitter_url: '',
   linkedin_url: '',
   notification_emails: ['alex.jungean@gmail.com'],
+  city_stats: [
+    { id: 'population', value: '17.527' },
+    { id: 'area', value: '148,8', unit: 'km²' },
+    { id: 'altitude', value: '96', unit: 'm' },
+    { id: 'founded', value: '1214' },
+    { id: 'twinCities', value: '6' },
+    { id: 'honoraryCitizens', value: '10' },
+  ],
 };
 
 export default function SetariPage() {
@@ -112,6 +138,9 @@ export default function SetariPage() {
             notification_emails: Array.isArray(data.notification_emails) && data.notification_emails.length > 0 
               ? data.notification_emails 
               : defaultSettings.notification_emails,
+            city_stats: Array.isArray(data.city_stats) && data.city_stats.length > 0
+              ? data.city_stats
+              : defaultSettings.city_stats,
           });
         } else {
           // Use defaults if API fails (including 401)
@@ -154,6 +183,14 @@ export default function SetariPage() {
       const newArray = prev[field].filter((_, i) => i !== index);
       // Keep at least one empty item
       return { ...prev, [field]: newArray.length ? newArray : [''] };
+    });
+  };
+
+  const handleStatChange = (index: number, field: 'value' | 'unit', val: string) => {
+    setSettings(prev => {
+      const newStats = [...prev.city_stats];
+      newStats[index] = { ...newStats[index], [field]: val };
+      return { ...prev, city_stats: newStats };
     });
   };
 
@@ -468,6 +505,46 @@ export default function SetariPage() {
           </div>
         </AdminCard>
       </div>
+
+      {/* City Statistics Section */}
+      <AdminCard title="Salonta în Cifre" className="mt-6">
+        <div className="space-y-4">
+          <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+            <div className="flex items-start gap-3">
+              <BarChart3 className="w-5 h-5 text-blue-600 mt-0.5" />
+              <p className="text-sm text-blue-800">
+                Aceste valori sunt afișate pe pagina principală a website-ului în secțiunea &quot;Salonta în Cifre&quot;.
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {settings.city_stats.map((stat, index) => (
+              <div key={stat.id} className="p-4 bg-slate-50 rounded-lg">
+                <label className="block text-sm font-medium text-slate-700 mb-2">
+                  {STAT_LABELS[stat.id] || stat.id}
+                </label>
+                <div className="flex gap-2">
+                  <AdminInput
+                    value={stat.value}
+                    onChange={(e) => handleStatChange(index, 'value', e.target.value)}
+                    placeholder="Valoare"
+                    className="flex-1"
+                  />
+                  {(stat.id === 'area' || stat.id === 'altitude') && (
+                    <AdminInput
+                      value={stat.unit || ''}
+                      onChange={(e) => handleStatChange(index, 'unit', e.target.value)}
+                      placeholder="Unitate"
+                      className="w-20"
+                    />
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </AdminCard>
 
       <div className="mt-6 flex justify-end">
         <AdminButton size="lg" icon={Save} onClick={handleSave} loading={saving}>
