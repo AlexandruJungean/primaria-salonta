@@ -1,6 +1,12 @@
 import { createAnonServerClient } from '@/lib/supabase/server';
 import { unstable_noStore as noStore } from 'next/cache';
 
+export interface CityStatItem {
+  id: string;
+  value: string;
+  unit?: string;
+}
+
 export interface SiteSettings {
   // Contact
   phones: string[];
@@ -18,6 +24,9 @@ export interface SiteSettings {
 
   // Notifications
   notification_emails: string[];
+
+  // City Statistics
+  city_stats: CityStatItem[];
 }
 
 // Default settings (fallback values matching CONTACT_INFO)
@@ -33,6 +42,14 @@ export const defaultSettings: SiteSettings = {
   twitter_url: '',
   linkedin_url: '',
   notification_emails: ['alex.jungean@gmail.com'],
+  city_stats: [
+    { id: 'population', value: '17.527' },
+    { id: 'area', value: '148,8', unit: 'km²' },
+    { id: 'altitude', value: '96', unit: 'm' },
+    { id: 'founded', value: '1214' },
+    { id: 'twinCities', value: '6' },
+    { id: 'honoraryCitizens', value: '10' },
+  ],
 };
 
 /**
@@ -132,6 +149,16 @@ export async function getContactInfo(): Promise<ContactInfo> {
       linkedin: settings.linkedin_url,
     },
   };
+}
+
+/**
+ * Get city statistics for the homepage
+ */
+export async function getCityStats(): Promise<CityStatItem[]> {
+  const settings = await getSiteSettings();
+  return settings.city_stats?.length > 0
+    ? settings.city_stats
+    : defaultSettings.city_stats;
 }
 
 /**

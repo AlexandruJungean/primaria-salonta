@@ -7,7 +7,7 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 export interface AdminProfile {
   id: string;
   full_name: string;
-  role: 'super_admin' | 'admin' | 'editor' | 'viewer';
+  role: 'super_admin' | 'admin' | 'editor';
   department: string | null;
   phone: string | null;
   avatar_url: string | null;

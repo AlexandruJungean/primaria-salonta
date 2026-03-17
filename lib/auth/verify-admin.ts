@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { verifyJWT, getTokenFromRequest } from './jwt';
 
 export interface AdminUser {
   id: string;
   email: string;
-  role: 'super_admin' | 'admin' | 'editor' | 'viewer';
+  role: 'super_admin' | 'admin' | 'editor';
   fullName: string;
   department: string | null;
   isActive: boolean;
@@ -16,82 +17,32 @@ export interface VerifyAdminResult {
   error?: string;
 }
 
-/**
- * Verifică dacă request-ul vine de la un admin autentificat
- * Folosește cookie-urile Supabase pentru a verifica sesiunea
- */
 export async function verifyAdmin(request: NextRequest): Promise<VerifyAdminResult> {
   try {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
     const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-    if (!supabaseUrl || !supabaseAnonKey || !serviceRoleKey) {
+    if (!supabaseUrl || !serviceRoleKey) {
       return { success: false, error: 'Server configuration error' };
     }
 
-    // Extrage token-ul din cookie-uri
-    const cookies = request.cookies;
-    const accessToken = cookies.get('sb-access-token')?.value || 
-                        cookies.get(`sb-${supabaseUrl.split('//')[1].split('.')[0]}-auth-token`)?.value;
-
-    // Încearcă să obțină token-ul din header Authorization
-    const authHeader = request.headers.get('Authorization');
-    const bearerToken = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null;
-
-    // Caută în toate cookie-urile pentru token Supabase
-    let authToken: string | null = null;
-    
-    // Supabase stochează sesiunea într-un cookie cu format specific
-    const allCookies = cookies.getAll();
-    for (const cookie of allCookies) {
-      if (cookie.name.includes('auth-token') && cookie.value) {
-        try {
-          // Cookie-ul poate fi JSON encoded
-          const parsed = JSON.parse(cookie.value);
-          if (parsed.access_token) {
-            authToken = parsed.access_token;
-            break;
-          }
-        } catch {
-          // Nu e JSON, poate e direct token-ul
-          if (cookie.value.length > 50) {
-            authToken = cookie.value;
-            break;
-          }
-        }
-      }
-    }
-
-    const token = bearerToken || accessToken || authToken;
+    const token = getTokenFromRequest(request);
 
     if (!token) {
       return { success: false, error: 'Nu ești autentificat' };
     }
 
-    // Creează client cu token-ul utilizatorului pentru a verifica sesiunea
-    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-      global: {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    });
-
-    // Verifică utilizatorul
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-
-    if (authError || !user) {
+    const payload = verifyJWT(token);
+    if (!payload) {
       return { success: false, error: 'Sesiune invalidă sau expirată' };
     }
 
-    // Verifică dacă e admin în admin_profiles (folosește service role pentru acces complet)
-    const supabaseAdmin = createClient(supabaseUrl, serviceRoleKey);
-    
-    const { data: profile, error: profileError } = await supabaseAdmin
+    const supabase = createClient(supabaseUrl, serviceRoleKey);
+
+    const { data: profile, error: profileError } = await supabase
       .from('admin_profiles')
       .select('full_name, role, department, is_active')
-      .eq('id', user.id)
+      .eq('id', payload.sub)
       .single();
 
     if (profileError || !profile) {
@@ -105,9 +56,9 @@ export async function verifyAdmin(request: NextRequest): Promise<VerifyAdminResu
     return {
       success: true,
       user: {
-        id: user.id,
-        email: user.email || '',
-        role: profile.role as 'super_admin' | 'admin' | 'editor' | 'viewer',
+        id: payload.sub,
+        email: payload.email,
+        role: profile.role as AdminUser['role'],
         fullName: profile.full_name,
         department: profile.department,
         isActive: profile.is_active,
@@ -119,10 +70,6 @@ export async function verifyAdmin(request: NextRequest): Promise<VerifyAdminResu
   }
 }
 
-/**
- * Middleware helper pentru API routes
- * Returnează response de eroare dacă nu e autentificat
- */
 export async function requireAdmin(request: NextRequest): Promise<NextResponse | AdminUser> {
   const result = await verifyAdmin(request);
 
@@ -136,19 +83,13 @@ export async function requireAdmin(request: NextRequest): Promise<NextResponse |
   return result.user;
 }
 
-/**
- * Verifică dacă utilizatorul are un anumit rol
- */
-export function hasRole(user: AdminUser, allowedRoles: Array<'super_admin' | 'admin' | 'editor' | 'viewer'>): boolean {
+export function hasRole(user: AdminUser, allowedRoles: Array<'super_admin' | 'admin' | 'editor'>): boolean {
   return allowedRoles.includes(user.role);
 }
 
-/**
- * Middleware helper cu verificare de rol
- */
 export async function requireRole(
   request: NextRequest,
-  allowedRoles: Array<'super_admin' | 'admin' | 'editor' | 'viewer'>
+  allowedRoles: Array<'super_admin' | 'admin' | 'editor'>
 ): Promise<NextResponse | AdminUser> {
   const result = await requireAdmin(request);
 
