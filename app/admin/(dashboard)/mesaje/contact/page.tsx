@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import { Calendar, Mail, Phone, User, Eye } from 'lucide-react';
-import { supabase } from '@/lib/supabase/client';
+import { Calendar, Mail, Phone, User } from 'lucide-react';
+import { adminFetch } from '@/lib/api-client';
 import {
   AdminPageHeader,
   AdminCard,
@@ -45,19 +45,12 @@ export default function ContactMessagesPage() {
   const loadMessages = useCallback(async () => {
     setLoading(true);
     try {
-      const from = (currentPage - 1) * ITEMS_PER_PAGE;
-      const to = from + ITEMS_PER_PAGE - 1;
+      const response = await adminFetch(`/api/admin/messages/contact?page=${currentPage}&limit=${ITEMS_PER_PAGE}`);
+      if (!response.ok) throw new Error('Failed to fetch');
+      const result = await response.json();
 
-      const { data, count, error } = await supabase
-        .from('contact_submissions')
-        .select('*', { count: 'exact' })
-        .order('created_at', { ascending: false })
-        .range(from, to);
-
-      if (error) throw error;
-
-      setMessages(data || []);
-      setTotalCount(count || 0);
+      setMessages(result.data || []);
+      setTotalCount(result.count || 0);
     } catch (error) {
       console.error('Error loading messages:', error);
       toast.error('Eroare', 'Nu s-au putut încărca mesajele.');
@@ -72,12 +65,11 @@ export default function ContactMessagesPage() {
 
   const updateStatus = async (message: ContactMessage, newStatus: string) => {
     try {
-      const { error } = await supabase
-        .from('contact_submissions')
-        .update({ status: newStatus })
-        .eq('id', message.id);
-      
-      if (error) throw error;
+      const response = await adminFetch(`/api/admin/messages/contact?id=${message.id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ status: newStatus }),
+      });
+      if (!response.ok) throw new Error('Failed to update');
       
       toast.success('Status actualizat', `Mesajul a fost marcat ca "${STATUS_LABELS[newStatus]}"`);
       loadMessages();

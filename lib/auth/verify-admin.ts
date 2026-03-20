@@ -84,6 +84,7 @@ export async function requireAdmin(request: NextRequest): Promise<NextResponse |
 }
 
 export function hasRole(user: AdminUser, allowedRoles: Array<'super_admin' | 'admin' | 'editor'>): boolean {
+  if (user.role === 'super_admin') return true;
   return allowedRoles.includes(user.role);
 }
 

@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import { Calendar, Mail, Phone, MapPin, User, Eye, FileText } from 'lucide-react';
-import { supabase } from '@/lib/supabase/client';
+import { Calendar, Mail, Phone, MapPin, User, FileText } from 'lucide-react';
+import { adminFetch } from '@/lib/api-client';
 import {
   AdminPageHeader,
   AdminCard,
@@ -50,19 +50,12 @@ export default function PetitiiPage() {
   const loadPetitions = useCallback(async () => {
     setLoading(true);
     try {
-      const from = (currentPage - 1) * ITEMS_PER_PAGE;
-      const to = from + ITEMS_PER_PAGE - 1;
+      const response = await adminFetch(`/api/admin/messages/petitions?page=${currentPage}&limit=${ITEMS_PER_PAGE}`);
+      if (!response.ok) throw new Error('Failed to fetch');
+      const result = await response.json();
 
-      const { data, count, error } = await supabase
-        .from('petitions')
-        .select('*', { count: 'exact' })
-        .order('created_at', { ascending: false })
-        .range(from, to);
-
-      if (error) throw error;
-
-      setPetitions(data || []);
-      setTotalCount(count || 0);
+      setPetitions(result.data || []);
+      setTotalCount(result.count || 0);
     } catch (error) {
       console.error('Error loading petitions:', error);
       toast.error('Eroare', 'Nu s-au putut încărca petițiile.');
@@ -77,12 +70,11 @@ export default function PetitiiPage() {
 
   const updateStatus = async (petition: Petition, newStatus: string) => {
     try {
-      const { error } = await supabase
-        .from('petitions')
-        .update({ status: newStatus })
-        .eq('id', petition.id);
-      
-      if (error) throw error;
+      const response = await adminFetch(`/api/admin/messages/petitions?id=${petition.id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ status: newStatus }),
+      });
+      if (!response.ok) throw new Error('Failed to update');
       
       toast.success('Status actualizat', `Petiția a fost marcată ca "${STATUS_LABELS[newStatus]}"`);
       loadPetitions();
