@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Calendar, Clock, Save, User } from 'lucide-react';
-import { supabase } from '@/lib/supabase/client';
+import { adminFetch } from '@/lib/api-client';
 import {
   AdminPageHeader,
   AdminButton,
@@ -37,20 +37,16 @@ export default function AudientePage() {
   const loadLeadership = useCallback(async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from('staff_members')
-        .select('id, name, position_type, reception_hours, is_active, sort_order')
-        .in('position_type', ['primar', 'viceprimar', 'secretar', 'administrator'])
-        .eq('is_active', true)
-        .order('sort_order', { ascending: true });
+      const res = await adminFetch('/api/admin/staff');
+      if (!res.ok) throw new Error('Failed to fetch staff');
 
-      if (error) throw error;
+      const data = await res.json();
       
       setLeadership(data || []);
       
       // Initialize edited hours with current values
       const hours: Record<string, string> = {};
-      data?.forEach(member => {
+      data?.forEach((member: StaffMember) => {
         hours[member.id] = member.reception_hours || '';
       });
       setEditedHours(hours);
@@ -73,12 +69,11 @@ export default function AudientePage() {
       for (const member of leadership) {
         const newHours = editedHours[member.id];
         if (newHours !== member.reception_hours) {
-          const { error } = await supabase
-            .from('staff_members')
-            .update({ reception_hours: newHours || null })
-            .eq('id', member.id);
-          
-          if (error) throw error;
+          const res = await adminFetch(`/api/admin/staff?id=${member.id}`, {
+            method: 'PATCH',
+            body: JSON.stringify({ reception_hours: newHours || null }),
+          });
+          if (!res.ok) throw new Error('Failed to update staff');
         }
       }
       

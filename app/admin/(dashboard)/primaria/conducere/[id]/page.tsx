@@ -110,6 +110,7 @@ export default function ConducereEditPage() {
   const validate = (): boolean => {
     const newErrors: Partial<Record<keyof StaffFormData, string>> = {};
     if (!formData.name.trim()) newErrors.name = 'Numele este obligatoriu';
+    if (!formData.position_title.trim()) newErrors.position_title = 'Titlul poziției este obligatoriu';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -125,7 +126,7 @@ export default function ConducereEditPage() {
       const staffData = {
         name: formData.name.trim(),
         position_type: formData.position_type,
-        position_title: formData.position_title.trim() || null,
+        position_title: formData.position_title.trim() || formData.name.trim(),
         bio: formData.bio.trim() || null,
         email: formData.email.trim() || null,
         phone: formData.phone.trim() || null,
@@ -237,6 +238,8 @@ export default function ConducereEditPage() {
                   value={formData.position_title}
                   onChange={(e) => handleChange('position_title', e.target.value)}
                   placeholder="Ex: Director Economic"
+                  required
+                  error={errors.position_title}
                 />
               </div>
               <AdminTextarea

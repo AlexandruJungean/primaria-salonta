@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Plus, Mail, Phone } from 'lucide-react';
-import { supabase } from '@/lib/supabase/client';
+import { adminFetch } from '@/lib/api-client';
 import {
   AdminPageHeader,
   AdminButton,
@@ -48,12 +48,10 @@ export default function ConducerePage() {
   const loadStaff = useCallback(async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from('staff_members')
-        .select('*')
-        .order('sort_order', { ascending: true });
+      const res = await adminFetch('/api/admin/staff');
+      if (!res.ok) throw new Error('Failed to fetch staff');
 
-      if (error) throw error;
+      const data = await res.json();
       setStaff(data || []);
     } catch (error) {
       console.error('Error loading staff:', error);
@@ -81,12 +79,8 @@ export default function ConducerePage() {
     
     setDeleting(true);
     try {
-      const { error } = await supabase
-        .from('staff_members')
-        .delete()
-        .eq('id', itemToDelete.id);
-
-      if (error) throw error;
+      const res = await adminFetch(`/api/admin/staff?id=${itemToDelete.id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Failed to delete staff member');
 
       toast.success('Șters cu succes', `${itemToDelete.name} a fost șters din conducere.`);
       setDeleteDialogOpen(false);
