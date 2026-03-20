@@ -38,10 +38,28 @@ export async function GET(request: NextRequest) {
     const id = searchParams.get('id');
 
     if (!id) {
-      return NextResponse.json({ error: 'ID is required' }, { status: 400 });
+      const page = parseInt(searchParams.get('page') || '1');
+      const limit = parseInt(searchParams.get('limit') || '20');
+      const search = searchParams.get('search');
+      const from = (page - 1) * limit;
+      const to = from + limit - 1;
+
+      let query = supabaseAdmin
+        .from('news')
+        .select('*', { count: 'exact' })
+        .order('published_at', { ascending: false });
+
+      if (search) {
+        query = query.ilike('title', `%${search}%`);
+      }
+
+      const { data, count, error } = await query.range(from, to);
+      if (error) throw error;
+
+      return NextResponse.json({ data: data || [], count: count || 0 });
     }
 
-    // Get news
+    // Get single news by ID
     const { data: news, error } = await supabaseAdmin
       .from('news')
       .select('*')
@@ -50,14 +68,12 @@ export async function GET(request: NextRequest) {
 
     if (error) throw error;
 
-    // Get images
     const { data: images } = await supabaseAdmin
       .from('news_images')
       .select('*')
       .eq('news_id', id)
       .order('sort_order');
 
-    // Get documents
     const { data: documents } = await supabaseAdmin
       .from('news_documents')
       .select('*')

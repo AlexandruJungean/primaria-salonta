@@ -32,13 +32,24 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(data);
     }
 
-    const { data, error } = await supabase
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = parseInt(searchParams.get('limit') || '50');
+    const search = searchParams.get('search');
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
+
+    let query = supabase
       .from('events')
-      .select('*')
+      .select('*', { count: 'exact' })
       .order('start_date', { ascending: false });
 
+    if (search) {
+      query = query.ilike('title', `%${search}%`);
+    }
+
+    const { data, count, error } = await query.range(from, to);
     if (error) throw error;
-    return NextResponse.json(data);
+    return NextResponse.json({ data: data || [], count: count || 0 });
   } catch (error) {
     console.error('Error fetching events:', error);
     return NextResponse.json({ error: 'Failed to fetch events' }, { status: 500 });
