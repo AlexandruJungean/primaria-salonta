@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Plus, Search, Calendar, Eye } from 'lucide-react';
-import { supabase } from '@/lib/supabase/client';
+import { adminFetch } from '@/lib/api-client';
 import {
   AdminPageHeader,
   AdminButton,
@@ -46,23 +46,15 @@ export default function StiriListPage() {
   const loadNews = useCallback(async () => {
     setLoading(true);
     try {
-      let query = supabase
-        .from('news')
-        .select('*', { count: 'exact' })
-        .order('published_at', { ascending: false, nullsFirst: false });
+      const params = new URLSearchParams();
+      params.set('page', String(currentPage));
+      params.set('limit', String(ITEMS_PER_PAGE));
+      if (searchQuery) params.set('search', searchQuery);
 
-      if (searchQuery) {
-        query = query.ilike('title', `%${searchQuery}%`);
-      }
+      const res = await adminFetch(`/api/admin/news?${params}`);
+      if (!res.ok) throw new Error('Failed to fetch news');
 
-      const from = (currentPage - 1) * ITEMS_PER_PAGE;
-      const to = from + ITEMS_PER_PAGE - 1;
-      query = query.range(from, to);
-
-      const { data, count, error } = await query;
-
-      if (error) throw error;
-
+      const { data, count } = await res.json();
       setNews(data || []);
       setTotalCount(count || 0);
     } catch (error) {
@@ -101,12 +93,8 @@ export default function StiriListPage() {
     
     setDeleting(true);
     try {
-      const { error } = await supabase
-        .from('news')
-        .delete()
-        .eq('id', itemToDelete.id);
-
-      if (error) throw error;
+      const res = await adminFetch(`/api/admin/news?id=${itemToDelete.id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Failed to delete news');
 
       toast.success('Șters cu succes', `Știrea "${itemToDelete.title}" a fost ștearsă.`);
       setDeleteDialogOpen(false);

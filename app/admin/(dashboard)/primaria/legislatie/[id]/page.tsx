@@ -15,7 +15,6 @@ import {
   X,
   Download,
 } from 'lucide-react';
-import { supabase } from '@/lib/supabase/client';
 import { adminFetch } from '@/lib/api-client';
 import {
   AdminPageHeader,
@@ -77,25 +76,23 @@ export default function LegislatieEditPage() {
   }, [id, isNew]);
 
   const getNextSortOrder = async () => {
-    const { data } = await supabase
-      .from('legislation_links')
-      .select('sort_order')
-      .order('sort_order', { ascending: false })
-      .limit(1);
-    
-    const nextOrder = data && data.length > 0 ? (data[0].sort_order || 0) + 1 : 1;
-    setFormData(prev => ({ ...prev, sort_order: nextOrder }));
+    try {
+      const response = await adminFetch('/api/admin/legislation?max_sort_order=true');
+      if (!response.ok) return;
+      const data = await response.json();
+      const nextOrder = data && data.length > 0 ? (data[0].sort_order || 0) + 1 : 1;
+      setFormData(prev => ({ ...prev, sort_order: nextOrder }));
+    } catch {
+      // Ignore errors for sort order
+    }
   };
 
   const loadLink = async () => {
     try {
-      const { data, error } = await supabase
-        .from('legislation_links')
-        .select('*')
-        .eq('id', id)
-        .single();
+      const response = await adminFetch(`/api/admin/legislation?id=${id}`);
+      if (!response.ok) throw new Error('Failed to fetch');
+      const data = await response.json();
 
-      if (error) throw error;
       if (!data) {
         toast.error('Eroare', 'Link-ul nu a fost găsit.');
         router.push('/admin/primaria/legislatie');
@@ -220,29 +217,25 @@ export default function LegislatieEditPage() {
         published: formData.published,
       };
 
-      // If setting as primary, unset other primary links first
       if (formData.is_primary) {
-        await supabase
-          .from('legislation_links')
-          .update({ is_primary: false })
-          .neq('id', id)
-          .eq('is_primary', true);
+        await adminFetch(`/api/admin/legislation?unset_primary_except=${id}`, {
+          method: 'PATCH',
+        });
       }
 
       if (isNew) {
-        const { error } = await supabase
-          .from('legislation_links')
-          .insert([saveData]);
-
-        if (error) throw error;
+        const response = await adminFetch('/api/admin/legislation', {
+          method: 'POST',
+          body: JSON.stringify(saveData),
+        });
+        if (!response.ok) throw new Error('Failed to create');
         toast.success('Creat cu succes', 'Link-ul a fost adăugat.');
       } else {
-        const { error } = await supabase
-          .from('legislation_links')
-          .update(saveData)
-          .eq('id', id);
-
-        if (error) throw error;
+        const response = await adminFetch(`/api/admin/legislation?id=${id}`, {
+          method: 'PATCH',
+          body: JSON.stringify(saveData),
+        });
+        if (!response.ok) throw new Error('Failed to update');
         toast.success('Salvat cu succes', 'Link-ul a fost actualizat.');
       }
 
@@ -258,12 +251,10 @@ export default function LegislatieEditPage() {
   const handleDelete = async () => {
     setDeleting(true);
     try {
-      const { error } = await supabase
-        .from('legislation_links')
-        .delete()
-        .eq('id', id);
-
-      if (error) throw error;
+      const response = await adminFetch(`/api/admin/legislation?id=${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed to delete');
 
       toast.success('Șters cu succes', 'Link-ul a fost șters.');
       router.push('/admin/primaria/legislatie');

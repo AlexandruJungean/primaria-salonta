@@ -18,7 +18,6 @@ import {
   Users,
   Scale,
 } from 'lucide-react';
-import { supabase } from '@/lib/supabase/client';
 import { adminFetch } from '@/lib/api-client';
 import {
   AdminPageHeader,
@@ -153,31 +152,23 @@ export default function GeneralePage() {
   const loadDocuments = useCallback(async () => {
     setLoadingDocs(true);
     try {
-      let query = supabase
-        .from('documents')
-        .select('*', { count: 'exact' })
-        .eq('source_folder', 'generale')
-        .eq('subcategory', docSubcategory)
-        .is('parent_id', null); // Only parent documents
-
+      const params = new URLSearchParams({
+        source_folder: 'generale',
+        subcategory: docSubcategory,
+        parents_only: 'true',
+        page: currentPage.toString(),
+        limit: ITEMS_PER_PAGE.toString(),
+      });
       if (searchQuery) {
-        query = query.ilike('title', `%${searchQuery}%`);
+        params.set('search', searchQuery);
       }
 
-      query = query
-        .order('year', { ascending: false, nullsFirst: false })
-        .order('created_at', { ascending: false });
+      const response = await adminFetch(`/api/admin/documents?${params}`);
+      if (!response.ok) throw new Error('Failed to fetch');
+      const result = await response.json();
 
-      const from = (currentPage - 1) * ITEMS_PER_PAGE;
-      const to = from + ITEMS_PER_PAGE - 1;
-      query = query.range(from, to);
-
-      const { data, count, error } = await query;
-
-      if (error) throw error;
-
-      setDocuments(data || []);
-      setTotalCount(count || 0);
+      setDocuments(result.data || []);
+      setTotalCount(result.count || 0);
     } catch (error) {
       console.error('Error loading documents:', error);
       toast.error('Eroare', 'Nu s-au putut încărca documentele.');

@@ -13,6 +13,7 @@ export default function GeneraleEditPage() {
         { label: 'Generale' },
       ]}
       basePath="/admin/transparenta/generale"
+      defaultSubcategory="dispozitii"
     />
   );
 }
