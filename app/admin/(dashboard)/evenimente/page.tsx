@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Plus, Search, Calendar, MapPin } from 'lucide-react';
-import { supabase } from '@/lib/supabase/client';
+import { adminFetch } from '@/lib/api-client';
 import {
   AdminPageHeader,
   AdminButton,
@@ -56,23 +56,15 @@ export default function EvenimenteListPage() {
   const loadEvents = useCallback(async () => {
     setLoading(true);
     try {
-      let query = supabase
-        .from('events')
-        .select('*', { count: 'exact' })
-        .order('start_date', { ascending: false });
+      const params = new URLSearchParams();
+      params.set('page', String(currentPage));
+      params.set('limit', String(ITEMS_PER_PAGE));
+      if (searchQuery) params.set('search', searchQuery);
 
-      if (searchQuery) {
-        query = query.ilike('title', `%${searchQuery}%`);
-      }
+      const res = await adminFetch(`/api/admin/events?${params}`);
+      if (!res.ok) throw new Error('Failed to fetch events');
 
-      const from = (currentPage - 1) * ITEMS_PER_PAGE;
-      const to = from + ITEMS_PER_PAGE - 1;
-      query = query.range(from, to);
-
-      const { data, count, error } = await query;
-
-      if (error) throw error;
-
+      const { data, count } = await res.json();
       setEvents(data || []);
       setTotalCount(count || 0);
     } catch (error) {
@@ -111,12 +103,8 @@ export default function EvenimenteListPage() {
     
     setDeleting(true);
     try {
-      const { error } = await supabase
-        .from('events')
-        .delete()
-        .eq('id', itemToDelete.id);
-
-      if (error) throw error;
+      const res = await adminFetch(`/api/admin/events?id=${itemToDelete.id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Failed to delete event');
 
       toast.success('Șters cu succes', `Evenimentul "${itemToDelete.title}" a fost șters.`);
       setDeleteDialogOpen(false);

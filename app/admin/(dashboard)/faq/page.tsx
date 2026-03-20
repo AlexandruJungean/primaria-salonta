@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Plus, HelpCircle } from 'lucide-react';
-import { supabase } from '@/lib/supabase/client';
+import { adminFetch } from '@/lib/api-client';
 import {
   AdminPageHeader,
   AdminButton,
@@ -36,12 +36,10 @@ export default function FAQPage() {
   const loadFAQs = useCallback(async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from('faq')
-        .select('*')
-        .order('sort_order', { ascending: true });
+      const res = await adminFetch('/api/admin/faq');
+      if (!res.ok) throw new Error('Failed to fetch FAQs');
 
-      if (error) throw error;
+      const data = await res.json();
       setFaqs(data || []);
     } catch (error) {
       console.error('Error loading FAQs:', error);
@@ -69,12 +67,8 @@ export default function FAQPage() {
     
     setDeleting(true);
     try {
-      const { error } = await supabase
-        .from('faq')
-        .delete()
-        .eq('id', itemToDelete.id);
-
-      if (error) throw error;
+      const res = await adminFetch(`/api/admin/faq?id=${itemToDelete.id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Failed to delete FAQ');
 
       toast.success('Șters cu succes', 'Întrebarea a fost ștearsă.');
       setDeleteDialogOpen(false);
