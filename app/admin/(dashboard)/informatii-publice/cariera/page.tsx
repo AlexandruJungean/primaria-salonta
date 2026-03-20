@@ -3,7 +3,6 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Plus, Clock, FileText, FolderDown, ChevronDown, ChevronUp, Trash2, Upload, ExternalLink } from 'lucide-react';
-import { supabase } from '@/lib/supabase/client';
 import { adminFetch } from '@/lib/api-client';
 import {
   AdminPageHeader,
@@ -73,19 +72,12 @@ export default function CarieraPage() {
   const loadJobs = useCallback(async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from('job_vacancies')
-        .select(`
-          *,
-          job_vacancy_documents (*)
-        `)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setAllJobs(data || []);
+      const response = await adminFetch('/api/admin/job-vacancies');
+      if (!response.ok) throw new Error('Failed to fetch');
+      const data = await response.json();
+      setAllJobs(data);
       
-      // Extract form documents from general forms entry
-      const formsEntry = data?.find(job => job.slug === GENERAL_FORMS_SLUG);
+      const formsEntry = data?.find((job: JobVacancy) => job.slug === GENERAL_FORMS_SLUG);
       if (formsEntry) {
         setFormDocuments(formsEntry.job_vacancy_documents || []);
       }
@@ -100,19 +92,19 @@ export default function CarieraPage() {
   // Create general forms entry if it doesn't exist
   const createGeneralFormsEntry = async () => {
     try {
-      const { data, error } = await supabase
-        .from('job_vacancies')
-        .insert({
+      const response = await adminFetch('/api/admin/job-vacancies', {
+        method: 'POST',
+        body: JSON.stringify({
           slug: GENERAL_FORMS_SLUG,
           position: 'Formulare generale pentru concursuri',
           status: 'activ',
           published_at: new Date().toISOString(),
           description: 'Formulare tipizate necesare pentru înscrierea la concursurile organizate de Primăria Municipiului Salonta.',
-        })
-        .select()
-        .single();
+        }),
+      });
+      if (!response.ok) throw new Error('Failed to create');
+      const data = await response.json();
 
-      if (error) throw error;
       toast.success('Succes', 'Secțiunea de formulare a fost creată.');
       loadJobs();
       setFormsExpanded(true);
@@ -159,23 +151,22 @@ export default function CarieraPage() {
 
         const { url } = await uploadRes.json();
 
-        // Insert into database
         const maxSortOrder = formDocuments.length > 0 
           ? Math.max(...formDocuments.map(d => d.sort_order)) 
           : 0;
 
-        const { error: dbError } = await supabase
-          .from('job_vacancy_documents')
-          .insert({
+        const docResponse = await adminFetch('/api/admin/job-vacancies?table=documents', {
+          method: 'POST',
+          body: JSON.stringify({
             vacancy_id: vacancyId,
             document_type: 'formular',
             file_url: url,
             file_name: file.name,
             title: newFormTitle || file.name.replace(/\.[^/.]+$/, ''),
             sort_order: maxSortOrder + 1,
-          });
-
-        if (dbError) throw dbError;
+          }),
+        });
+        if (!docResponse.ok) throw new Error('Failed to save document');
       }
 
       toast.success('Succes', 'Formularul a fost adăugat.');
@@ -196,12 +187,10 @@ export default function CarieraPage() {
   const handleDeleteForm = async (doc: JobDocument) => {
     setDeletingFormId(doc.id);
     try {
-      const { error } = await supabase
-        .from('job_vacancy_documents')
-        .delete()
-        .eq('id', doc.id);
-
-      if (error) throw error;
+      const response = await adminFetch(`/api/admin/job-vacancies?table=documents&id=${doc.id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed to delete');
 
       toast.success('Șters', 'Formularul a fost șters.');
       loadJobs();
@@ -231,12 +220,10 @@ export default function CarieraPage() {
     
     setDeleting(true);
     try {
-      const { error } = await supabase
-        .from('job_vacancies')
-        .delete()
-        .eq('id', itemToDelete.id);
-      
-      if (error) throw error;
+      const response = await adminFetch(`/api/admin/job-vacancies?id=${itemToDelete.id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed to delete');
 
       toast.success('Șters', 'Concursul a fost șters.');
       setDeleteDialogOpen(false);
