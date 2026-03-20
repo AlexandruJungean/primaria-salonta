@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Plus, Video, MapPin, Link as LinkIcon } from 'lucide-react';
-import { supabase } from '@/lib/supabase/client';
+import { adminFetch } from '@/lib/api-client';
 import {
   AdminPageHeader,
   AdminButton,
@@ -38,12 +38,10 @@ export default function WebcamsPage() {
   const loadWebcams = useCallback(async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from('webcams')
-        .select('*')
-        .order('sort_order', { ascending: true });
+      const res = await adminFetch('/api/admin/webcams');
+      if (!res.ok) throw new Error('Failed to fetch webcams');
 
-      if (error) throw error;
+      const data = await res.json();
       setWebcams(data || []);
     } catch (error) {
       console.error('Error loading webcams:', error);
@@ -71,12 +69,8 @@ export default function WebcamsPage() {
     
     setDeleting(true);
     try {
-      const { error } = await supabase
-        .from('webcams')
-        .delete()
-        .eq('id', itemToDelete.id);
-
-      if (error) throw error;
+      const res = await adminFetch(`/api/admin/webcams?id=${itemToDelete.id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Failed to delete webcam');
 
       toast.success('Șters cu succes', `Camera "${itemToDelete.name}" a fost ștearsă.`);
       setDeleteDialogOpen(false);

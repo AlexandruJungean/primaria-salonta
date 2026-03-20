@@ -10,7 +10,7 @@ import {
   Star,
   GripVertical,
 } from 'lucide-react';
-import { supabase } from '@/lib/supabase/client';
+import { adminFetch } from '@/lib/api-client';
 import {
   AdminPageHeader,
   AdminButton,
@@ -46,14 +46,10 @@ export default function LegislatiePage() {
   const loadLinks = useCallback(async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from('legislation_links')
-        .select('*')
-        .order('is_primary', { ascending: false })
-        .order('sort_order', { ascending: true });
-
-      if (error) throw error;
-      setLinks(data || []);
+      const response = await adminFetch('/api/admin/legislation');
+      if (!response.ok) throw new Error('Failed to fetch');
+      const data = await response.json();
+      setLinks(data);
     } catch (error) {
       console.error('Error loading legislation links:', error);
       toast.error('Eroare', 'Nu s-au putut încărca link-urile.');
@@ -80,12 +76,10 @@ export default function LegislatiePage() {
     
     setDeleting(true);
     try {
-      const { error } = await supabase
-        .from('legislation_links')
-        .delete()
-        .eq('id', itemToDelete.id);
-
-      if (error) throw error;
+      const response = await adminFetch(`/api/admin/legislation?id=${itemToDelete.id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed to delete');
 
       toast.success('Șters cu succes', `Link-ul "${itemToDelete.title}" a fost șters.`);
       setDeleteDialogOpen(false);
