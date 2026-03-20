@@ -94,7 +94,7 @@ export async function getLeadership(): Promise<StaffMember[]> {
     .from('staff_members')
     .select('*')
     .eq('is_active', true)
-    .in('position_type', ['primar', 'viceprimar', 'secretar', 'administrator'])
+    .in('position_type', ['primar', 'viceprimar', 'secretar', 'administrator', 'sef_serviciu', 'altele'])
     .order('sort_order', { ascending: true });
 
   if (error) {
