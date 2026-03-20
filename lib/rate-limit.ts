@@ -98,27 +98,31 @@ export async function checkRateLimit(
     return null;
   }
 
-  const ip = getClientIP(request);
-  const { success, limit, remaining, reset } = await limiter.limit(ip);
+  try {
+    const ip = getClientIP(request);
+    const { success, limit, remaining, reset } = await limiter.limit(ip);
 
-  if (!success) {
-    const retryAfter = Math.ceil((reset - Date.now()) / 1000);
-    
-    return NextResponse.json(
-      {
-        error: 'Prea multe cereri. Vă rugăm să așteptați.',
-        retryAfter,
-      },
-      {
-        status: 429,
-        headers: {
-          'X-RateLimit-Limit': limit.toString(),
-          'X-RateLimit-Remaining': '0',
-          'X-RateLimit-Reset': reset.toString(),
-          'Retry-After': retryAfter.toString(),
+    if (!success) {
+      const retryAfter = Math.ceil((reset - Date.now()) / 1000);
+      
+      return NextResponse.json(
+        {
+          error: 'Prea multe cereri. Vă rugăm să așteptați.',
+          retryAfter,
         },
-      }
-    );
+        {
+          status: 429,
+          headers: {
+            'X-RateLimit-Limit': limit.toString(),
+            'X-RateLimit-Remaining': '0',
+            'X-RateLimit-Reset': reset.toString(),
+            'Retry-After': retryAfter.toString(),
+          },
+        }
+      );
+    }
+  } catch {
+    // Redis unavailable - allow request to proceed
   }
 
   return null;
