@@ -8,6 +8,7 @@ import {
   AdminButton,
   AdminCard,
   AdminInput,
+  AdminDateInput,
   AdminTextarea,
   AdminSelect,
   AdminConfirmDialog,
@@ -731,11 +732,10 @@ export function DocumentEdit({
         <div className="space-y-6">
           <AdminCard title="Setări">
             <div className="space-y-4">
-              <AdminInput
+              <AdminDateInput
                 label="Data"
-                type="date"
                 value={formData.document_date}
-                onChange={(e) => handleChange('document_date', e.target.value)}
+                onChange={(value) => handleChange('document_date', value)}
                 required
               />
 

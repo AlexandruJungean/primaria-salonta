@@ -135,7 +135,7 @@ export function AdminDateInput({
           onChange={handleInputChange}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          placeholder="ZZ.LL.AAAA"
+          placeholder="DD/MM/YYYY"
           disabled={disabled}
           className={`
             w-full px-4 py-3 pr-12 text-base border rounded-lg
