@@ -14,12 +14,30 @@ export function MobileNav() {
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
   const [expandedGroups, setExpandedGroups] = useState<string[]>([]);
   const t = useTranslations('navigation');
-  const { dynamicInstitutions, dynamicPrograms } = useNavigationContext();
+  const { dynamicInstitutions, dynamicPrograms, navPages } = useNavigationContext();
   
-  // Merge dynamic institutions and programs into navigation
+  // Transform navPages into the format expected by the merge function
+  const navPagesMenuData = useMemo(() => {
+    const transform = (pages: typeof navPages.cetateni) =>
+      pages.map(p => ({
+        id: p.id,
+        title: p.title,
+        icon: p.icon,
+        public_path: p.public_path,
+        section_slug: (p.nav_sections as { slug: string })?.slug || '',
+      }));
+    return {
+      cetateni: transform(navPages.cetateni),
+      firme: transform(navPages.firme),
+      primarie: transform(navPages.primarie),
+      turist: transform(navPages.turist),
+    };
+  }, [navPages]);
+
+  // Merge all dynamic data into navigation
   const navigation = useMemo(() => 
-    getNavigationWithInstitutions(dynamicInstitutions, dynamicPrograms),
-    [dynamicInstitutions, dynamicPrograms]
+    getNavigationWithInstitutions(dynamicInstitutions, dynamicPrograms, navPagesMenuData),
+    [dynamicInstitutions, dynamicPrograms, navPagesMenuData]
   );
 
   // Icon mapping for secondary items

@@ -7,11 +7,13 @@
 import { getInstitutionsForNav, type InstitutionNavItem } from './institutions';
 import { getProgramsForNav, type ProgramNavItem } from './programs';
 import { getContactInfo, type ContactInfo } from './settings';
+import { getPublicMenuData, type PublicMenuData } from './navigation';
 
 export interface LayoutData {
   institutions: InstitutionNavItem[];
   programs: ProgramNavItem[];
   contactInfo: ContactInfo;
+  navPages: PublicMenuData;
 }
 
 /**
@@ -19,16 +21,17 @@ export interface LayoutData {
  * No caching - changes in admin appear immediately
  */
 export async function getLayoutData(): Promise<LayoutData> {
-  // Fetch all data in parallel for speed
-  const [institutions, programs, contactInfo] = await Promise.all([
+  const [institutions, programs, contactInfo, navPages] = await Promise.all([
     getInstitutionsForNav(),
     getProgramsForNav(),
     getContactInfo(),
+    getPublicMenuData(),
   ]);
 
   return {
     institutions,
     programs,
     contactInfo,
+    navPages,
   };
 }

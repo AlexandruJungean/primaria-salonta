@@ -184,7 +184,7 @@ export default async function LocaleLayout({
   
   // Fetch all layout data from single cached source
   const layoutData = await getLayoutData();
-  const { institutions, contactInfo } = layoutData;
+  const { institutions, contactInfo, navPages } = layoutData;
 
   // Skip translation for Romanian (default language) - no API call needed
   // This significantly speeds up initial page load
@@ -205,7 +205,7 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages}>
           <RecaptchaProvider>
             <SiteSettingsProvider contactInfo={contactInfo}>
-              <NavigationProvider institutions={institutions} programs={programs}>
+              <NavigationProvider institutions={institutions} programs={programs} navPages={navPages}>
                 {/* Skip to Content Link */}
                 <a href="#main-content" className="skip-to-content">
                   Skip to content

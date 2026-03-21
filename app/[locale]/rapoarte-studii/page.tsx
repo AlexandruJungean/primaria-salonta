@@ -1,5 +1,4 @@
-import { useTranslations } from 'next-intl';
-import { ShieldCheck, FileSearch } from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { Card, CardContent } from '@/components/ui/card';
@@ -8,6 +7,9 @@ import { PageHeader } from '@/components/pages/page-header';
 import { Link } from '@/components/ui/link';
 import { generatePageMetadata } from '@/lib/seo/metadata';
 import { WebPageJsonLd } from '@/lib/seo/json-ld';
+import { AdminEditButton } from '@/components/admin-edit-button';
+import { getNavPagesBySection } from '@/lib/supabase/services/navigation';
+import { getIcon } from '@/lib/constants/icon-map';
 import { type Locale } from '@/i18n/routing';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
@@ -19,14 +21,11 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   });
 }
 
-const SECTIONS = [
-  { id: 'rapoarteAudit', href: '/rapoarte-studii/rapoarte', icon: ShieldCheck },
-  { id: 'studii', href: '/rapoarte-studii/studii', icon: FileSearch },
-];
-
-export default function RapoarteStudiiPage() {
-  const t = useTranslations('navigation');
-  const tp = useTranslations('rapoarteStudiiPage');
+export default async function RapoarteStudiiPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'navigation' });
+  const tp = await getTranslations({ locale, namespace: 'rapoarteStudiiPage' });
+  const pages = await getNavPagesBySection('rapoarte-studii');
 
   return (
     <>
@@ -45,16 +44,16 @@ export default function RapoarteStudiiPage() {
           </p>
 
           <div className="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
-            {SECTIONS.map((section) => {
-              const Icon = section.icon;
+            {pages.map((page) => {
+              const Icon = getIcon(page.icon);
               return (
-                <Link key={section.id} href={section.href}>
+                <Link key={page.id} href={page.public_path || '#'}>
                   <Card hover className="h-full">
                     <CardContent className="flex items-center gap-4 pt-6">
                       <div className="w-12 h-12 rounded-lg bg-primary-100 flex items-center justify-center shrink-0">
                         <Icon className="w-6 h-6 text-primary-700" />
                       </div>
-                      <h3 className="font-semibold text-gray-900">{t(section.id)}</h3>
+                      <h3 className="font-semibold text-gray-900">{page.title}</h3>
                     </CardContent>
                   </Card>
                 </Link>
@@ -63,7 +62,7 @@ export default function RapoarteStudiiPage() {
           </div>
         </Container>
       </Section>
+      <AdminEditButton href="/admin/rapoarte-studii" />
     </>
   );
 }
-

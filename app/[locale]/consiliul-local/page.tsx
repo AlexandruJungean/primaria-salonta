@@ -1,6 +1,4 @@
 import { getTranslations } from 'next-intl/server';
-import { useTranslations } from 'next-intl';
-import { Users, Briefcase, ClipboardList, Gavel, ScrollText, FileCheck, BarChart3 } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { Card, CardContent } from '@/components/ui/card';
@@ -8,6 +6,9 @@ import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
 import { Link } from '@/components/ui/link';
 import { generatePageMetadata, BreadcrumbJsonLd } from '@/lib/seo';
+import { AdminEditButton } from '@/components/admin-edit-button';
+import { getNavPagesBySection } from '@/lib/supabase/services/navigation';
+import { getIcon } from '@/lib/constants/icon-map';
 import type { Locale } from '@/lib/seo/config';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
@@ -19,18 +20,10 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   });
 }
 
-const COUNCIL_SECTIONS = [
-  { id: 'consilieriLocali', href: '/consiliul-local/consilieri', icon: Users },
-  { id: 'comisii', href: '/consiliul-local/comisii', icon: Briefcase },
-  { id: 'ordineZi', href: '/consiliul-local/ordine-de-zi', icon: ClipboardList },
-  { id: 'hotarari', href: '/consiliul-local/hotarari', icon: Gavel },
-  { id: 'hotarariRepublicate', href: '/consiliul-local/hotarari-republicate', icon: ScrollText },
-  { id: 'declaratiiAvereConsiliu', href: '/consiliul-local/declaratii-avere', icon: FileCheck },
-  { id: 'rapoarteActivitate', href: '/consiliul-local/rapoarte-activitate', icon: BarChart3 },
-];
-
-export default function ConsiliulLocalPage() {
-  const t = useTranslations('navigation');
+export default async function ConsiliulLocalPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'navigation' });
+  const pages = await getNavPagesBySection('consiliul-local');
 
   return (
     <>
@@ -45,16 +38,16 @@ export default function ConsiliulLocalPage() {
           </p>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {COUNCIL_SECTIONS.map((section) => {
-              const Icon = section.icon;
+            {pages.map((page) => {
+              const Icon = getIcon(page.icon);
               return (
-                <Link key={section.id} href={section.href}>
+                <Link key={page.id} href={page.public_path || '#'}>
                   <Card hover className="h-full">
                     <CardContent className="flex items-center gap-4 pt-6">
                       <div className="w-12 h-12 rounded-lg bg-primary-100 flex items-center justify-center shrink-0">
                         <Icon className="w-6 h-6 text-primary-700" />
                       </div>
-                      <h3 className="font-semibold text-gray-900">{t(section.id)}</h3>
+                      <h3 className="font-semibold text-gray-900">{page.title}</h3>
                     </CardContent>
                   </Card>
                 </Link>
@@ -63,7 +56,7 @@ export default function ConsiliulLocalPage() {
           </div>
         </Container>
       </Section>
+      <AdminEditButton href="/admin/consiliul-local" />
     </>
   );
 }
-
