@@ -9,6 +9,7 @@ import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
 import { createAnonServerClient } from '@/lib/supabase/server';
 import Image from 'next/image';
+import { AdminEditButton } from '@/components/admin-edit-button';
 
 interface Webcam {
   id: string;
@@ -146,6 +147,7 @@ export default async function CamereWebPage({ params }: { params: Promise<{ loca
           </div>
         </Container>
       </Section>
+      <AdminEditButton href="/admin/webcams" />
     </>
   );
 }

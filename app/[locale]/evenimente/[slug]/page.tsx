@@ -11,6 +11,7 @@ import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
 import { getEventBySlug, getAllEventSlugs, EVENT_TYPE_CONFIG } from '@/lib/supabase/services';
 import { translateContentFields } from '@/lib/google-translate/cache';
+import { AdminEditButton } from '@/components/admin-edit-button';
 
 function formatDate(dateStr: string, locale: string): string {
   const date = new Date(dateStr);
@@ -269,6 +270,7 @@ export default async function EventDetailPage({
           </div>
         </Container>
       </Section>
+      <AdminEditButton href={`/admin/evenimente/${eventData.id}`} />
     </>
   );
 }

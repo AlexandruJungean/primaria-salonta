@@ -5,6 +5,7 @@ import { PageHeader } from '@/components/pages/page-header';
 import { getEvents } from '@/lib/supabase/services';
 import { EventsGrid } from './events-grid';
 import { translateContentArray } from '@/lib/google-translate/cache';
+import { AdminEditButton } from '@/components/admin-edit-button';
 
 export default async function EvenimentePage({
   params,
@@ -36,6 +37,7 @@ export default async function EvenimentePage({
           <EventsGrid events={events} />
         </Container>
       </Section>
+      <AdminEditButton href="/admin/evenimente" />
     </>
   );
 }

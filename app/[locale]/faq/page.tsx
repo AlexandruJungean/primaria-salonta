@@ -10,6 +10,7 @@ import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
 import { createAnonServerClient } from '@/lib/supabase/server';
 import { translateContentArray } from '@/lib/google-translate/cache';
+import { AdminEditButton } from '@/components/admin-edit-button';
 
 interface FAQItem {
   id: string;
@@ -146,6 +147,7 @@ export default async function FaqPage({ params }: { params: Promise<{ locale: st
           </div>
         </Container>
       </Section>
+      <AdminEditButton href="/admin/faq" />
     </>
   );
 }
