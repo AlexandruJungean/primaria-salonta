@@ -149,21 +149,6 @@ export function DocumentEdit({
   const hasSubcategories = SUBCATEGORY_OPTIONS[filterValue];
   
   const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 15 }, (_, i) => currentYear - i);
-  const months = [
-    { value: '1', label: 'Ianuarie' },
-    { value: '2', label: 'Februarie' },
-    { value: '3', label: 'Martie' },
-    { value: '4', label: 'Aprilie' },
-    { value: '5', label: 'Mai' },
-    { value: '6', label: 'Iunie' },
-    { value: '7', label: 'Iulie' },
-    { value: '8', label: 'August' },
-    { value: '9', label: 'Septembrie' },
-    { value: '10', label: 'Octombrie' },
-    { value: '11', label: 'Noiembrie' },
-    { value: '12', label: 'Decembrie' },
-  ];
 
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -189,7 +174,7 @@ export function DocumentEdit({
     month: null,
     subcategory: defaultSubcategory || '',
     description: '',
-    document_date: '',
+    document_date: new Date().toISOString().split('T')[0],
     published: true,
   });
   const [createdAt, setCreatedAt] = useState<string | null>(null);
@@ -443,13 +428,14 @@ export function DocumentEdit({
 
     setSaving(true);
     try {
+      const docDate = formData.document_date ? new Date(formData.document_date) : new Date();
       const documentData: Record<string, unknown> = {
         title: formData.title.trim(),
         file_url: formData.file_url.trim(),
         file_name: formData.file_name.trim() || formData.title.trim(),
         file_size: formData.file_size || null,
-        year: formData.year,
-        month: formData.month,
+        year: docDate.getFullYear(),
+        month: docDate.getMonth() + 1,
         subcategory: formData.subcategory || null,
         description: formData.description.trim() || null,
         document_date: formData.document_date || null,
@@ -582,16 +568,17 @@ export function DocumentEdit({
 
                     if (isNew) {
                       const title = formData.title.trim() || file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ');
+                      const autoDate = formData.document_date ? new Date(formData.document_date) : new Date();
                       const documentData: Record<string, unknown> = {
                         title,
                         file_url: '',
                         file_name: '',
                         file_size: 0,
-                        year: formData.year,
-                        month: formData.month,
+                        year: autoDate.getFullYear(),
+                        month: autoDate.getMonth() + 1,
                         subcategory: formData.subcategory || defaultSubcategory || null,
                         description: formData.description.trim() || null,
-                        document_date: formData.document_date || null,
+                        document_date: formData.document_date || new Date().toISOString().split('T')[0],
                         published: formData.published,
                       };
                       if (filterType === 'category') {
@@ -744,28 +731,12 @@ export function DocumentEdit({
         <div className="space-y-6">
           <AdminCard title="Setări">
             <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-3">
-                <AdminSelect
-                  label="Anul"
-                  value={formData.year?.toString() || ''}
-                  onChange={(e) => handleChange('year', e.target.value ? parseInt(e.target.value) : null)}
-                  options={years.map(y => ({ value: y.toString(), label: y.toString() }))}
-                  placeholder="Selectează"
-                />
-                <AdminSelect
-                  label="Luna (opțional)"
-                  value={formData.month?.toString() || ''}
-                  onChange={(e) => handleChange('month', e.target.value ? parseInt(e.target.value) : null)}
-                  options={months}
-                  placeholder="Selectează"
-                />
-              </div>
-
               <AdminInput
-                label="Data Document (opțional)"
+                label="Data"
                 type="date"
                 value={formData.document_date}
                 onChange={(e) => handleChange('document_date', e.target.value)}
+                required
               />
 
               {hasSubcategories && (
