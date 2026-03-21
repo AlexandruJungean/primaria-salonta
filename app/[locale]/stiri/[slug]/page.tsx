@@ -13,6 +13,7 @@ import type { Locale } from '@/lib/seo/config';
 import { getNewsBySlug, getAllNewsSlugs } from '@/lib/supabase/services';
 import { NewsImageGallery } from './news-image-gallery';
 import { translateContentFields } from '@/lib/google-translate/cache';
+import { AdminEditButton } from '@/components/admin-edit-button';
 
 
 export async function generateMetadata({ 
@@ -191,6 +192,7 @@ export default async function NewsDetailPage({
           </article>
         </Container>
       </Section>
+      <AdminEditButton href={`/admin/stiri/${newsData.id}`} />
     </>
   );
 }

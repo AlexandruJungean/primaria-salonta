@@ -10,6 +10,7 @@ import { getDocumentsBySourceFolderWithAnnexes } from '@/lib/supabase/services/d
 import { getPageContent, getExternalLinks } from '@/lib/supabase/services/page-content';
 import { GeneraleDocuments } from './generale-documents';
 import { translateContentArray, translateContentMap } from '@/lib/google-translate/cache';
+import { AdminEditButton } from '@/components/admin-edit-button';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -201,6 +202,7 @@ export default async function GeneralePage({ params }: { params: Promise<{ local
           </div>
         </Container>
       </Section>
+      <AdminEditButton href="/admin/transparenta/generale" />
     </>
   );
 }

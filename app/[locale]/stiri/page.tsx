@@ -13,6 +13,7 @@ import { WebPageJsonLd } from '@/lib/seo/json-ld';
 import { type Locale } from '@/i18n/routing';
 import { getNews } from '@/lib/supabase/services';
 import { translateContentArray } from '@/lib/google-translate/cache';
+import { AdminEditButton } from '@/components/admin-edit-button';
 
 const ITEMS_PER_PAGE = 12;
 
@@ -140,6 +141,7 @@ export default async function NewsPage({
           )}
         </Container>
       </Section>
+      <AdminEditButton href="/admin/stiri" />
     </>
   );
 }

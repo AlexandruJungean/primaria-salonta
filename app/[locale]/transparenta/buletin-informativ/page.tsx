@@ -12,6 +12,7 @@ import * as documentsService from '@/lib/supabase/services/documents';
 import { getExternalLinks } from '@/lib/supabase/services/page-content';
 import { translateContentArray } from '@/lib/google-translate/cache';
 import type { ExternalLink as ExternalLinkType } from '@/lib/types/database';
+import { AdminEditButton } from '@/components/admin-edit-button';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -517,6 +518,7 @@ export default async function BuletinInformativPage({ params }: { params: Promis
           </div>
         </Container>
       </Section>
+      <AdminEditButton href="/admin/transparenta/buletin-informativ" />
     </>
   );
 }
