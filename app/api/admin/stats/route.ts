@@ -21,12 +21,11 @@ export async function GET(request: NextRequest) {
 
   try {
     if (type === 'main') {
-      // Main dashboard stats
       const [
         newsCount,
         eventsCount,
-        decisionsCount,
-        sessionsCount,
+        hotarariCount,
+        sedinteCount,
         docsCount,
         newsDocsCount,
         decisionDocsCount,
@@ -40,8 +39,8 @@ export async function GET(request: NextRequest) {
       ] = await Promise.all([
         supabase.from('news').select('*', { count: 'exact', head: true }),
         supabase.from('events').select('*', { count: 'exact', head: true }),
-        supabase.from('council_decisions').select('*', { count: 'exact', head: true }),
-        supabase.from('council_sessions').select('*', { count: 'exact', head: true }),
+        supabase.from('council_sessions').select('*', { count: 'exact', head: true }).eq('source', 'hotarari'),
+        supabase.from('council_sessions').select('*', { count: 'exact', head: true }).eq('source', 'sedinte'),
         supabase.from('documents').select('*', { count: 'exact', head: true }).not('file_url', 'is', null),
         supabase.from('news_documents').select('*', { count: 'exact', head: true }).not('file_url', 'is', null),
         supabase.from('council_decision_documents').select('*', { count: 'exact', head: true }).not('file_url', 'is', null),
@@ -65,8 +64,8 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({
         news: newsCount.count || 0,
         events: eventsCount.count || 0,
-        decisions: decisionsCount.count || 0,
-        sessions: sessionsCount.count || 0,
+        decisions: hotarariCount.count || 0,
+        sessions: sedinteCount.count || 0,
         documents: totalDocuments,
         councilMembers: councilMembersCount.count || 0,
         unreadPetitions: unreadPetitionsCount.count || 0,

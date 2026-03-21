@@ -163,10 +163,19 @@ export function NavSectionAdminPage({ sectionSlug, breadcrumbLabel }: NavSection
       />
 
       {/* Edit form */}
-      {editingId && (
+      {editingId && (() => {
+        const EditIcon = getIcon(editForm.icon || '');
+        return (
         <AdminCard className="border-blue-300 ring-2 ring-blue-100 mb-6">
           <div className="space-y-4">
-            <div className="flex gap-4">
+            <div className="flex items-end gap-4">
+              {/* Icon preview */}
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">Icon</label>
+                <div className="w-[42px] h-[42px] rounded-lg bg-blue-50 border border-blue-200 flex items-center justify-center">
+                  <EditIcon className="w-5 h-5 text-blue-600" />
+                </div>
+              </div>
               <div className="flex-1">
                 <label className="block text-sm font-medium text-slate-700 mb-1">Titlu</label>
                 <input
@@ -176,16 +185,18 @@ export function NavSectionAdminPage({ sectionSlug, breadcrumbLabel }: NavSection
                   className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
-              <div className="w-48">
+              <div className="w-56">
                 <label className="block text-sm font-medium text-slate-700 mb-1">Icon</label>
                 <select
                   value={editForm.icon || ''}
                   onChange={e => setEditForm(f => ({ ...f, icon: e.target.value }))}
                   className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
-                  {ICON_OPTIONS.map(iconName => (
-                    <option key={iconName} value={iconName}>{iconName}</option>
-                  ))}
+                  {ICON_OPTIONS.map(iconName => {
+                    return (
+                      <option key={iconName} value={iconName}>{iconName}</option>
+                    );
+                  })}
                 </select>
               </div>
             </div>
@@ -246,7 +257,8 @@ export function NavSectionAdminPage({ sectionSlug, breadcrumbLabel }: NavSection
             </div>
           </div>
         </AdminCard>
-      )}
+        );
+      })()}
 
       {/* Cards grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
