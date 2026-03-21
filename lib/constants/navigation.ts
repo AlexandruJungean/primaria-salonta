@@ -667,14 +667,29 @@ export function getNavigationWithInstitutions(
       // Handle DB-driven nav_section groups
       const sectionSlug = GROUP_TO_SECTION_SLUG[group.groupId];
       if (sectionSlug && navPagesData && navPagesBySection[sectionSlug]) {
-        // Skip if we already rendered this section's items in a previous group
         if (renderedSections.has(sectionSlug)) {
-          return { ...group, items: [] };
+          // This is a continuation group -- take the second half
+          const dbPages = navPagesBySection[sectionSlug];
+          const mid = Math.ceil(dbPages.length / 2);
+          const secondHalf = dbPages.slice(mid);
+          const items: NavItem[] = secondHalf.map(page => ({
+            id: page.id,
+            href: page.public_path || '#',
+            icon: NAV_PAGE_ICONS[page.icon] || FileText,
+            label: page.title,
+          }));
+          return { ...group, items };
         }
         renderedSections.add(sectionSlug);
 
         const dbPages = navPagesBySection[sectionSlug];
-        const items: NavItem[] = dbPages.map(page => ({
+        // Check if there's a continuation group for this section
+        const hasContinuation = section.groups?.some(
+          g => g !== group && GROUP_TO_SECTION_SLUG[g.groupId] === sectionSlug
+        );
+
+        const pagesToShow = hasContinuation ? dbPages.slice(0, Math.ceil(dbPages.length / 2)) : dbPages;
+        const items: NavItem[] = pagesToShow.map(page => ({
           id: page.id,
           href: page.public_path || '#',
           icon: NAV_PAGE_ICONS[page.icon] || FileText,
