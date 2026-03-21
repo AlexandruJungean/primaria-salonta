@@ -76,18 +76,14 @@ export default function DocumenteManagerPage() {
         dir: sortDir,
       });
       if (searchQuery) params.set('search', searchQuery);
+      if (sourceFilter) params.set('source', sourceFilter);
 
       const response = await adminFetch(`/api/admin/all-documents?${params}`);
       if (!response.ok) throw new Error('Failed to fetch');
       const result = await response.json();
 
-      let data = result.data || [];
-      if (sourceFilter) {
-        data = data.filter((d: UnifiedDocument) => d.source_table === sourceFilter);
-      }
-
-      setDocuments(data);
-      setTotalCount(sourceFilter ? data.length : result.count);
+      setDocuments(result.data || []);
+      setTotalCount(result.count || 0);
     } catch {
       toast.error('Eroare', 'Nu s-au putut încărca documentele.');
     } finally {

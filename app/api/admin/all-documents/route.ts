@@ -22,12 +22,36 @@ interface UnifiedDocument {
   admin_edit_url: string | null;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function fetchAllRows(supabase: ReturnType<typeof createAdminClient>, table: string, columns: string): Promise<any[]> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const rows: any[] = [];
+  const PAGE_SIZE = 1000;
+  let from = 0;
+
+  while (true) {
+    const { data, error } = await supabase
+      .from(table)
+      .select(columns)
+      .not('file_url', 'is', null)
+      .range(from, from + PAGE_SIZE - 1);
+
+    if (error) { console.error(`Error fetching ${table}:`, error); break; }
+    if (!data || data.length === 0) break;
+    rows.push(...data);
+    if (data.length < PAGE_SIZE) break;
+    from += PAGE_SIZE;
+  }
+  return rows;
+}
+
 export async function GET(request: NextRequest) {
   const authResult = await requireAdmin(request);
   if (authResult instanceof NextResponse) return authResult;
 
   const { searchParams } = new URL(request.url);
   const search = searchParams.get('search') || '';
+  const source = searchParams.get('source') || '';
   const sortBy = searchParams.get('sort') || 'created_at';
   const sortDir = searchParams.get('dir') || 'desc';
   const page = parseInt(searchParams.get('page') || '1');
@@ -36,13 +60,20 @@ export async function GET(request: NextRequest) {
   const supabase = createAdminClient();
   const allDocs: UnifiedDocument[] = [];
 
-  // 1. documents table
-  const { data: docs } = await supabase
-    .from('documents')
-    .select('id, title, file_url, file_name, file_size, created_at, category, source_folder, parent_id');
-  
-  (docs || []).forEach(d => {
-    if (!d.file_url) return;
+  // Only fetch the tables we need (skip unnecessary queries when filtering by source)
+  const shouldFetch = (table: string) => !source || source === table;
+
+  const [docs, newsDocs, decisionDocs, sessionDocs, reports, jobDocs, progDocs] = await Promise.all([
+    shouldFetch('documents') ? fetchAllRows(supabase, 'documents', 'id, title, file_url, file_name, file_size, created_at, category, source_folder, parent_id') : [],
+    shouldFetch('news_documents') ? fetchAllRows(supabase, 'news_documents', 'id, title, file_url, file_name, file_size, created_at, news_id') : [],
+    shouldFetch('council_decision_documents') ? fetchAllRows(supabase, 'council_decision_documents', 'id, title, file_url, file_name, file_size, created_at, decision_id') : [],
+    shouldFetch('council_session_documents') ? fetchAllRows(supabase, 'council_session_documents', 'id, title, file_url, file_name, file_size, created_at, session_id') : [],
+    shouldFetch('reports') ? fetchAllRows(supabase, 'reports', 'id, title, file_url, file_name, file_size, created_at, report_type') : [],
+    shouldFetch('job_vacancy_documents') ? fetchAllRows(supabase, 'job_vacancy_documents', 'id, title, file_url, file_name, created_at, vacancy_id') : [],
+    shouldFetch('program_documents') ? fetchAllRows(supabase, 'program_documents', 'id, title, file_url, file_name, file_size, created_at, program_id') : [],
+  ]);
+
+  docs.forEach((d: { id: string; title: string; file_url: string; file_name: string; file_size: number | null; created_at: string; category: string; source_folder: string; parent_id: string | null }) => {
     allDocs.push({
       id: d.id,
       title: d.title || d.file_name,
@@ -57,13 +88,7 @@ export async function GET(request: NextRequest) {
     });
   });
 
-  // 2. news_documents
-  const { data: newsDocs } = await supabase
-    .from('news_documents')
-    .select('id, title, file_url, file_name, file_size, created_at, news_id');
-  
-  (newsDocs || []).forEach(d => {
-    if (!d.file_url) return;
+  newsDocs.forEach((d: { id: string; title: string; file_url: string; file_name: string; file_size: number | null; created_at: string; news_id: string }) => {
     allDocs.push({
       id: d.id,
       title: d.title || d.file_name,
@@ -78,13 +103,7 @@ export async function GET(request: NextRequest) {
     });
   });
 
-  // 3. council_decision_documents
-  const { data: decisionDocs } = await supabase
-    .from('council_decision_documents')
-    .select('id, title, file_url, file_name, file_size, created_at, decision_id');
-  
-  (decisionDocs || []).forEach(d => {
-    if (!d.file_url) return;
+  decisionDocs.forEach((d: { id: string; title: string; file_url: string; file_name: string; file_size: number | null; created_at: string; decision_id: string }) => {
     allDocs.push({
       id: d.id,
       title: d.title || d.file_name,
@@ -99,13 +118,7 @@ export async function GET(request: NextRequest) {
     });
   });
 
-  // 4. council_session_documents
-  const { data: sessionDocs } = await supabase
-    .from('council_session_documents')
-    .select('id, title, file_url, file_name, file_size, created_at, session_id');
-  
-  (sessionDocs || []).forEach(d => {
-    if (!d.file_url) return;
+  sessionDocs.forEach((d: { id: string; title: string; file_url: string; file_name: string; file_size: number | null; created_at: string; session_id: string }) => {
     allDocs.push({
       id: d.id,
       title: d.title || d.file_name,
@@ -120,13 +133,7 @@ export async function GET(request: NextRequest) {
     });
   });
 
-  // 5. reports
-  const { data: reports } = await supabase
-    .from('reports')
-    .select('id, title, file_url, file_name, file_size, created_at, report_type');
-  
-  (reports || []).forEach(d => {
-    if (!d.file_url) return;
+  reports.forEach((d: { id: string; title: string; file_url: string; file_name: string; file_size: number | null; created_at: string; report_type: string }) => {
     allDocs.push({
       id: d.id,
       title: d.title || d.file_name || '',
@@ -141,19 +148,13 @@ export async function GET(request: NextRequest) {
     });
   });
 
-  // 6. job_vacancy_documents
-  const { data: jobDocs } = await supabase
-    .from('job_vacancy_documents')
-    .select('id, title, file_url, file_name, file_size, created_at, vacancy_id');
-  
-  (jobDocs || []).forEach(d => {
-    if (!d.file_url) return;
+  jobDocs.forEach((d: { id: string; title: string; file_url: string; file_name: string; created_at: string; vacancy_id: string }) => {
     allDocs.push({
       id: d.id,
       title: d.title || d.file_name || '',
       file_url: d.file_url,
       file_name: d.file_name || '',
-      file_size: d.file_size,
+      file_size: null,
       created_at: d.created_at,
       source_table: 'job_vacancy_documents',
       source_label: 'Carieră',
@@ -162,13 +163,7 @@ export async function GET(request: NextRequest) {
     });
   });
 
-  // 7. program_documents
-  const { data: progDocs } = await supabase
-    .from('program_documents')
-    .select('id, title, file_url, file_name, file_size, created_at, program_id');
-  
-  (progDocs || []).forEach(d => {
-    if (!d.file_url) return;
+  progDocs.forEach((d: { id: string; title: string; file_url: string; file_name: string; file_size: number | null; created_at: string; program_id: string }) => {
     allDocs.push({
       id: d.id,
       title: d.title || d.file_name || '',
@@ -187,7 +182,7 @@ export async function GET(request: NextRequest) {
   let filtered = allDocs;
   if (search) {
     const q = search.toLowerCase();
-    filtered = allDocs.filter(d =>
+    filtered = filtered.filter(d =>
       d.title.toLowerCase().includes(q) ||
       d.file_name.toLowerCase().includes(q) ||
       d.source_label.toLowerCase().includes(q)
@@ -204,8 +199,8 @@ export async function GET(request: NextRequest) {
   });
 
   const total = filtered.length;
-  const from = (page - 1) * limit;
-  const paginated = filtered.slice(from, from + limit);
+  const fromIdx = (page - 1) * limit;
+  const paginated = filtered.slice(fromIdx, fromIdx + limit);
 
   return NextResponse.json({ data: paginated, count: total });
 }

@@ -27,7 +27,13 @@ export async function GET(request: NextRequest) {
         eventsCount,
         decisionsCount,
         sessionsCount,
-        documentsCount,
+        docsCount,
+        newsDocsCount,
+        decisionDocsCount,
+        sessionDocsCount,
+        reportsCount,
+        jobDocsCount,
+        programDocsCount,
         councilMembersCount,
         unreadPetitionsCount,
         unreadContactsCount,
@@ -37,17 +43,31 @@ export async function GET(request: NextRequest) {
         supabase.from('council_decisions').select('*', { count: 'exact', head: true }),
         supabase.from('council_sessions').select('*', { count: 'exact', head: true }),
         supabase.from('documents').select('*', { count: 'exact', head: true }).not('file_url', 'is', null),
+        supabase.from('news_documents').select('*', { count: 'exact', head: true }).not('file_url', 'is', null),
+        supabase.from('council_decision_documents').select('*', { count: 'exact', head: true }).not('file_url', 'is', null),
+        supabase.from('council_session_documents').select('*', { count: 'exact', head: true }).not('file_url', 'is', null),
+        supabase.from('reports').select('*', { count: 'exact', head: true }).not('file_url', 'is', null),
+        supabase.from('job_vacancy_documents').select('*', { count: 'exact', head: true }).not('file_url', 'is', null),
+        supabase.from('program_documents').select('*', { count: 'exact', head: true }).not('file_url', 'is', null),
         supabase.from('council_members').select('*', { count: 'exact', head: true }),
         supabase.from('petitions').select('*', { count: 'exact', head: true }).in('status', ['inregistrata', 'in_lucru']),
         supabase.from('contact_submissions').select('*', { count: 'exact', head: true }).eq('status', 'new'),
       ]);
+
+      const totalDocuments = (docsCount.count || 0)
+        + (newsDocsCount.count || 0)
+        + (decisionDocsCount.count || 0)
+        + (sessionDocsCount.count || 0)
+        + (reportsCount.count || 0)
+        + (jobDocsCount.count || 0)
+        + (programDocsCount.count || 0);
 
       return NextResponse.json({
         news: newsCount.count || 0,
         events: eventsCount.count || 0,
         decisions: decisionsCount.count || 0,
         sessions: sessionsCount.count || 0,
-        documents: documentsCount.count || 0,
+        documents: totalDocuments,
         councilMembers: councilMembersCount.count || 0,
         unreadPetitions: unreadPetitionsCount.count || 0,
         unreadContacts: unreadContactsCount.count || 0,
