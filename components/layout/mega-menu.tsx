@@ -146,7 +146,7 @@ export function MegaMenu() {
                     >
                       {section.groups.map((group) => {
                         const GroupIcon = group.groupIcon;
-                        const groupTitle = t(group.groupId);
+                        const groupTitle = group.groupLabel || t(group.groupId);
                         const hasTitle = groupTitle && groupTitle.trim() !== '';
                         return (
                           <div key={group.groupId} className={cn("space-y-2", !hasTitle && "pt-10")}>

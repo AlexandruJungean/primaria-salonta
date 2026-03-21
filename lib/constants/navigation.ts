@@ -80,6 +80,7 @@ import {
   Mail,
   type LucideIcon,
 } from 'lucide-react';
+import { getIcon } from './icon-map';
 
 export interface NavItem {
   id: string;
@@ -94,6 +95,7 @@ export interface NavGroup {
   groupId: string; // Translation key for group header
   groupHref?: string; // Optional link for the group header itself
   groupIcon?: LucideIcon;
+  groupLabel?: string; // Direct label (bypasses translation)
   items: NavItem[];
   isDynamic?: boolean; // Flag for dynamically loaded items
   dynamicType?: string; // Type identifier for dynamic loading
@@ -622,6 +624,19 @@ export interface NavPagesMenuData {
   turist: NavPageItem[];
 }
 
+const SECTION_SLUG_DEFAULTS: Record<string, { groupIcon: LucideIcon; groupHref: string; label: string }> = {
+  'informatii-publice': { groupIcon: FileSearch, groupHref: '/informatii-publice', label: 'Informații Publice' },
+  'transparenta': { groupIcon: Eye, groupHref: '/transparenta', label: 'Transparență' },
+  'primaria': { groupIcon: Building2, groupHref: '/primaria', label: 'Primăria' },
+  'consiliul-local': { groupIcon: Users, groupHref: '/consiliul-local', label: 'Consiliul Local' },
+  'monitorul-oficial': { groupIcon: BookMarked, groupHref: '/monitorul-oficial', label: 'Monitorul Oficial' },
+  'rapoarte-studii': { groupIcon: FileSearch, groupHref: '/rapoarte-studii', label: 'Rapoarte și Studii' },
+  'localitatea': { groupIcon: MapPin, groupHref: '/localitatea', label: 'Localitatea' },
+  'servicii-online': { groupIcon: CreditCard, groupHref: '/servicii-online', label: 'Servicii Online' },
+  'altele': { groupIcon: FileText, groupHref: '#', label: 'Altele' },
+  'programe': { groupIcon: Target, groupHref: '/programe', label: 'Programe' },
+};
+
 // Helper to get navigation with dynamic data merged in
 export function getNavigationWithInstitutions(
   dynamicInstitutions: DynamicInstitution[],
@@ -693,7 +708,7 @@ export function getNavigationWithInstitutions(
           const items: NavItem[] = secondHalf.map(page => ({
             id: page.id,
             href: page.public_path || '#',
-            icon: NAV_PAGE_ICONS[page.icon] || FileText,
+            icon: getIcon(page.icon),
             label: page.title,
           }));
           return { ...group, items };
@@ -710,7 +725,7 @@ export function getNavigationWithInstitutions(
         const items: NavItem[] = pagesToShow.map(page => ({
           id: page.id,
           href: page.public_path || '#',
-          icon: NAV_PAGE_ICONS[page.icon] || FileText,
+          icon: getIcon(page.icon),
           label: page.title,
         }));
         return { ...group, items };
@@ -719,8 +734,28 @@ export function getNavigationWithInstitutions(
       return group;
     });
 
-    // Filter out groups with no items (e.g., continuation groups that were emptied)
-    const filteredGroups = processedGroups?.filter(g => g.items.length > 0);
+    // Inject new groups for sections that have pages but no existing group in this menu
+    const extraGroups: NavGroup[] = [];
+    for (const [slug, pages] of Object.entries(navPagesBySection)) {
+      if (renderedSections.has(slug)) continue;
+      const defaults = SECTION_SLUG_DEFAULTS[slug];
+      const items: NavItem[] = pages.map(page => ({
+        id: page.id,
+        href: page.public_path || '#',
+        icon: getIcon(page.icon),
+        label: page.title,
+      }));
+      extraGroups.push({
+        groupId: slug,
+        groupHref: defaults?.groupHref || '#',
+        groupIcon: defaults?.groupIcon || FileText,
+        groupLabel: defaults?.label || slug,
+        items,
+      });
+    }
+
+    const allGroups = [...(processedGroups || []), ...extraGroups];
+    const filteredGroups = allGroups.filter(g => g.items.length > 0);
 
     return { ...section, groups: filteredGroups };
   });

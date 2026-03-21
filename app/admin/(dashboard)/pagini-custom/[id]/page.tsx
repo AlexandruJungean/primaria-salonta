@@ -426,25 +426,12 @@ export default function CustomPageEditorPage() {
 
       {/* Add block + save */}
       <div className="flex justify-between items-start">
-        <div className="relative">
-          <AdminButton onClick={() => setShowBlockMenu(!showBlockMenu)} variant="secondary" icon={Plus}>
-            Adaugă bloc
-          </AdminButton>
-          {showBlockMenu && (
-            <div className="absolute top-full left-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-lg z-10 py-1 min-w-[180px]">
-              {BLOCK_TYPES.map(({ type, label, icon: BlockIcon }) => (
-                <button
-                  key={type}
-                  onClick={() => addBlock(type)}
-                  className="w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
-                >
-                  <BlockIcon className="w-4 h-4 text-slate-400" />
-                  {label}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
+        <BlockMenuDropdown
+          show={showBlockMenu}
+          onToggle={() => setShowBlockMenu(!showBlockMenu)}
+          onClose={() => setShowBlockMenu(false)}
+          onAdd={addBlock}
+        />
         <AdminButton onClick={saveAll} disabled={saving} icon={Save}>
           {saving ? 'Se salvează...' : 'Salvează totul'}
         </AdminButton>
@@ -760,6 +747,46 @@ function SeparatorBlockEditor() {
       <Minus className="w-4 h-4 text-slate-400" />
       <span className="text-xs font-medium text-slate-500 uppercase">Separator</span>
       <div className="flex-1 border-t border-slate-300" />
+    </div>
+  );
+}
+
+function BlockMenuDropdown({ show, onToggle, onClose, onAdd }: {
+  show: boolean;
+  onToggle: () => void;
+  onClose: () => void;
+  onAdd: (type: ContentBlock['type']) => void;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!show) return;
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) onClose();
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [show, onClose]);
+
+  return (
+    <div className="relative" ref={ref}>
+      <AdminButton onClick={onToggle} variant="secondary" icon={Plus}>
+        Adaugă bloc
+      </AdminButton>
+      {show && (
+        <div className="absolute bottom-full left-0 mb-1 bg-white border border-slate-200 rounded-lg shadow-lg z-50 py-1 min-w-[180px]">
+          {BLOCK_TYPES.map(({ type, label, icon: BlockIcon }) => (
+            <button
+              key={type}
+              onClick={() => onAdd(type)}
+              className="w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
+            >
+              <BlockIcon className="w-4 h-4 text-slate-400" />
+              {label}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
