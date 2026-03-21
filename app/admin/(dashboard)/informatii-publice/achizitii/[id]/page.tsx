@@ -18,6 +18,7 @@ export default function AchizitiiEditPage() {
       ]}
       basePath="/admin/informatii-publice/achizitii"
       defaultSubcategory={defaultSubcategory}
+      hideAnnexes
     />
   );
 }

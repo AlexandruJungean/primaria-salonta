@@ -13,6 +13,7 @@ export default function AnunturiEditPage() {
         { label: 'Anunțuri' },
       ]}
       basePath="/admin/transparenta/anunturi"
+      defaultSubcategory="general"
     />
   );
 }

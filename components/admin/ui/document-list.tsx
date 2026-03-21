@@ -84,6 +84,12 @@ const SUBCATEGORY_OPTIONS: Record<string, { value: string; label: string }[]> = 
     { value: 'transparenta', label: 'Transparență' },
   ],
   // Source folder-based subcategories
+  'anunturi': [
+    { value: 'general', label: 'Anunț general' },
+    { value: 'consultare', label: 'Consultare publică' },
+    { value: 'puz', label: 'Anunț PUZ' },
+    { value: 'dezbatere', label: 'Dezbatere publică' },
+  ],
   'generale': [
     { value: 'dispozitii', label: 'Dispoziții' },
     { value: 'rapoarte', label: 'Rapoarte anuale' },

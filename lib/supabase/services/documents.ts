@@ -183,19 +183,25 @@ export async function getDocumentsBySourceFolderWithAnnexes(
     return [];
   }
 
-  // Get all parent IDs
+  // Get all parent IDs and fetch annexes in batches to avoid header overflow
   const parentIds = parentDocs.map(doc => doc.id);
+  const BATCH_SIZE = 50;
+  let annexData: Document[] = [];
 
-  // Fetch all annexes for these parent documents
-  const { data: annexData, error: annexError } = await supabase
-    .from('documents')
-    .select('*')
-    .eq('published', true)
-    .in('parent_id', parentIds)
-    .order('created_at', { ascending: true });
+  for (let i = 0; i < parentIds.length; i += BATCH_SIZE) {
+    const batch = parentIds.slice(i, i + BATCH_SIZE);
+    const { data, error } = await supabase
+      .from('documents')
+      .select('*')
+      .eq('published', true)
+      .in('parent_id', batch)
+      .order('created_at', { ascending: true });
 
-  if (annexError) {
-    console.error('Error fetching annexes:', annexError);
+    if (error) {
+      console.error('Error fetching annexes batch:', error);
+    } else if (data) {
+      annexData = annexData.concat(data);
+    }
   }
 
   // Group annexes by parent_id

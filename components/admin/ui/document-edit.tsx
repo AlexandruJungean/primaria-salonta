@@ -49,6 +49,7 @@ interface DocumentEditProps {
   breadcrumbs: BreadcrumbItem[];
   basePath: string;
   defaultSubcategory?: string;
+  hideAnnexes?: boolean;
 }
 
 const SUBCATEGORY_OPTIONS: Record<string, { value: string; label: string }[]> = {
@@ -89,6 +90,12 @@ const SUBCATEGORY_OPTIONS: Record<string, { value: string; label: string }[]> = 
     { value: 'buget_final', label: 'Buget Final' },
   ],
   // Source folder-based subcategories
+  'anunturi': [
+    { value: 'general', label: 'Anunț general' },
+    { value: 'consultare', label: 'Consultare publică' },
+    { value: 'puz', label: 'Anunț PUZ' },
+    { value: 'dezbatere', label: 'Dezbatere publică' },
+  ],
   'generale': [
     { value: 'dispozitii', label: 'Dispoziții' },
     { value: 'rapoarte', label: 'Rapoarte anuale' },
@@ -131,6 +138,7 @@ export function DocumentEdit({
   breadcrumbs,
   basePath,
   defaultSubcategory,
+  hideAnnexes = false,
 }: DocumentEditProps) {
   const router = useRouter();
   const params = useParams();
@@ -619,8 +627,8 @@ export function DocumentEdit({
             </div>
           </AdminCard>
 
-          {/* Annexes Section - only show for existing documents and subcategory 'rapoarte' */}
-          {!isNew && formData.subcategory === 'rapoarte' && (
+          {/* Annexes Section */}
+          {!isNew && !hideAnnexes && (
             <AdminCard title="Anexe / Fișiere Atașate">
               <div className="space-y-4">
                 {/* Upload new annex */}

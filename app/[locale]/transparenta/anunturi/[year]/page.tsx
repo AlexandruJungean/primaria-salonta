@@ -10,7 +10,7 @@ import { Pagination } from '@/components/ui/pagination';
 import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
 import * as documentsService from '@/lib/supabase/services/documents';
-import type { Document } from '@/lib/types/database';
+import type { Document, DocumentWithAnnexes } from '@/lib/types/database';
 import { notFound } from 'next/navigation';
 import { translateContentArray } from '@/lib/google-translate/cache';
 
@@ -25,18 +25,14 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   });
 }
 
-// Determine announcement type from title
-function getAnnouncementType(title: string): 'consultare' | 'puz' | 'dezbatere' | 'general' {
-  const lowerTitle = title.toLowerCase();
-  if (lowerTitle.includes('puz') || lowerTitle.includes('plan urbanistic')) {
-    return 'puz';
+function getAnnouncementType(doc: { subcategory?: string | null; title: string }): 'consultare' | 'puz' | 'dezbatere' | 'general' {
+  if (doc.subcategory && ['consultare', 'puz', 'dezbatere', 'general'].includes(doc.subcategory)) {
+    return doc.subcategory as 'consultare' | 'puz' | 'dezbatere' | 'general';
   }
-  if (lowerTitle.includes('dezbatere') || lowerTitle.includes('minuta') || lowerTitle.includes('proces verbal')) {
-    return 'dezbatere';
-  }
-  if (lowerTitle.includes('consultare') || lowerTitle.includes('proiect de hotărâre') || lowerTitle.includes('proiect de hotarare')) {
-    return 'consultare';
-  }
+  const lowerTitle = doc.title.toLowerCase();
+  if (lowerTitle.includes('puz') || lowerTitle.includes('plan urbanistic')) return 'puz';
+  if (lowerTitle.includes('dezbatere') || lowerTitle.includes('minuta') || lowerTitle.includes('proces verbal')) return 'dezbatere';
+  if (lowerTitle.includes('consultare') || lowerTitle.includes('proiect de hotărâre') || lowerTitle.includes('proiect de hotarare')) return 'consultare';
   return 'general';
 }
 
@@ -47,10 +43,11 @@ const TYPE_CONFIG: Record<string, { label: string; icon: typeof Users; color: st
   general: { label: 'Anunț general', icon: Megaphone, color: 'text-gray-700', bgColor: 'bg-gray-100' },
 };
 
-function AnnouncementCard({ doc }: { doc: Document }) {
-  const type = getAnnouncementType(doc.title);
+function AnnouncementCard({ doc }: { doc: DocumentWithAnnexes }) {
+  const type = getAnnouncementType(doc);
   const config = TYPE_CONFIG[type];
   const Icon = config.icon;
+  const hasAnnexes = doc.annexes && doc.annexes.length > 0;
   
   return (
     <Card className="hover:shadow-md transition-shadow">
@@ -77,8 +74,8 @@ function AnnouncementCard({ doc }: { doc: Document }) {
             {doc.description && (
               <p className="text-sm text-gray-600 mb-2">{doc.description}</p>
             )}
-            {doc.file_url && (
-              <div className="flex flex-wrap gap-2 mt-2">
+            <div className="flex flex-wrap gap-2 mt-2">
+              {doc.file_url && (
                 <a
                   href={doc.file_url}
                   target="_blank"
@@ -86,10 +83,22 @@ function AnnouncementCard({ doc }: { doc: Document }) {
                   className="inline-flex items-center gap-1 text-xs text-primary-600 hover:text-primary-800 bg-primary-50 hover:bg-primary-100 px-2 py-1 rounded transition-colors"
                 >
                   <Download className="w-3 h-3" />
-                  Descarcă document
+                  {doc.file_name || 'Descarcă document'}
                 </a>
-              </div>
-            )}
+              )}
+              {hasAnnexes && doc.annexes.map((annex) => (
+                <a
+                  key={annex.id}
+                  href={annex.file_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-xs text-slate-600 hover:text-slate-800 bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded transition-colors"
+                >
+                  <FileText className="w-3 h-3" />
+                  {annex.title || annex.file_name}
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </CardContent>
@@ -117,8 +126,8 @@ export default async function AnunturiYearPage({
   const t = await getTranslations({ locale, namespace: 'navigation' });
   const ta = await getTranslations({ locale, namespace: 'anunturiPage' });
 
-  // Fetch announcements for this year
-  const allDocumentsData = await documentsService.getDocumentsBySourceFolder('anunturi');
+  // Fetch announcements for this year (with annexes)
+  const allDocumentsData = await documentsService.getDocumentsBySourceFolderWithAnnexes('anunturi');
   const yearDocumentsData = allDocumentsData.filter(doc => doc.year === yearNum);
   
   // Calculate pagination

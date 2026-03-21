@@ -26,7 +26,7 @@ export default async function LicitatiiPage({ params }: { params: Promise<{ loca
   const tPage = await getTranslations({ locale, namespace: 'licitatiiPage' });
 
   // Fetch auction documents from database
-  const auctionDocsData = await documents.getDocumentsByCategory('licitatii');
+  const auctionDocsData = await documents.getDocumentsByCategoryWithAnnexes('licitatii');
   
   // Translate document titles based on locale
   const auctionDocs = await translateContentArray(
@@ -116,6 +116,22 @@ export default async function LicitatiiPage({ params }: { params: Promise<{ loca
                           {labels.download}
                         </a>
                       </CardContent>
+                      {doc.annexes && doc.annexes.length > 0 && (
+                        <div className="flex flex-wrap gap-2 px-6 pb-4">
+                          {doc.annexes.map((annex) => (
+                            <a
+                              key={annex.id}
+                              href={annex.file_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 text-xs text-slate-600 hover:text-slate-800 bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded transition-colors"
+                            >
+                              <FileText className="w-3 h-3" />
+                              {annex.title || annex.file_name}
+                            </a>
+                          ))}
+                        </div>
+                      )}
                     </Card>
                   ))}
                 </div>

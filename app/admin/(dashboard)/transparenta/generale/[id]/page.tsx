@@ -14,6 +14,7 @@ export default function GeneraleEditPage() {
       ]}
       basePath="/admin/transparenta/generale"
       defaultSubcategory="dispozitii"
+      hideAnnexes
     />
   );
 }

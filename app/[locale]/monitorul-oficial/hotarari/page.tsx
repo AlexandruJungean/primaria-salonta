@@ -8,7 +8,8 @@ import { PageHeader } from '@/components/pages/page-header';
 import Link from 'next/link';
 import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
-import { getDocumentsBySourceFolder } from '@/lib/supabase/services/documents';
+import { getDocumentsBySourceFolderWithAnnexes } from '@/lib/supabase/services/documents';
+import type { DocumentWithAnnexes } from '@/lib/types/database';
 import { translateContentArray } from '@/lib/google-translate/cache';
 import { AdminEditButton } from '@/components/admin-edit-button';
 
@@ -47,7 +48,7 @@ export default async function HotarariMolPage({ params }: { params: Promise<{ lo
   const th = await getTranslations({ locale, namespace: 'hotarariMolPage' });
 
   // Fetch all registers from database
-  const allDocumentsData = await getDocumentsBySourceFolder('hotararile-autoritatii-deliberative');
+  const allDocumentsData = await getDocumentsBySourceFolderWithAnnexes('hotararile-autoritatii-deliberative');
   
   // Translate document titles
   const allDocuments = await translateContentArray(
@@ -119,22 +120,40 @@ export default async function HotarariMolPage({ params }: { params: Promise<{ lo
               ) : (
                 <div className="grid sm:grid-cols-2 gap-3">
                   {decisionRegisters.map((doc) => (
-                    <div key={doc.id} className="flex items-center justify-between gap-3 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                      <div className="flex items-center gap-3 flex-1 min-w-0">
-                        <FileText className="w-5 h-5 text-blue-600 shrink-0" />
-                        <span className="font-medium text-gray-900 text-sm truncate" title={doc.title}>
-                          {doc.title}
-                        </span>
+                    <div key={doc.id} className="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                          <FileText className="w-5 h-5 text-blue-600 shrink-0" />
+                          <span className="font-medium text-gray-900 text-sm truncate" title={doc.title}>
+                            {doc.title}
+                          </span>
+                        </div>
+                        <Link
+                          href={doc.file_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-1 px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-xs font-medium shrink-0"
+                        >
+                          <Download className="w-3 h-3" />
+                          PDF
+                        </Link>
                       </div>
-                      <Link
-                        href={doc.file_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1 px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-xs font-medium shrink-0"
-                      >
-                        <Download className="w-3 h-3" />
-                        PDF
-                      </Link>
+                      {doc.annexes && doc.annexes.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mt-2 ml-8">
+                          {doc.annexes.map((annex) => (
+                            <a
+                              key={annex.id}
+                              href={annex.file_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 text-xs text-slate-600 hover:text-slate-800 bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded transition-colors"
+                            >
+                              <FileText className="w-3 h-3" />
+                              {annex.title || annex.file_name}
+                            </a>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -163,22 +182,40 @@ export default async function HotarariMolPage({ params }: { params: Promise<{ lo
               ) : (
                 <div className="grid sm:grid-cols-2 gap-3">
                   {projectRegisters.map((doc) => (
-                    <div key={doc.id} className="flex items-center justify-between gap-3 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                      <div className="flex items-center gap-3 flex-1 min-w-0">
-                        <FileText className="w-5 h-5 text-amber-600 shrink-0" />
-                        <span className="font-medium text-gray-900 text-sm truncate" title={doc.title}>
-                          {doc.title}
-                        </span>
+                    <div key={doc.id} className="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                          <FileText className="w-5 h-5 text-amber-600 shrink-0" />
+                          <span className="font-medium text-gray-900 text-sm truncate" title={doc.title}>
+                            {doc.title}
+                          </span>
+                        </div>
+                        <Link
+                          href={doc.file_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-1 px-3 py-1.5 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors text-xs font-medium shrink-0"
+                        >
+                          <Download className="w-3 h-3" />
+                          PDF
+                        </Link>
                       </div>
-                      <Link
-                        href={doc.file_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1 px-3 py-1.5 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors text-xs font-medium shrink-0"
-                      >
-                        <Download className="w-3 h-3" />
-                        PDF
-                      </Link>
+                      {doc.annexes && doc.annexes.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mt-2 ml-8">
+                          {doc.annexes.map((annex) => (
+                            <a
+                              key={annex.id}
+                              href={annex.file_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 text-xs text-slate-600 hover:text-slate-800 bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded transition-colors"
+                            >
+                              <FileText className="w-3 h-3" />
+                              {annex.title || annex.file_name}
+                            </a>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>

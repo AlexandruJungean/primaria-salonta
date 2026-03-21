@@ -18,6 +18,7 @@ export default function DocumenteFinanciareEditPage() {
       ]}
       basePath="/admin/monitorul-oficial/documente-financiare"
       defaultSubcategory={defaultSubcategory}
+      hideAnnexes
     />
   );
 }

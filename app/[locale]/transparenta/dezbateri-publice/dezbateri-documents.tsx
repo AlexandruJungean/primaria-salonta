@@ -3,10 +3,10 @@
 import { Calendar, Download, Users, FileText } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Collapsible } from '@/components/ui/collapsible';
-import type { Document } from '@/lib/types/database';
+import type { DocumentWithAnnexes } from '@/lib/types/database';
 
 interface DezbateriDocumentsProps {
-  documentsByYear: Record<number, Document[]>;
+  documentsByYear: Record<number, DocumentWithAnnexes[]>;
   recentYears: number[];
   archiveYears: number[];
   translations: {
@@ -16,7 +16,7 @@ interface DezbateriDocumentsProps {
   };
 }
 
-function DebateCard({ doc }: { doc: Document }) {
+function DebateCard({ doc }: { doc: DocumentWithAnnexes }) {
   // Use document_date from database directly
   const date = doc.document_date;
   
@@ -53,6 +53,18 @@ function DebateCard({ doc }: { doc: Document }) {
                   <Download className="w-3 h-3" />
                   Descarcă document
                 </a>
+                {doc.annexes && doc.annexes.length > 0 && doc.annexes.map((annex) => (
+                  <a
+                    key={annex.id}
+                    href={annex.file_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-xs text-slate-600 hover:text-slate-800 bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded transition-colors"
+                  >
+                    <FileText className="w-3 h-3" />
+                    {annex.title || annex.file_name}
+                  </a>
+                ))}
               </div>
             )}
           </div>

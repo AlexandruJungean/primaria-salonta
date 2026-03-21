@@ -7,7 +7,7 @@ import { PageHeader } from '@/components/pages/page-header';
 import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
 import * as documentsService from '@/lib/supabase/services/documents';
-import type { Document } from '@/lib/types/database';
+import type { DocumentWithAnnexes } from '@/lib/types/database';
 import { DezbateriDocuments } from './dezbateri-documents';
 import { translateContentArray } from '@/lib/google-translate/cache';
 import { AdminEditButton } from '@/components/admin-edit-button';
@@ -27,7 +27,7 @@ export default async function DezbateriPublicePage({ params }: { params: Promise
   const td = await getTranslations({ locale, namespace: 'dezbateriPage' });
 
   // Fetch documents from database
-  const allDocumentsData = await documentsService.getDocumentsBySourceFolder('dezbateri-publice');
+  const allDocumentsData = await documentsService.getDocumentsBySourceFolderWithAnnexes('dezbateri-publice');
   
   // Translate document titles based on locale
   const allDocuments = await translateContentArray(
@@ -37,7 +37,7 @@ export default async function DezbateriPublicePage({ params }: { params: Promise
   );
 
   // Group documents by year (using doc.year from database directly)
-  const documentsByYear: Record<number, Document[]> = {};
+  const documentsByYear: Record<number, DocumentWithAnnexes[]> = {};
   
   allDocuments.forEach(doc => {
     // Use year from database, fallback to current year only if not set

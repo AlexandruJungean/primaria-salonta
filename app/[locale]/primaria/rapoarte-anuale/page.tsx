@@ -26,7 +26,7 @@ export default async function RapoarteAnualePage({ params }: { params: Promise<{
   const tr = await getTranslations({ locale, namespace: 'rapoarteAnualePage' });
 
   // Fetch reports from database - documents from altele/rapoarte-anuale-ale-primarului
-  const reportsData = await documents.getDocumentsBySourceFolder('rapoarte-anuale-ale-primarului');
+  const reportsData = await documents.getDocumentsBySourceFolderWithAnnexes('rapoarte-anuale-ale-primarului');
   
   // Translate report titles based on locale
   const reports = await translateContentArray(
@@ -107,6 +107,22 @@ export default async function RapoarteAnualePage({ params }: { params: Promise<{
                           PDF
                         </a>
                       </div>
+                      {report.annexes && report.annexes.length > 0 && (
+                        <div className="flex flex-wrap gap-2 px-4 pb-4">
+                          {report.annexes.map((annex) => (
+                            <a
+                              key={annex.id}
+                              href={annex.file_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 text-xs text-slate-600 hover:text-slate-800 bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded transition-colors"
+                            >
+                              <FileText className="w-3 h-3" />
+                              {annex.title || annex.file_name}
+                            </a>
+                          ))}
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 ))}
