@@ -9,6 +9,7 @@ import { Link } from '@/components/ui/link';
 import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
 import * as council from '@/lib/supabase/services/council';
+import { AdminEditButton } from '@/components/admin-edit-button';
 import { 
   Calendar, 
   Clock,
@@ -347,6 +348,7 @@ export default async function SedintaDetailPage({
           </div>
         </Container>
       </Section>
+      <AdminEditButton href={`/admin/consiliul-local/ordine-de-zi/${sessionData?.id || ''}`} />
     </>
   );
 }

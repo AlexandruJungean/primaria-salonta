@@ -1,14 +1,17 @@
 import { getTranslations } from 'next-intl/server';
-import { useTranslations } from 'next-intl';
 import Image from 'next/image';
-import { MapPin } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
-import { Card, CardContent } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
-import { generatePageMetadata, BreadcrumbJsonLd } from '@/lib/seo';
+import { generatePageMetadata } from '@/lib/seo';
+import { AdminEditButton } from '@/components/admin-edit-button';
+import { getPageWithData } from '@/lib/supabase/services/pages';
 import type { Locale } from '@/lib/seo/config';
+
+interface OraseData {
+  twinCities: { id: string; image: string }[];
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -19,18 +22,12 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   });
 }
 
-const TWIN_CITIES = [
-  { id: 'sarkad', image: '/images/orase-infratite/sarkad.webp' },
-  { id: 'csepel', image: '/images/orase-infratite/csepel.webp' },
-  { id: 'turkeve', image: '/images/orase-infratite/turkeve.webp' },
-  { id: 'rimaszombat', image: '/images/orase-infratite/rimaszombat.webp' },
-  { id: 'nagykoros', image: '/images/orase-infratite/nagykoros.webp' },
-  { id: 'hajduboszormeny', image: '/images/orase-infratite/hajduboszormeny.webp' },
-];
-
-export default function OraseInfratitePage() {
-  const t = useTranslations('navigation');
-  const tPage = useTranslations('oraseInfratitePage');
+export default async function OraseInfratitePage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'navigation' });
+  const tPage = await getTranslations({ locale, namespace: 'oraseInfratitePage' });
+  const page = await getPageWithData<OraseData>('localitatea-orase-infratite');
+  const twinCities = page?.structured_data?.twinCities || [];
 
   return (
     <>
@@ -43,53 +40,28 @@ export default function OraseInfratitePage() {
       <Section background="white">
         <Container>
           <div className="max-w-5xl mx-auto">
-            <p className="text-xl text-gray-600 mb-8 text-center">
-              {tPage('intro')}
-            </p>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {TWIN_CITIES.map((city) => (
-                <Card key={city.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-                  <CardContent className="pt-6">
-                    <div className="flex items-start gap-4">
-                      <div className="relative w-20 h-24 flex-shrink-0">
-                        <Image
-                          src={city.image}
-                          alt={tPage(`cities.${city.id}.name`)}
-                          fill
-                          className="object-contain"
-                          sizes="80px"
-                        />
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-bold text-gray-900">
-                          {tPage(`cities.${city.id}.name`)}
-                        </h3>
-                        <div className="flex items-center gap-1 text-gray-500 text-sm mb-2">
-                          <MapPin className="w-4 h-4" />
-                          {tPage(`cities.${city.id}.country`)}
-                        </div>
-                        <p className="text-gray-600 text-sm">
-                          {tPage(`cities.${city.id}.description`)}
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+            <p className="text-lg text-gray-600 mb-10 text-center">{tPage('intro')}</p>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {twinCities.map((city) => (
+                <div key={city.id} className="text-center group">
+                  <div className="relative w-full aspect-square max-w-[200px] mx-auto rounded-xl overflow-hidden shadow-md group-hover:shadow-lg transition-shadow mb-4 bg-white">
+                    <Image
+                      src={city.image}
+                      alt={tPage(`cities.${city.id}.name`)}
+                      fill
+                      className="object-contain p-2"
+                    />
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900">{tPage(`cities.${city.id}.name`)}</h3>
+                  <p className="text-sm text-primary-600">{tPage(`cities.${city.id}.country`)}</p>
+                  <p className="text-sm text-gray-600 mt-2">{tPage(`cities.${city.id}.description`)}</p>
+                </div>
               ))}
-            </div>
-
-            <div className="mt-12 p-6 bg-gray-50 rounded-xl">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                {tPage('aboutTitle')}
-              </h2>
-              <p className="text-gray-600">
-                {tPage('aboutText')}
-              </p>
             </div>
           </div>
         </Container>
       </Section>
+      <AdminEditButton href="/admin/localitatea/orase-infratite" />
     </>
   );
 }

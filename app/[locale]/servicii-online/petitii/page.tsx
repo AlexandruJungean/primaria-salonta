@@ -13,6 +13,7 @@ import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
 import { Button } from '@/components/ui/button';
 import { useSiteSettings } from '@/components/layout/site-settings-context';
+import { AdminEditButtonClient as AdminEditButton } from '@/components/admin-edit-button-client';
 import { petitionFormSchema, type PetitionFormData } from '@/lib/validations/forms';
 import { useEnsureRecaptcha } from '@/components/features/recaptcha-provider';
 
@@ -460,6 +461,7 @@ export default function PetitiiPage() {
           </div>
         </Container>
       </Section>
+      <AdminEditButton href="/admin/mesaje/petitii" />
     </>
   );
 }

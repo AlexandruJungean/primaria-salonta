@@ -11,6 +11,7 @@ import { type Locale } from '@/i18n/routing';
 import { ContactForm } from './contact-form';
 import { getOfficeHours } from '@/lib/supabase/services/office-hours';
 import { translateContentArray } from '@/lib/google-translate/cache';
+import { AdminEditButton } from '@/components/admin-edit-button';
 
 export async function generateMetadata({
   params,
@@ -182,6 +183,7 @@ export default async function ContactPage({
           />
         </div>
       </Section>
+      <AdminEditButton href="/admin/mesaje/contact" />
     </>
   );
 }

@@ -13,6 +13,7 @@ import * as documentsService from '@/lib/supabase/services/documents';
 import type { Document, DocumentWithAnnexes } from '@/lib/types/database';
 import { notFound } from 'next/navigation';
 import { translateContentArray } from '@/lib/google-translate/cache';
+import { AdminEditButton } from '@/components/admin-edit-button';
 
 const ITEMS_PER_PAGE = 20;
 
@@ -248,6 +249,7 @@ export default async function AnunturiYearPage({
           </div>
         </Container>
       </Section>
+      <AdminEditButton href="/admin/transparenta/anunturi" />
     </>
   );
 }

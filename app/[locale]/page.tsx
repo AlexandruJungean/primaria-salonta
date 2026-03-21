@@ -10,6 +10,7 @@ import { WebPageJsonLd } from '@/lib/seo/json-ld';
 import { type Locale } from '@/i18n/routing';
 import { getHeroSlidesForLocale, getLatestNews, getUpcomingEvents } from '@/lib/supabase/services';
 import { getCityStats } from '@/lib/supabase/services/settings';
+import { AdminEditButton } from '@/components/admin-edit-button';
 
 // Enable ISR - revalidate homepage every 60 seconds for fresh content while maintaining fast response times
 export const revalidate = 60;
@@ -113,6 +114,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
       {/* Contact Information - Local SEO */}
       <ContactInfoSection />
+      <AdminEditButton href="/admin" />
     </>
   );
 }

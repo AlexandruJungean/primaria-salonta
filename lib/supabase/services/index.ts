@@ -115,6 +115,7 @@ export {
 export {
   getPageBySlug,
   getPageByPath,
+  getPageWithData,
   getPages,
   getChildPages,
   getFAQs,
@@ -156,6 +157,16 @@ export {
   type HeroSlide,
   type HeroSlideTranslated,
 } from './hero-slides';
+
+// Institutions Services
+export {
+  getInstitutionBySlug,
+  getAllInstitutions,
+  getAllInstitutionSlugs,
+  getInstitutionsForNav,
+  type Institution,
+  type InstitutionNavItem,
+} from './institutions';
 
 // Navigation Services
 export {

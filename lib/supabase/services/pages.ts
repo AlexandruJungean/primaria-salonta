@@ -6,6 +6,7 @@ export interface Page {
   parent_slug: string | null;
   title: string;
   content: string | null;
+  structured_data: Record<string, unknown> | null;
   excerpt: string | null;
   featured_image: string | null;
   meta_title: string | null;
@@ -190,6 +191,27 @@ export async function getFAQCategories(): Promise<string[]> {
   });
 
   return Array.from(categories).sort();
+}
+
+/**
+ * Get page with structured data by slug (for pages with JSONB structured_data)
+ */
+export async function getPageWithData<T = Record<string, unknown>>(slug: string): Promise<(Page & { structured_data: T }) | null> {
+  const supabase = createAnonServerClient();
+
+  const { data, error } = await supabase
+    .from('pages')
+    .select('*')
+    .eq('slug', slug)
+    .eq('published', true)
+    .single();
+
+  if (error) {
+    console.error('Error fetching page with data:', slug, error);
+    return null;
+  }
+
+  return data as (Page & { structured_data: T });
 }
 
 /**

@@ -1,13 +1,19 @@
 import { getTranslations } from 'next-intl/server';
-import { useTranslations } from 'next-intl';
-import { Award, User } from 'lucide-react';
+import { User } from 'lucide-react';
 import { Container } from '@/components/ui/container';
 import { Section } from '@/components/ui/section';
 import { Card, CardContent } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
-import { generatePageMetadata, BreadcrumbJsonLd } from '@/lib/seo';
+import { generatePageMetadata } from '@/lib/seo';
+import { AdminEditButton } from '@/components/admin-edit-button';
+import { getPageWithData } from '@/lib/supabase/services/pages';
 import type { Locale } from '@/lib/seo/config';
+
+interface CetateniData {
+  citizens: { name: string; year: string | null; description: string }[];
+  procedure: string;
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -18,16 +24,12 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   });
 }
 
-const HONORARY_CITIZENS = [
-  {
-    name: 'Arany János',
-    year: null,
-    description: 'Poet maghiar, unul dintre cei mai mari poeți ai literaturii maghiare, născut în Salonta (1817-1882).',
-  },
-];
-
-export default function CetateniOnoarePage() {
-  const t = useTranslations('navigation');
+export default async function CetateniOnoarePage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'navigation' });
+  const page = await getPageWithData<CetateniData>('localitatea-cetateni-de-onoare');
+  const citizens = page?.structured_data?.citizens || [];
+  const procedure = page?.structured_data?.procedure || '';
 
   return (
     <>
@@ -40,14 +42,12 @@ export default function CetateniOnoarePage() {
       <Section background="white">
         <Container>
           <div className="max-w-5xl mx-auto">
-            <p className="text-xl text-gray-600 mb-8 text-center">
-              Titlul de Cetățean de Onoare este cea mai înaltă distincție acordată 
-              de Consiliul Local al Municipiului Salonta persoanelor care au adus 
-              contribuții deosebite la dezvoltarea și prestigiul orașului.
-            </p>
+            {page?.content && (
+              <p className="text-xl text-gray-600 mb-8 text-center">{page.content}</p>
+            )}
 
             <div className="space-y-4">
-              {HONORARY_CITIZENS.map((citizen) => (
+              {citizens.map((citizen) => (
                 <Card key={citizen.name}>
                   <CardContent className="flex items-start gap-4 pt-6">
                     <div className="w-16 h-16 rounded-full bg-primary-100 flex items-center justify-center shrink-0">
@@ -56,9 +56,7 @@ export default function CetateniOnoarePage() {
                     <div>
                       <h3 className="text-xl font-bold text-gray-900">{citizen.name}</h3>
                       {citizen.year && (
-                        <p className="text-sm text-primary-600 font-medium">
-                          Acordat în {citizen.year}
-                        </p>
+                        <p className="text-sm text-primary-600 font-medium">Acordat în {citizen.year}</p>
                       )}
                       <p className="text-gray-600 mt-2">{citizen.description}</p>
                     </div>
@@ -67,20 +65,16 @@ export default function CetateniOnoarePage() {
               ))}
             </div>
 
-            <div className="mt-12 p-6 bg-amber-50 rounded-xl border border-amber-200">
-              <h2 className="text-xl font-semibold text-amber-900 mb-4">
-                Procedura de acordare
-              </h2>
-              <p className="text-amber-800">
-                Titlul de Cetățean de Onoare se acordă prin hotărâre a Consiliului 
-                Local al Municipiului Salonta, la propunerea primarului, a consilierilor 
-                locali sau a cetățenilor, în condițiile stabilite prin regulament.
-              </p>
-            </div>
+            {procedure && (
+              <div className="mt-12 p-6 bg-amber-50 rounded-xl border border-amber-200">
+                <h2 className="text-xl font-semibold text-amber-900 mb-4">Procedura de acordare</h2>
+                <p className="text-amber-800">{procedure}</p>
+              </div>
+            )}
           </div>
         </Container>
       </Section>
+      <AdminEditButton href="/admin/localitatea/cetateni-de-onoare" />
     </>
   );
 }
-

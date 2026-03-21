@@ -23,6 +23,8 @@ import {
   MoreHorizontal,
   Eye,
   UserCog,
+  MapPin,
+  CreditCard,
 } from 'lucide-react';
 
 interface NavItem {
@@ -140,6 +142,20 @@ const navigationItems: NavItem[] = [
     label: 'Instituții',
     href: '/admin/institutii',
     icon: GraduationCap,
+    hasSubPages: true,
+  },
+  {
+    id: 'localitatea',
+    label: 'Localitatea',
+    href: '/admin/localitatea',
+    icon: MapPin,
+    hasSubPages: true,
+  },
+  {
+    id: 'servicii-online',
+    label: 'Servicii Online',
+    href: '/admin/servicii-online',
+    icon: CreditCard,
     hasSubPages: true,
   },
   {

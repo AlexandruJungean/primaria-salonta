@@ -12,6 +12,7 @@ import type { Locale } from '@/lib/seo/config';
 import { getCouncilSessionBySlug, getAllSessionSlugs } from '@/lib/supabase/services';
 import type { CouncilSessionWithDetails } from '@/lib/types/database';
 import { translateContentFields, translateContentArray } from '@/lib/google-translate/cache';
+import { AdminEditButton } from '@/components/admin-edit-button';
 
 function formatDate(dateString: string, locale: string): string {
   const date = new Date(dateString);
@@ -319,6 +320,7 @@ export default async function HotarariDetailPage({
           </div>
         </Container>
       </Section>
+      <AdminEditButton href={`/admin/consiliul-local/hotarari/${session.id}`} />
     </>
   );
 }
