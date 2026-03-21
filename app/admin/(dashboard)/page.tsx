@@ -83,7 +83,7 @@ export default function AdminDashboardPage() {
     { label: 'Evenimente', value: stats.events, icon: Calendar, href: '/admin/evenimente', color: 'bg-purple-500' },
     { label: 'Hotărâri CL', value: stats.decisions, icon: Gavel, href: '/admin/consiliul-local/hotarari', color: 'bg-amber-500' },
     { label: 'Ordine de Zi', value: stats.sessions, icon: ListChecks, href: '/admin/consiliul-local/ordine-de-zi', color: 'bg-green-500' },
-    { label: 'Documente', value: stats.documents, icon: Info, href: '/admin/informatii-publice/achizitii', color: 'bg-slate-500' },
+    { label: 'Documente', value: stats.documents, icon: Info, href: '/admin/documente', color: 'bg-slate-500' },
     { label: 'Consilieri Locali', value: stats.councilMembers, icon: Users, href: '/admin/consiliul-local/consilieri', color: 'bg-teal-500' },
   ];
 

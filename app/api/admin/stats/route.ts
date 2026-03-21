@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
         supabase.from('events').select('*', { count: 'exact', head: true }),
         supabase.from('council_decisions').select('*', { count: 'exact', head: true }),
         supabase.from('council_sessions').select('*', { count: 'exact', head: true }),
-        supabase.from('documents').select('*', { count: 'exact', head: true }),
+        supabase.from('documents').select('*', { count: 'exact', head: true }).not('file_url', 'is', null),
         supabase.from('council_members').select('*', { count: 'exact', head: true }),
         supabase.from('petitions').select('*', { count: 'exact', head: true }).in('status', ['inregistrata', 'in_lucru']),
         supabase.from('contact_submissions').select('*', { count: 'exact', head: true }).eq('status', 'new'),

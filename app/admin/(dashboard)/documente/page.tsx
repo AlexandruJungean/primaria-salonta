@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import { Search, FileText, ExternalLink, ArrowUpDown, ArrowUp, ArrowDown, X } from 'lucide-react';
+import { Search, FileText, ExternalLink, ArrowUpDown, ArrowUp, ArrowDown, X, Pencil } from 'lucide-react';
 import { adminFetch } from '@/lib/api-client';
 import {
   AdminPageHeader,
@@ -234,7 +234,7 @@ export default function DocumenteManagerPage() {
                             className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
                             title="Editează sursa"
                           >
-                            <FileText className="w-4 h-4" />
+                            <Pencil className="w-4 h-4" />
                           </a>
                         )}
                       </div>
