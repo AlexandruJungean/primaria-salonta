@@ -2,8 +2,9 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
-import { ChevronUp, ChevronDown, Pencil, X, Check, Eye, EyeOff, Lock } from 'lucide-react';
-import { AdminPageHeader, AdminCard, toast } from '@/components/admin';
+import { useRouter } from 'next/navigation';
+import { ChevronUp, ChevronDown, Pencil, X, Check, Eye, EyeOff, Lock, Trash2, Plus } from 'lucide-react';
+import { AdminPageHeader, AdminCard, AdminButton, AdminConfirmDialog, toast } from '@/components/admin';
 import { adminFetch } from '@/lib/api-client';
 import { getIcon } from '@/lib/constants/icon-map';
 import { IconPicker } from '@/components/admin/icon-picker';
@@ -19,6 +20,8 @@ interface NavPage {
   admin_path: string;
   sort_order: number;
   is_active: boolean;
+  is_custom?: boolean;
+  page_id?: string | null;
   show_in_cetateni: boolean;
   show_in_firme: boolean;
   show_in_primarie: boolean;
@@ -46,12 +49,15 @@ const NAV_GROUPS = [
 ];
 
 export function NavSectionAdminPage({ sectionSlug, breadcrumbLabel }: NavSectionAdminPageProps) {
+  const router = useRouter();
   const [section, setSection] = useState<NavSection | null>(null);
   const [pages, setPages] = useState<NavPage[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<Partial<NavPage>>({});
   const [saving, setSaving] = useState(false);
+  const [creating, setCreating] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<NavPage | null>(null);
 
   const loadData = useCallback(async () => {
     try {
@@ -69,6 +75,45 @@ export function NavSectionAdminPage({ sectionSlug, breadcrumbLabel }: NavSection
   }, [sectionSlug]);
 
   useEffect(() => { loadData(); }, [loadData]);
+
+  const createCustomPage = async () => {
+    if (!section) return;
+    setCreating(true);
+    try {
+      const maxOrder = pages.reduce((max, p) => Math.max(max, p.sort_order), 0);
+      const response = await adminFetch('/api/admin/navigation', {
+        method: 'POST',
+        body: JSON.stringify({
+          is_custom: true,
+          section_id: section.id,
+          title: 'Pagină nouă',
+          sort_order: maxOrder + 1,
+        }),
+      });
+      if (!response.ok) throw new Error('Failed to create');
+      const result = await response.json();
+      toast.success('Pagina a fost creată');
+      router.push(`/admin/pagini-custom/${result.page.id}`);
+    } catch {
+      toast.error('Eroare la crearea paginii');
+    } finally {
+      setCreating(false);
+    }
+  };
+
+  const deleteCustomPage = async (page: NavPage) => {
+    try {
+      const response = await adminFetch(`/api/admin/navigation?id=${page.id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed to delete');
+      toast.success('Pagina a fost ștearsă');
+      setDeleteTarget(null);
+      await loadData();
+    } catch {
+      toast.error('Eroare la ștergerea paginii');
+    }
+  };
 
   const startEdit = (page: NavPage) => {
     setEditingId(page.id);
@@ -161,6 +206,11 @@ export function NavSectionAdminPage({ sectionSlug, breadcrumbLabel }: NavSection
         title={section.title}
         description={section.description || undefined}
         breadcrumbs={[{ label: breadcrumbLabel }]}
+        actions={
+          <AdminButton onClick={createCustomPage} disabled={creating} icon={Plus}>
+            {creating ? 'Se creează...' : 'Adaugă Pagină'}
+          </AdminButton>
+        }
       />
 
       {/* Edit form */}
@@ -305,12 +355,22 @@ export function NavSectionAdminPage({ sectionSlug, breadcrumbLabel }: NavSection
                     >
                       <Pencil className="w-3.5 h-3.5" />
                     </button>
-                    <div
-                      className="p-1 text-slate-300 cursor-default"
-                      title="Nu poate fi șters"
-                    >
-                      <Lock className="w-3.5 h-3.5" />
-                    </div>
+                    {page.is_custom ? (
+                      <button
+                        onClick={() => setDeleteTarget(page)}
+                        className="p-1 rounded hover:bg-red-50 text-slate-400 hover:text-red-600"
+                        title="Șterge pagina"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    ) : (
+                      <div
+                        className="p-1 text-slate-300 cursor-default"
+                        title="Nu poate fi șters"
+                      >
+                        <Lock className="w-3.5 h-3.5" />
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -328,6 +388,20 @@ export function NavSectionAdminPage({ sectionSlug, breadcrumbLabel }: NavSection
             </AdminCard>
           );
         })}
+
+        {/* Add page card */}
+        <button
+          onClick={createCustomPage}
+          disabled={creating}
+          className="border-2 border-dashed border-slate-300 rounded-xl hover:border-blue-400 hover:bg-blue-50/50 transition-colors flex flex-col items-center justify-center gap-2 py-8 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center">
+            <Plus className="w-5 h-5 text-slate-400" />
+          </div>
+          <span className="text-sm font-medium text-slate-400">
+            {creating ? 'Se creează...' : 'Adaugă pagină'}
+          </span>
+        </button>
       </div>
 
       {pages.length === 0 && (
@@ -337,6 +411,18 @@ export function NavSectionAdminPage({ sectionSlug, breadcrumbLabel }: NavSection
           </div>
         </AdminCard>
       )}
+
+      <AdminConfirmDialog
+        isOpen={deleteTarget !== null}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={() => {
+          if (deleteTarget) deleteCustomPage(deleteTarget);
+        }}
+        title="Șterge pagina personalizată?"
+        message={`Ești sigur că vrei să ștergi pagina „${deleteTarget?.title}"? Conținutul paginii va fi șters definitiv.`}
+        confirmLabel="Da, șterge"
+        cancelLabel="Nu, anulează"
+      />
     </div>
   );
 }
