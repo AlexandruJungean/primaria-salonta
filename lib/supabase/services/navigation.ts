@@ -128,7 +128,7 @@ export async function getNavPageByPageId(pageId: string): Promise<NavPageWithSec
     .from('nav_pages')
     .select('*, nav_sections(slug, title, icon)')
     .eq('page_id', pageId)
-    .single();
+    .maybeSingle();
 
   if (error) {
     console.error('Error fetching nav page by page_id:', pageId, error);

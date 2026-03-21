@@ -1,4 +1,4 @@
-import { FileText, ExternalLink } from 'lucide-react';
+import { FileText, ExternalLink, LinkIcon } from 'lucide-react';
 import { ClickableImage } from '@/components/ui/clickable-image';
 
 interface HeadingBlock {
@@ -14,13 +14,22 @@ interface TextBlock {
   content: string;
 }
 
-interface ImageBlock {
-  id: string;
-  type: 'image';
+interface ImageItem {
   url: string;
   alt: string;
   caption: string;
-  layout: 'full' | 'contained';
+}
+
+interface ImageBlock {
+  id: string;
+  type: 'image';
+  images?: ImageItem[];
+  columns?: 1 | 2 | 3 | 4 | 5;
+  maxHeight?: string;
+  url?: string;
+  alt?: string;
+  caption?: string;
+  layout?: 'full' | 'contained';
 }
 
 interface DocumentItem {
@@ -35,6 +44,15 @@ interface DocumentsBlock {
   type: 'documents';
   title: string;
   items: DocumentItem[];
+}
+
+interface DocumentDetailBlock {
+  id: string;
+  type: 'document_detail';
+  title: string;
+  description: string;
+  attachments: DocumentItem[];
+  links: { title: string; url: string }[];
 }
 
 interface LinkItem {
@@ -55,7 +73,7 @@ interface SeparatorBlock {
   type: 'separator';
 }
 
-type ContentBlock = HeadingBlock | TextBlock | ImageBlock | DocumentsBlock | LinksBlock | SeparatorBlock;
+type ContentBlock = HeadingBlock | TextBlock | ImageBlock | DocumentsBlock | DocumentDetailBlock | LinksBlock | SeparatorBlock;
 
 interface CustomPageRendererProps {
   blocks: ContentBlock[];
@@ -94,19 +112,7 @@ function BlockRenderer({ block }: { block: ContentBlock }) {
       );
 
     case 'image':
-      if (!block.url) return null;
-      return (
-        <figure className={`my-8 not-prose ${block.layout === 'contained' ? 'max-w-2xl mx-auto' : ''}`}>
-          <ClickableImage
-            src={block.url}
-            alt={block.alt || 'Imagine'}
-            aspectRatio="video"
-            className="rounded-xl"
-            sizes={block.layout === 'full' ? '100vw' : '(max-width: 768px) 100vw, 672px'}
-            caption={block.caption || undefined}
-          />
-        </figure>
-      );
+      return <ImageBlockRenderer block={block} />;
 
     case 'documents':
       if (!block.items || block.items.length === 0) return null;
@@ -141,6 +147,9 @@ function BlockRenderer({ block }: { block: ContentBlock }) {
           </div>
         </div>
       );
+
+    case 'document_detail':
+      return <DocumentDetailRenderer block={block} />;
 
     case 'links':
       if (!block.items || block.items.length === 0) return null;
@@ -179,6 +188,129 @@ function BlockRenderer({ block }: { block: ContentBlock }) {
     default:
       return null;
   }
+}
+
+function ImageBlockRenderer({ block }: { block: ImageBlock }) {
+  const images = block.images && block.images.length > 0
+    ? block.images
+    : block.url ? [{ url: block.url, alt: block.alt || '', caption: block.caption || '' }] : [];
+
+  if (images.length === 0 || !images.some(img => img.url)) return null;
+
+  const columns = block.columns || 1;
+  const maxHeight = block.maxHeight || undefined;
+  const heightStyle = maxHeight ? { maxHeight, overflow: 'hidden' as const } : undefined;
+
+  if (images.length === 1) {
+    const img = images[0];
+    if (!img.url) return null;
+    const isContained = block.layout === 'contained' || columns > 1;
+    return (
+      <figure className={`my-8 not-prose ${isContained ? 'max-w-2xl mx-auto' : ''}`}>
+        <div style={heightStyle} className="rounded-xl overflow-hidden">
+          <ClickableImage
+            src={img.url}
+            alt={img.alt || 'Imagine'}
+            aspectRatio="video"
+            className="rounded-xl"
+            sizes={isContained ? '(max-width: 768px) 100vw, 672px' : '100vw'}
+            caption={img.caption || undefined}
+          />
+        </div>
+      </figure>
+    );
+  }
+
+  const gridColsMap: Record<number, string> = { 2: 'md:grid-cols-2', 3: 'md:grid-cols-3', 4: 'md:grid-cols-4', 5: 'md:grid-cols-5' };
+  const gridCols = gridColsMap[columns] || '';
+
+  return (
+    <div className={`my-8 not-prose grid gap-4 ${gridCols}`}>
+      {images.map((img, idx) => {
+        if (!img.url) return null;
+        return (
+          <figure key={idx}>
+            <div style={heightStyle} className="rounded-xl overflow-hidden">
+              <ClickableImage
+                src={img.url}
+                alt={img.alt || 'Imagine'}
+                aspectRatio="video"
+                className="rounded-xl"
+                sizes={columns >= 4 ? '25vw' : columns === 3 ? '33vw' : columns === 2 ? '50vw' : '100vw'}
+                caption={img.caption || undefined}
+              />
+            </div>
+          </figure>
+        );
+      })}
+    </div>
+  );
+}
+
+function DocumentDetailRenderer({ block }: { block: DocumentDetailBlock }) {
+  const hasAttachments = block.attachments && block.attachments.length > 0;
+  const hasLinks = block.links && block.links.length > 0;
+  if (!block.title && !hasAttachments && !hasLinks) return null;
+
+  return (
+    <div className="my-8 not-prose border border-gray-200 rounded-xl p-5">
+      {block.title && (
+        <h3 className="text-lg font-semibold text-primary-800 mb-1">{block.title}</h3>
+      )}
+      {block.description && (
+        <p className="text-sm text-gray-600 mb-4 whitespace-pre-line">{block.description}</p>
+      )}
+
+      {hasAttachments && (
+        <div className="mb-4">
+          <p className="text-xs font-medium text-gray-500 uppercase mb-2">Fișiere atașate</p>
+          <div className="space-y-1.5">
+            {block.attachments.map((att, idx) => (
+              <a
+                key={idx}
+                href={att.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 p-2.5 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors group"
+              >
+                <FileText className="w-4 h-4 text-primary-600 shrink-0" />
+                <span className="text-sm font-medium text-gray-900 group-hover:text-primary-700 flex-1 truncate">
+                  {att.title || att.file_name}
+                </span>
+                {att.file_size > 0 && (
+                  <span className="text-xs text-gray-400">{formatSize(att.file_size)}</span>
+                )}
+                <ExternalLink className="w-3.5 h-3.5 text-gray-400 shrink-0" />
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {hasLinks && (
+        <div>
+          <p className="text-xs font-medium text-gray-500 uppercase mb-2">Link-uri asociate</p>
+          <div className="space-y-1.5">
+            {block.links.map((link, idx) => (
+              <a
+                key={idx}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-primary-50 transition-colors group"
+              >
+                <LinkIcon className="w-4 h-4 text-primary-600 shrink-0" />
+                <span className="text-sm text-primary-700 group-hover:text-primary-800 font-medium">
+                  {link.title || link.url}
+                </span>
+                <ExternalLink className="w-3.5 h-3.5 text-gray-400 shrink-0 ml-auto" />
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
 
 function formatSize(bytes: number): string {

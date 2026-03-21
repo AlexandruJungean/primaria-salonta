@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import {
   Save, Trash2, Plus, ChevronUp, ChevronDown, ArrowLeft,
   Type, AlignLeft, ImageIcon, FileText, LinkIcon, Minus, Upload, X,
+  FileBox,
 } from 'lucide-react';
 import { AdminPageHeader, AdminCard, AdminButton, AdminConfirmDialog, toast } from '@/components/admin';
 import { AdminImageUpload } from '@/components/admin/ui/admin-image-upload';
@@ -27,13 +28,23 @@ interface TextBlock {
   content: string;
 }
 
-interface ImageBlock {
-  id: string;
-  type: 'image';
+interface ImageItem {
   url: string;
   alt: string;
   caption: string;
-  layout: 'full' | 'contained';
+}
+
+interface ImageBlock {
+  id: string;
+  type: 'image';
+  images: ImageItem[];
+  columns: 1 | 2 | 3 | 4 | 5;
+  maxHeight: string;
+  // legacy single-image fields (migrated on load)
+  url?: string;
+  alt?: string;
+  caption?: string;
+  layout?: string;
 }
 
 interface DocumentItem {
@@ -48,6 +59,15 @@ interface DocumentsBlock {
   type: 'documents';
   title: string;
   items: DocumentItem[];
+}
+
+interface DocumentDetailBlock {
+  id: string;
+  type: 'document_detail';
+  title: string;
+  description: string;
+  attachments: DocumentItem[];
+  links: { title: string; url: string }[];
 }
 
 interface LinkItem {
@@ -68,7 +88,7 @@ interface SeparatorBlock {
   type: 'separator';
 }
 
-type ContentBlock = HeadingBlock | TextBlock | ImageBlock | DocumentsBlock | LinksBlock | SeparatorBlock;
+type ContentBlock = HeadingBlock | TextBlock | ImageBlock | DocumentsBlock | DocumentDetailBlock | LinksBlock | SeparatorBlock;
 
 // ── Nav page metadata ──
 
@@ -98,8 +118,9 @@ const NAV_GROUPS = [
 const BLOCK_TYPES = [
   { type: 'heading', label: 'Titlu', icon: Type },
   { type: 'text', label: 'Text', icon: AlignLeft },
-  { type: 'image', label: 'Imagine', icon: ImageIcon },
-  { type: 'documents', label: 'Documente', icon: FileText },
+  { type: 'image', label: 'Imagini', icon: ImageIcon },
+  { type: 'documents', label: 'Lista documente', icon: FileText },
+  { type: 'document_detail', label: 'Document cu atașamente', icon: FileBox },
   { type: 'links', label: 'Link-uri', icon: LinkIcon },
   { type: 'separator', label: 'Separator', icon: Minus },
 ] as const;
@@ -119,6 +140,8 @@ export default function CustomPageEditorPage() {
   const [blocks, setBlocks] = useState<ContentBlock[]>([]);
   const [showDeletePage, setShowDeletePage] = useState(false);
   const [showBlockMenu, setShowBlockMenu] = useState(false);
+  const [deletedBlock, setDeletedBlock] = useState<{ block: ContentBlock; index: number } | null>(null);
+  const undoTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Settings form state (synced from navPage)
   const [title, setTitle] = useState('');
@@ -231,10 +254,13 @@ export default function CustomPageEditorPage() {
         block = { id, type: 'text', content: '' };
         break;
       case 'image':
-        block = { id, type: 'image', url: '', alt: '', caption: '', layout: 'full' };
+        block = { id, type: 'image', images: [{ url: '', alt: '', caption: '' }], columns: 1, maxHeight: '' };
         break;
       case 'documents':
         block = { id, type: 'documents', title: '', items: [] };
+        break;
+      case 'document_detail':
+        block = { id, type: 'document_detail', title: '', description: '', attachments: [], links: [] };
         break;
       case 'links':
         block = { id, type: 'links', title: '', items: [] };
@@ -252,7 +278,22 @@ export default function CustomPageEditorPage() {
   };
 
   const removeBlock = (index: number) => {
+    const removed = blocks[index];
     setBlocks(prev => prev.filter((_, i) => i !== index));
+    if (undoTimerRef.current) clearTimeout(undoTimerRef.current);
+    setDeletedBlock({ block: removed, index });
+    undoTimerRef.current = setTimeout(() => setDeletedBlock(null), 8000);
+  };
+
+  const undoRemoveBlock = () => {
+    if (!deletedBlock) return;
+    if (undoTimerRef.current) clearTimeout(undoTimerRef.current);
+    setBlocks(prev => {
+      const next = [...prev];
+      next.splice(deletedBlock.index, 0, deletedBlock.block);
+      return next;
+    });
+    setDeletedBlock(null);
   };
 
   const moveBlock = (index: number, direction: 'up' | 'down') => {
@@ -415,12 +456,24 @@ export default function CustomPageEditorPage() {
           ))}
         </div>
 
-        {blocks.length === 0 && (
+        {blocks.length === 0 && !deletedBlock && (
           <AdminCard>
             <div className="text-center py-8 text-slate-500">
               Nu există conținut. Adaugă primul bloc.
             </div>
           </AdminCard>
+        )}
+
+        {deletedBlock && (
+          <div className="flex items-center gap-3 px-4 py-3 bg-amber-50 border border-amber-200 rounded-lg mt-3">
+            <span className="text-sm text-amber-800">Bloc șters.</span>
+            <button
+              onClick={undoRemoveBlock}
+              className="text-sm font-semibold text-amber-700 hover:text-amber-900 underline underline-offset-2"
+            >
+              Anulează
+            </button>
+          </div>
         )}
       </div>
 
@@ -459,15 +512,27 @@ function BlockEditor({ block, onChange }: { block: ContentBlock; onChange: (upda
       return <HeadingBlockEditor block={block} onChange={onChange} />;
     case 'text':
       return <TextBlockEditor block={block} onChange={onChange} />;
-    case 'image':
-      return <ImageBlockEditor block={block} onChange={onChange} />;
+    case 'image': {
+      const migrated = migrateImageBlock(block);
+      return <ImageBlockEditor block={migrated} onChange={onChange} />;
+    }
     case 'documents':
       return <DocumentsBlockEditor block={block} onChange={onChange} />;
+    case 'document_detail':
+      return <DocumentDetailBlockEditor block={block} onChange={onChange} />;
     case 'links':
       return <LinksBlockEditor block={block} onChange={onChange} />;
     case 'separator':
       return <SeparatorBlockEditor />;
   }
+}
+
+function migrateImageBlock(block: ImageBlock): ImageBlock {
+  if (block.images && block.images.length > 0) return block;
+  if (block.url) {
+    return { ...block, images: [{ url: block.url, alt: block.alt || '', caption: block.caption || '' }], columns: 1, maxHeight: '' };
+  }
+  return { ...block, images: [], columns: block.columns || 1, maxHeight: block.maxHeight || '' };
 }
 
 function HeadingBlockEditor({ block, onChange }: { block: HeadingBlock; onChange: (u: Partial<HeadingBlock>) => void }) {
@@ -515,48 +580,99 @@ function TextBlockEditor({ block, onChange }: { block: TextBlock; onChange: (u: 
 }
 
 function ImageBlockEditor({ block, onChange }: { block: ImageBlock; onChange: (u: Partial<ImageBlock>) => void }) {
+  const images = block.images || [];
+
+  const updateImage = (idx: number, field: keyof ImageItem, value: string) => {
+    const next = [...images];
+    next[idx] = { ...next[idx], [field]: value };
+    onChange({ images: next });
+  };
+
+  const addImage = () => {
+    onChange({ images: [...images, { url: '', alt: '', caption: '' }] });
+  };
+
+  const removeImage = (idx: number) => {
+    onChange({ images: images.filter((_, i) => i !== idx) });
+  };
+
   return (
     <div>
-      <div className="flex items-center gap-2 mb-2">
+      <div className="flex items-center gap-2 mb-3 flex-wrap">
         <ImageIcon className="w-4 h-4 text-slate-400" />
-        <span className="text-xs font-medium text-slate-500 uppercase">Imagine</span>
-        <select
-          value={block.layout}
-          onChange={e => onChange({ layout: e.target.value as 'full' | 'contained' })}
-          className="ml-auto text-xs border border-slate-300 rounded px-2 py-1"
-        >
-          <option value="full">Lățime completă</option>
-          <option value="contained">Dimensiune naturală</option>
-        </select>
-      </div>
-      <AdminImageUpload
-        label=""
-        value={block.url}
-        onChange={url => onChange({ url })}
-        category="altele"
-      />
-      <div className="grid grid-cols-2 gap-3 mt-3">
-        <div>
-          <label className="block text-xs font-medium text-slate-500 mb-1">Text alternativ</label>
-          <input
-            type="text"
-            value={block.alt}
-            onChange={e => onChange({ alt: e.target.value })}
-            placeholder="Descriere imagine..."
-            className="w-full px-3 py-1.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          />
-        </div>
-        <div>
-          <label className="block text-xs font-medium text-slate-500 mb-1">Legendă (opțional)</label>
-          <input
-            type="text"
-            value={block.caption}
-            onChange={e => onChange({ caption: e.target.value })}
-            placeholder="Legendă imagine..."
-            className="w-full px-3 py-1.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          />
+        <span className="text-xs font-medium text-slate-500 uppercase">Imagini</span>
+        <div className="ml-auto flex items-center gap-3">
+          <div className="flex items-center gap-1">
+            <label className="text-xs text-slate-500">Coloane:</label>
+            <select
+              value={block.columns}
+              onChange={e => onChange({ columns: Number(e.target.value) as 1 | 2 | 3 | 4 | 5 })}
+              className="text-xs border border-slate-300 rounded px-2 py-1"
+            >
+              <option value={1}>1</option>
+              <option value={2}>2</option>
+              <option value={3}>3</option>
+              <option value={4}>4</option>
+              <option value={5}>5</option>
+            </select>
+          </div>
+          <div className="flex items-center gap-1">
+            <label className="text-xs text-slate-500">Înălțime max:</label>
+            <input
+              type="text"
+              value={block.maxHeight || ''}
+              onChange={e => onChange({ maxHeight: e.target.value })}
+              placeholder="ex: 300px"
+              className="w-20 text-xs border border-slate-300 rounded px-2 py-1"
+            />
+          </div>
         </div>
       </div>
+
+      <div className={`grid gap-3 ${images.length > 1 ? 'grid-cols-1 md:grid-cols-2' : ''}`}>
+        {images.map((img, idx) => (
+          <div key={idx} className="border border-slate-200 rounded-lg p-3 relative">
+            {images.length > 1 && (
+              <button
+                onClick={() => removeImage(idx)}
+                className="absolute top-2 right-2 p-1 bg-white rounded-full shadow hover:bg-red-50 text-slate-400 hover:text-red-600 z-10"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
+            <AdminImageUpload
+              label=""
+              value={img.url}
+              onChange={url => updateImage(idx, 'url', url)}
+              category="altele"
+              maxWidth={250}
+            />
+            <div className="grid grid-cols-2 gap-2 mt-2">
+              <input
+                type="text"
+                value={img.alt}
+                onChange={e => updateImage(idx, 'alt', e.target.value)}
+                placeholder="Text alternativ..."
+                className="w-full px-2 py-1 text-xs border border-slate-300 rounded focus:ring-2 focus:ring-blue-500"
+              />
+              <input
+                type="text"
+                value={img.caption}
+                onChange={e => updateImage(idx, 'caption', e.target.value)}
+                placeholder="Legendă..."
+                className="w-full px-2 py-1 text-xs border border-slate-300 rounded focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <button
+        onClick={addImage}
+        className="mt-2 flex items-center gap-2 px-3 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-lg border border-dashed border-slate-300"
+      >
+        <Plus className="w-4 h-4" /> Adaugă imagine
+      </button>
     </div>
   );
 }
@@ -659,6 +775,163 @@ function DocumentsBlockEditor({ block, onChange }: { block: DocumentsBlock; onCh
           if (file) uploadDocument(file);
         }}
       />
+    </div>
+  );
+}
+
+function DocumentDetailBlockEditor({ block, onChange }: { block: DocumentDetailBlock; onChange: (u: Partial<DocumentDetailBlock>) => void }) {
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+
+  const uploadAttachment = async (file: File) => {
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('category', 'altele');
+      const response = await adminFetch('/api/admin/upload', { method: 'POST', body: formData });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error);
+      const newItem: DocumentItem = {
+        title: file.name.replace(/\.[^/.]+$/, ''),
+        url: data.url,
+        file_name: data.originalFilename || file.name,
+        file_size: file.size,
+      };
+      onChange({ attachments: [...block.attachments, newItem] });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Eroare la încărcare');
+    } finally {
+      setUploading(false);
+      if (fileRef.current) fileRef.current.value = '';
+    }
+  };
+
+  const removeAttachment = (idx: number) => {
+    onChange({ attachments: block.attachments.filter((_, i) => i !== idx) });
+  };
+
+  const updateAttachment = (idx: number, title: string) => {
+    const attachments = [...block.attachments];
+    attachments[idx] = { ...attachments[idx], title };
+    onChange({ attachments });
+  };
+
+  const addLink = () => {
+    onChange({ links: [...block.links, { title: '', url: '' }] });
+  };
+
+  const removeLink = (idx: number) => {
+    onChange({ links: block.links.filter((_, i) => i !== idx) });
+  };
+
+  const updateLink = (idx: number, field: 'title' | 'url', value: string) => {
+    const links = [...block.links];
+    links[idx] = { ...links[idx], [field]: value };
+    onChange({ links });
+  };
+
+  return (
+    <div>
+      <div className="flex items-center gap-2 mb-2">
+        <FileBox className="w-4 h-4 text-slate-400" />
+        <span className="text-xs font-medium text-slate-500 uppercase">Document cu atașamente</span>
+      </div>
+
+      <div className="space-y-3">
+        <div>
+          <label className="block text-xs font-medium text-slate-500 mb-1">Titlu document</label>
+          <input
+            type="text"
+            value={block.title}
+            onChange={e => onChange({ title: e.target.value })}
+            placeholder="ex: Hotărârea nr. 123/2026"
+            className="w-full px-3 py-1.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+        <div>
+          <label className="block text-xs font-medium text-slate-500 mb-1">Descriere (opțional)</label>
+          <textarea
+            value={block.description}
+            onChange={e => onChange({ description: e.target.value })}
+            placeholder="Descriere sau rezumat..."
+            rows={2}
+            className="w-full px-3 py-1.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+
+        {/* Attachments */}
+        <div>
+          <label className="block text-xs font-medium text-slate-500 mb-1">Fișiere atașate</label>
+          <div className="space-y-1.5">
+            {block.attachments.map((att, idx) => (
+              <div key={idx} className="flex items-center gap-2 p-2 bg-slate-50 rounded-lg">
+                <FileText className="w-4 h-4 text-slate-400 shrink-0" />
+                <input
+                  type="text"
+                  value={att.title}
+                  onChange={e => updateAttachment(idx, e.target.value)}
+                  className="flex-1 px-2 py-1 text-sm border border-slate-300 rounded focus:ring-2 focus:ring-blue-500"
+                  placeholder="Titlu fișier"
+                />
+                <span className="text-xs text-slate-400 shrink-0">{formatSize(att.file_size)}</span>
+                <button onClick={() => removeAttachment(idx)} className="p-1 rounded hover:bg-red-50 text-slate-400 hover:text-red-600">
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            ))}
+          </div>
+          <button
+            onClick={() => fileRef.current?.click()}
+            disabled={uploading}
+            className="mt-1.5 flex items-center gap-2 px-3 py-1.5 text-sm text-slate-600 hover:bg-slate-100 rounded-lg border border-dashed border-slate-300 disabled:opacity-50"
+          >
+            <Upload className="w-4 h-4" />
+            {uploading ? 'Se încarcă...' : 'Încarcă fișier'}
+          </button>
+          <input
+            ref={fileRef}
+            type="file"
+            className="hidden"
+            accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.zip,.rar"
+            onChange={e => { const file = e.target.files?.[0]; if (file) uploadAttachment(file); }}
+          />
+        </div>
+
+        {/* Links */}
+        <div>
+          <label className="block text-xs font-medium text-slate-500 mb-1">Link-uri asociate</label>
+          <div className="space-y-1.5">
+            {block.links.map((link, idx) => (
+              <div key={idx} className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={link.title}
+                  onChange={e => updateLink(idx, 'title', e.target.value)}
+                  className="flex-1 px-2 py-1 text-sm border border-slate-300 rounded focus:ring-2 focus:ring-blue-500"
+                  placeholder="Titlu link"
+                />
+                <input
+                  type="url"
+                  value={link.url}
+                  onChange={e => updateLink(idx, 'url', e.target.value)}
+                  className="flex-1 px-2 py-1 text-sm border border-slate-300 rounded focus:ring-2 focus:ring-blue-500"
+                  placeholder="https://..."
+                />
+                <button onClick={() => removeLink(idx)} className="p-1 rounded hover:bg-red-50 text-slate-400 hover:text-red-600">
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            ))}
+          </div>
+          <button
+            onClick={addLink}
+            className="mt-1.5 flex items-center gap-2 px-3 py-1.5 text-sm text-slate-600 hover:bg-slate-100 rounded-lg border border-dashed border-slate-300"
+          >
+            <Plus className="w-4 h-4" /> Adaugă link
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
@@ -774,12 +1047,12 @@ function BlockMenuDropdown({ show, onToggle, onClose, onAdd }: {
         Adaugă bloc
       </AdminButton>
       {show && (
-        <div className="absolute bottom-full left-0 mb-1 bg-white border border-slate-200 rounded-lg shadow-lg z-50 py-1 min-w-[180px]">
+        <div className="absolute bottom-full left-0 mb-1 bg-white border border-slate-200 rounded-lg shadow-lg z-50 py-1 min-w-[220px]">
           {BLOCK_TYPES.map(({ type, label, icon: BlockIcon }) => (
             <button
               key={type}
               onClick={() => onAdd(type)}
-              className="w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
+              className="w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 whitespace-nowrap"
             >
               <BlockIcon className="w-4 h-4 text-slate-400" />
               {label}

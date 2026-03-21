@@ -41,7 +41,7 @@ export async function getPageBySlug(slug: string): Promise<Page | null> {
     .select('*')
     .eq('slug', slug)
     .eq('published', true)
-    .single();
+    .maybeSingle();
 
   if (error) {
     console.error('Error fetching page:', error);
@@ -57,23 +57,21 @@ export async function getPageBySlug(slug: string): Promise<Page | null> {
 export async function getPageByPath(path: string): Promise<Page | null> {
   const supabase = createAnonServerClient();
   
-  // Try to find by exact slug first
   let { data, error } = await supabase
     .from('pages')
     .select('*')
     .eq('slug', path)
     .eq('published', true)
-    .single();
+    .maybeSingle();
 
   if (!data) {
-    // Try just the last part of the path
     const slug = path.split('/').pop() || path;
     const result = await supabase
       .from('pages')
       .select('*')
       .eq('slug', slug)
       .eq('published', true)
-      .single();
+      .maybeSingle();
     
     data = result.data;
     error = result.error;
