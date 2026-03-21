@@ -1,6 +1,7 @@
 'use client';
 
-import { LogOut, User, Menu } from 'lucide-react';
+import Link from 'next/link';
+import { LogOut, User, Menu, KeyRound } from 'lucide-react';
 
 interface AdminHeaderProps {
   userName: string;
@@ -38,7 +39,14 @@ export function AdminHeader({ userName, userRole, onLogout, onMenuToggle }: Admi
             </div>
           </div>
           
-          {/* Logout button */}
+          <Link
+            href="/admin/setari/parola"
+            className="flex items-center gap-2 px-3 lg:px-4 py-2 lg:py-3 text-sm lg:text-base font-medium text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+            title="Schimbă parola"
+          >
+            <KeyRound className="w-5 h-5" />
+            <span className="hidden sm:inline">Parolă</span>
+          </Link>
           <button
             onClick={onLogout}
             className="flex items-center gap-2 px-3 lg:px-4 py-2 lg:py-3 text-sm lg:text-base font-medium text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
