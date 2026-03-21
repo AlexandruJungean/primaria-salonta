@@ -537,19 +537,19 @@ export interface ProgramNavItem {
   id: string;
   slug: string;
   title: string;
+  icon: string | null;
+  showInCetateni: boolean;
+  showInFirme: boolean;
+  showInPrimarie: boolean;
+  showInTurist: boolean;
 }
 
-/**
- * Get top-level programs for navigation menu
- */
-// Internal function to fetch programs for nav
-// Get programs for navigation menu
 export async function getProgramsForNav(): Promise<ProgramNavItem[]> {
   const supabase = createAnonServerClient();
 
   const { data, error } = await supabase
     .from('programs')
-    .select('id, slug, title')
+    .select('id, slug, title, icon, show_in_cetateni, show_in_firme, show_in_primarie, show_in_turist')
     .eq('published', true)
     .is('parent_id', null)
     .order('sort_order', { ascending: true });
@@ -563,5 +563,10 @@ export async function getProgramsForNav(): Promise<ProgramNavItem[]> {
     id: p.slug,
     slug: p.slug,
     title: p.title,
+    icon: p.icon || null,
+    showInCetateni: p.show_in_cetateni || false,
+    showInFirme: p.show_in_firme || false,
+    showInPrimarie: p.show_in_primarie || false,
+    showInTurist: p.show_in_turist || false,
   }));
 }

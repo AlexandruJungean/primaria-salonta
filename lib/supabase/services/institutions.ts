@@ -112,6 +112,8 @@ export interface InstitutionNavItem {
   category: string;
   showInCitizens: boolean;
   showInTourists: boolean;
+  showInFirme: boolean;
+  showInPrimarie: boolean;
 }
 
 // Get institutions for navigation menu
@@ -120,9 +122,8 @@ export async function getInstitutionsForNav(): Promise<InstitutionNavItem[]> {
   
   const { data, error } = await supabase
     .from('institutions')
-    .select('id, slug, name, icon, category, show_in_citizens, show_in_tourists')
+    .select('id, slug, name, icon, category, show_in_cetateni, show_in_firme, show_in_primarie, show_in_turist')
     .eq('published', true)
-    .eq('category', 'institutii')
     .order('display_order', { ascending: true });
   
   if (error) {
@@ -136,7 +137,9 @@ export async function getInstitutionsForNav(): Promise<InstitutionNavItem[]> {
     name: d.name,
     icon: d.icon || 'building',
     category: d.category || 'institutii',
-    showInCitizens: d.show_in_citizens || false,
-    showInTourists: d.show_in_tourists || false,
+    showInCitizens: d.show_in_cetateni || false,
+    showInTourists: d.show_in_turist || false,
+    showInFirme: d.show_in_firme || false,
+    showInPrimarie: d.show_in_primarie || false,
   }));
 }

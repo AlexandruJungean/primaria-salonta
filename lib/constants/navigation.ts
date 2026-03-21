@@ -183,6 +183,15 @@ export const MAIN_NAVIGATION: NavSection[] = [
           { id: 'audiente', href: '/primaria/audiente', icon: Mic },
         ],
       },
+      // Programs for citizens
+      {
+        groupId: 'programe',
+        groupHref: '/programe',
+        groupIcon: Target,
+        isDynamic: true,
+        dynamicType: 'programs-cetateni',
+        items: [],
+      },
     ],
     standaloneItems: [
       { id: 'raporteazaProblema', href: '/raporteaza-problema', icon: AlertTriangle },
@@ -235,6 +244,24 @@ export const MAIN_NAVIGATION: NavSection[] = [
           { id: 'economie', href: '/localitatea/economie', icon: TrendingUp },
         ],
       },
+      // Programs for businesses
+      {
+        groupId: 'programe',
+        groupHref: '/programe',
+        groupIcon: Target,
+        isDynamic: true,
+        dynamicType: 'programs-firme',
+        items: [],
+      },
+      // Institutions for businesses
+      {
+        groupId: 'institutii',
+        groupHref: '/institutii',
+        groupIcon: Building,
+        items: [],
+        isDynamic: true,
+        dynamicType: 'institutions-firme',
+      },
     ],
     standaloneItems: [],
   },
@@ -266,8 +293,8 @@ export const MAIN_NAVIGATION: NavSection[] = [
         groupHref: '/programe',
         groupIcon: Target,
         isDynamic: true,
-        dynamicType: 'programs',
-        items: [], // Will be populated from database
+        dynamicType: 'programs-primarie',
+        items: [],
       },
       // Local Council group
       {
@@ -334,6 +361,15 @@ export const MAIN_NAVIGATION: NavSection[] = [
           { id: 'studii', href: '/rapoarte-studii/studii', icon: FileSearch },
         ],
       },
+      // Institutions for city hall
+      {
+        groupId: 'institutii',
+        groupHref: '/institutii',
+        groupIcon: Building,
+        items: [],
+        isDynamic: true,
+        dynamicType: 'institutions-primarie',
+      },
     ],
     standaloneItems: [],
   },
@@ -364,9 +400,18 @@ export const MAIN_NAVIGATION: NavSection[] = [
         groupId: 'institutii',
         groupHref: '/institutii',
         groupIcon: Building,
-        items: [], // Populated dynamically from database
-        isDynamic: true, // Flag for dynamic loading
+        items: [],
+        isDynamic: true,
         dynamicType: 'institutions-cultural',
+      },
+      // Programs for tourists
+      {
+        groupId: 'programe',
+        groupHref: '/programe',
+        groupIcon: Target,
+        isDynamic: true,
+        dynamicType: 'programs-turist',
+        items: [],
       },
     ],
     standaloneItems: [
@@ -509,6 +554,8 @@ export interface DynamicInstitution {
   category: string;
   showInCitizens: boolean;
   showInTourists: boolean;
+  showInFirme: boolean;
+  showInPrimarie: boolean;
 }
 
 // Interface for dynamic program nav items
@@ -516,6 +563,11 @@ export interface DynamicProgram {
   id: string;
   slug: string;
   title: string;
+  icon: string | null;
+  showInCetateni: boolean;
+  showInFirme: boolean;
+  showInPrimarie: boolean;
+  showInTurist: boolean;
 }
 
 // Maps groupId to nav_sections slug for DB-driven groups
@@ -579,8 +631,15 @@ export function getNavigationWithInstitutions(
     const processedGroups = section.groups?.map(group => {
       // Handle existing dynamic types (institutions, programs)
       if (group.isDynamic) {
-        if (group.dynamicType === 'programs') {
-          const programItems: NavItem[] = dynamicPrograms.map(prog => ({
+        if (group.dynamicType?.startsWith('programs-')) {
+          const filteredPrograms = dynamicPrograms.filter(prog => {
+            if (group.dynamicType === 'programs-cetateni') return prog.showInCetateni;
+            if (group.dynamicType === 'programs-firme') return prog.showInFirme;
+            if (group.dynamicType === 'programs-primarie') return prog.showInPrimarie;
+            if (group.dynamicType === 'programs-turist') return prog.showInTurist;
+            return false;
+          });
+          const programItems: NavItem[] = filteredPrograms.map(prog => ({
             id: prog.slug,
             href: `/programe/${prog.slug}`,
             icon: PROGRAM_ICONS[prog.slug] || Target,
@@ -592,6 +651,8 @@ export function getNavigationWithInstitutions(
         const filteredInstitutions = dynamicInstitutions.filter(inst => {
           if (group.dynamicType === 'institutions-social') return inst.showInCitizens;
           if (group.dynamicType === 'institutions-cultural') return inst.showInTourists;
+          if (group.dynamicType === 'institutions-firme') return inst.showInFirme;
+          if (group.dynamicType === 'institutions-primarie') return inst.showInPrimarie;
           return false;
         });
         const dynamicItems: NavItem[] = filteredInstitutions.map(inst => ({
