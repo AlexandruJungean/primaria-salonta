@@ -90,6 +90,13 @@ const navigationItems: NavItem[] = [
     requiredRole: 'super_admin',
   },
   {
+    id: 'logs',
+    label: 'Jurnal Activitate',
+    href: '/admin/logs',
+    icon: History,
+    requiredRole: 'super_admin',
+  },
+  {
     id: 'setari',
     label: 'Setări',
     href: '/admin/setari',
@@ -201,6 +208,12 @@ const navigationItems: NavItem[] = [
     ],
   },
   {
+    id: 'programe',
+    label: 'Programe și Strategii',
+    href: '/admin/programe',
+    icon: Target,
+  },
+  {
     id: 'rapoarte-studii',
     label: 'Rapoarte și Studii',
     icon: ShieldCheck,
@@ -210,17 +223,20 @@ const navigationItems: NavItem[] = [
     ],
   },
   {
+    id: 'institutii',
+    label: 'Instituții',
+    href: '/admin/institutii',
+    icon: GraduationCap,
+  },
+  {
     id: 'altele',
     label: 'Altele',
     icon: MoreHorizontal,
     children: [
-      { id: 'programe', label: 'Programe și Proiecte', href: '/admin/programe', icon: Target },
-      { id: 'institutii', label: 'Instituții', href: '/admin/institutii', icon: GraduationCap },
       { id: 'voluntariat', label: 'Voluntariat', href: '/admin/voluntariat', icon: Heart },
       { id: 'faq', label: 'Întrebări Frecvente', href: '/admin/faq', icon: HelpCircle },
       { id: 'galerie', label: 'Galerie Foto', href: '/admin/galerie', icon: Image },
       { id: 'webcams', label: 'Camere Web', href: '/admin/webcams', icon: Video },
-      { id: 'logs', label: 'Jurnal Activitate', href: '/admin/logs', icon: History },
     ],
   },
 ];
