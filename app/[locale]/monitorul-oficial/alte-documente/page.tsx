@@ -15,6 +15,7 @@ import type { Locale } from '@/lib/seo/config';
 import { getDocumentsBySourceFolder } from '@/lib/supabase/services/documents';
 import { getExternalLinks } from '@/lib/supabase/services/page-content';
 import type { Document, ExternalLink as ExternalLinkType } from '@/lib/types/database';
+import { AdminEditButton } from '@/components/admin-edit-button';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -370,6 +371,7 @@ export default async function AlteDocumentePage({ params }: { params: Promise<{ 
           </div>
         </Container>
       </Section>
+      <AdminEditButton href="/admin/monitorul-oficial/alte-documente" />
     </>
   );
 }

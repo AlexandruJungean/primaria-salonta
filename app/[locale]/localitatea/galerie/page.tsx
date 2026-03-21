@@ -7,6 +7,7 @@ import { ImageGallery } from '@/components/ui/image-gallery';
 import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
 import * as pageImages from '@/lib/supabase/services/page-images';
+import { AdminEditButton } from '@/components/admin-edit-button';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -66,6 +67,7 @@ export default async function GaleriePage({ params }: { params: Promise<{ locale
           </div>
         </Container>
       </Section>
+      <AdminEditButton href="/admin/galerie" />
     </>
   );
 }

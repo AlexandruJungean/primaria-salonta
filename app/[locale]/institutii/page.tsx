@@ -11,6 +11,7 @@ import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
 import * as institutionsService from '@/lib/supabase/services/institutions';
 import { translateContentArray } from '@/lib/google-translate/cache';
+import { AdminEditButton } from '@/components/admin-edit-button';
 
 // Icon mapping
 const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -108,6 +109,7 @@ export default async function InstitutiiPage({ params }: { params: Promise<{ loc
           </div>
         </Container>
       </Section>
+      <AdminEditButton href="/admin/institutii" />
     </>
   );
 }
