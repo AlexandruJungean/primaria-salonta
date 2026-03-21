@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { Save, ArrowLeft, Trash2, Image as ImageIcon, Video } from 'lucide-react';
+import { Save, ArrowLeft, Trash2, Video } from 'lucide-react';
 import {
   AdminPageHeader,
   AdminButton,
@@ -10,6 +10,7 @@ import {
   AdminInput,
   AdminTextarea,
   AdminConfirmDialog,
+  AdminImageUpload,
   toast,
 } from '@/components/admin';
 import { adminFetch } from '@/lib/api-client';
@@ -222,11 +223,13 @@ export default function WebcamEditPage() {
                 placeholder="https://stream.example.com/camera1"
                 hint="URL-ul stream-ului video live (HLS, RTSP, etc.)"
               />
-              <AdminInput
-                label="URL Imagine Preview"
+              <AdminImageUpload
+                label="Imagine Preview"
                 value={formData.image_url}
-                onChange={(e) => handleChange('image_url', e.target.value)}
-                placeholder="https://..."
+                onChange={(url) => handleChange('image_url', url)}
+                category="webcams"
+                aspectRatio="video"
+                maxWidth={400}
                 hint="Imagine statică afișată ca preview"
               />
             </div>

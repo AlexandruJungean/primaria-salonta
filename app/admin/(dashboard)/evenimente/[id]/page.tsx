@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { Save, ArrowLeft, Eye, Trash2, Image as ImageIcon } from 'lucide-react';
+import { Save, ArrowLeft, Eye, Trash2 } from 'lucide-react';
 import {
   AdminPageHeader,
   AdminButton,
@@ -12,6 +12,7 @@ import {
   AdminTextarea,
   AdminSelect,
   AdminConfirmDialog,
+  AdminImageUpload,
   toast,
 } from '@/components/admin';
 import { adminFetch } from '@/lib/api-client';
@@ -403,26 +404,14 @@ export default function EvenimenteEditPage() {
           </AdminCard>
 
           <AdminCard title="Imagine principală">
-            <div className="space-y-4">
-              <AdminInput
-                label="URL Imagine"
-                value={formData.featured_image}
-                onChange={(e) => handleChange('featured_image', e.target.value)}
-                placeholder="https://..."
-              />
-              {formData.featured_image ? (
-                <div className="aspect-video bg-slate-100 rounded-lg overflow-hidden">
-                  <img src={formData.featured_image} alt="Preview" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
-                </div>
-              ) : (
-                <div className="aspect-video bg-slate-100 rounded-lg flex items-center justify-center">
-                  <div className="text-center text-slate-400">
-                    <ImageIcon className="w-12 h-12 mx-auto mb-2" />
-                    <p>Nicio imagine selectată</p>
-                  </div>
-                </div>
-              )}
-            </div>
+            <AdminImageUpload
+              label="Imagine Eveniment"
+              value={formData.featured_image}
+              onChange={(url) => handleChange('featured_image', url)}
+              category="evenimente"
+              aspectRatio="video"
+              maxWidth={400}
+            />
           </AdminCard>
         </div>
       </div>

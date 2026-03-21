@@ -1100,7 +1100,6 @@ export default function ProgramEditPage() {
                 </div>
                 {docForm.file_url && <p className="mt-2 text-sm text-green-600">✓ {docForm.file_name}</p>}
               </div>
-              <AdminInput label="URL fișier (sau încarcă mai sus)" value={docForm.file_url} onChange={(e) => setDocForm(prev => ({ ...prev, file_url: e.target.value }))} />
               <div className="grid grid-cols-2 gap-4">
                 <AdminInput label="An" type="number" value={docForm.year} onChange={(e) => setDocForm(prev => ({ ...prev, year: e.target.value }))} placeholder="2024" />
                 <AdminSelect label="Categorie" value={docForm.category} onChange={(e) => setDocForm(prev => ({ ...prev, category: e.target.value }))} options={DOCUMENT_CATEGORIES} />

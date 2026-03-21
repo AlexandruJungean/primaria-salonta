@@ -11,3 +11,4 @@ export { AdminPageHeader } from './admin-page-header';
 export { AdminStatusBadge } from './admin-status-badge';
 export { DocumentList } from './document-list';
 export { DocumentEdit } from './document-edit';
+export { AdminImageUpload } from './admin-image-upload';

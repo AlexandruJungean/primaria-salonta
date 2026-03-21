@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { Save, ArrowLeft, Trash2, Image as ImageIcon } from 'lucide-react';
+import { Save, ArrowLeft, Trash2 } from 'lucide-react';
 import {
   AdminPageHeader,
   AdminButton,
@@ -11,6 +11,7 @@ import {
   AdminTextarea,
   AdminSelect,
   AdminConfirmDialog,
+  AdminImageUpload,
   toast,
 } from '@/components/admin';
 import { adminFetch } from '@/lib/api-client';
@@ -316,23 +317,14 @@ export default function ConducereEditPage() {
           </AdminCard>
 
           <AdminCard title="Fotografie">
-            <div className="space-y-4">
-              <AdminInput
-                label="URL Fotografie"
-                value={formData.photo_url}
-                onChange={(e) => handleChange('photo_url', e.target.value)}
-                placeholder="https://..."
-              />
-              {formData.photo_url ? (
-                <div className="aspect-square bg-slate-100 rounded-lg overflow-hidden max-w-[200px] mx-auto">
-                  <img src={formData.photo_url} alt="Preview" className="w-full h-full object-cover" />
-                </div>
-              ) : (
-                <div className="aspect-square bg-slate-100 rounded-lg flex items-center justify-center max-w-[200px] mx-auto">
-                  <ImageIcon className="w-12 h-12 text-slate-400" />
-                </div>
-              )}
-            </div>
+            <AdminImageUpload
+              label="Fotografie"
+              value={formData.photo_url}
+              onChange={(url) => handleChange('photo_url', url)}
+              category="conducere"
+              aspectRatio="square"
+              maxWidth={200}
+            />
           </AdminCard>
         </div>
       </div>
