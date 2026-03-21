@@ -12,6 +12,7 @@ import { getDocumentsByCategory, getDocumentYears } from '@/lib/supabase/service
 import type { Locale } from '@/lib/seo/config';
 import type { Document } from '@/lib/types/database';
 import { translateContentArray } from '@/lib/google-translate/cache';
+import { AdminEditButton } from '@/components/admin-edit-button';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -255,6 +256,7 @@ export default async function AchizitiiPage({ params }: { params: Promise<{ loca
           </div>
         </Container>
       </Section>
+      <AdminEditButton href="/admin/informatii-publice/achizitii" />
     </>
   );
 }

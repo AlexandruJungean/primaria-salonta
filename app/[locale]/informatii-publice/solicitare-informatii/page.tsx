@@ -8,6 +8,7 @@ import { PageHeader } from '@/components/pages/page-header';
 import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
 import * as documents from '@/lib/supabase/services/documents';
+import { AdminEditButton } from '@/components/admin-edit-button';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -104,6 +105,7 @@ export default async function SolicitareInformatiiPage({ params }: { params: Pro
           </div>
         </Container>
       </Section>
+      <AdminEditButton href="/admin/informatii-publice/solicitare-informatii" />
     </>
   );
 }

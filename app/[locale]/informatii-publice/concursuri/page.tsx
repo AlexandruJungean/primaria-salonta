@@ -9,6 +9,7 @@ import { Collapsible, CollapsibleGroup } from '@/components/ui/collapsible';
 import { getJobVacancies, DOCUMENT_TYPE_LABELS, STATUS_LABELS } from '@/lib/supabase/services/job-vacancies';
 import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
+import { AdminEditButton } from '@/components/admin-edit-button';
 
 const GENERAL_FORMS_SLUG = 'formulare-generale';
 
@@ -338,6 +339,7 @@ export default async function ConcursuriPage({ params }: { params: Promise<{ loc
           </div>
         </Container>
       </Section>
+      <AdminEditButton href="/admin/informatii-publice/cariera" />
     </>
   );
 }

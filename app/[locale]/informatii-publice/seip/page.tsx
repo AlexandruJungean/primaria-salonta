@@ -9,6 +9,7 @@ import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
 import { getTranslations } from 'next-intl/server';
 import { getPageContent } from '@/lib/supabase/services/page-content';
+import { AdminEditButton } from '@/components/admin-edit-button';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -63,6 +64,7 @@ export default async function SeipPage({ params }: { params: Promise<{ locale: s
           </div>
         </Container>
       </Section>
+      <AdminEditButton href="/admin/informatii-publice/seip" />
     </>
   );
 }

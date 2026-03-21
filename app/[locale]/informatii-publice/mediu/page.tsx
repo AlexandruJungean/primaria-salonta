@@ -9,6 +9,7 @@ import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
 import * as documentsService from '@/lib/supabase/services/documents';
 import { MediuCollapsibleSections } from './collapsible-sections';
+import { AdminEditButton } from '@/components/admin-edit-button';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -82,6 +83,7 @@ export default async function MediuPage({ params }: { params: Promise<{ locale: 
           </div>
         </Container>
       </Section>
+      <AdminEditButton href="/admin/informatii-publice/mediu" />
     </>
   );
 }

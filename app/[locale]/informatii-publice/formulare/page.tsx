@@ -10,6 +10,7 @@ import { FormulareCollapsibleCategories } from './collapsible-categories';
 import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
 import { createAnonServerClient } from '@/lib/supabase/server';
+import { AdminEditButton } from '@/components/admin-edit-button';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -81,6 +82,7 @@ export default async function FormularePage() {
           </div>
         </Container>
       </Section>
+      <AdminEditButton href="/admin/informatii-publice/formulare" />
     </>
   );
 }

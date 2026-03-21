@@ -9,6 +9,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
 import { Collapsible, CollapsibleGroup } from '@/components/ui/collapsible';
+import { AdminEditButtonClient as AdminEditButton } from '@/components/admin-edit-button-client';
 
 interface CertificateDocument {
   id: string;
@@ -164,6 +165,7 @@ export default function CertificateUrbanismPage() {
           </div>
         </Container>
       </Section>
+      <AdminEditButton href="/admin/informatii-publice/certificate-urbanism" />
     </>
   );
 }

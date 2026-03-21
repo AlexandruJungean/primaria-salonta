@@ -10,6 +10,7 @@ import type { Locale } from '@/lib/seo/config';
 import * as documents from '@/lib/supabase/services/documents';
 import { AnunturiCollapsibleYears } from './collapsible-years';
 import { translateContentArray } from '@/lib/google-translate/cache';
+import { AdminEditButton } from '@/components/admin-edit-button';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -89,6 +90,7 @@ export default async function AnunturiPage({ params }: { params: Promise<{ local
           </div>
         </Container>
       </Section>
+      <AdminEditButton href="/admin/informatii-publice/anunturi" />
     </>
   );
 }

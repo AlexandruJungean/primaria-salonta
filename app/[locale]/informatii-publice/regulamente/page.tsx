@@ -10,6 +10,7 @@ import type { Locale } from '@/lib/seo/config';
 import * as documents from '@/lib/supabase/services/documents';
 import type { DocumentWithAnnexes } from '@/lib/types/database';
 import { ArchiveSection } from './archive-section';
+import { AdminEditButton } from '@/components/admin-edit-button';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -188,6 +189,7 @@ export default async function RegulamentePage({ params }: { params: Promise<{ lo
           </div>
         </Container>
       </Section>
+      <AdminEditButton href="/admin/informatii-publice/regulamente" />
     </>
   );
 }
