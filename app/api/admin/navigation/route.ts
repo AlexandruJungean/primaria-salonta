@@ -21,6 +21,17 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const sectionSlug = searchParams.get('section');
     const id = searchParams.get('id');
+    const pageId = searchParams.get('page_id');
+
+    if (pageId) {
+      const { data, error } = await supabase
+        .from('nav_pages')
+        .select('*, nav_sections(slug, title)')
+        .eq('page_id', pageId)
+        .single();
+      if (error) throw error;
+      return NextResponse.json(data);
+    }
 
     if (id) {
       const { data, error } = await supabase
@@ -73,6 +84,68 @@ export async function POST(request: NextRequest) {
     const supabase = createAdminClient();
     const body = await request.json();
     const { ipAddress, userAgent } = getRequestInfo(request);
+
+    if (body.is_custom) {
+      const slug = body.slug || `pagina-${Date.now()}`;
+
+      const { data: pageData, error: pageError } = await supabase
+        .from('pages')
+        .insert([{
+          slug,
+          page_type: 'custom',
+          title: body.title || 'Pagină nouă',
+          content: '',
+          structured_data: { blocks: [] },
+          published: true,
+          created_by: adminUser.id,
+        }])
+        .select()
+        .single();
+
+      if (pageError) throw pageError;
+
+      const { data, error } = await supabase
+        .from('nav_pages')
+        .insert([{
+          section_id: body.section_id,
+          slug,
+          title: body.title || 'Pagină nouă',
+          description: body.description || '',
+          icon: body.icon || 'fileText',
+          public_path: `/pagini/${slug}`,
+          admin_path: `/admin/pagini-custom/${pageData.id}`,
+          sort_order: body.sort_order || 999,
+          is_active: true,
+          is_custom: true,
+          page_id: pageData.id,
+          show_in_cetateni: false,
+          show_in_firme: false,
+          show_in_primarie: false,
+          show_in_turist: false,
+        }])
+        .select()
+        .single();
+
+      if (error) {
+        await supabase.from('pages').delete().eq('id', pageData.id);
+        throw error;
+      }
+
+      await logAuditAction({
+        action: 'create',
+        resourceType: 'custom_page',
+        resourceId: data.id,
+        resourceTitle: data.title,
+        details: { pageId: pageData.id, slug },
+        userId: adminUser.id,
+        userEmail: adminUser.email,
+        userName: adminUser.fullName,
+        ipAddress,
+        userAgent,
+      });
+
+      return NextResponse.json({ success: true, data, page: pageData });
+    }
 
     const { data, error } = await supabase
       .from('nav_pages')
@@ -169,9 +242,9 @@ export async function DELETE(request: NextRequest) {
 
     const { ipAddress, userAgent } = getRequestInfo(request);
 
-    const { data: page } = await supabase
+    const { data: navPage } = await supabase
       .from('nav_pages')
-      .select('title')
+      .select('title, is_custom, page_id')
       .eq('id', id)
       .single();
 
@@ -182,11 +255,15 @@ export async function DELETE(request: NextRequest) {
 
     if (error) throw error;
 
+    if (navPage?.is_custom && navPage?.page_id) {
+      await supabase.from('pages').delete().eq('id', navPage.page_id);
+    }
+
     await logAuditAction({
       action: 'delete',
-      resourceType: 'nav_page',
+      resourceType: navPage?.is_custom ? 'custom_page' : 'nav_page',
       resourceId: id,
-      resourceTitle: page?.title,
+      resourceTitle: navPage?.title,
       userId: adminUser.id,
       userEmail: adminUser.email,
       userName: adminUser.fullName,
