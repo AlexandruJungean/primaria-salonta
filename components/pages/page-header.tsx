@@ -124,10 +124,11 @@ const ICON_MAP: Record<string, LucideIcon> = {
 export interface PageHeaderProps {
   titleKey: string;
   descriptionKey?: string;
-  subtitle?: string; // Direct text subtitle (not a translation key)
+  subtitle?: string;
   icon?: string;
   namespace?: string;
   className?: string;
+  useRawTitle?: boolean;
 }
 
 export function PageHeader({
@@ -137,6 +138,7 @@ export function PageHeader({
   icon,
   namespace = 'navigation',
   className,
+  useRawTitle,
 }: PageHeaderProps) {
   const t = useTranslations(namespace);
   const Icon = icon ? ICON_MAP[icon] : undefined;
@@ -152,14 +154,14 @@ export function PageHeader({
               </div>
             )}
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold">{t(titleKey)}</h1>
+              <h1 className="text-3xl md:text-4xl font-bold">{useRawTitle ? titleKey : t(titleKey)}</h1>
               {subtitle && (
                 <p className="text-lg text-primary-200 mt-1">{subtitle}</p>
               )}
             </div>
           </div>
           {descriptionKey && (
-            <p className="text-lg text-primary-100">{t(descriptionKey)}</p>
+            <p className="text-lg text-primary-100">{useRawTitle ? descriptionKey : t(descriptionKey)}</p>
           )}
         </div>
       </Container>
