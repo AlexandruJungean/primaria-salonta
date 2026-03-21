@@ -77,6 +77,34 @@ const navigationItems: NavItem[] = [
     icon: LayoutDashboard,
   },
   {
+    id: 'documente',
+    label: 'Documente',
+    href: '/admin/documente',
+    icon: FileText,
+  },
+  {
+    id: 'utilizatori',
+    label: 'Utilizatori',
+    href: '/admin/utilizatori',
+    icon: UserCog,
+    requiredRole: 'super_admin',
+  },
+  {
+    id: 'setari',
+    label: 'Setări',
+    href: '/admin/setari',
+    icon: Settings,
+  },
+  {
+    id: 'mesaje',
+    label: 'Mesaje Primite',
+    icon: Mail,
+    children: [
+      { id: 'petitii', label: 'Petiții Online', href: '/admin/mesaje/petitii', icon: Mail },
+      { id: 'contact', label: 'Mesaje Contact', href: '/admin/mesaje/contact', icon: Mail },
+    ],
+  },
+  {
     id: 'stiri',
     label: 'Știri și Anunțuri',
     href: '/admin/stiri',
@@ -87,12 +115,6 @@ const navigationItems: NavItem[] = [
     label: 'Evenimente',
     href: '/admin/evenimente',
     icon: Calendar,
-  },
-  {
-    id: 'documente',
-    label: 'Documente',
-    href: '/admin/documente',
-    icon: FileText,
   },
   {
     id: 'consiliul-local',
@@ -200,28 +222,6 @@ const navigationItems: NavItem[] = [
       { id: 'webcams', label: 'Camere Web', href: '/admin/webcams', icon: Video },
       { id: 'logs', label: 'Jurnal Activitate', href: '/admin/logs', icon: History },
     ],
-  },
-  {
-    id: 'mesaje',
-    label: 'Mesaje Primite',
-    icon: Mail,
-    children: [
-      { id: 'petitii', label: 'Petiții Online', href: '/admin/mesaje/petitii', icon: Mail },
-      { id: 'contact', label: 'Mesaje Contact', href: '/admin/mesaje/contact', icon: Mail },
-    ],
-  },
-  {
-    id: 'utilizatori',
-    label: 'Utilizatori',
-    href: '/admin/utilizatori',
-    icon: UserCog,
-    requiredRole: 'super_admin',
-  },
-  {
-    id: 'setari',
-    label: 'Setări',
-    href: '/admin/setari',
-    icon: Settings,
   },
 ];
 
