@@ -25,6 +25,8 @@ export interface NavPage {
   admin_path: string;
   sort_order: number;
   is_active: boolean;
+  is_custom: boolean;
+  page_id: string | null;
   show_in_cetateni: boolean;
   show_in_firme: boolean;
   show_in_primarie: boolean;
@@ -117,6 +119,23 @@ export async function getNavSectionBySlug(slug: string): Promise<NavSection | nu
   }
 
   return data as NavSection;
+}
+
+export async function getNavPageByPageId(pageId: string): Promise<NavPageWithSection | null> {
+  const supabase = createAnonServerClient();
+
+  const { data, error } = await supabase
+    .from('nav_pages')
+    .select('*, nav_sections(slug, title, icon)')
+    .eq('page_id', pageId)
+    .single();
+
+  if (error) {
+    console.error('Error fetching nav page by page_id:', pageId, error);
+    return null;
+  }
+
+  return data as NavPageWithSection;
 }
 
 // ─── Navigation data for public menu (all menus at once) ────

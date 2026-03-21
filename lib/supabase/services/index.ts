@@ -174,6 +174,7 @@ export {
   getNavPagesBySection,
   getNavPagesForPublicMenu,
   getNavSectionBySlug,
+  getNavPageByPageId,
   getPublicMenuData,
   type NavSection,
   type NavPage,
