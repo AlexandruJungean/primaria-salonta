@@ -153,12 +153,49 @@ export function AdminPagination({
 
   if (totalPages <= 1) return null;
 
+  const handlePageInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      const val = parseInt((e.target as HTMLInputElement).value);
+      if (!isNaN(val) && val >= 1 && val <= totalPages) {
+        onPageChange(val);
+      } else {
+        (e.target as HTMLInputElement).value = currentPage.toString();
+      }
+    }
+  };
+
+  const handlePageBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const val = parseInt(e.target.value);
+    if (!isNaN(val) && val >= 1 && val <= totalPages) {
+      onPageChange(val);
+    } else {
+      e.target.value = currentPage.toString();
+    }
+  };
+
+  // Show page number buttons for quick navigation
+  const getPageNumbers = () => {
+    const pages: (number | '...')[] = [];
+    if (totalPages <= 7) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+    } else {
+      pages.push(1);
+      if (currentPage > 3) pages.push('...');
+      for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
+        pages.push(i);
+      }
+      if (currentPage < totalPages - 2) pages.push('...');
+      pages.push(totalPages);
+    }
+    return pages;
+  };
+
   return (
     <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-4 sm:px-6 py-4 bg-white border-t border-slate-200 rounded-b-xl">
       <p className="text-sm sm:text-base text-slate-600 order-2 sm:order-1">
         {startItem} - {endItem} din {totalItems}
       </p>
-      <div className="flex items-center gap-2 order-1 sm:order-2">
+      <div className="flex items-center gap-1.5 order-1 sm:order-2">
         <AdminButton
           variant="secondary"
           size="sm"
@@ -168,9 +205,44 @@ export function AdminPagination({
         >
           <span className="hidden sm:inline">Anterior</span>
         </AdminButton>
-        <span className="px-3 sm:px-4 py-2 text-sm sm:text-base font-medium text-slate-700">
-          {currentPage} / {totalPages}
-        </span>
+
+        {/* Page numbers */}
+        <div className="hidden md:flex items-center gap-1">
+          {getPageNumbers().map((p, i) =>
+            p === '...' ? (
+              <span key={`dots-${i}`} className="px-1 text-slate-400">...</span>
+            ) : (
+              <button
+                key={p}
+                onClick={() => onPageChange(p)}
+                className={`min-w-[32px] h-8 px-2 text-sm rounded-md transition-colors ${
+                  p === currentPage
+                    ? 'bg-blue-600 text-white font-semibold'
+                    : 'text-slate-600 hover:bg-slate-100'
+                }`}
+              >
+                {p}
+              </button>
+            )
+          )}
+        </div>
+
+        {/* Editable page input (always visible on mobile, alongside buttons on desktop) */}
+        <div className="flex items-center gap-1.5 md:ml-2 md:pl-2 md:border-l md:border-slate-200">
+          <span className="text-xs text-slate-400 hidden md:inline">pag.</span>
+          <input
+            key={currentPage}
+            type="number"
+            defaultValue={currentPage}
+            min={1}
+            max={totalPages}
+            onKeyDown={handlePageInput}
+            onBlur={handlePageBlur}
+            className="w-14 h-8 px-2 text-sm text-center border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+          />
+          <span className="text-xs text-slate-400">/ {totalPages}</span>
+        </div>
+
         <AdminButton
           variant="secondary"
           size="sm"
