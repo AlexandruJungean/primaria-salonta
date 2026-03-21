@@ -18,6 +18,7 @@ import { generatePageMetadata, ProgramJsonLd, BreadcrumbJsonLd } from '@/lib/seo
 import type { Locale } from '@/lib/seo/config';
 import * as programs from '@/lib/supabase/services/programs';
 import { translateContentFields, translateContentArray } from '@/lib/google-translate/cache';
+import { AdminEditButton } from '@/components/admin-edit-button';
 import { ProgramUpdatesAccordion } from './program-updates-accordion';
 import { ProgramDocumentsSection } from './program-documents-section';
 import { ProgramChildrenList } from './program-children-list';
@@ -403,6 +404,7 @@ export default async function ProgramPage({
           </div>
         </Container>
       </Section>
+      <AdminEditButton href={`/admin/programe/${programData.id}`} />
     </>
   );
 }

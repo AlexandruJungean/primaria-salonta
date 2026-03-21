@@ -10,6 +10,7 @@ import * as documentsService from '@/lib/supabase/services/documents';
 import type { Document } from '@/lib/types/database';
 import { DezbateriDocuments } from './dezbateri-documents';
 import { translateContentArray } from '@/lib/google-translate/cache';
+import { AdminEditButton } from '@/components/admin-edit-button';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -109,6 +110,7 @@ export default async function DezbateriPublicePage({ params }: { params: Promise
           </div>
         </Container>
       </Section>
+      <AdminEditButton href="/admin/transparenta/dezbateri-publice" />
     </>
   );
 }

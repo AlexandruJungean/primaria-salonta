@@ -23,6 +23,7 @@ import { WebPageJsonLd } from '@/lib/seo/json-ld';
 import { type Locale } from '@/i18n/routing';
 import * as programs from '@/lib/supabase/services/programs';
 import { translateContentArray } from '@/lib/google-translate/cache';
+import { AdminEditButton } from '@/components/admin-edit-button';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -118,6 +119,7 @@ export default async function ProgramePage({ params }: { params: Promise<{ local
           )}
         </Container>
       </Section>
+      <AdminEditButton href="/admin/programe" />
     </>
   );
 }
