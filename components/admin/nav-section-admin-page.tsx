@@ -2,8 +2,8 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
-import { ChevronUp, ChevronDown, Pencil, X, Check, ExternalLink } from 'lucide-react';
-import { AdminPageHeader, AdminCard, AdminButton, toast } from '@/components/admin';
+import { ChevronUp, ChevronDown, Pencil, X, Check, Eye, EyeOff, Lock } from 'lucide-react';
+import { AdminPageHeader, AdminCard, toast } from '@/components/admin';
 import { adminFetch } from '@/lib/api-client';
 import { getIcon, ICON_OPTIONS } from '@/lib/constants/icon-map';
 
@@ -75,6 +75,7 @@ export function NavSectionAdminPage({ sectionSlug, breadcrumbLabel }: NavSection
       title: page.title,
       description: page.description || '',
       icon: page.icon,
+      is_active: page.is_active,
       show_in_cetateni: page.show_in_cetateni,
       show_in_firme: page.show_in_firme,
       show_in_primarie: page.show_in_primarie,
@@ -104,6 +105,20 @@ export function NavSectionAdminPage({ sectionSlug, breadcrumbLabel }: NavSection
       toast.error('Eroare la salvare');
     } finally {
       setSaving(false);
+    }
+  };
+
+  const toggleVisibility = async (page: NavPage) => {
+    try {
+      const response = await adminFetch(`/api/admin/navigation?id=${page.id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ is_active: !page.is_active }),
+      });
+      if (!response.ok) throw new Error('Failed to toggle');
+      toast.success(page.is_active ? 'Pagina a fost ascunsă' : 'Pagina a fost activată');
+      await loadData();
+    } catch {
+      toast.error('Eroare la schimbarea vizibilității');
     }
   };
 
@@ -139,8 +154,6 @@ export function NavSectionAdminPage({ sectionSlug, breadcrumbLabel }: NavSection
     return <div className="text-center py-20 text-slate-500">Secțiunea nu a fost găsită.</div>;
   }
 
-  const SectionIcon = getIcon(section.icon);
-
   return (
     <div>
       <AdminPageHeader
@@ -149,7 +162,7 @@ export function NavSectionAdminPage({ sectionSlug, breadcrumbLabel }: NavSection
         breadcrumbs={[{ label: breadcrumbLabel }]}
       />
 
-      {/* Edit form - full width when editing */}
+      {/* Edit form */}
       {editingId && (
         <AdminCard className="border-blue-300 ring-2 ring-blue-100 mb-6">
           <div className="space-y-4">
@@ -186,20 +199,34 @@ export function NavSectionAdminPage({ sectionSlug, breadcrumbLabel }: NavSection
                 placeholder="Descriere scurtă..."
               />
             </div>
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">Vizibil în meniul public</label>
-              <div className="flex flex-wrap gap-4">
-                {NAV_GROUPS.map(group => (
-                  <label key={group.key} className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={!!editForm[group.key]}
-                      onChange={e => setEditForm(f => ({ ...f, [group.key]: e.target.checked }))}
-                      className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
-                    />
-                    <span className="text-sm text-slate-600">{group.label}</span>
-                  </label>
-                ))}
+            <div className="flex flex-wrap gap-6">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">Vizibilitate</label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={editForm.is_active !== false}
+                    onChange={e => setEditForm(f => ({ ...f, is_active: e.target.checked }))}
+                    className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                  />
+                  <span className="text-sm text-slate-600">Pagina este activă</span>
+                </label>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">Vizibil în meniul public</label>
+                <div className="flex flex-wrap gap-4">
+                  {NAV_GROUPS.map(group => (
+                    <label key={group.key} className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={!!editForm[group.key]}
+                        onChange={e => setEditForm(f => ({ ...f, [group.key]: e.target.checked }))}
+                        className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                      />
+                      <span className="text-sm text-slate-600">{group.label}</span>
+                    </label>
+                  ))}
+                </div>
               </div>
             </div>
             <div className="flex justify-end gap-2 pt-2 border-t border-slate-200">
@@ -221,22 +248,26 @@ export function NavSectionAdminPage({ sectionSlug, breadcrumbLabel }: NavSection
         </AdminCard>
       )}
 
-      {/* Cards grid - 3 columns */}
+      {/* Cards grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {pages.map((page, index) => {
           const PageIcon = getIcon(page.icon);
 
           return (
-            <AdminCard key={page.id} className="hover:shadow-md transition-shadow">
+            <AdminCard
+              key={page.id}
+              className={`transition-shadow ${page.is_active ? 'hover:shadow-md' : 'opacity-50'}`}
+            >
               <div className="flex flex-col gap-2">
-                {/* Main content: clickable link */}
                 <div className="flex items-start gap-3">
                   <Link href={page.admin_path} className="flex items-start gap-3 flex-1 min-w-0 group">
-                    <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-100 transition-colors">
-                      <PageIcon className="w-5 h-5 text-blue-600" />
+                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors ${page.is_active ? 'bg-blue-50 group-hover:bg-blue-100' : 'bg-slate-100'}`}>
+                      <PageIcon className={`w-5 h-5 ${page.is_active ? 'text-blue-600' : 'text-slate-400'}`} />
                     </div>
                     <div className="min-w-0 pt-0.5">
-                      <h3 className="text-sm font-semibold text-slate-900 leading-tight group-hover:text-blue-600 transition-colors">{page.title}</h3>
+                      <h3 className={`text-sm font-semibold leading-tight transition-colors ${page.is_active ? 'text-slate-900 group-hover:text-blue-600' : 'text-slate-500'}`}>
+                        {page.title}
+                      </h3>
                       {page.description && (
                         <p className="text-xs text-slate-500 mt-0.5 line-clamp-2">{page.description}</p>
                       )}
@@ -244,6 +275,16 @@ export function NavSectionAdminPage({ sectionSlug, breadcrumbLabel }: NavSection
                   </Link>
                   {/* Actions */}
                   <div className="flex items-center gap-0.5 flex-shrink-0">
+                    <button
+                      onClick={() => toggleVisibility(page)}
+                      className={`p-1 rounded hover:bg-slate-100 ${page.is_active ? 'text-slate-400 hover:text-slate-600' : 'text-red-400 hover:text-red-600'}`}
+                      title={page.is_active ? 'Ascunde pagina' : 'Activează pagina'}
+                    >
+                      {page.is_active
+                        ? <Eye className="w-3.5 h-3.5" />
+                        : <EyeOff className="w-3.5 h-3.5" />
+                      }
+                    </button>
                     <button
                       onClick={() => moveItem(index, 'up')}
                       disabled={index === 0}
@@ -267,11 +308,20 @@ export function NavSectionAdminPage({ sectionSlug, breadcrumbLabel }: NavSection
                     >
                       <Pencil className="w-3.5 h-3.5" />
                     </button>
+                    <div
+                      className="p-1 text-slate-300 cursor-default"
+                      title="Nu poate fi șters"
+                    >
+                      <Lock className="w-3.5 h-3.5" />
+                    </div>
                   </div>
                 </div>
 
-                {/* Nav group badges */}
-                <div className="flex flex-wrap gap-1 pl-[52px]">
+                {/* Badges */}
+                <div className="flex flex-wrap items-center gap-1 pl-[52px]">
+                  {!page.is_active && (
+                    <span className="px-1.5 py-0.5 text-[10px] bg-red-100 text-red-700 rounded-full">Ascuns</span>
+                  )}
                   {page.show_in_cetateni && <span className="px-1.5 py-0.5 text-[10px] bg-green-100 text-green-700 rounded-full">Cetățeni</span>}
                   {page.show_in_firme && <span className="px-1.5 py-0.5 text-[10px] bg-purple-100 text-purple-700 rounded-full">Firme</span>}
                   {page.show_in_primarie && <span className="px-1.5 py-0.5 text-[10px] bg-blue-100 text-blue-700 rounded-full">Primărie</span>}
