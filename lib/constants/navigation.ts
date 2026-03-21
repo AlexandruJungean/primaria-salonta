@@ -198,8 +198,6 @@ export const MAIN_NAVIGATION: NavSection[] = [
     standaloneItems: [
       { id: 'raporteazaProblema', href: '/raporteaza-problema', icon: AlertTriangle },
       { id: 'evenimente', href: '/evenimente', icon: Calendar },
-      { id: 'voluntariat', href: '/voluntariat', icon: Heart },
-      { id: 'faq', href: '/faq', icon: HelpCircle },
     ],
   },
   // 2. FOR BUSINESSES - Permits, procurement, urban planning
@@ -418,7 +416,6 @@ export const MAIN_NAVIGATION: NavSection[] = [
     ],
     standaloneItems: [
       { id: 'evenimente', href: '/evenimente', icon: Calendar },
-      { id: 'voluntariat', href: '/voluntariat', icon: Heart },
     ],
   },
 ];
@@ -736,27 +733,36 @@ export function getNavigationWithInstitutions(
 
     // Inject new groups for sections that have pages but no existing group in this menu
     const extraGroups: NavGroup[] = [];
+    const extraStandaloneItems: NavItem[] = [];
     for (const [slug, pages] of Object.entries(navPagesBySection)) {
       if (renderedSections.has(slug)) continue;
-      const defaults = SECTION_SLUG_DEFAULTS[slug];
       const items: NavItem[] = pages.map(page => ({
         id: page.id,
         href: page.public_path || '#',
         icon: getIcon(page.icon),
         label: page.title,
       }));
-      extraGroups.push({
-        groupId: slug,
-        groupHref: defaults?.groupHref || '#',
-        groupIcon: defaults?.groupIcon || FileText,
-        groupLabel: defaults?.label || slug,
-        items,
-      });
+
+      if (slug === 'altele') {
+        extraStandaloneItems.push(...items);
+      } else {
+        const defaults = SECTION_SLUG_DEFAULTS[slug];
+        extraGroups.push({
+          groupId: slug,
+          groupHref: defaults?.groupHref || '#',
+          groupIcon: defaults?.groupIcon || FileText,
+          groupLabel: defaults?.label || slug,
+          items,
+        });
+      }
     }
 
     const allGroups = [...(processedGroups || []), ...extraGroups];
     const filteredGroups = allGroups.filter(g => g.items.length > 0);
+    const existingHrefs = new Set((section.standaloneItems || []).map(i => i.href));
+    const dedupedExtra = extraStandaloneItems.filter(i => !existingHrefs.has(i.href));
+    const allStandalone = [...(section.standaloneItems || []), ...dedupedExtra];
 
-    return { ...section, groups: filteredGroups };
+    return { ...section, groups: filteredGroups, standaloneItems: allStandalone };
   });
 }

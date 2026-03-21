@@ -225,6 +225,7 @@ export function MegaMenu() {
                       >
                         {section.standaloneItems.map((item) => {
                           const ItemIcon = item.icon;
+                          const itemLabel = item.label || t(item.id);
                           return (
                             <Link
                               key={item.id + item.href}
@@ -235,7 +236,7 @@ export function MegaMenu() {
                                 <ItemIcon className="w-4 h-4 text-primary-600 group-hover:text-primary-700 shrink-0" />
                               )}
                               <span className="text-sm text-gray-700 group-hover:text-gray-900 font-medium">
-                                {t(item.id)}
+                                {itemLabel}
                               </span>
                             </Link>
                           );
