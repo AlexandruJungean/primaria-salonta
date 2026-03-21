@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { Save, ArrowLeft, Trash2, FileText, Upload, ExternalLink, RefreshCw, X, Plus, Paperclip } from 'lucide-react';
+import { Save, ArrowLeft, Trash2, FileText, Upload, ExternalLink, X, Plus, Pencil } from 'lucide-react';
 import {
   AdminPageHeader,
   AdminButton,
@@ -172,6 +172,8 @@ export function DocumentEdit({
   // Annexes state
   const [annexes, setAnnexes] = useState<Annex[]>([]);
   const [loadingAnnexes, setLoadingAnnexes] = useState(false);
+  const [editingAnnexId, setEditingAnnexId] = useState<string | null>(null);
+  const [editingAnnexTitle, setEditingAnnexTitle] = useState('');
   const [uploadingAnnex, setUploadingAnnex] = useState(false);
   const [annexProgress, setAnnexProgress] = useState(0);
   const [deleteAnnexDialogOpen, setDeleteAnnexDialogOpen] = useState(false);
@@ -387,6 +389,22 @@ export function DocumentEdit({
     }
   };
 
+  const handleRenameAnnex = async (annexId: string) => {
+    if (!editingAnnexTitle.trim()) return;
+    try {
+      const response = await adminFetch(`/api/admin/documents?id=${annexId}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ title: editingAnnexTitle.trim() }),
+      });
+      if (!response.ok) throw new Error('Failed to rename');
+      toast.success('Salvat', 'Numele anexei a fost actualizat.');
+      setEditingAnnexId(null);
+      loadAnnexes();
+    } catch {
+      toast.error('Eroare', 'Nu s-a putut redenumi anexa.');
+    }
+  };
+
   const goBack = () => {
     router.push(basePath);
   };
@@ -412,7 +430,6 @@ export function DocumentEdit({
   const validate = (): boolean => {
     const newErrors: Partial<Record<keyof DocumentFormData, string>> = {};
     if (!formData.title.trim()) newErrors.title = 'Titlul este obligatoriu';
-    if (!formData.file_url.trim()) newErrors.file_url = 'Fișierul este obligatoriu';
     if (hasSubcategories && !formData.subcategory) newErrors.subcategory = 'Subcategoria este obligatorie';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -525,89 +542,6 @@ export function DocumentEdit({
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
-          <AdminCard title="Fișier Document">
-            <div className="space-y-4">
-              {/* Show file info when file exists and upload area is hidden */}
-              {formData.file_url && !showUploadArea ? (
-                <div className="space-y-4">
-                  <div className="p-4 bg-slate-50 rounded-lg flex items-center gap-4">
-                    <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-                      <FileText className="w-6 h-6 text-red-600" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium text-slate-900 truncate">{formData.file_name || 'Document'}</p>
-                      <p className="text-sm text-slate-500">
-                        {formData.file_size ? `${(formData.file_size / 1024).toFixed(1)} KB` : ''}
-                      </p>
-                    </div>
-                    <a 
-                      href={formData.file_url} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1 px-3 py-2 text-sm text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-colors"
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                      Deschide
-                    </a>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setShowUploadArea(true)}
-                    className="flex items-center gap-2 px-4 py-2 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
-                  >
-                    <RefreshCw className="w-4 h-4" />
-                    Schimbă documentul
-                  </button>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  <div className="border-2 border-dashed border-slate-300 rounded-xl p-6 text-center hover:border-blue-400 transition-colors">
-                    <input
-                      type="file"
-                      accept=".pdf,.doc,.docx"
-                      onChange={(e) => {
-                        handleFileChange(e);
-                        setShowUploadArea(false);
-                      }}
-                      className="hidden"
-                      id="file-upload"
-                      disabled={uploading}
-                    />
-                    <label htmlFor="file-upload" className="cursor-pointer">
-                      <Upload className="w-10 h-10 text-slate-400 mx-auto mb-3" />
-                      <p className="text-sm text-slate-600 mb-1">
-                        {uploading ? `Se încarcă... ${progress}%` : 'Click pentru a încărca sau trage fișierul aici'}
-                      </p>
-                      <p className="text-xs text-slate-400">PDF, DOC, DOCX (max 10MB)</p>
-                    </label>
-                    {uploading && (
-                      <div className="mt-4 w-full bg-slate-200 rounded-full h-2">
-                        <div 
-                          className="bg-blue-500 h-2 rounded-full transition-all duration-300"
-                          style={{ width: `${progress}%` }}
-                        />
-                      </div>
-                    )}
-                  </div>
-                  {showUploadArea && formData.file_url && (
-                    <button
-                      type="button"
-                      onClick={() => setShowUploadArea(false)}
-                      className="flex items-center gap-2 px-4 py-2 text-sm text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
-                    >
-                      <X className="w-4 h-4" />
-                      Anulează
-                    </button>
-                  )}
-                </div>
-              )}
-
-              {errors.file_url && (
-                <p className="text-sm text-red-600">{errors.file_url}</p>
-              )}
-            </div>
-          </AdminCard>
-
           <AdminCard title="Informații Document">
             <div className="space-y-4">
               <AdminInput
@@ -628,74 +562,183 @@ export function DocumentEdit({
             </div>
           </AdminCard>
 
-          {/* Annexes Section */}
-          {!isNew && !hideAnnexes && (
-            <AdminCard title="Anexe / Fișiere Atașate">
-              <div className="space-y-4">
-                {/* Upload new annex */}
-                <div className="border-2 border-dashed border-slate-300 rounded-xl p-4 text-center hover:border-blue-400 transition-colors">
-                  <input
-                    type="file"
-                    accept=".pdf,.doc,.docx"
-                    onChange={handleAnnexFileChange}
-                    className="hidden"
-                    id="annex-upload"
-                    disabled={uploadingAnnex}
-                  />
-                  <label htmlFor="annex-upload" className="cursor-pointer flex items-center justify-center gap-3">
-                    {uploadingAnnex ? (
-                      <>
-                        <div className="animate-spin h-5 w-5 border-2 border-blue-500 border-t-transparent rounded-full" />
-                        <span className="text-sm text-slate-600">Se încarcă... {annexProgress}%</span>
-                      </>
-                    ) : (
-                      <>
-                        <Plus className="w-5 h-5 text-slate-400" />
-                        <span className="text-sm text-slate-600">Adaugă anexă (PDF, DOC, DOCX)</span>
-                      </>
-                    )}
-                  </label>
-                </div>
+          {/* Documents Section */}
+          <AdminCard title="Documente Atașate">
+            <div className="space-y-4">
+              {/* Upload */}
+              <div className="border-2 border-dashed border-slate-300 rounded-xl p-4 text-center hover:border-blue-400 transition-colors">
+                <input
+                  type="file"
+                  accept=".pdf,.doc,.docx"
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
 
-                {/* Annexes list */}
-                {loadingAnnexes ? (
-                  <div className="flex items-center justify-center py-4">
-                    <div className="animate-spin h-5 w-5 border-2 border-blue-500 border-t-transparent rounded-full" />
-                  </div>
-                ) : annexes.length > 0 ? (
-                  <ul className="space-y-2">
-                    {annexes.map((annex) => (
-                      <li key={annex.id} className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
-                        <Paperclip className="w-4 h-4 text-slate-400 shrink-0" />
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-slate-900 truncate">{annex.title}</p>
-                          <p className="text-xs text-slate-500">{annex.file_name}</p>
-                        </div>
-                        <a
-                          href={annex.file_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-1.5 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded transition-colors"
-                        >
-                          <ExternalLink className="w-4 h-4" />
-                        </a>
-                        <button
-                          onClick={() => confirmDeleteAnnex(annex)}
-                          className="p-1.5 text-red-600 hover:text-red-800 hover:bg-red-50 rounded transition-colors"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="text-sm text-slate-500 text-center py-4">
-                    Nu există anexe. Folosește butonul de mai sus pentru a adăuga.
-                  </p>
-                )}
+                    const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+                    if (!allowedTypes.includes(file.type)) {
+                      toast.error('Tip de fișier invalid', 'Sunt permise doar fișiere PDF și DOC/DOCX.');
+                      return;
+                    }
+
+                    if (isNew) {
+                      const title = formData.title.trim() || file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ');
+                      const documentData: Record<string, unknown> = {
+                        title,
+                        file_url: '',
+                        file_name: '',
+                        file_size: 0,
+                        year: formData.year,
+                        month: formData.month,
+                        subcategory: formData.subcategory || defaultSubcategory || null,
+                        description: formData.description.trim() || null,
+                        document_date: formData.document_date || null,
+                        published: formData.published,
+                      };
+                      if (filterType === 'category') {
+                        documentData.category = filterValue;
+                      } else {
+                        documentData.source_folder = filterValue;
+                        documentData.category = 'altele';
+                      }
+
+                      try {
+                        const createResp = await adminFetch('/api/admin/documents', {
+                          method: 'POST',
+                          body: JSON.stringify(documentData),
+                        });
+                        if (!createResp.ok) throw new Error('Failed to create');
+                        const created = await createResp.json();
+                        toast.success('Subiect creat', 'Se încarcă documentul...');
+                        router.replace(`${basePath}/${created.id}`);
+                      } catch {
+                        toast.error('Eroare', 'Nu s-a putut crea subiectul.');
+                      }
+                      e.target.value = '';
+                      return;
+                    }
+
+                    handleAnnexFileChange(e);
+                  }}
+                  className="hidden"
+                  id="annex-upload"
+                  disabled={uploadingAnnex}
+                />
+                <label htmlFor="annex-upload" className="cursor-pointer flex items-center justify-center gap-3">
+                  {uploadingAnnex ? (
+                    <>
+                      <div className="animate-spin h-5 w-5 border-2 border-blue-500 border-t-transparent rounded-full" />
+                      <span className="text-sm text-slate-600">Se încarcă... {annexProgress}%</span>
+                    </>
+                  ) : (
+                    <>
+                      <Plus className="w-5 h-5 text-slate-400" />
+                      <span className="text-sm text-slate-600">Adaugă document (PDF, DOC, DOCX)</span>
+                    </>
+                  )}
+                </label>
               </div>
-            </AdminCard>
-          )}
+
+                  {/* All files list (main file + annexes) */}
+                  {loadingAnnexes ? (
+                    <div className="flex items-center justify-center py-4">
+                      <div className="animate-spin h-5 w-5 border-2 border-blue-500 border-t-transparent rounded-full" />
+                    </div>
+                  ) : (
+                    <ul className="space-y-2">
+                      {formData.file_url && (
+                        <li className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
+                          <FileText className="w-4 h-4 text-slate-400 shrink-0" />
+                          <div className="flex-1 min-w-0">
+                            {editingAnnexId === 'main' ? (
+                              <div className="flex items-center gap-2">
+                                <input
+                                  type="text"
+                                  value={editingAnnexTitle}
+                                  onChange={(e) => setEditingAnnexTitle(e.target.value)}
+                                  onKeyDown={(e) => {
+                                    if (e.key === 'Enter') { handleChange('file_name', editingAnnexTitle.trim()); setEditingAnnexId(null); }
+                                    if (e.key === 'Escape') setEditingAnnexId(null);
+                                  }}
+                                  className="flex-1 text-sm px-2 py-1 border border-blue-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                  autoFocus
+                                />
+                                <button onClick={() => { handleChange('file_name', editingAnnexTitle.trim()); setEditingAnnexId(null); }} className="p-1 text-green-600 hover:bg-green-50 rounded" title="Salvează"><Save className="w-4 h-4" /></button>
+                                <button onClick={() => setEditingAnnexId(null)} className="p-1 text-slate-400 hover:bg-slate-100 rounded" title="Anulează"><X className="w-4 h-4" /></button>
+                              </div>
+                            ) : (
+                              <div className="flex items-center gap-2">
+                                <p className="text-sm font-medium text-slate-900 truncate flex-1">{formData.file_name || formData.title}</p>
+                                <button
+                                  onClick={() => { setEditingAnnexId('main'); setEditingAnnexTitle(formData.file_name || formData.title); }}
+                                  className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                                  title="Redenumește"
+                                >
+                                  <Pencil className="w-3.5 h-3.5" />
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                          <a href={formData.file_url} target="_blank" rel="noopener noreferrer" className="p-1.5 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded transition-colors" title="Deschide">
+                            <ExternalLink className="w-4 h-4" />
+                          </a>
+                          <button onClick={() => { setFormData(prev => ({ ...prev, file_url: '', file_name: '', file_size: 0 })); }} className="p-1.5 text-red-600 hover:text-red-800 hover:bg-red-50 rounded transition-colors" title="Șterge">
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </li>
+                      )}
+                      {annexes.map((annex) => (
+                        <li key={annex.id} className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
+                          <FileText className="w-4 h-4 text-slate-400 shrink-0" />
+                          <div className="flex-1 min-w-0">
+                            {editingAnnexId === annex.id ? (
+                              <div className="flex items-center gap-2">
+                                <input
+                                  type="text"
+                                  value={editingAnnexTitle}
+                                  onChange={(e) => setEditingAnnexTitle(e.target.value)}
+                                  onKeyDown={(e) => {
+                                    if (e.key === 'Enter') handleRenameAnnex(annex.id);
+                                    if (e.key === 'Escape') setEditingAnnexId(null);
+                                  }}
+                                  className="flex-1 text-sm px-2 py-1 border border-blue-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                  autoFocus
+                                />
+                                <button onClick={() => handleRenameAnnex(annex.id)} className="p-1 text-green-600 hover:bg-green-50 rounded" title="Salvează"><Save className="w-4 h-4" /></button>
+                                <button onClick={() => setEditingAnnexId(null)} className="p-1 text-slate-400 hover:bg-slate-100 rounded" title="Anulează"><X className="w-4 h-4" /></button>
+                              </div>
+                            ) : (
+                              <div className="flex items-center gap-2">
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-sm font-medium text-slate-900 truncate">{annex.title}</p>
+                                  <p className="text-xs text-slate-500">{annex.file_name}</p>
+                                </div>
+                                <button
+                                  onClick={() => { setEditingAnnexId(annex.id); setEditingAnnexTitle(annex.title); }}
+                                  className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                                  title="Redenumește"
+                                >
+                                  <Pencil className="w-3.5 h-3.5" />
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                          <a href={annex.file_url} target="_blank" rel="noopener noreferrer" className="p-1.5 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded transition-colors">
+                            <ExternalLink className="w-4 h-4" />
+                          </a>
+                          <button onClick={() => confirmDeleteAnnex(annex)} className="p-1.5 text-red-600 hover:text-red-800 hover:bg-red-50 rounded transition-colors" title="Șterge">
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </li>
+                      ))}
+                      {!formData.file_url && annexes.length === 0 && !isNew && (
+                        <p className="text-sm text-slate-500 text-center py-4">
+                          Nu există documente atașate. Folosește butonul de mai sus pentru a adăuga.
+                        </p>
+                      )}
+                    </ul>
+                  )}
+            </div>
+          </AdminCard>
         </div>
 
         <div className="space-y-6">
