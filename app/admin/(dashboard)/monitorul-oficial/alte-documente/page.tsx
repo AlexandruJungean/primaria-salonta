@@ -91,6 +91,14 @@ const DOCUMENT_TABS = [
     color: 'purple'
   },
   { 
+    id: 'registru', 
+    label: 'Registru', 
+    icon: ScrollText,
+    sourceFolder: 'alte-documente',
+    subcategory: 'registru',
+    color: 'amber'
+  },
+  { 
     id: 'arhiva', 
     label: 'Arhivă Mandate 2020-2024', 
     icon: Archive,

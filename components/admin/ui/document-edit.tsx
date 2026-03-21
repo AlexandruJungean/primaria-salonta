@@ -413,6 +413,7 @@ export function DocumentEdit({
     const newErrors: Partial<Record<keyof DocumentFormData, string>> = {};
     if (!formData.title.trim()) newErrors.title = 'Titlul este obligatoriu';
     if (!formData.file_url.trim()) newErrors.file_url = 'Fișierul este obligatoriu';
+    if (hasSubcategories && !formData.subcategory) newErrors.subcategory = 'Subcategoria este obligatorie';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -731,6 +732,8 @@ export function DocumentEdit({
                   onChange={(e) => handleChange('subcategory', e.target.value)}
                   options={SUBCATEGORY_OPTIONS[filterValue]}
                   placeholder="Selectează subcategoria"
+                  required
+                  error={errors.subcategory}
                 />
               )}
 

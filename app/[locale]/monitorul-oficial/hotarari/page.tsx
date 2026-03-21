@@ -32,14 +32,8 @@ const MAIN_LINKS = [
  * Check if document is a project register (proiecte de hotărâri)
  * Uses subcategory first, falls back to title check for legacy documents
  */
-function isProjectRegister(doc: { subcategory?: string | null; title: string }): boolean {
-  // Check subcategory first
-  if (doc.subcategory === 'registru_proiecte') return true;
-  if (doc.subcategory === 'registru_hotarari') return false;
-  
-  // Fallback to title check for documents without subcategory
-  const lowerTitle = doc.title.toLowerCase();
-  return lowerTitle.includes('proiect');
+function isProjectRegister(doc: { subcategory?: string | null }): boolean {
+  return doc.subcategory === 'registru_proiecte';
 }
 
 export default async function HotarariMolPage({ params }: { params: Promise<{ locale: string }> }) {

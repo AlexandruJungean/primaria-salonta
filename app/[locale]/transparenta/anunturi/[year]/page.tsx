@@ -25,14 +25,10 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   });
 }
 
-function getAnnouncementType(doc: { subcategory?: string | null; title: string }): 'consultare' | 'puz' | 'dezbatere' | 'general' {
+function getAnnouncementType(doc: { subcategory?: string | null }): 'consultare' | 'puz' | 'dezbatere' | 'general' {
   if (doc.subcategory && ['consultare', 'puz', 'dezbatere', 'general'].includes(doc.subcategory)) {
     return doc.subcategory as 'consultare' | 'puz' | 'dezbatere' | 'general';
   }
-  const lowerTitle = doc.title.toLowerCase();
-  if (lowerTitle.includes('puz') || lowerTitle.includes('plan urbanistic')) return 'puz';
-  if (lowerTitle.includes('dezbatere') || lowerTitle.includes('minuta') || lowerTitle.includes('proces verbal')) return 'dezbatere';
-  if (lowerTitle.includes('consultare') || lowerTitle.includes('proiect de hotărâre') || lowerTitle.includes('proiect de hotarare')) return 'consultare';
   return 'general';
 }
 

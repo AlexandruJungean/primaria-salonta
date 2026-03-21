@@ -54,9 +54,8 @@ export default function GdprPage() {
       const result = await response.json();
       const docs: GdprDocument[] = result.data || [];
       
-      // Separate documents by type (cerere vs official documents)
-      const officialDocs = docs.filter(doc => !doc.title.toLowerCase().includes('cerere'));
-      const formDocs = docs.filter(doc => doc.title.toLowerCase().includes('cerere'));
+      const officialDocs = docs.filter(doc => doc.subcategory !== 'cerere');
+      const formDocs = docs.filter(doc => doc.subcategory === 'cerere');
       
       const sectionsData: GdprSection[] = [];
       
@@ -158,7 +157,7 @@ export default function GdprPage() {
             <p className="font-medium mb-1">Tipuri de documente GDPR:</p>
             <ul className="list-disc list-inside space-y-1 text-emerald-700">
               <li><strong>Documente Oficiale</strong> - politici, regulamente, informări</li>
-              <li><strong>Formulare și Cereri</strong> - documente cu "cerere" în titlu</li>
+              <li><strong>Formulare și Cereri</strong> - selectează tipul &quot;Formular/Cerere&quot; la editare</li>
             </ul>
           </div>
         </div>

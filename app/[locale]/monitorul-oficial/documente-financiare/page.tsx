@@ -31,19 +31,9 @@ interface YearData {
   other: Document[];
 }
 
-/**
- * Determine document subcategory based on title content
- */
-function getDocumentType(title: string): 'executie' | 'buget' | 'rectificare' | 'altele' {
-  const lowerTitle = title.toLowerCase();
-  if (lowerTitle.includes('execuț') || lowerTitle.includes('executie') || lowerTitle.includes('execut')) {
-    return 'executie';
-  }
-  if (lowerTitle.includes('rectifica')) { 
-    return 'rectificare';
-  }
-  if (lowerTitle.includes('buget') && (lowerTitle.includes('inițial') || lowerTitle.includes('initial') || lowerTitle.includes('aproba'))) {
-    return 'buget';
+function getDocumentType(doc: { subcategory?: string | null }): 'executie' | 'buget' | 'rectificare' | 'altele' {
+  if (doc.subcategory && ['executie', 'buget', 'rectificare', 'altele'].includes(doc.subcategory)) {
+    return doc.subcategory as 'executie' | 'buget' | 'rectificare' | 'altele';
   }
   return 'altele';
 }
@@ -57,7 +47,7 @@ function groupDocumentsByYear(documents: Document[]): YearData[] {
   documents.forEach(doc => {
     const year = doc.year;
     const mapKey = year || 'unknown';
-    const type = doc.subcategory as 'executie' | 'buget' | 'rectificare' | 'altele' || getDocumentType(doc.title);
+    const type = getDocumentType(doc);
     
     if (!yearMap.has(mapKey)) {
       yearMap.set(mapKey, {

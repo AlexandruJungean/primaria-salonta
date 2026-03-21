@@ -27,14 +27,8 @@ export default async function GdprPage({ params }: { params: Promise<{ locale: s
   // Fetch GDPR documents from database
   const gdprDocs = await documents.getDocumentsByCategory('gdpr');
 
-  // Separate documents into official documents and forms based on title
-  // Forms are identified by "cerere" in the title (Romanian for "request")
-  const officialDocuments = gdprDocs.filter(
-    doc => !doc.title.toLowerCase().includes('cerere')
-  );
-  const gdprForms = gdprDocs.filter(
-    doc => doc.title.toLowerCase().includes('cerere')
-  );
+  const officialDocuments = gdprDocs.filter(doc => doc.subcategory !== 'cerere');
+  const gdprForms = gdprDocs.filter(doc => doc.subcategory === 'cerere');
 
   const pageLabels = {
     ro: {

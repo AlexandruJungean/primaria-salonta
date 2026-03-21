@@ -57,8 +57,8 @@ export default async function BuletinInformativPage({ params }: { params: Promis
   }, {} as Record<string, ExternalLinkType[]>);
 
   // Separate documents by subcategory (section)
-  const sectionA = allDocuments.filter(doc => doc.subcategory === 'a' || doc.title.includes('OUG'));
-  const sectionB = allDocuments.filter(doc => doc.subcategory === 'b' || (doc.title.toLowerCase().includes('buletin') && !doc.title.includes('OUG')));
+  const sectionA = allDocuments.filter(doc => doc.subcategory === 'a');
+  const sectionB = allDocuments.filter(doc => doc.subcategory === 'b');
   const sectionC = allDocuments.filter(doc => doc.subcategory === 'c');
   const sectionG = allDocuments.filter(doc => doc.subcategory === 'g');
   const sectionH = allDocuments.filter(doc => doc.subcategory === 'h');

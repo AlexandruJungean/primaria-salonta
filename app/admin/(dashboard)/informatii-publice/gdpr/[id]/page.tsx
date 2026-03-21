@@ -62,12 +62,7 @@ export default function GdprEditPage() {
       setFileName(doc.file_name || '');
       setFileSize(doc.file_size || 0);
       
-      // Detect type based on title
-      if (doc.title?.toLowerCase().includes('cerere')) {
-        setDocType('cerere');
-      } else {
-        setDocType('document');
-      }
+      setDocType(doc.subcategory || 'document');
     } catch (error) {
       console.error('Error fetching document:', error);
       toast.error('Eroare', 'Nu s-a putut încărca documentul');
@@ -141,21 +136,16 @@ export default function GdprEditPage() {
       return;
     }
     
-    // Ensure title includes "cerere" for form type
-    let finalTitle = title;
-    if (docType === 'cerere' && !title.toLowerCase().includes('cerere')) {
-      finalTitle = `Cerere - ${title}`;
-    }
-    
     setSaving(true);
     
     try {
       const docData = {
-        title: finalTitle,
+        title: title.trim(),
         file_url: fileUrl,
         file_name: fileName,
         file_size: fileSize,
         category: 'gdpr',
+        subcategory: docType,
         published: true,
       };
       
@@ -298,11 +288,6 @@ export default function GdprEditPage() {
                   : "Ex: Politica de confidențialitate"}
               />
               
-              {docType === 'cerere' && !title.toLowerCase().includes('cerere') && title.trim() && (
-                <p className="text-sm text-amber-600 bg-amber-50 p-2 rounded">
-                  Titlul va fi prefixat automat cu "Cerere - " la salvare.
-                </p>
-              )}
             </div>
           </AdminCard>
 
