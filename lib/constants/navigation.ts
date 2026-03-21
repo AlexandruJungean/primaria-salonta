@@ -77,6 +77,7 @@ import {
   Network,
   FileQuestion,
   AlertCircle,
+  Mail,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -420,6 +421,60 @@ export const QUICK_LINKS = [
   { id: 'program', href: '/primaria/program', icon: Calendar },
 ];
 
+// Icon mapping for nav_pages (DB-driven items)
+export const NAV_PAGE_ICONS: Record<string, LucideIcon> = {
+  mail: Mail,
+  users: Users,
+  briefcase: Briefcase,
+  listChecks: ListChecks,
+  gavel: Gavel,
+  scrollText: ScrollText,
+  fileCheck: FileCheck,
+  barChart3: BarChart3,
+  userCircle: UserCircle,
+  layoutGrid: LayoutGrid,
+  calendar: Calendar,
+  mic: Mic,
+  scale: Scale,
+  building2: Building2,
+  info: Info,
+  shoppingCart: ShoppingCart,
+  fileText: FileText,
+  dog: Dog,
+  megaphone: Megaphone,
+  hammer: Hammer,
+  wallet: Wallet,
+  badgeCheck: BadgeCheck,
+  home: HomeIcon,
+  fileSignature: FileSignature,
+  clipboardList: ClipboardList,
+  shieldCheck: ShieldCheck,
+  receipt: Receipt,
+  leaf: Leaf,
+  wheat: Wheat,
+  map: Map,
+  heart: Heart,
+  tag: Tag,
+  hardHat: HardHat,
+  radio: Radio,
+  network: Network,
+  fileQuestion: FileQuestion,
+  alertCircle: AlertCircle,
+  landmark: Landmark,
+  bookOpen: BookOpen,
+  folderOpen: FolderOpen,
+  eye: Eye,
+  messageSquare: MessageSquare,
+  newspaper: Newspaper,
+  fileSearch: FileSearch,
+  target: Target,
+  graduationCap: GraduationCap,
+  helpCircle: HelpCircle,
+  image: Image,
+  video: Video,
+  flag: Flag,
+};
+
 // Icon mapping for dynamic institutions
 export const INSTITUTION_ICONS: Record<string, LucideIcon> = {
   building: Building,
@@ -463,57 +518,116 @@ export interface DynamicProgram {
   title: string;
 }
 
+// Maps groupId to nav_sections slug for DB-driven groups
+const GROUP_TO_SECTION_SLUG: Record<string, string> = {
+  informatiiPublice: 'informatii-publice',
+  informatiiPubliceContinuare: 'informatii-publice',
+  transparenta: 'transparenta',
+  primaria: 'primaria',
+  consiliulLocal: 'consiliul-local',
+  monitorulOficial: 'monitorul-oficial',
+  rapoarteStudii: 'rapoarte-studii',
+};
+
+// Maps main section id to the menu key used in nav_pages show_in_* columns
+const SECTION_TO_MENU_KEY: Record<string, string> = {
+  pentruCetateni: 'cetateni',
+  pentruFirme: 'firme',
+  primpieSalonta: 'primarie',
+  turistSalonta: 'turist',
+};
+
+export interface NavPageItem {
+  id: string;
+  title: string;
+  icon: string;
+  public_path: string | null;
+  section_slug: string;
+}
+
+export interface NavPagesMenuData {
+  cetateni: NavPageItem[];
+  firme: NavPageItem[];
+  primarie: NavPageItem[];
+  turist: NavPageItem[];
+}
+
 // Helper to get navigation with dynamic data merged in
 export function getNavigationWithInstitutions(
   dynamicInstitutions: DynamicInstitution[],
-  dynamicPrograms: DynamicProgram[] = []
+  dynamicPrograms: DynamicProgram[] = [],
+  navPagesData?: NavPagesMenuData
 ): NavSection[] {
-  return MAIN_NAVIGATION.map(section => ({
-    ...section,
-    groups: section.groups?.map(group => {
-      if (!group.isDynamic) return group;
-      
-      // Handle dynamic programs
-      if (group.dynamicType === 'programs') {
-        const programItems: NavItem[] = dynamicPrograms.map(prog => ({
-          id: prog.slug,
-          href: `/programe/${prog.slug}`,
-          icon: PROGRAM_ICONS[prog.slug] || Target, // Use specific icon if defined, otherwise Target
-          label: prog.title,
-        }));
-        
-        return {
-          ...group,
-          items: programItems,
-        };
+  return MAIN_NAVIGATION.map(section => {
+    const menuKey = SECTION_TO_MENU_KEY[section.id] as keyof NavPagesMenuData | undefined;
+    const navPagesForMenu = navPagesData && menuKey
+      ? navPagesData[menuKey] || []
+      : [];
+
+    // Group nav pages by their parent section slug
+    const navPagesBySection: Record<string, NavPageItem[]> = {};
+    for (const page of navPagesForMenu) {
+      if (!navPagesBySection[page.section_slug]) {
+        navPagesBySection[page.section_slug] = [];
       }
-      
-      // Handle dynamic institutions
-      // Filter institutions based on the dynamic type (which section they belong to)
-      const filteredInstitutions = dynamicInstitutions.filter(inst => {
-        if (group.dynamicType === 'institutions-social') {
-          // Social institutions for "Pentru Cetățeni" section
-          return inst.showInCitizens;
+      navPagesBySection[page.section_slug].push(page);
+    }
+
+    // Track which section slugs have been rendered (to avoid duplicates for split groups)
+    const renderedSections = new Set<string>();
+
+    const processedGroups = section.groups?.map(group => {
+      // Handle existing dynamic types (institutions, programs)
+      if (group.isDynamic) {
+        if (group.dynamicType === 'programs') {
+          const programItems: NavItem[] = dynamicPrograms.map(prog => ({
+            id: prog.slug,
+            href: `/programe/${prog.slug}`,
+            icon: PROGRAM_ICONS[prog.slug] || Target,
+            label: prog.title,
+          }));
+          return { ...group, items: programItems };
         }
-        if (group.dynamicType === 'institutions-cultural') {
-          // Cultural institutions for "Turist în Salonta" section
-          return inst.showInTourists;
+
+        const filteredInstitutions = dynamicInstitutions.filter(inst => {
+          if (group.dynamicType === 'institutions-social') return inst.showInCitizens;
+          if (group.dynamicType === 'institutions-cultural') return inst.showInTourists;
+          return false;
+        });
+        const dynamicItems: NavItem[] = filteredInstitutions.map(inst => ({
+          id: inst.slug,
+          href: `/institutii/${inst.slug}`,
+          icon: INSTITUTION_ICONS[inst.icon] || Building,
+          label: inst.name,
+        }));
+        return { ...group, items: dynamicItems };
+      }
+
+      // Handle DB-driven nav_section groups
+      const sectionSlug = GROUP_TO_SECTION_SLUG[group.groupId];
+      if (sectionSlug && navPagesData && navPagesBySection[sectionSlug]) {
+        // Skip if we already rendered this section's items in a previous group
+        if (renderedSections.has(sectionSlug)) {
+          return { ...group, items: [] };
         }
-        return false;
-      });
-      
-      // Map filtered institutions to nav items
-      const dynamicItems: NavItem[] = filteredInstitutions.map(inst => ({
-        id: inst.slug, // Use slug as id for translation fallback
-        href: `/institutii/${inst.slug}`,
-        icon: INSTITUTION_ICONS[inst.icon] || Building,
-        label: inst.name, // Direct label for dynamic items
-      }));
-      
-      return {
-        ...group,
-        items: dynamicItems,
-      };
-    }),
-  }));
+        renderedSections.add(sectionSlug);
+
+        const dbPages = navPagesBySection[sectionSlug];
+        const items: NavItem[] = dbPages.map(page => ({
+          id: page.id,
+          href: page.public_path || '#',
+          icon: NAV_PAGE_ICONS[page.icon] || FileText,
+          label: page.title,
+        }));
+        return { ...group, items };
+      }
+
+      return group;
+    });
+
+    // Filter out groups with no items (e.g., continuation groups that were emptied)
+    const filteredGroups = processedGroups?.filter(g => g.items.length > 0);
+
+    return { ...section, groups: filteredGroups };
+  });
 }

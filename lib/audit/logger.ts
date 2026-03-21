@@ -40,7 +40,8 @@ export type ResourceType =
   | 'report'
   | 'faq'
   | 'required_documents_office'
-  | 'required_document';
+  | 'required_document'
+  | 'nav_page';
 
 export interface AuditLogEntry {
   action: AuditAction;
@@ -139,6 +140,7 @@ export function getResourceTypeLabel(resourceType: ResourceType): string {
     faq: 'Întrebare frecventă',
     required_documents_office: 'Birou acte necesare',
     required_document: 'Secțiune acte necesare',
+    nav_page: 'Pagină navigare',
   };
   return labels[resourceType] || resourceType;
 }
