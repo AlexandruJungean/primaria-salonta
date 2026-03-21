@@ -1001,7 +1001,7 @@ export default function ProgramEditPage() {
               {images.map(img => (
                 <div key={img.id} className="relative group">
                   <div className="aspect-square bg-slate-100 rounded-lg overflow-hidden">
-                    <img src={img.image_url} alt={img.alt_text || ''} className="w-full h-full object-cover" />
+                    <img src={img.image_url} alt={img.alt_text || ''} className="w-full h-full object-contain p-1" />
                   </div>
                   <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center gap-2">
                     <button onClick={() => openImgDialog(img)} className="p-2 bg-white rounded-lg text-slate-600 hover:text-blue-600">
@@ -1132,7 +1132,7 @@ export default function ProgramEditPage() {
                     {uploadingImg ? 'Se încarcă...' : 'Încarcă imagine'}
                   </label>
                 </div>
-                {imgForm.image_url && <div className="mt-2"><img src={imgForm.image_url} alt="Preview" className="h-32 object-cover rounded-lg" /></div>}
+                {imgForm.image_url && <div className="mt-2"><img src={imgForm.image_url} alt="Preview" className="h-32 object-contain rounded-lg" /></div>}
               </div>
               <AdminSelect
                 label="Tip imagine"
