@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { Plus, Trash2, ChevronUp, ChevronDown, Save, ExternalLink } from 'lucide-react';
-import { AdminPageHeader, AdminCard, AdminButton, toast } from '@/components/admin';
+import { AdminPageHeader, AdminCard, AdminButton, AdminConfirmDialog, toast } from '@/components/admin';
 import { adminFetch } from '@/lib/api-client';
 import { IconPicker } from '@/components/admin/icon-picker';
 import { ImageField } from '@/components/admin/image-field';
@@ -39,6 +39,7 @@ export function StructuredPageEditor({
   const [pageContent, setPageContent] = useState('');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
 
   const loadData = useCallback(async () => {
     try {
@@ -146,7 +147,7 @@ export function StructuredPageEditor({
                   <ChevronDown className="w-4 h-4" />
                 </button>
                 <button
-                  onClick={() => removeItem(index)}
+                  onClick={() => setDeleteIndex(index)}
                   className="p-1 rounded hover:bg-red-50 text-slate-400 hover:text-red-600 mt-1"
                   title="Șterge"
                 >
@@ -238,6 +239,21 @@ export function StructuredPageEditor({
           {saving ? 'Se salvează...' : 'Salvează totul'}
         </AdminButton>
       </div>
+
+      <AdminConfirmDialog
+        isOpen={deleteIndex !== null}
+        onClose={() => setDeleteIndex(null)}
+        onConfirm={() => {
+          if (deleteIndex !== null) {
+            removeItem(deleteIndex);
+            setDeleteIndex(null);
+          }
+        }}
+        title={`Șterge ${itemLabel}?`}
+        message={`Ești sigur că vrei să ștergi acest ${itemLabel}? Nu uita să salvezi după ștergere.`}
+        confirmLabel="Da, șterge"
+        cancelLabel="Nu, anulează"
+      />
     </div>
   );
 }
