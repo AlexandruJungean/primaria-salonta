@@ -10,6 +10,7 @@ import { getLeadership } from '@/lib/supabase/services';
 import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
 import { translateContentArray } from '@/lib/google-translate/cache';
+import { AdminEditButton } from '@/components/admin-edit-button';
 
 const POSITION_LABELS: Record<string, Record<string, string>> = {
   primar: { ro: 'Primar', hu: 'Polgármester', en: 'Mayor' },
@@ -181,6 +182,7 @@ export default async function LeadershipPage({
           )}
         </Container>
       </Section>
+      <AdminEditButton href="/admin/primaria/conducere" />
     </>
   );
 }

@@ -9,6 +9,7 @@ import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
 import * as reports from '@/lib/supabase/services/reports';
 import { translateContentArray } from '@/lib/google-translate/cache';
+import { AdminEditButton } from '@/components/admin-edit-button';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -126,6 +127,7 @@ export default async function StudiiPage({ params }: { params: Promise<{ locale:
           </div>
         </Container>
       </Section>
+      <AdminEditButton href="/admin/rapoarte-studii/studii" />
     </>
   );
 }

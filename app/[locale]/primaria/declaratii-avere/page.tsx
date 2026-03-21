@@ -8,6 +8,7 @@ import type { Locale } from '@/lib/seo/config';
 import * as documentsService from '@/lib/supabase/services/documents';
 import type { AssetDeclaration } from '@/lib/types/database';
 import { CollapsibleYearSection } from './collapsible-year-section';
+import { AdminEditButton } from '@/components/admin-edit-button';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -196,6 +197,7 @@ export default async function DeclaratiiAverePage({ params }: { params: Promise<
           </div>
         </Container>
       </Section>
+      <AdminEditButton href="/admin/primaria/declaratii" />
     </>
   );
 }
