@@ -24,6 +24,7 @@ import { type Locale } from '@/i18n/routing';
 import * as programs from '@/lib/supabase/services/programs';
 import { translateContentArray } from '@/lib/google-translate/cache';
 import { AdminEditButton } from '@/components/admin-edit-button';
+import { AddPageCard } from '@/components/add-page-card';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -110,6 +111,7 @@ export default async function ProgramePage({ params }: { params: Promise<{ local
                 </Link>
               );
             })}
+            <AddPageCard adminHref="/admin/programe" />
           </div>
           
           {translatedPrograms.length === 0 && (

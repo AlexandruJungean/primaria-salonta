@@ -7,6 +7,7 @@ import { PageHeader } from '@/components/pages/page-header';
 import { Link } from '@/components/ui/link';
 import { generatePageMetadata } from '@/lib/seo/metadata';
 import { AdminEditButton } from '@/components/admin-edit-button';
+import { AddPageCard } from '@/components/add-page-card';
 import { getNavPagesBySection } from '@/lib/supabase/services/navigation';
 import { getIcon } from '@/lib/constants/icon-map';
 import { type Locale } from '@/i18n/routing';
@@ -57,6 +58,7 @@ export default async function ServiciiOnlinePage({ params }: { params: Promise<{
                 </Link>
               );
             })}
+            <AddPageCard adminHref="/admin/servicii-online" />
           </div>
         </Container>
       </Section>

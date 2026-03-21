@@ -7,6 +7,7 @@ import { PageHeader } from '@/components/pages/page-header';
 import { Link } from '@/components/ui/link';
 import { generatePageMetadata, BreadcrumbJsonLd } from '@/lib/seo';
 import { AdminEditButton } from '@/components/admin-edit-button';
+import { AddPageCard } from '@/components/add-page-card';
 import { getNavPagesBySection } from '@/lib/supabase/services/navigation';
 import { getIcon } from '@/lib/constants/icon-map';
 import type { Locale } from '@/lib/seo/config';
@@ -54,6 +55,7 @@ export default async function InformatiiPublicePage({ params }: { params: Promis
                 </Link>
               );
             })}
+            <AddPageCard adminHref="/admin/informatii-publice" />
           </div>
         </Container>
       </Section>
