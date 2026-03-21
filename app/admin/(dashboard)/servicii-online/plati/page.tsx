@@ -16,7 +16,7 @@ export default function AdminPlatiPage() {
       fields={[
         { key: 'id', label: 'ID unic', type: 'text', required: true, placeholder: 'ex: ghiseul' },
         { key: 'url', label: 'URL platforma', type: 'url', required: true, placeholder: 'https://...' },
-        { key: 'icon', label: 'Icon', type: 'text', placeholder: 'creditCard / receipt / fileWarning' },
+        { key: 'icon', label: 'Icon', type: 'icon' },
       ]}
       itemLabel="link de plată"
     />

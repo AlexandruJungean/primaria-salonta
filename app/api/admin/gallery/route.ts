@@ -181,6 +181,35 @@ export async function POST(request: NextRequest) {
   }
 }
 
+// PATCH - Reorder images
+export async function PATCH(request: NextRequest) {
+  const authResult = await requireAdmin(request);
+  if (authResult instanceof NextResponse) return authResult;
+
+  try {
+    const supabaseAdmin = getSupabaseAdmin();
+    const { orderedIds } = await request.json() as { orderedIds: string[] };
+
+    if (!orderedIds || !Array.isArray(orderedIds)) {
+      return NextResponse.json({ error: 'orderedIds array required' }, { status: 400 });
+    }
+
+    await Promise.all(
+      orderedIds.map((id, index) =>
+        supabaseAdmin
+          .from('page_images')
+          .update({ sort_order: index + 1 })
+          .eq('id', id)
+      )
+    );
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Error reordering gallery:', error);
+    return NextResponse.json({ error: 'Failed to reorder' }, { status: 500 });
+  }
+}
+
 // DELETE - Remove image
 export async function DELETE(request: NextRequest) {
   // Verifică autentificarea

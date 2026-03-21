@@ -15,7 +15,7 @@ export default function AdminOraseInfratitePage() {
       dataKey="twinCities"
       fields={[
         { key: 'id', label: 'ID (cheie traducere)', type: 'text', required: true, placeholder: 'ex: sarkad' },
-        { key: 'image', label: 'Cale imagine', type: 'text', placeholder: '/images/orase-infratite/nume.webp' },
+        { key: 'image', label: 'Stemă/Logo', type: 'image' },
       ]}
       itemLabel="oraș înfrățit"
     />

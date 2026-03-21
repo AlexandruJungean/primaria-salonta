@@ -4,11 +4,13 @@ import { useEffect, useState, useCallback } from 'react';
 import { Plus, Trash2, ChevronUp, ChevronDown, Save, ExternalLink } from 'lucide-react';
 import { AdminPageHeader, AdminCard, AdminButton, toast } from '@/components/admin';
 import { adminFetch } from '@/lib/api-client';
+import { IconPicker } from '@/components/admin/icon-picker';
+import { ImageField } from '@/components/admin/image-field';
 
 interface FieldConfig {
   key: string;
   label: string;
-  type: 'text' | 'url' | 'textarea' | 'checkbox' | 'image';
+  type: 'text' | 'url' | 'textarea' | 'checkbox' | 'image' | 'icon';
   placeholder?: string;
   required?: boolean;
 }
@@ -156,40 +158,61 @@ export function StructuredPageEditor({
               <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-3">
                 {fields.map(field => (
                   <div key={field.key} className={field.type === 'textarea' ? 'md:col-span-2' : ''}>
-                    <label className="block text-xs font-medium text-slate-500 mb-1">{field.label}</label>
-                    {field.type === 'textarea' ? (
-                      <textarea
+                    {field.type === 'image' ? (
+                      <ImageField
                         value={item[field.key] || ''}
-                        onChange={e => updateItem(index, field.key, e.target.value)}
-                        rows={2}
-                        placeholder={field.placeholder}
-                        className="w-full px-3 py-1.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        onChange={val => updateItem(index, field.key, val)}
+                        label={field.label}
                       />
-                    ) : field.type === 'checkbox' ? (
-                      <label className="flex items-center gap-2 cursor-pointer mt-1">
-                        <input
-                          type="checkbox"
-                          checked={!!item[field.key]}
-                          onChange={e => updateItem(index, field.key, e.target.checked)}
-                          className="w-4 h-4 rounded border-slate-300 text-blue-600"
-                        />
-                        <span className="text-sm text-slate-600">Da</span>
-                      </label>
-                    ) : (
-                      <div className="flex gap-1">
-                        <input
-                          type={field.type === 'url' ? 'url' : 'text'}
+                    ) : field.type === 'icon' ? (
+                      <IconPicker
+                        value={item[field.key] || 'fileText'}
+                        onChange={val => updateItem(index, field.key, val)}
+                        label={field.label}
+                        compact
+                      />
+                    ) : field.type === 'textarea' ? (
+                      <>
+                        <label className="block text-xs font-medium text-slate-500 mb-1">{field.label}</label>
+                        <textarea
                           value={item[field.key] || ''}
                           onChange={e => updateItem(index, field.key, e.target.value)}
+                          rows={2}
                           placeholder={field.placeholder}
                           className="w-full px-3 py-1.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         />
-                        {field.type === 'url' && item[field.key] && (
-                          <a href={item[field.key]} target="_blank" rel="noopener noreferrer" className="p-1.5 text-blue-500 hover:text-blue-700 shrink-0">
-                            <ExternalLink className="w-4 h-4" />
-                          </a>
-                        )}
-                      </div>
+                      </>
+                    ) : field.type === 'checkbox' ? (
+                      <>
+                        <label className="block text-xs font-medium text-slate-500 mb-1">{field.label}</label>
+                        <label className="flex items-center gap-2 cursor-pointer mt-1">
+                          <input
+                            type="checkbox"
+                            checked={!!item[field.key]}
+                            onChange={e => updateItem(index, field.key, e.target.checked)}
+                            className="w-4 h-4 rounded border-slate-300 text-blue-600"
+                          />
+                          <span className="text-sm text-slate-600">Da</span>
+                        </label>
+                      </>
+                    ) : (
+                      <>
+                        <label className="block text-xs font-medium text-slate-500 mb-1">{field.label}</label>
+                        <div className="flex gap-1">
+                          <input
+                            type={field.type === 'url' ? 'url' : 'text'}
+                            value={item[field.key] || ''}
+                            onChange={e => updateItem(index, field.key, e.target.value)}
+                            placeholder={field.placeholder}
+                            className="w-full px-3 py-1.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          />
+                          {field.type === 'url' && item[field.key] && (
+                            <a href={item[field.key]} target="_blank" rel="noopener noreferrer" className="p-1.5 text-blue-500 hover:text-blue-700 shrink-0">
+                              <ExternalLink className="w-4 h-4" />
+                            </a>
+                          )}
+                        </div>
+                      </>
                     )}
                   </div>
                 ))}

@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
-import { ChevronUp, ChevronDown, Pencil, X, Check, Eye, EyeOff, Lock, Search } from 'lucide-react';
+import { ChevronUp, ChevronDown, Pencil, X, Check, Eye, EyeOff, Lock } from 'lucide-react';
 import { AdminPageHeader, AdminCard, toast } from '@/components/admin';
 import { adminFetch } from '@/lib/api-client';
-import { getIcon, ICON_OPTIONS } from '@/lib/constants/icon-map';
+import { getIcon } from '@/lib/constants/icon-map';
+import { IconPicker } from '@/components/admin/icon-picker';
 
 interface NavPage {
   id: string;
@@ -43,81 +44,6 @@ const NAV_GROUPS = [
   { key: 'show_in_primarie' as const, label: 'Primărie' },
   { key: 'show_in_turist' as const, label: 'Turist' },
 ];
-
-function IconPicker({ value, onChange }: { value: string; onChange: (icon: string) => void }) {
-  const [open, setOpen] = useState(false);
-  const [search, setSearch] = useState('');
-  const ref = useRef<HTMLDivElement>(null);
-  const CurrentIcon = getIcon(value);
-
-  useEffect(() => {
-    const handleClick = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
-    };
-    document.addEventListener('mousedown', handleClick);
-    return () => document.removeEventListener('mousedown', handleClick);
-  }, []);
-
-  const filtered = search
-    ? ICON_OPTIONS.filter(name => name.toLowerCase().includes(search.toLowerCase()))
-    : ICON_OPTIONS;
-
-  return (
-    <div className="relative" ref={ref}>
-      <label className="block text-sm font-medium text-slate-700 mb-1">Icon</label>
-      <button
-        type="button"
-        onClick={() => { setOpen(!open); setSearch(''); }}
-        className="flex items-center gap-2 px-3 py-2 border border-slate-300 rounded-lg text-sm hover:border-blue-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-      >
-        <CurrentIcon className="w-5 h-5 text-blue-600" />
-        <span className="text-slate-700">{value}</span>
-        <ChevronDown className="w-3.5 h-3.5 text-slate-400 ml-1" />
-      </button>
-
-      {open && (
-        <div className="absolute top-full left-0 mt-1 z-50 w-80 bg-white border border-slate-200 rounded-xl shadow-xl">
-          <div className="p-2 border-b border-slate-100">
-            <div className="relative">
-              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-              <input
-                type="text"
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                placeholder="Caută icon..."
-                className="w-full pl-8 pr-3 py-1.5 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                autoFocus
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-8 gap-1 p-2 max-h-52 overflow-y-auto">
-            {filtered.map(name => {
-              const Icon = getIcon(name);
-              return (
-                <button
-                  key={name}
-                  type="button"
-                  onClick={() => { onChange(name); setOpen(false); }}
-                  title={name}
-                  className={`w-8 h-8 flex items-center justify-center rounded-md transition-colors ${
-                    value === name
-                      ? 'bg-blue-100 text-blue-700 ring-2 ring-blue-400'
-                      : 'hover:bg-slate-100 text-slate-600'
-                  }`}
-                >
-                  <Icon className="w-4 h-4" />
-                </button>
-              );
-            })}
-            {filtered.length === 0 && (
-              <div className="col-span-8 text-center py-4 text-sm text-slate-400">Niciun rezultat</div>
-            )}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
 
 export function NavSectionAdminPage({ sectionSlug, breadcrumbLabel }: NavSectionAdminPageProps) {
   const [section, setSection] = useState<NavSection | null>(null);
@@ -244,10 +170,10 @@ export function NavSectionAdminPage({ sectionSlug, breadcrumbLabel }: NavSection
         <AdminCard className="border-blue-300 ring-2 ring-blue-100 mb-6">
           <div className="space-y-4">
             <div className="flex items-end gap-3">
-              {/* Icon picker */}
               <IconPicker
                 value={editForm.icon || ''}
                 onChange={icon => setEditForm(f => ({ ...f, icon }))}
+                label="Icon"
               />
               <div className="flex-1">
                 <label className="block text-sm font-medium text-slate-700 mb-1">Titlu</label>

@@ -16,7 +16,7 @@ export default function AdminCulturaPage() {
       fields={[
         { key: 'id', label: 'ID (cheie traducere)', type: 'text', required: true, placeholder: 'ex: aranyJanos' },
         { key: 'name', label: 'Nume complet', type: 'text', required: true },
-        { key: 'image', label: 'Cale imagine', type: 'text', placeholder: '/images/personalitati/nume.webp' },
+        { key: 'image', label: 'Imagine', type: 'image' },
       ]}
       itemLabel="personalitate"
     />
