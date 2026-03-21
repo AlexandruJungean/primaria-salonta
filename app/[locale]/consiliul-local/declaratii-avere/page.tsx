@@ -7,6 +7,7 @@ import { DeclarationsYearList } from '@/components/pages/declarations-year-list'
 import { getAssetDeclarations } from '@/lib/supabase/services';
 import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
+import { AdminEditButton } from '@/components/admin-edit-button';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -51,6 +52,7 @@ export default async function DeclaratiiAverePage({
           </div>
         </Container>
       </Section>
+      <AdminEditButton href="/admin/consiliul-local/declaratii" />
     </>
   );
 }

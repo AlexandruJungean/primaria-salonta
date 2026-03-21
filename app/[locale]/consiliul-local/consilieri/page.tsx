@@ -9,6 +9,7 @@ import { getCouncilMembers, getDocumentsByCategory } from '@/lib/supabase/servic
 import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
 import { translateContentArray } from '@/lib/google-translate/cache';
+import { AdminEditButton } from '@/components/admin-edit-button';
 
 interface ConsilieriPageMessages {
   consilieriPage: {
@@ -198,6 +199,7 @@ export default async function ConsilieriPage({
           </div>
         </Container>
       </Section>
+      <AdminEditButton href="/admin/consiliul-local/consilieri" />
     </>
   );
 }

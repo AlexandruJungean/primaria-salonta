@@ -10,6 +10,7 @@ import { generatePageMetadata } from '@/lib/seo';
 import type { Locale } from '@/lib/seo/config';
 import * as council from '@/lib/supabase/services/council';
 import { translateContentArray } from '@/lib/google-translate/cache';
+import { AdminEditButton } from '@/components/admin-edit-button';
 
 const ITEMS_PER_PAGE = 20;
 
@@ -273,6 +274,7 @@ export default async function OrdineDeZiPage({
           </div>
         </Container>
       </Section>
+      <AdminEditButton href="/admin/consiliul-local/ordine-de-zi" />
     </>
   );
 }

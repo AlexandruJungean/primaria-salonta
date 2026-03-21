@@ -9,6 +9,7 @@ import type { Locale } from '@/lib/seo/config';
 import * as reports from '@/lib/supabase/services/reports';
 import { translateContentArray } from '@/lib/google-translate/cache';
 import { MandateAccordion, type PageLabels } from './mandate-accordion';
+import { AdminEditButton } from '@/components/admin-edit-button';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -152,6 +153,7 @@ export default async function RapoarteActivitatePage({
           </div>
         </Container>
       </Section>
+      <AdminEditButton href="/admin/consiliul-local/rapoarte-activitate" />
     </>
   );
 }

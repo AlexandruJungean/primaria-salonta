@@ -9,6 +9,7 @@ import type { Locale } from '@/lib/seo/config';
 import { getDocumentsBySourceFolderWithAnnexes } from '@/lib/supabase/services/documents';
 import type { DocumentWithAnnexes } from '@/lib/types/database';
 import { HotarariByYear } from './hotarari-by-year';
+import { AdminEditButton } from '@/components/admin-edit-button';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -131,6 +132,7 @@ export default async function HotarariRepublicatePage({ params }: { params: Prom
           </div>
         </Container>
       </Section>
+      <AdminEditButton href="/admin/consiliul-local/hotarari-republicate" />
     </>
   );
 }

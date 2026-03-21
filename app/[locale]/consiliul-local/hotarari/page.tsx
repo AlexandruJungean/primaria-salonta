@@ -7,6 +7,7 @@ import { Breadcrumbs } from '@/components/layout/breadcrumbs';
 import { PageHeader } from '@/components/pages/page-header';
 import { Link } from '@/components/ui/link';
 import { getSessionsWithDecisionsCount } from '@/lib/supabase/services';
+import { AdminEditButton } from '@/components/admin-edit-button';
 
 const ITEMS_PER_PAGE = 20;
 
@@ -242,6 +243,7 @@ export default async function HotarariPage({
           </div>
         </Container>
       </Section>
+      <AdminEditButton href="/admin/consiliul-local/hotarari" />
     </>
   );
 }
