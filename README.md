@@ -1,43 +1,41 @@
-# 🏛️ Primăria Salonta - Website Oficial
+# Primăria Salonta – site web
 
-Website-ul Primăriei Municipiului Salonta: conținut public multilingv (RO / HU / EN) și panou de administrare, construit cu **Next.js** (App Router), **TypeScript** și **Tailwind CSS 4**.
+Website oficial: conținut public **RO / HU / EN** și **panou de administrare**, construit cu **Next.js** (App Router), **TypeScript** și **Tailwind CSS 4**.
 
-Infrastructura țintă este **hosting cPanel** (sau echivalent): **PostgreSQL** pe același furnizor și **stocare fișiere pe server** (disc / upload-uri), fără dependență de Supabase sau Cloudflare.
+## Arhitectură producție
 
-## Tech stack (țintă producție)
+| Rol | Tehnologie |
+|-----|------------|
+| Aplicație (Next.js) | **Netlify** + `@netlify/plugin-nextjs` |
+| Bază de date | **PostgreSQL** pe infrastructura primăriei (**cPanel**); aplicația se conectează prin `DATABASE_URL` |
+| Fișiere (documente, media) | **Stocare pe server** (disc în contul de hosting), servite prin URL-uri publice |
+| Autentificare admin | **JWT** (cookie httpOnly), profiluri și parole în PostgreSQL (`admin_profiles`, **bcrypt**) |
+| E-mail | **SMTP** (ex. serviciul de mail al gazdei) |
+| Protecție formulare | **Google reCAPTCHA v3** |
+| Traduceri automate (admin) | **Google Translate API** (opțional) |
+| Limitare trafic | Mecanism în aplicație și/sau **Redis** (URL/token configurate în mediu — furnizor la alegere) |
+| i18n site | **next-intl** — `messages/ro.json`, `hu.json`, `en.json` |
 
-| Zonă | Tehnologie |
-|------|------------|
-| Framework | Next.js **16.x**, React **19** |
-| Limbaj | TypeScript 5 |
-| Stiluri | Tailwind CSS 4 |
-| Bază de date | **PostgreSQL** (cPanel / phpPgAdmin / conexiune directă din aplicație) – schema în **`docs/schema-cpanel.sql`** |
-| Stocare fișiere | **Disc pe server** (documente și media în spațiul de hosting), expuse prin URL-uri publice configurate |
-| Rate limiting | Opțional: **Redis** (ex. Upstash) sau mecanism simplu pe DB / memorie, după implementare |
-| Hosting | **cPanel** (Node.js + Passenger, vezi `server.js`) și/sau **Netlify** pentru frontend cu `DATABASE_URL` către PostgreSQL pe server |
-| i18n | `next-intl` – `messages/ro.json`, `hu.json`, `en.json` |
+**Notă:** Node.js pentru Next.js **nu** rulează pe același cPanel cu site-ul vechi; aplicația este izolată pe Netlify, iar cPanel găzduiește în principal PostgreSQL (și spațiul pentru fișiere, după configurare).
 
-## Migrare în cod
+## Stack tehnic
 
-Închiderea completă în cod (înlocuirea backend-ului vechi prin **pg** / API proprii și mutarea upload-urilor pe disc) poate fi **în curs**. Schema pentru **cPanel** este în `docs/schema-cpanel.sql`; variabilele de mai jos sunt **ținta** după migrare.
-
-**Până atunci:** ramura curentă poate încă necesita variabilele vechi de integrare pentru a rula `npm run dev` — folosește setul agreat de echipă (ex. fișier `.env.local` partajat intern).
+- **Next.js** 16.x, **React** 19, **TypeScript** 5, **Tailwind CSS** 4  
+- Acces la date: client **PostgreSQL** din runtime-ul Next.js (ex. `pg` + pool)  
+- Validări **Zod**, jurnal **audit** pentru acțiuni admin  
 
 ## Funcții principale
 
-- Pagini publice pe locale (`/ro`, `/hu`, `/en`): știri, evenimente, primărie, consiliu local, formulare etc.
-- **Panou admin** (`/admin`): autentificare, roluri (`super_admin`, `admin`, `editor`, `viewer`), gestionare utilizatori, schimbare parolă, reset parolă (e-mail prin **SMTP**).
-- **Securitate**: JWT în cookie httpOnly pentru sesiunea admin, parole cu **bcrypt** în `admin_profiles`, reCAPTCHA v3, rate limiting (unde e configurat), audit log, validări Zod.
+- Site public pe `/ro`, `/hu`, `/en` (știri, evenimente, primărie, consiliu local, formulare etc.)
+- **`/admin`:** roluri `super_admin`, `admin`, `editor`, `viewer`; utilizatori; schimbare și reset parolă; e-mail pentru fluxuri de securitate unde e configurat SMTP
 
-## Cerințe locale
+## Cerințe pentru dezvoltare locală
 
-- **Node.js 20+** (recomandat LTS)
-- npm
-- PostgreSQL accesibil din mașina de dezvoltare (sau tunnel), pentru teste cu aceeași schemă ca producția
+- **Node.js 20+** (LTS recomandat)  
+- **npm**  
+- PostgreSQL accesibil local sau prin tunel (aceeași schemă ca în producție)
 
 ## Setup local
-
-### 1. Repository și dependențe
 
 ```bash
 git clone <url-repository>
@@ -45,43 +43,27 @@ cd web-primaria-salonta
 npm install
 ```
 
-### 2. Variabile de mediu
-
-Creează `.env.local` în rădăcina proiectului. Model pentru arhitectura pe **cPanel** (completează valorile reale):
+Creează **`.env.local`** (exemplu — denumirile rămân stabile odată cu arhitectura de mai sus):
 
 ```bash
-# --- PostgreSQL (cPanel: host intern sau hostname din cPanel) ---
 DATABASE_URL=postgresql://utilizator:parola@host:5432/nume_baza
-
-# --- Sesiune admin (JWT) ---
-JWT_SECRET=long-random-secret-min-32-chars
-
-# --- URL public al site-ului (SEO, link-uri) ---
+JWT_SECRET=secret-lung-minim-32-caractere
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 
-# --- Google reCAPTCHA v3 ---
-NEXT_PUBLIC_RECAPTCHA_SITE_KEY=xxxxx
-RECAPTCHA_SECRET_KEY=xxxxx
+NEXT_PUBLIC_RECAPTCHA_SITE_KEY=
+RECAPTCHA_SECRET_KEY=
 
-# --- Google Translate (dacă folosiți traducere automată în admin) ---
 GOOGLE_TRANSLATE_API_KEY=
 
-# --- E-mail (reset parolă, notificări) – SMTP din cPanel sau furnizor ---
-SMTP_HOST=smtp.example.com
+SMTP_HOST=
 SMTP_PORT=587
 SMTP_USER=
 SMTP_PASSWORD=
 
-# --- Rate limiting (opțional) ---
+# Opțional – rate limiting (Redis over HTTP, ex. Upstash)
 UPSTASH_REDIS_REST_URL=
 UPSTASH_REDIS_REST_TOKEN=
 ```
-
-**Baza de date:** rulează mai întâi scriptul din **`docs/schema-cpanel.sql`** în PostgreSQL (ex. phpPgAdmin pe cPanel). Migrări incrementale suplimentare: `docs/*.sql`, `sql/`.
-
-**Fișiere:** după migrarea codului, căile / URL-urile pentru upload vor fi cele definite în aplicație (director sub contul cPanel, cu permisiuni corecte).
-
-### 3. Rulare development
 
 ```bash
 npm run dev
@@ -89,54 +71,38 @@ npm run dev
 
 Deschide [http://localhost:3000](http://localhost:3000).
 
-## Structura proiectului (rezumat)
+## Structura repository (rezumat)
 
 ```
 web-primaria-salonta/
-├── app/
-│   ├── [locale]/           # Site public (ro, hu, en)
-│   ├── admin/              # Panou administrare
-│   └── api/                # Route handlers (public + admin)
-├── components/             # UI, layout, secțiuni, admin
-├── lib/                    # Auth, JWT, rate-limit, e-mail, audit, clienți DB/storage (în evoluție)
-├── messages/               # Traduceri i18n
-├── public/                 # Assets statice
-├── docs/                   # SQL: schema-cpanel.sql, migrări
-├── sql/                    # Scripturi SQL mici
-├── i18n/                   # Config next-intl
-├── netlify.toml            # Opțional: build Netlify + plugin Next.js
-└── server.js               # Entry Node pentru Phusion Passenger (cPanel)
+├── app/                 # Rute publice [locale], admin, API
+├── components/
+├── lib/                 # DB, auth, e-mail, rate limit, utilitare
+├── messages/            # Traduceri
+├── public/
+├── docs/                # Schema SQL (ex. schema-cpanel.sql), ghid operare
+├── i18n/
+└── netlify.toml
 ```
-
-## Limbi
-
-- Română (implicit)
-- Maghiară
-- Engleză
 
 ## Deploy
 
-### cPanel (Node.js + Passenger)
+1. **Netlify:** repository conectat, build `npm run build`, plugin Next.js din `netlify.toml`, variabile de mediu setate (inclusiv `DATABASE_URL` către PostgreSQL-ul accesibil public sau prin rețea permisă).
+2. **PostgreSQL (cPanel):** bază creată din panoul de găzduire; import schema din fișierul SQL menținut în `docs/` (structura bazei).
 
-1. Creează baza **PostgreSQL** (Database Wizard) și aplică **`docs/schema-cpanel.sql`**.
-2. Încarcă build-ul aplicației și rulează `npm install` / `npm run build` conform procedurii hostului.
-3. Setează **Application Startup File** la **`server.js`** dacă folosești Passenger.
-4. Definește toate variabilele de mediu în interfața **Setup Node.js App** (Passenger nu încarcă automat `.env.local`).
-5. Pe pachete shared cu limite stricte (NPROC, memorie), SSR intens poate fi problematic; în acest caz e util să rulezi frontend-ul pe **Netlify** și să lași doar **PostgreSQL** (și eventual fișiere) pe cPanel.
+Operațiuni punctuale (primul import, migrări de date, fișiere): **`docs/MIGRATION-CPANEL.md`**.
 
-### Netlify (frontend)
+## Limbi
 
-1. Conectează repository-ul la Netlify.
-2. Folosește **`netlify.toml`**: `npm run build` și plugin **`@netlify/plugin-nextjs`**.
-3. Adaugă în **Environment variables** aceleași variabile ca în producție; **`DATABASE_URL`** poate puncta spre PostgreSQL-ul de pe cPanel (dacă hostul permite conexiuni externe și firewall-ul e configurat).
+Română (implicit), maghiară, engleză.
 
 ## Scripts npm
 
 | Comandă | Rol |
 |---------|-----|
-| `npm run dev` | Server de dezvoltare |
+| `npm run dev` | Development |
 | `npm run build` | Build producție |
-| `npm run start` | Pornește serverul Next după build |
+| `npm run start` | Server producție (după build) |
 | `npm run lint` | ESLint |
 
 ## Licență
