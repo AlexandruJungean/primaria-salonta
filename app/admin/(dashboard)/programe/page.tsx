@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Plus, ChevronUp, ChevronDown, Pencil, Eye, EyeOff, Trash2, X, Check, Save } from 'lucide-react';
+import { Plus, ChevronUp, ChevronDown, Pencil, Eye, EyeOff, Trash2, X, Check, Save, FileText } from 'lucide-react';
 import { AdminPageHeader, AdminCard, AdminButton, AdminConfirmDialog, toast } from '@/components/admin';
 import { adminFetch } from '@/lib/api-client';
 import { getIcon } from '@/lib/constants/icon-map';
@@ -42,6 +42,35 @@ export default function ProgramePage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<Partial<Program>>({});
   const [saving, setSaving] = useState(false);
+  const [creatingPage, setCreatingPage] = useState(false);
+
+  const createCustomPage = async () => {
+    setCreatingPage(true);
+    try {
+      const secRes = await adminFetch('/api/admin/navigation?section=programe');
+      if (!secRes.ok) throw new Error('Section not found');
+      const secData = await secRes.json();
+
+      const maxOrder = programs.reduce((max, p) => Math.max(max, p.sort_order), 0);
+      const response = await adminFetch('/api/admin/navigation', {
+        method: 'POST',
+        body: JSON.stringify({
+          is_custom: true,
+          section_id: secData.section.id,
+          title: 'Pagină nouă',
+          sort_order: maxOrder + 1,
+        }),
+      });
+      if (!response.ok) throw new Error('Failed to create');
+      const result = await response.json();
+      toast.success('Pagina a fost creată');
+      router.push(`/admin/pagini-custom/${result.page.id}`);
+    } catch {
+      toast.error('Eroare la crearea paginii');
+    } finally {
+      setCreatingPage(false);
+    }
+  };
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -254,6 +283,19 @@ export default function ProgramePage() {
             </AdminCard>
           );
         })}
+
+        <button
+          onClick={createCustomPage}
+          disabled={creatingPage}
+          className="border-2 border-dashed border-slate-300 rounded-xl hover:border-blue-400 hover:bg-blue-50/50 transition-colors flex flex-col items-center justify-center gap-2 py-8 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center">
+            <Plus className="w-5 h-5 text-slate-400" />
+          </div>
+          <span className="text-sm font-medium text-slate-400">
+            {creatingPage ? 'Se creează...' : 'Adaugă pagină'}
+          </span>
+        </button>
       </div>
 
       {programs.length === 0 && (

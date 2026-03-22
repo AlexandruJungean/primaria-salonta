@@ -234,8 +234,9 @@ export default function CustomPageEditorPage() {
       });
       if (!response.ok) throw new Error('Failed to delete');
       toast.success('Pagina a fost ștearsă');
-      const sectionSlug = navPage.nav_sections?.slug;
-      router.push(sectionSlug ? `/admin/${sectionSlug}` : '/admin');
+      const adminPath = (navPage.nav_sections as { admin_path?: string } | undefined)?.admin_path;
+      const fallbackSlug = navPage.nav_sections?.slug;
+      router.push(adminPath || (fallbackSlug ? `/admin/${fallbackSlug}` : '/admin'));
     } catch {
       toast.error('Eroare la ștergerea paginii');
     }
@@ -316,21 +317,22 @@ export default function CustomPageEditorPage() {
 
   const sectionSlug = navPage?.nav_sections?.slug;
   const sectionTitle = navPage?.nav_sections?.title;
+  const sectionAdminPath = (navPage?.nav_sections as { admin_path?: string } | undefined)?.admin_path || (sectionSlug ? `/admin/${sectionSlug}` : null);
 
   return (
     <div>
       <AdminPageHeader
         title={title || 'Pagină nouă'}
         breadcrumbs={[
-          ...(sectionSlug && sectionTitle
-            ? [{ label: sectionTitle, href: `/admin/${sectionSlug}` }]
+          ...(sectionAdminPath && sectionTitle
+            ? [{ label: sectionTitle, href: sectionAdminPath }]
             : []),
           { label: title || 'Pagină nouă' },
         ]}
         actions={
           <div className="flex items-center gap-2">
-            {sectionSlug && (
-              <Link href={`/admin/${sectionSlug}`}>
+            {sectionAdminPath && (
+              <Link href={sectionAdminPath}>
                 <AdminButton variant="secondary" icon={ArrowLeft}>Înapoi</AdminButton>
               </Link>
             )}
