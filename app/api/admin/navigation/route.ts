@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
     if (pageId) {
       const { data, error } = await supabase
         .from('nav_pages')
-        .select('*, nav_sections(slug, title)')
+        .select('*, nav_sections(slug, title, admin_path)')
         .eq('page_id', pageId)
         .single();
       if (error) throw error;
@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
     if (id) {
       const { data, error } = await supabase
         .from('nav_pages')
-        .select('*, nav_sections(slug, title)')
+        .select('*, nav_sections(slug, title, admin_path)')
         .eq('id', id)
         .single();
       if (error) throw error;
@@ -75,6 +75,15 @@ export async function GET(request: NextRequest) {
   }
 }
 
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '')
+    || `sectiune-${Date.now()}`;
+}
+
 export async function POST(request: NextRequest) {
   const authResult = await requireAdmin(request);
   if (authResult instanceof NextResponse) return authResult;
@@ -84,6 +93,53 @@ export async function POST(request: NextRequest) {
     const supabase = createAdminClient();
     const body = await request.json();
     const { ipAddress, userAgent } = getRequestInfo(request);
+    const type = new URL(request.url).searchParams.get('type');
+
+    if (type === 'section') {
+      const slug = body.slug || slugify(body.title || '');
+      const { data: maxOrder } = await supabase
+        .from('nav_sections')
+        .select('sort_order')
+        .order('sort_order', { ascending: false })
+        .limit(1)
+        .single();
+
+      const { data, error } = await supabase
+        .from('nav_sections')
+        .insert([{
+          slug,
+          title: body.title || 'Grup nou',
+          description: body.description || '',
+          icon: body.icon || 'folder',
+          sort_order: (maxOrder?.sort_order || 0) + 1,
+          is_active: true,
+          is_custom: true,
+          show_in_cetateni: body.show_in_cetateni || false,
+          show_in_firme: body.show_in_firme || false,
+          show_in_primarie: body.show_in_primarie || false,
+          show_in_turist: body.show_in_turist || false,
+          public_path: `/sectiuni/${slug}`,
+          admin_path: `/admin/sectiuni/${slug}`,
+        }])
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      await logAuditAction({
+        action: 'create',
+        resourceType: 'nav_section',
+        resourceId: data.id,
+        resourceTitle: data.title,
+        userId: adminUser.id,
+        userEmail: adminUser.email,
+        userName: adminUser.fullName,
+        ipAddress,
+        userAgent,
+      });
+
+      return NextResponse.json({ success: true, data });
+    }
 
     if (body.is_custom) {
       const slug = body.slug || `pagina-${Date.now()}`;
@@ -169,9 +225,10 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true, data });
   } catch (error: unknown) {
-    const msg = error instanceof Error ? error.message : 'Unknown error';
+    const errObj = error as { message?: string; code?: string; details?: string };
+    const msg = errObj?.message || (error instanceof Error ? error.message : 'Unknown error');
     console.error('Error creating nav page:', error);
-    return NextResponse.json({ error: msg }, { status: 500 });
+    return NextResponse.json({ error: msg, code: errObj?.code }, { status: 500 });
   }
 }
 
@@ -184,12 +241,39 @@ export async function PATCH(request: NextRequest) {
     const supabase = createAdminClient();
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
+    const type = searchParams.get('type');
     if (!id) {
       return NextResponse.json({ error: 'ID required' }, { status: 400 });
     }
 
     const body = await request.json();
     const { ipAddress, userAgent } = getRequestInfo(request);
+
+    if (type === 'section') {
+      const { data, error } = await supabase
+        .from('nav_sections')
+        .update(body)
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      await logAuditAction({
+        action: 'update',
+        resourceType: 'nav_section',
+        resourceId: id,
+        resourceTitle: data.title,
+        details: { updatedFields: Object.keys(body) },
+        userId: adminUser.id,
+        userEmail: adminUser.email,
+        userName: adminUser.fullName,
+        ipAddress,
+        userAgent,
+      });
+
+      return NextResponse.json({ success: true, data });
+    }
 
     const { data: existing } = await supabase
       .from('nav_pages')
@@ -236,11 +320,41 @@ export async function DELETE(request: NextRequest) {
     const supabase = createAdminClient();
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
+    const type = searchParams.get('type');
     if (!id) {
       return NextResponse.json({ error: 'ID required' }, { status: 400 });
     }
 
     const { ipAddress, userAgent } = getRequestInfo(request);
+
+    if (type === 'section') {
+      const { data: section } = await supabase
+        .from('nav_sections')
+        .select('title')
+        .eq('id', id)
+        .single();
+
+      const { error } = await supabase
+        .from('nav_sections')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+
+      await logAuditAction({
+        action: 'delete',
+        resourceType: 'nav_section',
+        resourceId: id,
+        resourceTitle: section?.title,
+        userId: adminUser.id,
+        userEmail: adminUser.email,
+        userName: adminUser.fullName,
+        ipAddress,
+        userAgent,
+      });
+
+      return NextResponse.json({ success: true });
+    }
 
     const { data: navPage } = await supabase
       .from('nav_pages')
