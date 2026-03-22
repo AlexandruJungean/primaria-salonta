@@ -34,11 +34,13 @@ interface NavSection {
   title: string;
   description: string | null;
   icon: string;
+  is_custom?: boolean;
 }
 
 interface NavSectionAdminPageProps {
   sectionSlug: string;
   breadcrumbLabel: string;
+  allowCustomPages?: boolean;
 }
 
 const NAV_GROUPS = [
@@ -48,7 +50,7 @@ const NAV_GROUPS = [
   { key: 'show_in_turist' as const, label: 'Turist' },
 ];
 
-export function NavSectionAdminPage({ sectionSlug, breadcrumbLabel }: NavSectionAdminPageProps) {
+export function NavSectionAdminPage({ sectionSlug, breadcrumbLabel, allowCustomPages = true }: NavSectionAdminPageProps) {
   const router = useRouter();
   const [section, setSection] = useState<NavSection | null>(null);
   const [pages, setPages] = useState<NavPage[]>([]);
@@ -58,6 +60,10 @@ export function NavSectionAdminPage({ sectionSlug, breadcrumbLabel }: NavSection
   const [saving, setSaving] = useState(false);
   const [creating, setCreating] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<NavPage | null>(null);
+  const [editingSection, setEditingSection] = useState(false);
+  const [sectionForm, setSectionForm] = useState({ title: '', icon: '' });
+  const [savingSection, setSavingSection] = useState(false);
+  const [showDeleteSection, setShowDeleteSection] = useState(false);
 
   const loadData = useCallback(async () => {
     try {
@@ -75,6 +81,45 @@ export function NavSectionAdminPage({ sectionSlug, breadcrumbLabel }: NavSection
   }, [sectionSlug]);
 
   useEffect(() => { loadData(); }, [loadData]);
+
+  const startEditSection = () => {
+    if (!section) return;
+    setSectionForm({ title: section.title, icon: section.icon });
+    setEditingSection(true);
+  };
+
+  const saveSection = async () => {
+    if (!section) return;
+    setSavingSection(true);
+    try {
+      const response = await adminFetch(`/api/admin/navigation?id=${section.id}&type=section`, {
+        method: 'PATCH',
+        body: JSON.stringify(sectionForm),
+      });
+      if (!response.ok) throw new Error('Failed');
+      toast.success('Grupul a fost actualizat');
+      setEditingSection(false);
+      await loadData();
+    } catch {
+      toast.error('Eroare la salvare');
+    } finally {
+      setSavingSection(false);
+    }
+  };
+
+  const deleteSection = async () => {
+    if (!section) return;
+    try {
+      const response = await adminFetch(`/api/admin/navigation?id=${section.id}&type=section`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed');
+      toast.success('Grupul a fost șters');
+      router.push('/admin');
+    } catch {
+      toast.error('Eroare la ștergerea grupului');
+    }
+  };
 
   const createCustomPage = async () => {
     if (!section) return;
@@ -207,11 +252,69 @@ export function NavSectionAdminPage({ sectionSlug, breadcrumbLabel }: NavSection
         description={section.description || undefined}
         breadcrumbs={[{ label: breadcrumbLabel }]}
         actions={
-          <AdminButton onClick={createCustomPage} disabled={creating} icon={Plus}>
-            {creating ? 'Se creează...' : 'Adaugă Pagină'}
-          </AdminButton>
+          <div className="flex items-center gap-2">
+            {section.is_custom && (
+              <>
+                <AdminButton onClick={startEditSection} variant="secondary" icon={Pencil}>
+                  Editează grup
+                </AdminButton>
+                <button
+                  onClick={() => setShowDeleteSection(true)}
+                  className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                  title="Șterge grupul"
+                >
+                  <Trash2 className="w-5 h-5" />
+                </button>
+              </>
+            )}
+            {allowCustomPages && (
+              <AdminButton onClick={createCustomPage} disabled={creating} icon={Plus}>
+                {creating ? 'Se creează...' : 'Adaugă Pagină'}
+              </AdminButton>
+            )}
+          </div>
         }
       />
+
+      {/* Section edit form */}
+      {editingSection && (
+        <AdminCard className="border-blue-300 ring-2 ring-blue-100 mb-6">
+          <div className="space-y-4">
+            <h3 className="text-sm font-semibold text-slate-700">Editează grupul</h3>
+            <div className="flex items-end gap-3">
+              <IconPicker
+                value={sectionForm.icon}
+                onChange={icon => setSectionForm(f => ({ ...f, icon }))}
+                label="Icon"
+              />
+              <div className="flex-1">
+                <label className="block text-sm font-medium text-slate-700 mb-1">Nume grup</label>
+                <input
+                  type="text"
+                  value={sectionForm.title}
+                  onChange={e => setSectionForm(f => ({ ...f, title: e.target.value }))}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+            </div>
+            <div className="flex justify-end gap-2 pt-2 border-t border-slate-200">
+              <button
+                onClick={() => setEditingSection(false)}
+                className="flex items-center gap-1 px-3 py-1.5 text-sm text-slate-600 hover:text-slate-800 rounded-lg hover:bg-slate-100"
+              >
+                <X className="w-4 h-4" /> Anulează
+              </button>
+              <button
+                onClick={saveSection}
+                disabled={savingSection}
+                className="flex items-center gap-1 px-4 py-1.5 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+              >
+                <Check className="w-4 h-4" /> {savingSection ? 'Se salvează...' : 'Salvează'}
+              </button>
+            </div>
+          </div>
+        </AdminCard>
+      )}
 
       {/* Edit form */}
       {editingId && (() => {
@@ -390,18 +493,20 @@ export function NavSectionAdminPage({ sectionSlug, breadcrumbLabel }: NavSection
         })}
 
         {/* Add page card */}
-        <button
-          onClick={createCustomPage}
-          disabled={creating}
-          className="border-2 border-dashed border-slate-300 rounded-xl hover:border-blue-400 hover:bg-blue-50/50 transition-colors flex flex-col items-center justify-center gap-2 py-8 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center">
-            <Plus className="w-5 h-5 text-slate-400" />
-          </div>
-          <span className="text-sm font-medium text-slate-400">
-            {creating ? 'Se creează...' : 'Adaugă pagină'}
-          </span>
-        </button>
+        {allowCustomPages && (
+          <button
+            onClick={createCustomPage}
+            disabled={creating}
+            className="border-2 border-dashed border-slate-300 rounded-xl hover:border-blue-400 hover:bg-blue-50/50 transition-colors flex flex-col items-center justify-center gap-2 py-8 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center">
+              <Plus className="w-5 h-5 text-slate-400" />
+            </div>
+            <span className="text-sm font-medium text-slate-400">
+              {creating ? 'Se creează...' : 'Adaugă pagină'}
+            </span>
+          </button>
+        )}
       </div>
 
       {pages.length === 0 && (
@@ -420,6 +525,16 @@ export function NavSectionAdminPage({ sectionSlug, breadcrumbLabel }: NavSection
         }}
         title="Șterge pagina personalizată?"
         message={`Ești sigur că vrei să ștergi pagina „${deleteTarget?.title}"? Conținutul paginii va fi șters definitiv.`}
+        confirmLabel="Da, șterge"
+        cancelLabel="Nu, anulează"
+      />
+
+      <AdminConfirmDialog
+        isOpen={showDeleteSection}
+        onClose={() => setShowDeleteSection(false)}
+        onConfirm={deleteSection}
+        title="Șterge grupul de pagini?"
+        message={`Ești sigur că vrei să ștergi grupul „${section?.title}"? Toate paginile din grup vor fi șterse definitiv.`}
         confirmLabel="Da, șterge"
         cancelLabel="Nu, anulează"
       />
