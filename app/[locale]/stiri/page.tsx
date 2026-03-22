@@ -14,6 +14,7 @@ import { type Locale } from '@/i18n/routing';
 import { getNews } from '@/lib/supabase/services';
 import { translateContentArray } from '@/lib/google-translate/cache';
 import { AdminEditButton } from '@/components/admin-edit-button';
+import { AddPageCard } from '@/components/add-page-card';
 
 const ITEMS_PER_PAGE = 12;
 
@@ -93,6 +94,7 @@ export default async function NewsPage({
 
               {/* News grid */}
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <AddPageCard adminHref="/admin/stiri/nou" label="Adaugă știre" />
                 {news.map((item) => (
                   <Link key={item.id} href={`/stiri/${item.slug}`} className="block">
                     <Card hover className="overflow-hidden group h-full">

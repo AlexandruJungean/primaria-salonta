@@ -7,9 +7,10 @@ import { Card, CardContent } from '@/components/ui/card';
 interface AddPageCardProps {
   adminHref: string;
   variant?: 'centered' | 'inline';
+  label?: string;
 }
 
-export async function AddPageCard({ adminHref, variant = 'inline' }: AddPageCardProps) {
+export async function AddPageCard({ adminHref, variant = 'inline', label = 'Adaugă pagină' }: AddPageCardProps) {
   const cookieStore = await cookies();
   const token = cookieStore.get('admin-session')?.value;
 
@@ -29,7 +30,7 @@ export async function AddPageCard({ adminHref, variant = 'inline' }: AddPageCard
             <div className="w-14 h-14 rounded-xl bg-gray-100 flex items-center justify-center group-hover:bg-primary-100 transition-colors">
               <Plus className="w-7 h-7 text-gray-400" />
             </div>
-            <h3 className="font-semibold text-gray-400">Adaugă pagină</h3>
+            <h3 className="font-semibold text-gray-400">{label}</h3>
           </CardContent>
         </Card>
       </Link>
@@ -43,7 +44,7 @@ export async function AddPageCard({ adminHref, variant = 'inline' }: AddPageCard
           <div className="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center shrink-0">
             <Plus className="w-6 h-6 text-gray-400" />
           </div>
-          <h3 className="font-semibold text-gray-400">Adaugă pagină</h3>
+          <h3 className="font-semibold text-gray-400">{label}</h3>
         </CardContent>
       </Card>
     </Link>
