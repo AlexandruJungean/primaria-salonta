@@ -8,6 +8,11 @@ export interface NavSection {
   icon: string;
   sort_order: number;
   is_active: boolean;
+  is_custom: boolean;
+  show_in_cetateni: boolean;
+  show_in_firme: boolean;
+  show_in_primarie: boolean;
+  show_in_turist: boolean;
   public_path: string | null;
   admin_path: string;
   created_at: string;
@@ -36,7 +41,7 @@ export interface NavPage {
 }
 
 export interface NavPageWithSection extends NavPage {
-  nav_sections: Pick<NavSection, 'slug' | 'title' | 'icon'>;
+  nav_sections: Pick<NavSection, 'slug' | 'title' | 'icon' | 'public_path'>;
 }
 
 // ─── Public queries (anon client, respects RLS) ─────────────
@@ -91,7 +96,7 @@ export async function getNavPagesForPublicMenu(menuKey: MenuKey): Promise<NavPag
 
   const { data, error } = await supabase
     .from('nav_pages')
-    .select('*, nav_sections(slug, title, icon)')
+    .select('*, nav_sections(slug, title, icon, public_path)')
     .eq(column, true)
     .eq('is_active', true)
     .order('sort_order', { ascending: true });

@@ -612,6 +612,9 @@ export interface NavPageItem {
   icon: string;
   public_path: string | null;
   section_slug: string;
+  section_title?: string;
+  section_icon?: string;
+  section_public_path?: string | null;
 }
 
 export interface NavPagesMenuData {
@@ -747,11 +750,15 @@ export function getNavigationWithInstitutions(
         extraStandaloneItems.push(...items);
       } else {
         const defaults = SECTION_SLUG_DEFAULTS[slug];
+        const firstPage = pages[0];
+        const sectionTitle = firstPage?.section_title;
+        const sectionIcon = firstPage?.section_icon;
+        const sectionPath = firstPage?.section_public_path;
         extraGroups.push({
           groupId: slug,
-          groupHref: defaults?.groupHref || '#',
-          groupIcon: defaults?.groupIcon || FileText,
-          groupLabel: defaults?.label || slug,
+          groupHref: defaults?.groupHref || sectionPath || `/sectiuni/${slug}`,
+          groupIcon: defaults?.groupIcon || (sectionIcon ? getIcon(sectionIcon) : FileText),
+          groupLabel: defaults?.label || sectionTitle || slug,
           items,
         });
       }

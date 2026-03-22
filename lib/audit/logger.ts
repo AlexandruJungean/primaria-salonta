@@ -42,6 +42,7 @@ export type ResourceType =
   | 'required_documents_office'
   | 'required_document'
   | 'nav_page'
+  | 'nav_section'
   | 'custom_page';
 
 export interface AuditLogEntry {
@@ -142,6 +143,7 @@ export function getResourceTypeLabel(resourceType: ResourceType): string {
     required_documents_office: 'Birou acte necesare',
     required_document: 'Secțiune acte necesare',
     nav_page: 'Pagină navigare',
+    nav_section: 'Secțiune navigare',
     custom_page: 'Pagină personalizată',
   };
   return labels[resourceType] || resourceType;
